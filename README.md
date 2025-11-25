@@ -2,9 +2,11 @@
 
 > The Operating System for modern businesses.
 
-**Xentri** is an opinionated platform that unifies disparate business tools—CRM, ERP, AI Agents, and Legal Automation—into a single, high-performance PWA. It solves "tab fatigue" by providing a unified shell while maintaining the scalability of microservices.
+**Xentri** is a modular **Business OS** that starts with a conversation, not a configuration screen. It unifies Strategy, Marketing, Sales, Finance, and Operations into a single, calm workspace.
 
-**Status:** Early-stage, not production-ready (API and CRM MVP under active development). This repository currently contains documentation and planning artifacts; the code scaffolding described below will land in upcoming commits.
+It solves "tab fatigue" and "setup paralysis" by using a **Strategy Co-pilot** to generate a **Universal Brief**—the DNA of your business—which then powers a curated set of tools (Website, CRM, Invoicing) that grow with you.
+
+**Status:** Early-stage development. This repository contains the core infrastructure for the v0.1 MVP (Strategy Co-pilot + Universal Brief).
 
 ---
 
@@ -40,7 +42,7 @@ npm run dev
 | Layer | Technologies |
 |-------|-------------|
 | **Frontend** | Astro (Shell) + React (Micro-Apps) + Vite |
-| **Backend** | Dockerized Microservices (Node.js, Python, Go) |
+| **Backend** | Dockerized Microservices (Node.js, Python) |
 | **Data** | Postgres (Multi-tenant via RLS), Redis (Event Bus) |
 | **Automation** | n8n (Workflow Orchestration) |
 | **Repo** | Turborepo (Monorepo management) |
@@ -59,11 +61,12 @@ This project is architected to scale from 1 to 1,000,000 users without a rewrite
 
 ## Roadmap
 
-| Phase | Focus |
-|-------|-------|
-| **Current** | CRM MVP + Core API + WhatsApp Bot Processor |
-| **Next** | ERP Engine (Invoicing) and Multi-tenant Billing Integration |
-| **Future** | Marketing Automation Module and Client-Facing Automation Builder |
+| Phase | Tier | Focus |
+|-------|------|-------|
+| **v0.1** | Free | **Strategy Co-pilot + Universal Brief**. The entry point that generates business clarity. |
+| **v0.2** | Presencia ($10) | **Brand & Marketing**. Website Builder, CMS, and Lead Capture auto-configured from the Brief. |
+| **v0.3** | Light Ops ($30) | **Sales & Pipeline**. CRM, Quotes, and Follow-ups. |
+| **v0.4** | Business in Motion ($90) | **Finance & Accounting**. Invoicing, Payments, and the "Open Loops" view. |
 
 ---
 

@@ -9,7 +9,7 @@
 ## Executive Summary
 
 **Headline:** A "Boring" Postgres Event Store is the secret weapon.
-**Key Insight:** We don't need Kafka or complex Event Stores. A single Postgres table with `JSONB` payloads and `BRIN` indexes is sufficient for millions of events and allows for "Time Travel" debugging and "Calm View" generation.
+**Key Insight:** We don't need Kafka or complex Event Stores. A single Postgres table with `JSONB` payloads and `BRIN` indexes is sufficient for millions of events and allows for "Time Travel" debugging and "Calm View" generation. This also powers the **Co-pilot Swarm**, giving every agent a perfect memory of what happened.
 
 ---
 
@@ -24,7 +24,7 @@ We will use a single `system_events` table, aligned to the Event Model v0.1.
 CREATE TABLE system_events (
   id UUID PRIMARY KEY,
   org_id UUID NOT NULL,
-  event_type VARCHAR(64) NOT NULL, -- e.g., 'lead_created', 'quote_sent'
+  event_type VARCHAR(64) NOT NULL, -- e.g., 'lead_created', 'quote_sent', 'brief_created'
   occurred_at TIMESTAMPTZ NOT NULL, -- business time
   actor_id UUID NOT NULL,
   actor_type VARCHAR(16) NOT NULL, -- 'user' | 'system' | 'client'
@@ -84,6 +84,7 @@ type EventActorType = 'user' | 'system' | 'client';
 type PrimaryEntityType = 'deal' | 'invoice' | 'client' | 'followup';
 
 type EventType =
+  | 'brief_created'
   | 'lead_created'
   | 'quote_requested'
   | 'quote_sent'
@@ -111,6 +112,7 @@ const SystemEventSchema = z.object({
   id: z.string().uuid(),
   org_id: z.string().uuid(),
   event_type: z.enum([
+    'brief_created',
     'lead_created',
     'quote_requested',
     'quote_sent',

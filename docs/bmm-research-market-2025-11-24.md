@@ -80,9 +80,10 @@
 
 | Tier | Xentri Price | Competitor Benchmarks | Verdict |
 | :--- | :--- | :--- | :--- |
-| **"Presencia"** | ~$10/mo | Wix ($17/mo), Squarespace ($16/mo), Carrd ($19/yr) | **Aggressive.** Great entry point to capture volume. |
+| **Free** | $0/mo | No direct competitor | **Category-defining.** No one offers a free business clarity tool (Strategy Co-pilot). |
+| **Presencia** | ~$10/mo | Wix ($17/mo), Squarespace ($16/mo), Carrd ($19/yr) | **Aggressive.** Great entry point to capture volume. |
 | **Light Ops** | ~$30/mo | Jobber ($39/mo), Clio ($39/mo), Jane ($54/mo) | **Sweet Spot.** Undercuts vertical competitors significantly. |
-| **Business in Motion** | ~$90/mo | Jobber ($119/mo), Toast ($110/mo), Odoo (varies) | **Competitive.** Offers "OS" value at a mid-tier price. |
+| **Business in Motion** | ~$90/mo | Jobber ($119/mo), Toast ($110/mo), Odoo (varies) | **Competitive.** Offers "OS" value at mid-tier price. |
 | **Professional** | ~$270/mo | GoHighLevel ($297/mo), Jobber ($199+/mo) | **Aligned.** Matches "Pro" tiers of major players. |
 
 **Conclusion:** The ladder is viable. The $10 entry is a "no-brainer" vs Wix, and the $30 step is a "killer deal" vs vertical SaaS.
@@ -108,7 +109,7 @@
 
 1.  **Target "Service Trades" & "Clinics" first.** They have the highest anxiety and the worst current tools.
 2.  **Lean into "Business OS" branding.** It separates you from the "Website Builder" commodity war.
-3.  **Keep the $10 -> $30 jump.** It's a perfect upsell path from "I just need a site" to "Help me run my business".
+3.  **Keep the Free -> $10 -> $30 jump.** It's a perfect upsell path from "I need clarity" to "I need a site" to "Help me run my business".
 4.  **Don't fight Wix on Design; fight them on "Brain".** Sell the *peace of mind* that Xentri "remembers" everything, whereas Wix just "displays" things.
 
 ---

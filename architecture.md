@@ -10,9 +10,9 @@ This document describes the high-level architecture, repository conventions, and
 
 ## 1. Executive Summary
 
-This platform is designed to be an **"Operating System for Business,"** automating disparate functions (CRM, ERP, AI Bots, Legal) into a single, cohesive experience.
+This platform is designed to be a **"Modular Business OS,"** automating disparate functions (Strategy, Marketing, Sales, Finance, Ops, Team, Legal) into a single, cohesive experience.
 
-Unlike traditional SaaS which suffers from "tab fatigue" (switching between different tools), this architecture uses a **Unified App Shell** to provide a seamless, native-app feel while maintaining strict technical isolation between services for scalability and team autonomy.
+Unlike traditional SaaS which suffers from "tab fatigue" (switching between different tools), this architecture uses a **Unified App Shell** to provide a seamless, native-app feel while maintaining strict technical isolation between services for scalability and team autonomy. The **Universal Brief** serves as the central source of truth, ensuring all modules and AI co-pilots share a unified understanding of the business.
 
 ---
 
@@ -23,8 +23,8 @@ We strictly separate the **User Experience** from the **Business Logic**.
 | Layer | Metaphor | Role |
 |-------|----------|------|
 | **The Shell (Astro)** | The "Body" | A lightweight, server-rendered container that handles the frame, authentication, and routing. It creates the illusion of a Single Page Application (SPA). |
-| **The Organs (React Micro-Apps)** | The "Capabilities" | Interactive tools (CRM, ERP) bundled as libraries and lazy-loaded into the Shell. |
-| **The Engine (Docker Microservices)** | The "Muscle" | Isolated backend containers that handle heavy processing, Python/Go logic, and database transactions. |
+| **The Organs (React Micro-Apps)** | The "Capabilities" | Interactive tools (Website, CRM, Invoicing) bundled as libraries and lazy-loaded into the Shell, organized by the 7 Capability Categories. |
+| **The Engine (Docker Microservices)** | The "Muscle" | Isolated backend containers that handle heavy processing, Node.js/Python logic, and database transactions. |
 | **The Nervous System (Events)** | The "Signals" | An event-driven layer that prevents services from talking directly to each other, ensuring the system remains modular. |
 
 ### Visual Data Flow
@@ -36,17 +36,17 @@ graph TD
 
     subgraph "Frontend (Browser)"
         Shell -->|Loads| Sidebar[Nano Store UI State]
-        Shell -->|Lazy Loads| CRM[React CRM App]
-        Shell -->|Lazy Loads| ERP[React ERP App]
+        Shell -->|Lazy Loads| Brand[React Brand App]
+        Shell -->|Lazy Loads| Sales[React Sales App]
     end
 
     subgraph "Backend (Docker Swarm / K8s)"
-        CRM -->|API JSON| APIG[API Gateway]
-        ERP -->|API JSON| APIG
+        Brand -->|API JSON| APIG[API Gateway]
+        Sales -->|API JSON| APIG
 
-        APIG -->|Route: /api/crm| Svc1[CRM Service Node]
-        APIG -->|Route: /api/erp| Svc2[ERP Service Go/Python]
-        APIG -->|Route: /api/bot| Svc3[AI Bot Service Python]
+        APIG -->|Route: /api/brand| Svc1[Brand Service Node]
+        APIG -->|Route: /api/sales| Svc2[Sales Service Node]
+        APIG -->|Route: /api/ai| Svc3[AI Co-pilot Service Python]
     end
 
     subgraph "The Nervous System (Async)"
@@ -80,10 +80,10 @@ We use a **Monorepo** to share types and UI standards while enforcing strict iso
 │
 ├── /services                 # BACKEND MICROSERVICES (Dockerized)
 │   ├── /core-api             # Node.js. Users, Orgs, Billing. (Direct PG Connection)
-│   ├── /cms-engine           # Node.js. Website, CMS. (Direct PG Connection)
-│   ├── /crm-engine           # Node.js. CRM. (Direct PG Connection)
-│   ├── /erp-engine           # Python/Go. Financial math, PDF generation. (Direct PG Connection)
-│   ├── /bot-processor        # Python. LLM/WhatsApp. (Direct PG Connection)
+│   ├── /brand-engine         # Node.js. Website, CMS. (Direct PG Connection)
+│   ├── /sales-engine         # Node.js. CRM, Quotes. (Direct PG Connection)
+│   ├── /finance-engine       # Node.js. Invoicing, Payments. (Direct PG Connection)
+│   ├── /ai-service           # Python. Co-pilot Swarm Host. (Direct PG Connection)
 │   └── /n8n-host             # Self-hosted workflow automation engine.
 │
 ├── /tooling                  # Shared Configs
@@ -181,8 +181,8 @@ Each folder in `/services/*` has its own `Dockerfile`.
 
 **Benefits:**
 
-- **Isolation:** If the `bot-processor` crashes due to a memory leak, the `erp-engine` keeps running perfectly.
-- **Scaling:** On Black Friday, we can spin up 50 replicas of `core-api` without paying for extra `bot-processor` instances.
+- **Isolation:** If the `ai-service` crashes due to a memory leak, the `finance-engine` keeps running perfectly.
+- **Scaling:** On Black Friday, we can spin up 50 replicas of `core-api` without paying for extra `ai-service` instances.
 
 ### B. Observability
 
@@ -204,17 +204,17 @@ We will use a **Single Physical Postgres Cluster** (e.g., Supabase) but enforce 
 ```
 Database: business_os_db
 ├── Schema: auth           # Supabase managed
-├── Schema: public         # Users, Organizations, Tenants
-├── Schema: crm_service    # Tables: leads, pipelines, activities
-└── Schema: erp_service    # Tables: ledgers, invoices, inventory
+├── Schema: public         # Users, Organizations, Tenants, System Events
+├── Schema: sales_service  # Tables: leads, pipelines, activities
+└── Schema: finance_service # Tables: ledgers, invoices, inventory
 ```
 
 ### B. Schema Ownership
 
 | Rule | Description |
 |------|-------------|
-| **Strict Rule** | Only the CRM Service can write to `crm_schema`. |
-| **Migrations** | Managed per-service (e.g., Drizzle Kit for Node, Golang Migrate for Go). |
+| **Strict Rule** | Only the Sales Service can write to `sales_schema`. |
+| **Migrations** | Managed per-service (e.g., Drizzle Kit for Node). |
 
 ### C. The "Shared Contract" (`/packages/ts-schema`)
 
@@ -274,12 +274,10 @@ npm run dev
 
 ---
 
-## Appendix: Service Boundaries
-
 | Service | Owns | Responsibilities |
 |---------|------|------------------|
-| `core-api` | Users, Organizations, Billing | Authentication, Authorization, Subscription Management |
-| `crm-engine` | Leads, Pipelines, Activities | Contact Management, Sales Pipeline, Activity Tracking |
-| `erp-engine` | Ledgers, Invoices, Inventory | Financial Calculations, PDF Generation, Inventory Management |
-| `bot-processor` | Conversations, AI Context | LLM Chains, WhatsApp Connectivity, Sentiment Analysis |
+| `core-api` | Users, Orgs, Billing | Authentication, Authorization, Subscription Management, Event Ingestion |
+| `sales-engine` | Leads, Pipelines, Activities | Contact Management, Sales Pipeline, Activity Tracking |
+| `finance-engine` | Ledgers, Invoices, Inventory | Financial Calculations, PDF Generation, Inventory Management |
+| `ai-service` | Co-pilots, Universal Brief | Hosting the Co-pilot Swarm (Strategy, Brand, Sales, etc.), LLM Chains |
 | `n8n-host` | Workflows, Triggers | Business Logic Orchestration, Third-Party Integrations |

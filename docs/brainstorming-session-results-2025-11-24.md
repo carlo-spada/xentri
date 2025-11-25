@@ -10,7 +10,7 @@ Xentri is a modular Business OS that starts as your website + lead engine and gr
 
 - **Emotional job:** Kill open-loop anxiety for small business owners and operators (the constant feeling that something important is slipping through the cracks).
 - **Technical spine:** Event-driven backbone + visible automation + AI that lives in the mess (voice notes, chats, docs) and turns it into structured events.
-- **Adoption path:** Begin with Website Builder + CMS (presence and lead capture), then add CRM, invoicing, inventory, and AI-powered modules as the business grows.
+- **Adoption path:** Begin with **Strategy Co-pilot** (clarity), then **Website Builder** (presence), then add CRM, invoicing, and AI-powered modules as the business grows.
 
 ## Session Start
 
@@ -237,28 +237,32 @@ Xentri’s pricing and adoption model follows a ~3× stepped structure so that v
 
 Example ladder (prices are illustrative and can be localized):
 
-1.  **Plan Presencia / Presence (~10 USD/mes)**
-    -   Website + CMS + basic lead capture.
-    -   Ideal for freelancers, oficios, negocios muy pequeños.
-    -   Principal beneficio: presencia profesional y no perder contactos del sitio.
+1.  **Free Tier (Strategy Co-pilot)**
+    -   **Strategy Co-pilot + Universal Brief**.
+    -   Ideal for founders and early-stage businesses.
+    -   **Primary Benefit:** Clarity. Turns a messy conversation into a structured business DNA (The Brief).
 
-2.  **Plan Operación Ligera / Light Ops (~30 USD/mes)**
-    -   Todo lo anterior + mini-CRM, registro simple de oportunidades/cotizaciones, agenda básica.
-    -   Principal beneficio: empezar a organizar clientes y oportunidades en un solo lugar.
+2.  **Presencia ($10/mo)**
+    -   **Brand & Marketing**: Website Builder + CMS + Lead Capture.
+    -   Ideal for freelancers, trades, and small clinics.
+    -   **Primary Benefit:** Professional presence and capturing every lead.
 
-3.  **Plan Negocio en Marcha / Business in Motion (~90 USD/mes)**
-    -   Añade facturación/invoices, cobros en línea básicos, inventario sencillo (si aplica), dashboard diario de “qué está pasando”.
-    -   Principal beneficio: control del flujo completo dinero–trabajo, del primer contacto al pago.
+3.  **Light Ops ($30/mo)**
+    -   **Sales & Pipeline**: CRM + Quotes + Follow-ups.
+    -   Ideal for growing service businesses.
+    -   **Primary Benefit:** Organizing clients and opportunities in one place; never losing a quote.
 
-4.  **Plan Profesional (~270 USD/mes)**
-    -   Multi-usuario y roles, dashboards avanzados, gestión de proveedores, automatizaciones configurables, soporte prioritario.
-    -   Principal beneficio: eficiencia operativa y visibilidad real para negocios en crecimiento (5–20 empleados, multi-equipo).
+4.  **Business in Motion ($90/mo)**
+    -   **Finance & Accounting**: Invoicing + Payments + Open Loops View.
+    -   Ideal for established businesses with daily transaction volume.
+    -   **Primary Benefit:** Full control of the money flow (Lead -> Cash) and peace of mind (Calm Prompt).
 
-5.  **Plan Empresarial (~500+ USD/mes)**
-    -   Multi-sucursal/multi-país, integraciones avanzadas (contabilidad, ERPs externos), automatizaciones a la medida, acompañamiento de implementación.
-    -   Principal beneficio: un sistema operativo completo para operaciones complejas.
+5.  **Professional ($270/mo)**
+    -   **Team & Leadership**: Multi-user, roles, advanced workflows.
+    -   Ideal for scaling teams (5-15 people) with specialized roles.
+    -   **Primary Benefit:** Efficiency and delegation without losing visibility.
 
-> **Módulos Opcionales** (WhatsApp bot, AI blog, campañas de marketing, reportes financieros avanzados, etc.) se pueden agregar a cualquier nivel, permitiendo que cada negocio crezca su “cerebro operativo” Xentri poco a poco, desde ~10 USD/mes hasta 500+ USD/mes según su tamaño y complejidad.
+> **À la carte Modules** ($5/mo) can be added to any tier, allowing businesses to grow their "operating brain" incrementally.
 
 ## Reflection and Follow-up
 

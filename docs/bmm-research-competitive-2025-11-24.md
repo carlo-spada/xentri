@@ -74,7 +74,7 @@
     *   Instead of "Here are 50 invoices", say "3 Invoices are overdue. Send reminders? [Yes/No]".
 
 3.  **Pricing Power:**
-    *   By bundling "Website" ($20 value) + "Ops" ($40 value) + "Light Marketing" ($20 value), Xentri's **$30 tier** is an absolute steal.
+    *   By bundling "Website" ($20 value) + "Ops" ($40 value) + "Light Marketing" ($20 value), Xentri's **Light Ops ($30) tier** is an absolute steal.
 
 ---
 

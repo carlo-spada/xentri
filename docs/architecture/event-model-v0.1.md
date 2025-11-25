@@ -63,6 +63,7 @@ export type PrimaryEntityType =
   | 'followup'; // extend as new modules are added
 
 export type EventType =
+  | 'brief_created'
   | 'lead_created'
   | 'quote_requested'
   | 'quote_sent'
