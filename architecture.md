@@ -1,4 +1,4 @@
-# The Business OS - Technical Architecture
+# Xentri - Technical Architecture
 
 **Version:** 1.1.0
 **Status:** RFC / Foundation

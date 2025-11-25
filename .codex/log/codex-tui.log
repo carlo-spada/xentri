@@ -1,0 +1,1192 @@
+[2m2025-11-24T23:06:03.235476Z[0m [32m INFO[0m cwd not set, using current dir
+[2m2025-11-24T23:12:29.678560Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:12:30.126331Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:12:30.126513Z[0m [32m INFO[0m ghost commit captured: 84e4d791f99907f8cd5cee5ad0dca93265442096
+[2m2025-11-24T23:12:30.126525Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:12:32.505699Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:12:35.180802Z[0m [32m INFO[0m ToolCall: shell_command {"command":"rg --files","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:12:36.572056Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat README.md","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:12:39.197668Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat architecture.md","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:43:49.193537Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:43:49.419481Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:43:49.419667Z[0m [32m INFO[0m ghost commit captured: 510c0800836fe1b96a41a43227d3c6318cbd5f3e
+[2m2025-11-24T23:43:49.419680Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:43:51.785906Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls -a","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:43:53.766048Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/core/tasks/workflow.xml","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:43:57.307353Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/workflows/workflow-status/init/workflow.yaml","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:00.457044Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/config.yaml","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:05.402305Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/workflows/workflow-status/init/instructions.md","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:08.091197Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/workflows/workflow-status/workflow-status-template.yaml","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:10.241689Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls .bmad/bmm/workflows/workflow-status/paths","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:16.312506Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"status":"in_progress","step":"Load workflow config/resources and resolve variables per workflow.xml rules"},{"status":"pending","step":"Scan project for existing artifacts/code, classify state, and collect required user inputs"},{"status":"pending","step":"Execute remaining workflow steps (path selection, workflow path generation, tracking file decision) with required approvals/checkpoints"}]}
+[2m2025-11-24T23:44:23.244521Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls docs","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:29.697545Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cp .bmad/bmm/workflows/workflow-status/workflow-status-template.yaml docs/bmm-workflow-status.yaml","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:34.597285Z[0m [32m INFO[0m ToolCall: shell_command {"command":"find docs -type f","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:44:36.761424Z[0m [32m INFO[0m ToolCall: shell_command {"command":"find docs/sprint-artifacts -type f","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:45:56.116545Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:45:56.277459Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:45:56.277657Z[0m [32m INFO[0m ghost commit captured: 8d14f56d5534038280b5cf9d3643e3cf71dd12b2
+[2m2025-11-24T23:45:56.277670Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:46:12.609010Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: docs/bmm-workflow-status.yaml
+@@
+-generated: "{{generated}}"
+-project: "{{project_name}}"
++generated: "{{generated}}"
++project: "Nu"
+ project_type: "{{project_type}}"
+ selected_track: "{{selected_track}}"
+ field_type: "{{field_type}}"
+ workflow_path: "{{workflow_path_file}}"
+ workflow_status: "{{workflow_items}}"
+*** End Patch
+[2m2025-11-24T23:49:19.916029Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:49:20.080020Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:49:20.080204Z[0m [32m INFO[0m ghost commit captured: da2d2962c7fd5fa2d4ac016c93ee14d0e63fc5f8
+[2m2025-11-24T23:49:20.080219Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:49:22.758108Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/core/tasks/advanced-elicitation.xml","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:49:24.951168Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/core/tasks/advanced-elicitation-methods.csv","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:49:26.905846Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/_cfg/agent-manifest.csv","workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:51:05.951923Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:51:06.116115Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:51:06.116288Z[0m [32m INFO[0m ghost commit captured: 63de1811e4759a7adbfc630ce8421df86bb21404
+[2m2025-11-24T23:51:06.116301Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:55:09.466053Z[0m [32m INFO[0m Selected model: gpt-5.1, Selected effort: high
+[2m2025-11-24T23:58:11.552723Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:58:11.716012Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:58:11.716181Z[0m [32m INFO[0m ghost commit captured: 8e6fd3ba4aa28f04590acc485882f30ac0d42358
+[2m2025-11-24T23:58:11.716194Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:58:42.148694Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:58:42.281029Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:58:42.281209Z[0m [32m INFO[0m ghost commit captured: 25249ecec41612604f4328be44f1d458bf22cbb5
+[2m2025-11-24T23:58:42.281221Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:58:47.112605Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:58:50.542354Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls docs","timeout_ms":9862,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:58:52.073318Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '1,200p' README.md","timeout_ms":9671,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:58:54.833823Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '1,260p' architecture.md","timeout_ms":9879,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:58:56.766560Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '260,520p' architecture.md","timeout_ms":9536,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:59:50.892796Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-24T23:59:51.054952Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-24T23:59:51.055150Z[0m [32m INFO[0m ghost commit captured: 0d2363556660d7306f547df841d64562851962dc
+[2m2025-11-24T23:59:51.055162Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-24T23:59:55.352205Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls -a","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:59:56.551465Z[0m [32m INFO[0m ToolCall: shell_command {"command":"find . -name 'AGENTS.md' -maxdepth 5","timeout_ms":9935,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-24T23:59:59.341141Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls .bmad","timeout_ms":9052,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:01.582207Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls .bmad/core","timeout_ms":9185,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:03.831045Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls .bmad/core/tasks","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:06.747823Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '1,260p' .bmad/core/tasks/workflow.xml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:20.828933Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/core/tasks/workflow.xml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:27.156755Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/workflows/workflow-status/init/workflow.yaml","timeout_ms":8823,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:33.071874Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/config.yaml","timeout_ms":9818,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:00:57.957873Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/workflows/workflow-status/init/instructions.md","timeout_ms":8846,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:01:13.920162Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/bmm/workflows/workflow-status/workflow-status-template.yaml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:01:22.122155Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls docs && echo '---' && cat docs/bmm-workflow-status.yaml 2>/dev/null || echo 'NO_FILE'","timeout_ms":9102,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:01:42.543417Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"status":"in_progress","step":"Resolve workflow config and variables"},{"status":"pending","step":"Execute workflow instructions steps 1-4"},{"status":"pending","step":"Execute workflow instructions steps 5-9"},{"status":"pending","step":"Update template output file and summarize results"}]}
+[2m2025-11-25T00:02:10.707908Z[0m [32m INFO[0m ToolCall: shell_command {"command":"ls docs/sprint-artifacts","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:02:46.688919Z[0m [32m INFO[0m ToolCall: shell_command {"command":"find docs -maxdepth 3 -type f","timeout_ms":9671,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:04:36.360487Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:04:36.525872Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:04:36.526070Z[0m [32m INFO[0m ghost commit captured: 23113be04905e1673581db1104560d6a7373da0b
+[2m2025-11-25T00:04:36.526082Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:07:39.869242Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:07:40.035052Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:07:40.035225Z[0m [32m INFO[0m ghost commit captured: a9a2bb54615e5a53a5e0516cbe96e8d048b5364b
+[2m2025-11-25T00:07:40.035237Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:09:13.367858Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:09:13.534457Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:09:13.534635Z[0m [32m INFO[0m ghost commit captured: 858062cffd31f9a2834e52e9a4ccdecf3a4d085c
+[2m2025-11-25T00:09:13.534647Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:09:34.905493Z[0m [32m INFO[0m ToolCall: update_plan {"plan":[{"status":"completed","step":"Resolve workflow config and variables"},{"status":"in_progress","step":"Execute workflow instructions steps 1-4"},{"status":"pending","step":"Execute workflow instructions steps 5-9"},{"status":"pending","step":"Update template output file and summarize results"}]}
+[2m2025-11-25T00:11:29.210720Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:11:29.380208Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:11:29.380379Z[0m [32m INFO[0m ghost commit captured: e841f81e8043d80fe69da4393eb6043ff1a626e6
+[2m2025-11-25T00:11:29.380391Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:18:23.619056Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:18:23.788841Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:18:23.789012Z[0m [32m INFO[0m ghost commit captured: b01cb13cb1e2e108274b6141eb99b8bb0713f9a1
+[2m2025-11-25T00:18:23.789024Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:18:54.867168Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat docs/bmm-workflow-status.yaml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:19:06.250807Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: docs/bmm-workflow-status.yaml
+@@
+ generated: "{{generated}}"
+ project: "Nu"
+ project_type: "{{project_type}}"
+ selected_track: "{{selected_track}}"
+ field_type: "{{field_type}}"
+ workflow_path: "{{workflow_path_file}}"
+ workflow_status: "{{workflow_items}}"
++project_description: |-
++  This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs bringing them to the spearhead of technological development and AI. In Other words:
++
++  # Unison – Brand Guidelines (v0.1)
++
++  > Working name: **Unison**  
++  > These guidelines describe the brand foundations for the Business OS project.  
++  > If the project is renamed later, treat "Unison" as a placeholder and update accordingly.
++
++  ---
++
++  ## 1. Brand Core
++
++  ### 1.1 One-Liner
++
++  > **Unison is the operating system for small businesses and agencies, unifying CRM, ERP, billing, and AI automations into one calm, native-feeling workspace.**
++
++  ### 1.2 Elevator Pitch
++
++  Most small businesses run on a mess of tools: spreadsheets, WhatsApp, CRM, invoicing apps, manual reminders.
++
++  Unison replaces that chaos with a single operating system:
++
++  - A unified **app shell** that feels like a native desktop app.
++  - Modular **apps** for CRM, ERP, billing, and AI bots.
++  - An invisible **event system** that keeps everything in sync across the business.
++
++  Result: Teams work in one place, on one source of truth, at a sustainable rhythm.
++
++  ### 1.3 Brand Promise
++
++  > **"Bring your business tools into unison, and run everything from one place."**
++
++  ### 1.4 Brand Pillars
++
++  1. **Unity** – One shell, one data model, one workspace.
++  2. **Calm Control** – Clear dashboards, predictable systems, no drama.
++  3. **Visible Automation** – Bots and workflows that explain what they did and why.
++  4. **Real-World Ready** – Handles invoices, ledgers, permissions, and multi-tenant reality.
++
++  ---
++
++  ## 2. Brand Personality
++
++  If Unison were a person, it would be:
++
++  - **Analytical but human** – understands workflows and numbers, but speaks plainly.
++  - **Calm and composed** – no hype, no panic, just steady progress.
++  - **Quietly powerful** – does heavy lifting behind the scenes, without showing off.
++  - **Trustworthy and transparent** – automation is explainable, not magic.
++
++  Avoid personalities like:
++
++  - The loud “growth hacker” promising to 10x everything overnight.
++  - The jargon-heavy consultant who hides simple ideas behind complex language.
++
++  ---
++
++  ## 3. Voice & Tone
++
++  ### 3.1 Principles
++
++  1. **Plain, clear English**  
++     - Write for busy operators and owners.
++     - Short sentences. Concrete nouns. Few buzzwords.
++
++  2. **Confident, not arrogant**  
++     - We know what we’re doing, but we don’t promise miracles.
++     - Say: “Unison reduces errors and copy-paste work,” not “eliminates all problems forever.”
++
++  3. **Calm and reassuring**  
++     - Focus on stability, consistency, and clarity.
++     - Avoid fear tactics and fake urgency.
++
++  4. **Localization-friendly**  
++     - Use language that will translate cleanly later.
++     - Avoid idioms and jokes that only make sense in one culture.
++
++  ### 3.2 Writing Examples
++
++  **Good (homepage hero):**
++
++  > Run your business from one workspace.  
++  > Unison connects your CRM, ERP, billing, and AI bots so your team always works in sync.
++
++  **Bad (too hype):**
++
++  > Smash chaos with our AI super-suite and 10x your growth in a week!
++
++  **Good (feature explanation):**
++
++  > When a deal is marked as won, Unison can create the project, schedule tasks, and issue the invoice.  
++  > You can see every step in the automation log.
++
++  **Bad (too vague / magical):**
++
++  > Our AI takes care of everything behind the scenes. Just sit back and relax.
++
++  ---
++
++  ## 4. Visual Identity (v0.1)
++
++  These are starting points for design; they will evolve with real UI work.
++
++  ### 4.1 Color Direction
++
++  Concept: **Orchestrated calm.**
++
++  - **Base:** Deep neutral (charcoal / ink) for backgrounds or major chrome.
++  - **Primary accent:** A modern blue or teal that suggests clarity and flow.
++  - **Secondary accents:** Soft gradients or subtle secondary colors for CRM vs ERP vs Bots.
++
++  Usage:
++
++  - Use color to signal **state** (success, warning, error) and **hierarchy**, not decoration.
++  - Each core module can lean on a slightly different accent shade while keeping the overall look cohesive.
++
++  ### 4.2 Typography
++
++  Goals:
++
++  - Highly legible for tables, metrics, and forms.
++  - Works across many locales and screen sizes.
++
++  Suggestions:
++
++  - **Headings:** Modern sans-serif (e.g., Inter, SF Pro, or similar).
++  - **Body text:** Same family, regular weight, 14–16px for readability.
++
++  Rules:
++
++  - Keep titles short and scannable.
++  - Avoid over-styling; let whitespace and hierarchy do most of the work.
++
++  ### 4.3 Iconography & Illustration
++
++  - Icons should be simple and consistent, ideally line-based or minimal solid icons.
++  - Avoid cartoon mascots and over-cute elements.
++  - If using illustrations, prefer abstract representations of flows, nodes, or grids rather than generic “businesspeople with laptops.”
++
++  ---
++
++  ## 5. Product UX Principles
++
++  1. **One Shell, Many Apps**  
++     - The sidebar and header are stable anchors across CRM, ERP, Billing, and Bots.
++     - Switching between modules should feel like changing panels, not switching websites.
++
++  2. **Keep Context With the User**  
++     - From any client record, you should be able to see related deals, invoices, tasks, and automations without opening five tabs.
++
++  3. **Explain Automations**  
++     - Every automated action (sending an invoice, updating a status, posting a message) should be visible and traceable.
++     - Provide an “automation log” or similar view.
++
++  4. **Multi-Tenant Safety by Design**  
++     - Make organization boundaries obvious.
++     - Never make it easy to confuse data between orgs or clients.
++
++  5. **Design for Everyday Use, Not Demos**  
++     - Optimize for the daily workflows of small agencies and businesses:
++       - Lead → quote → project → invoice → payment.
++     - Fancy dashboards are secondary to clean, efficient flows.
++
++  ---
++
++  ## 6. Naming System (Modules & Sub-Brands)
++
++  Assuming **Unison** as master brand:
++
++  - **Platform:** Unison OS
++  - **Modules:**
++    - **Unison CRM** – Leads, pipelines, activities, deals.
++    - **Unison ERP** – Invoices, ledgers, inventory, suppliers.
++    - **Unison Billing** – Subscriptions, one-off invoices, payment status.
++    - **Unison Bots** – AI assistants, chatbots, workflow automations.
++    - **Unison Core** – Auth, organizations, users, plans, multi-tenancy.
++
++  Guidelines:
++
++  - Use full module names in documentation and marketing.
++  - Inside the app, you can shorten to **CRM**, **ERP**, **Billing**, **Bots**, **Core** once users are oriented.
++
++  ---
++
++  ## 7. Example Taglines & Messaging
++
++  Short taglines:
++
++  - “Bring your business tools into unison.”
++  - “One operating system for your whole business.”
++  - “From lead to invoice, in one flow.”
++
++  Homepage hero example:
++
++  > **Run your business in unison.**  
++  > Unison OS connects your CRM, ERP, billing, and AI bots in a single workspace, so your team always works from the same source of truth.
++
++  Subheading example:
++
++  > No more switching apps or copying data by hand.  
++  > See every client, project, and invoice in one place, with automations you can trust and understand.
++
++  ---
++
++  ## 8. Out of Scope (What Unison Is Not)
++
++  - Not a generic task or note-taking app.
++  - Not a “growth hack” dashboard.
++  - Not just an integration layer that tapes together other tools.
++  - Not limited to one country or language; English-first, translation-ready.
++
++  Unison is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
++  The brand should feel as solid and coherent as the architecture.
+*** End Patch
+[2m2025-11-25T00:19:36.775954Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:19:36.969286Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:19:36.969458Z[0m [32m INFO[0m ghost commit captured: 73ccf5685059e36b60c028c635066c5e4b1c42eb
+[2m2025-11-25T00:19:36.969470Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:19:42.962075Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/core/tasks/advanced-elicitation.xml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:19:46.829399Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/core/tasks/advanced-elicitation-methods.csv","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:19:48.953803Z[0m [32m INFO[0m ToolCall: shell_command {"command":"cat .bmad/_cfg/agent-manifest.csv","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T00:21:27.171365Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:21:27.341580Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:21:27.341756Z[0m [32m INFO[0m ghost commit captured: 501e6c82b250000b57d6460e11f8f02b62df7f9a
+[2m2025-11-25T00:21:27.341768Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:25:47.368428Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:25:47.541928Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:25:47.542104Z[0m [32m INFO[0m ghost commit captured: 825d8265a492982d8604edd93d28ffbbe17d4506
+[2m2025-11-25T00:25:47.542115Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T00:26:43.870209Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: docs/bmm-workflow-status.yaml
+@@
+-generated: "{{generated}}"
+-project: "Nu"
+-project_type: "{{project_type}}"
+-selected_track: "{{selected_track}}"
+-field_type: "{{field_type}}"
+-workflow_path: "{{workflow_path_file}}"
+-workflow_status: "{{workflow_items}}"
+-project_description: |-
+-  This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs bringing them to the spearhead of technological development and AI. In Other words:
+-
+-  # Unison – Brand Guidelines (v0.1)
+-
+-  > Working name: **Unison**  
+-  > These guidelines describe the brand foundations for the Business OS project.  
+-  > If the project is renamed later, treat "Unison" as a placeholder and update accordingly.
+-
+-  ---
+-
+-  ## 1. Brand Core
+-
+-  ### 1.1 One-Liner
+-
+-  > **Unison is the operating system for small businesses and agencies, unifying CRM, ERP, billing, and AI automations into one calm, native-feeling workspace.**
+-
+-  ### 1.2 Elevator Pitch
+-
+-  Most small businesses run on a mess of tools: spreadsheets, WhatsApp, CRM, invoicing apps, manual reminders.
+-
+-  Unison replaces that chaos with a single operating system:
+-
+-  - A unified **app shell** that feels like a native desktop app.
+-  - Modular **apps** for CRM, ERP, billing, and AI bots.
+-  - An invisible **event system** that keeps everything in sync across the business.
+-
+-  Result: Teams work in one place, on one source of truth, at a sustainable rhythm.
+-
+-  ### 1.3 Brand Promise
+-
+-  > **"Bring your business tools into unison, and run everything from one place."**
+-
+-  ### 1.4 Brand Pillars
+-
+-  1. **Unity** – One shell, one data model, one workspace.
+-  2. **Calm Control** – Clear dashboards, predictable systems, no drama.
+-  3. **Visible Automation** – Bots and workflows that explain what they did and why.
+-  4. **Real-World Ready** – Handles invoices, ledgers, permissions, and multi-tenant reality.
+-
+-  ---
+-
+-  ## 2. Brand Personality
+-
+-  If Unison were a person, it would be:
+-
+-  - **Analytical but human** – understands workflows and numbers, but speaks plainly.
+-  - **Calm and composed** – no hype, no panic, just steady progress.
+-  - **Quietly powerful** – does heavy lifting behind the scenes, without showing off.
+-  - **Trustworthy and transparent** – automation is explainable, not magic.
+-
+-  Avoid personalities like:
+-
+-  - The loud “growth hacker” promising to 10x everything overnight.
+-  - The jargon-heavy consultant who hides simple ideas behind complex language.
+-
+-  ---
+-
+-  ## 3. Voice & Tone
+-
+-  ### 3.1 Principles
+-
+-  1. **Plain, clear English**  
+-     - Write for busy operators and owners.
+-     - Short sentences. Concrete nouns. Few buzzwords.
+-
+-  2. **Confident, not arrogant**  
+-     - We know what we’re doing, but we don’t promise miracles.
+-     - Say: “Unison reduces errors and copy-paste work,” not “eliminates all problems forever.”
+-
+-  3. **Calm and reassuring**  
+-     - Focus on stability, consistency, and clarity.
+-     - Avoid fear tactics and fake urgency.
+-
+-  4. **Localization-friendly**  
+-     - Use language that will translate cleanly later.
+-     - Avoid idioms and jokes that only make sense in one culture.
+-
+-  ### 3.2 Writing Examples
+-
+-  **Good (homepage hero):**
+-
+-  > Run your business from one workspace.  
+-  > Unison connects your CRM, ERP, billing, and AI bots so your team always works in sync.
+-
+-  **Bad (too hype):**
+-
+-  > Smash chaos with our AI super-suite and 10x your growth in a week!
+-
+-  **Good (feature explanation):**
+-
+-  > When a deal is marked as won, Unison can create the project, schedule tasks, and issue the invoice.  
+-  > You can see every step in the automation log.
+-
+-  **Bad (too vague / magical):**
+-
+-  > Our AI takes care of everything behind the scenes. Just sit back and relax.
+-
+-  ---
+-
+-  ## 4. Visual Identity (v0.1)
+-
+-  These are starting points for design; they will evolve with real UI work.
+-
+-  ### 4.1 Color Direction
+-
+-  Concept: **Orchestrated calm.**
+-
+-  - **Base:** Deep neutral (charcoal / ink) for backgrounds or major chrome.
+-  - **Primary accent:** A modern blue or teal that suggests clarity and flow.
+-  - **Secondary accents:** Soft gradients or subtle secondary colors for CRM vs ERP vs Bots.
+-
+-  Usage:
+-
+-  - Use color to signal **state** (success, warning, error) and **hierarchy**, not decoration.
+-  - Each core module can lean on a slightly different accent shade while keeping the overall look cohesive.
+-
+-  ### 4.2 Typography
+-
+-  Goals:
+-
+-  - Highly legible for tables, metrics, and forms.
+-  - Works across many locales and screen sizes.
+-
+-  Suggestions:
+-
+-  - **Headings:** Modern sans-serif (e.g., Inter, SF Pro, or similar).
+-  - **Body text:** Same family, regular weight, 14–16px for readability.
+-
+-  Rules:
+-
+-  - Keep titles short and scannable.
+-  - Avoid over-styling; let whitespace and hierarchy do most of the work.
+-
+-  ### 4.3 Iconography & Illustration
+-
+-  - Icons should be simple and consistent, ideally line-based or minimal solid icons.
+-  - Avoid cartoon mascots and over-cute elements.
+-  - If using illustrations, prefer abstract representations of flows, nodes, or grids rather than generic “businesspeople with laptops.”
+-
+-  ---
+-
+-  ## 5. Product UX Principles
+-
+-  1. **One Shell, Many Apps**  
+-     - The sidebar and header are stable anchors across CRM, ERP, Billing, and Bots.
+-     - Switching between modules should feel like changing panels, not switching websites.
+-
+-  2. **Keep Context With the User**  
+-     - From any client record, you should be able to see related deals, invoices, tasks, and automations without opening five tabs.
+-
+-  3. **Explain Automations**  
+-     - Every automated action (sending an invoice, updating a status, posting a message) should be visible and traceable.
+-     - Provide an “automation log” or similar view.
+-
+-  4. **Multi-Tenant Safety by Design**  
+-     - Make organization boundaries obvious.
+-     - Never make it easy to confuse data between orgs or clients.
+-
+-  5. **Design for Everyday Use, Not Demos**  
+-     - Optimize for the daily workflows of small agencies and businesses:
+-       - Lead → quote → project → invoice → payment.
+-     - Fancy dashboards are secondary to clean, efficient flows.
+-
+-  ---
+-
+-  ## 6. Naming System (Modules & Sub-Brands)
+-
+-  Assuming **Unison** as master brand:
+-
+-  - **Platform:** Unison OS
+-  - **Modules:**
+-    - **Unison CRM** – Leads, pipelines, activities, deals.
+-    - **Unison ERP** – Invoices, ledgers, inventory, suppliers.
+-    - **Unison Billing** – Subscriptions, one-off invoices, payment status.
+-    - **Unison Bots** – AI assistants, chatbots, workflow automations.
+-    - **Unison Core** – Auth, organizations, users, plans, multi-tenancy.
+-
+-  Guidelines:
+-
+-  - Use full module names in documentation and marketing.
+-  - Inside the app, you can shorten to **CRM**, **ERP**, **Billing**, **Bots**, **Core** once users are oriented.
+-
+-  ---
+-
+-  ## 7. Example Taglines & Messaging
+-
+-  Short taglines:
+-
+-  - “Bring your business tools into unison.”
+-  - “One operating system for your whole business.”
+-  - “From lead to invoice, in one flow.”
+-
+-  Homepage hero example:
+-
+-  > **Run your business in unison.**  
+-  > Unison OS connects your CRM, ERP, billing, and AI bots in a single workspace, so your team always works from the same source of truth.
+-
+-  Subheading example:
+-
+-  > No more switching apps or copying data by hand.  
+-  > See every client, project, and invoice in one place, with automations you can trust and understand.
+-
+-  ---
+-
+-  ## 8. Out of Scope (What Unison Is Not)
+-
+-  - Not a generic task or note-taking app.
+-  - Not a “growth hack” dashboard.
+-  - Not just an integration layer that tapes together other tools.
+-  - Not limited to one country or language; English-first, translation-ready.
+-
+-  Unison is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
+-  The brand should feel as solid and coherent as the architecture.
++generated: "{{generated}}"
++project: "Nu"
++project_type: "{{project_type}}"
++selected_track: "{{selected_track}}"
++field_type: "{{field_type}}"
++workflow_path: "{{workflow_path_file}}"
++workflow_status: "{{workflow_items}}"
++project_description: |-
++  This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:
++
++  # Unio – Brand Guidelines (v0.2, First Principles Draft)
++
++  > Working name: **Unio**  
++  > These guidelines describe the brand foundations for the Business OS project.  
++  > If the project is renamed later, treat "Unio" as a placeholder and update accordingly.
++
++  ---
++
++  ## 1. Brand Core
++
++  ### 1.1 Problem From First Principles
++
++  - Small businesses and agencies run on **workflows**, not tools: lead → quote → project → invoice → payment → reporting.
++  - Today those workflows are split across **unrelated SaaS tools**, ad-hoc spreadsheets, and messaging apps (often WhatsApp).
++  - The real pain is not “missing features” but:
++    - **Fragmented state** (no single source of truth),
++    - **Manual glue work** (copy/paste, exports, screenshots),
++    - **Invisible automations** (things happen but nobody knows how or why).
++  - Owners care about **control and clarity** more than “AI magic.”
++  - Any solution that doesn’t respect **multi-tenant reality, accounting correctness, and permissions** will be rejected in practice.
++
++  ### 1.2 First-Principles Solution
++
++  From those fundamentals:
++
++  - Unio is **not** “just another CRM or ERP.”
++  - Unio is:
++    - A **unified shell**: one calm workspace instead of ten tabs.
++    - A **consistent data model**: clients, projects, invoices, and conversations all line up.
++    - An **event-driven backbone**: everything important (a deal closing, an invoice being paid, a bot sending a message) is an explicit event.
++    - A **visible automation layer**: workflows are inspectable, explainable, and correctable.
++    - An **AI operations brain**: the system can propose and trigger next actions across flows, based on the live state of the business.
++
++  > **Unio is the operating system and AI brain for small businesses and agencies: one workspace, one data model, and one automation layer for the flows that actually run the business.**
++
++  ### 1.3 Refined One-Liner
++
++  > **Run your whole business with one calm OS + AI brain – Unio connects CRM, ERP, billing, and automations so your small or medium business can run day-to-day operations from a single workspace.**
++
++  ### 1.4 Refined Elevator Pitch
++
++  Most small businesses and agencies don’t suffer from a lack of tools; they suffer from tools that don’t agree with each other.
++
++  Leads live in one app, invoices in another, tasks in a third, and critical decisions happen in WhatsApp threads and owner memory.
++
++  Unio starts from a different premise:
++
++  - The business has a **small number of critical flows** that must always work: from first contact to paid invoice (and beyond).
++  - Those flows deserve **one operating system and one AI brain**, not a chain of brittle integrations.
++
++  With Unio:
++
++  - The team works in a **single shell** that feels like a native desktop app, not a pile of tabs.
++  - CRM, ERP, billing, and AI bots are **modules** on a shared data model and event system.
++  - Every automation—whether it’s creating an invoice, updating a status, or sending a reminder—is **logged and explainable**.
++  - The AI layer acts as an **operations brain**: suggesting and orchestrating next actions so day-to-day work keeps flowing with less manual oversight.
++
++  Result: operators get calm, predictable control; owners get a trustworthy picture of the business; AI becomes infrastructure for daily operations, not a gimmick.
++
++  ### 1.5 Brand Promise
++
++  > **“Bring your business tools into unio, and run every critical flow from one place.”**
++
++  ### 1.6 Brand Pillars (Tightened)
++
++  1. **Unity of Workflows** – From lead to invoice, flows live in one system, on one schema.
++  2. **Calm Control** – No drama: clear states, predictable automations, stable UI.
++  3. **Visible Automation** – Every automated action is logged, explainable, and overridable.
++  4. **Operational Reality** – Built for multi-tenant ledgers, permissions, and real-world constraints from day one.
++  5. **Localization-Ready** – Copy, UX, and data model are designed to work across languages and markets.
++
++  ---
++
++  ## 2. Brand Personality
++
++  If Unio were a person, it would be:
++
++  - **Analytical but human** – understands workflows and numbers, but speaks plainly.
++  - **Calm and composed** – no hype, no panic, just steady progress.
++  - **Quietly powerful** – does heavy lifting behind the scenes, without showing off.
++  - **Trustworthy and transparent** – automation is explainable, not magic.
++
++  Avoid personalities like:
++
++  - The loud “growth hacker” promising to 10x everything overnight.
++  - The jargon-heavy consultant who hides simple ideas behind complex language.
++
++  ---
++
++  ## 3. Voice & Tone
++
++  ### 3.1 Principles
++
++  1. **Plain, clear English**  
++     - Write for busy operators and owners.
++     - Short sentences. Concrete nouns. Few buzzwords.
++
++  2. **Confident, not arrogant**  
++     - We know what we’re doing, but we don’t promise miracles.
++     - Say: “Unio reduces errors and copy-paste work,” not “eliminates all problems forever.”
++
++  3. **Calm and reassuring**  
++     - Focus on stability, consistency, and clarity.
++     - Avoid fear tactics and fake urgency.
++
++  4. **Localization-friendly**  
++     - Use language that will translate cleanly later.
++     - Avoid idioms and jokes that only make sense in one culture.
++
++  ### 3.2 Writing Examples
++
++  **Good (homepage hero):**
++
++  > Run your business from one workspace.  
++  > Unio connects your CRM, ERP, billing, and AI bots so your team always works in sync.
++
++  **Bad (too hype):**
++
++  > Smash chaos with our AI super-suite and 10x your growth in a week!
++
++  **Good (feature explanation):**
++
++  > When a deal is marked as won, Unio can create the project, schedule tasks, and issue the invoice.  
++  > You can see every step in the automation log.
++
++  **Bad (too vague / magical):**
++
++  > Our AI takes care of everything behind the scenes. Just sit back and relax.
++
++  ---
++
++  ## 4. Visual Identity (v0.1)
++
++  These are starting points for design; they will evolve with real UI work.
++
++  ### 4.1 Color Direction
++
++  Concept: **Orchestrated calm.**
++
++  - **Base:** Deep neutral (charcoal / ink) for backgrounds or major chrome.
++  - **Primary accent:** A modern blue or teal that suggests clarity and flow.
++  - **Secondary accents:** Soft gradients or subtle secondary colors for CRM vs ERP vs Bots.
++
++  Usage:
++
++  - Use color to signal **state** (success, warning, error) and **hierarchy**, not decoration.
++  - Each core module can lean on a slightly different accent shade while keeping the overall look cohesive.
++
++  ### 4.2 Typography
++
++  Goals:
++
++  - Highly legible for tables, metrics, and forms.
++  - Works across many locales and screen sizes.
++
++  Suggestions:
++
++  - **Headings:** Modern sans-serif (e.g., Inter, SF Pro, or similar).
++  - **Body text:** Same family, regular weight, 14–16px for readability.
++
++  Rules:
++
++  - Keep titles short and scannable.
++  - Avoid over-styling; let whitespace and hierarchy do most of the work.
++
++  ### 4.3 Iconography & Illustration
++
++  - Icons should be simple and consistent, ideally line-based or minimal solid icons.
++  - Avoid cartoon mascots and over-cute elements.
++  - If using illustrations, prefer abstract representations of flows, nodes, or grids rather than generic “businesspeople with laptops.”
++
++  ---
++
++  ## 5. Product UX Principles
++
++  1. **One Shell, Many Apps**  
++     - The sidebar and header are stable anchors across CRM, ERP, Billing, and Bots.
++     - Switching between modules should feel like changing panels, not switching websites.
++
++  2. **Keep Context With the User**  
++     - From any client record, you should be able to see related deals, invoices, tasks, and automations without opening five tabs.
++
++  3. **Explain Automations**  
++     - Every automated action (sending an invoice, updating a status, posting a message) should be visible and traceable.
++     - Provide an “automation log” or similar view.
++
++  4. **Multi-Tenant Safety by Design**  
++     - Make organization boundaries obvious.
++     - Never make it easy to confuse data between orgs or clients.
++
++  5. **Design for Everyday Use, Not Demos**  
++     - Optimize for the daily workflows of small agencies and businesses:
++       - Lead → quote → project → invoice → payment.
++     - Fancy dashboards are secondary to clean, efficient flows.
++
++  ---
++
++  ## 6. Naming System (Modules & Sub-Brands)
++
++  Assuming **Unio** as master brand:
++
++  - **Platform:** Unio OS
++  - **Modules:**
++    - **Unio CRM** – Leads, pipelines, activities, deals.
++    - **Unio ERP** – Invoices, ledgers, inventory, suppliers.
++    - **Unio Billing** – Subscriptions, one-off invoices, payment status.
++    - **Unio Bots** – AI assistants, chatbots, workflow automations.
++    - **Unio Core** – Auth, organizations, users, plans, multi-tenancy.
++
++  Guidelines:
++
++  - Use full module names in documentation and marketing.
++  - Inside the app, you can shorten to **CRM**, **ERP**, **Billing**, **Bots**, **Core** once users are oriented.
++
++  ---
++
++  ## 7. Example Taglines & Messaging
++
++  Short taglines:
++
++  - “Bring your business tools into unio.”
++  - “One operating system for your whole business.”
++  - “From lead to invoice, in one flow.”
++
++  Homepage hero example:
++
++  > **Run your business in unio.**  
++  > Unio OS connects your CRM, ERP, billing, and AI bots in a single workspace, so your team always works from the same source of truth.
++
++  Subheading example:
++
++  > No more switching apps or copying data by hand.  
++  > See every client, project, and invoice in one place, with automations you can trust and understand.
++
++  ---
++
++  ## 8. Out of Scope (What Unio Is Not)
++
++  - Not a generic task or note-taking app.
++  - Not a “growth hack” dashboard.
++  - Not just an integration layer that tapes together other tools.
++  - Not limited to one country or language; English-first, translation-ready.
++
++  Unio is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
++  The brand should feel as solid and coherent as the architecture.
+*** End Patch
+[2m2025-11-25T00:31:12.065663Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T00:31:12.298848Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T00:31:12.299019Z[0m [32m INFO[0m ghost commit captured: 6e4d4ea35a501241d56dca6dac1f6b0f3dd804ed
+[2m2025-11-25T00:31:12.299031Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T01:03:38.438671Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T01:03:38.731656Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T01:03:38.731831Z[0m [32m INFO[0m ghost commit captured: f838810ef471e5e394af704659eaf343d7ff2cfe
+[2m2025-11-25T01:03:38.731843Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T01:03:52.736958Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '1,260p' docs/bmm-workflow-status.yaml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T01:03:54.447547Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '260,520p' docs/bmm-workflow-status.yaml","timeout_ms":9980,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T01:04:18.709882Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '20,220p' docs/bmm-workflow-status.yaml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T01:04:20.904297Z[0m [32m INFO[0m ToolCall: shell_command {"command":"sed -n '220,420p' docs/bmm-workflow-status.yaml","timeout_ms":10000,"workdir":"/Users/carlo/Desktop/Projects/nu"}
+[2m2025-11-25T01:04:47.150325Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: docs/bmm-workflow-status.yaml
+@@
+-project_description: |-
+-  This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:
+-
+-  # Unio – Brand Guidelines (v0.2, First Principles Draft)
+-
+-  > Working name: **Unio**  
+-  > These guidelines describe the brand foundations for the Business OS project.  
+-  > If the project is renamed later, treat "Unio" as a placeholder and update accordingly.
++project_description: |-
++  This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:
++
++  # Xentri – Brand Guidelines (v0.2, First Principles Draft)
++
++  > Working name: **Xentri**  
++  > These guidelines describe the brand foundations for the Business OS project.  
++  > If the project is renamed later, treat "Xentri" as a placeholder and update accordingly.
+@@
+   ### 1.2 First-Principles Solution
+ 
+   From those fundamentals:
+ 
+-  - Unio is **not** “just another CRM or ERP.”
+-  - Unio is:
++  - Xentri is **not** “just another CRM or ERP.”
++  - Xentri is:
+     - A **unified shell**: one calm workspace instead of ten tabs.
+     - A **consistent data model**: clients, projects, invoices, and conversations all line up.
+     - An **event-driven backbone**: everything important (a deal closing, an invoice being paid, a bot sending a message) is an explicit event.
+     - A **visible automation layer**: workflows are inspectable, explainable, and correctable.
+     - An **AI operations brain**: the system can propose and trigger next actions across flows, based on the live state of the business.
+ 
+-  > **Unio is the operating system and AI brain for small businesses and agencies: one workspace, one data model, and one automation layer for the flows that actually run the business.**
++  > **Xentri is the operating system and AI brain for small businesses and agencies: one workspace, one data model, and one automation layer for the flows that actually run the business.**
+ 
+   ### 1.3 Refined One-Liner
+ 
+-  > **Run your whole business with one calm OS + AI brain – Unio connects CRM, ERP, billing, and automations so your small or medium business can run day-to-day operations from a single workspace.**
++  > **Run your whole business with Xentri OS and Xentri’s AI operations brain – Xentri connects CRM, ERP, billing, and automations so your small or medium business can run day-to-day operations from a single workspace.**
+@@
+-  Unio starts from a different premise:
++  Xentri starts from a different premise:
+@@
+-  With Unio:
++  With Xentri:
+@@
+-  ### 1.5 Brand Promise
+-
+-  > **“Bring your business tools into unio, and run every critical flow from one place.”**
++  ### 1.5 Brand Promise
++
++  > **“Bring your business tools into Xentri, and run every critical flow from one place.”**
+@@
+-  ---
+-
+-  ## 2. Brand Personality
+-
+-  If Unio were a person, it would be:
+-
+-  - **Analytical but human** – understands workflows and numbers, but speaks plainly.
+-  - **Calm and composed** – no hype, no panic, just steady progress.
+-  - **Quietly powerful** – does heavy lifting behind the scenes, without showing off.
+-  - **Trustworthy and transparent** – automation is explainable, not magic.
+-
+-  Avoid personalities like:
+-
+-  - The loud “growth hacker” promising to 10x everything overnight.
+-  - The jargon-heavy consultant who hides simple ideas behind complex language.
++  ### 1.7 Key Personas (Empathy Map)
++
++  #### Persona 1 – Owner / Founder (S/MB or Agency Lead)
++
++  **Thinks**
++
++  - “Everything depends on me seeing the whole picture.”
++  - “We have the tools, but no single place to trust.”
++  - “If I step away, will things still move?”
++
++  **Feels**
++
++  - Proud of the business, but mentally overloaded.
++  - Anxious about dropped balls, missed invoices, and unread threads.
++  - Skeptical of “AI magic,” open to help that feels controllable.
++
++  **Sees**
++
++  - Staff hopping between CRM, spreadsheets, billing apps, WhatsApp.
++  - Different numbers for “revenue” in different tools.
++  - Automations that no one fully understands or owns.
++
++  **Says**
++
++  - “Why am I hearing about this problem so late?”
++  - “Can someone show me what’s really going on this week?”
++  - “I don’t want more tools. I want one place where I can see and steer.”
++
++  **Does**
++
++  - Checks multiple dashboards and chats to piece together reality.
++  - Manually nudges people to follow up or send invoices.
++  - Tries new tools, abandons them when they add complexity.
++
++  **Pains**
++
++  - No single source of truth.
++  - Fear of missing something critical (payments, client issues).
++  - High dependency on specific people’s memory and personal systems.
++
++  **Gains (with Xentri)**
++
++  - One calm workspace that shows the real state of the business at a glance.
++  - Xentri’s AI operations brain keeps the core flows (lead → quote → project → invoice → payment) moving automatically, and surfaces what needs their attention today.
++  - Confidence that things keep moving even when they are offline or travelling.
++
++  ---
++
++  #### Persona 2 – Operations / General Manager (“Integrator”)
++
++  **Thinks**
++
++  - “If the workflow is clear, the team can execute.”
++  - “Right now I’m the human router between tools and people.”
++  - “I need systems that scale beyond my personal spreadsheets.”
++
++  **Feels**
++
++  - Responsible for “how the business actually runs.”
++  - Frustrated by brittle integrations and hidden automations.
++  - Motivated by clean processes and visible ownership.
++
++  **Sees**
++
++  - Teams creating their own side-systems (Notion, sheets, private boards).
++  - Automation rules scattered across tools (Zapier, Make, native automations).
++  - Repeated bottlenecks at the same stages of the flow.
++
++  **Says**
++
++  - “Where does this data actually come from?”
++  - “Who owns this step in the process?”
++  - “If we change this, what else breaks?”
++
++  **Does**
++
++  - Builds and maintains integrations, templates, SOPs.
++  - Reconciles data between systems at end of week/month.
++  - Translates leadership priorities into tasks across tools.
++
++  **Pains**
++
++  - Being the single point of failure for process knowledge.
++  - Debugging invisible automations when something silently fails.
++  - Wasting time reconciling data instead of improving flows.
++
++  **Gains (with Xentri)**
++
++  - One OS where end-to-end flows are modeled explicitly and can be improved centrally instead of in ten tools.
++  - An automation log that shows what Xentri (AI + workflows) did, when, and why, so debugging is transparent.
++  - Xentri takes over the routine routing, updates and reconciliations, so ops can focus on designing and improving processes instead of being the human glue.
++
++  ---
++
++  #### Persona 3 – Client-Facing Lead (Account / Project Lead)
++
++  **Thinks**
++
++  - “My job is to keep clients happy and work moving.”
++  - “I spend too much time chasing information.”
++  - “I don’t care which tool, I care about not dropping the ball.”
++
++  **Feels**
++
++  - Stressed by context switching and fragmented information.
++  - Embarrassed when the team misses follow-ups or invoices.
++  - Relieved when there’s a clear, reliable system.
++
++  **Sees**
++
++  - Client info scattered: email in one place, invoices in another, tasks in a third.
++  - Different stakeholders giving different answers about status.
++  - Last-minute scrambles before client meetings.
++
++  **Says**
++
++  - “Where’s the latest on this client?”
++  - “Did we actually send that invoice?”
++  - “Can someone please unify this view?”
++
++  **Does**
++
++  - Rebuilds client timelines from email, chat, and tools.
++  - Creates personal checklists to compensate for system gaps.
++  - Pings ops/finance for status updates.
++
++  **Pains**
++
++  - Losing time to hunting and re-stating context.
++  - Feeling responsible for errors caused by the system, not them.
++  - Lack of trust in dashboards vs “asking around.”
++
++  **Gains (with Xentri)**
++
++  - One client view with conversations, deals, projects, invoices and automations in a single place.
++  - An AI assistant in Xentri that tells them “what’s next” for each client and each day, so follow-ups and invoicing don’t depend on their memory.
++  - Confidence that important steps won’t fall through the cracks, even when they’re context switching.
++
++  ---
++
++  ## 2. Brand Personality
++
++  If Xentri were a person, it would be:
++
++  - **Analytical but human** – understands workflows and numbers, but speaks plainly.
++  - **Calm and composed** – no hype, no panic, just steady progress.
++  - **Quietly powerful** – does heavy lifting behind the scenes, without showing off.
++  - **Trustworthy and transparent** – automation is explainable, not magic.
++
++  Avoid personalities like:
++
++  - The loud “growth hacker” promising to 10x everything overnight.
++  - The jargon-heavy consultant who hides simple ideas behind complex language.
+@@
+-  2. **Confident, not arrogant**  
+-     - We know what we’re doing, but we don’t promise miracles.
+-     - Say: “Unio reduces errors and copy-paste work,” not “eliminates all problems forever.”
++  2. **Confident, not arrogant**  
++     - We know what we’re doing, but we don’t promise miracles.
++     - Say: “Xentri reduces errors and copy-paste work,” not “eliminates all problems forever.”
+@@
+-  **Good (homepage hero):**
+-
+-  > Run your business from one workspace.  
+-  > Unio connects your CRM, ERP, billing, and AI bots so your team always works in sync.
++  **Good (homepage hero):**
++
++  > Run your business from one workspace.  
++  > Xentri connects your CRM, ERP, billing, and AI bots so your team always works in sync.
+@@
+-  **Good (feature explanation):**
+-
+-  > When a deal is marked as won, Unio can create the project, schedule tasks, and issue the invoice.  
+-  > You can see every step in the automation log.
++  **Good (feature explanation):**
++
++  > When a deal is marked as won, Xentri can create the project, schedule tasks, and issue the invoice.  
++  > You can see every step in the automation log.
+@@
+-  ## 6. Naming System (Modules & Sub-Brands)
+-
+-  Assuming **Unio** as master brand:
+-
+-  - **Platform:** Unio OS
+-  - **Modules:**
+-    - **Unio CRM** – Leads, pipelines, activities, deals.
+-    - **Unio ERP** – Invoices, ledgers, inventory, suppliers.
+-    - **Unio Billing** – Subscriptions, one-off invoices, payment status.
+-    - **Unio Bots** – AI assistants, chatbots, workflow automations.
+-    - **Unio Core** – Auth, organizations, users, plans, multi-tenancy.
++  ## 6. Naming System (Modules & Sub-Brands)
++
++  Assuming **Xentri** as master brand:
++
++  - **Platform:** Xentri OS
++  - **Modules:**
++    - **Xentri CRM** – Leads, pipelines, activities, deals.
++    - **Xentri ERP** – Invoices, ledgers, inventory, suppliers.
++    - **Xentri Billing** – Subscriptions, one-off invoices, payment status.
++    - **Xentri Bots** – AI assistants, chatbots, workflow automations.
++    - **Xentri Core** – Auth, organizations, users, plans, multi-tenancy.
+@@
+-  Short taglines:
+-
+-  - “Bring your business tools into unio.”
+-  - “One operating system for your whole business.”
+-  - “From lead to invoice, in one flow.”
+-
+-  Homepage hero example:
+-
+-  > **Run your business in unio.**  
+-  > Unio OS connects your CRM, ERP, billing, and AI bots in a single workspace, so your team always works from the same source of truth.
++  Short taglines:
++
++  - “Bring your business tools into Xentri.”
++  - “One operating system for your whole business.”
++  - “From lead to invoice, in one flow.”
++
++  Homepage hero example:
++
++  > **Run your business in Xentri.**  
++  > Xentri OS connects your CRM, ERP, billing, and AI bots in a single workspace, so your team always works from the same source of truth.
+@@
+-  ## 8. Out of Scope (What Unio Is Not)
++  ## 8. Out of Scope (What Xentri Is Not)
+@@
+-  - Not limited to one country or language; English-first, translation-ready.
+-
+-  Unio is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
+-  The brand should feel as solid and coherent as the architecture.
++  - Not limited to one country or language; English-first, translation-ready.
++
++  Xentri is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
++  The brand should feel as solid and coherent as the architecture.
+*** End Patch
+[2m2025-11-25T01:10:34.191455Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T01:10:34.430013Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T01:10:34.430190Z[0m [32m INFO[0m ghost commit captured: e6dd52094717e5bcf0f8d7d7104c7c5236c152f8
+[2m2025-11-25T01:10:34.430203Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T01:11:48.550842Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T01:11:48.714120Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T01:11:48.714296Z[0m [32m INFO[0m ghost commit captured: 851de8a0043e1ebb292e8bb4ead4a1ca3416de9c
+[2m2025-11-25T01:11:48.714308Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T01:12:02.460297Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: docs/bmm-workflow-status.yaml
+@@
+ project: "Nu"
+ project_type: "{{project_type}}"
+-selected_track: "{{selected_track}}"
++selected_track: "enterprise"
+ field_type: "{{field_type}}"
+*** End Patch
+[2m2025-11-25T01:13:26.416566Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T01:13:26.652587Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T01:13:26.652766Z[0m [32m INFO[0m ghost commit captured: a0404fd601fc5d7d8c367086a62203ef4e0a03f4
+[2m2025-11-25T01:13:26.652778Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T01:14:20.385661Z[0m [32m INFO[0m spawning ghost snapshot task
+[2m2025-11-25T01:14:20.560059Z[0m [32m INFO[0m ghost snapshot blocking task finished
+[2m2025-11-25T01:14:20.560229Z[0m [32m INFO[0m ghost commit captured: 453e5ef1a8514fbf45c0dae02b8d9958bb5f9dab
+[2m2025-11-25T01:14:20.560240Z[0m [32m INFO[0m ghost snapshot gate marked ready
+[2m2025-11-25T01:14:46.032771Z[0m [32m INFO[0m ToolCall: apply_patch *** Begin Patch
+*** Update File: docs/bmm-workflow-status.yaml
+@@
+ project: "Nu"
+ project_type: "{{project_type}}"
+ selected_track: "enterprise"
+-field_type: "{{field_type}}"
++field_type: "greenfield"
+ workflow_path: "{{workflow_path_file}}"
+ workflow_status: "{{workflow_items}}"
+ project_description: |-
+@@
+   ## 8. Out of Scope (What Xentri Is Not)
+@@
+-  Xentri is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
+-  The brand should feel as solid and coherent as the architecture.
++  Xentri is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
++  The brand should feel as solid and coherent as the architecture.
++brainstorm_requested: true
++research_requested: true
++product_brief_requested: true
+*** End Patch

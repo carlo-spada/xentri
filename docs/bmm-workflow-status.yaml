@@ -1,0 +1,413 @@
+# Workflow Status Template
+
+# This tracks progress through BMM methodology Analysis, Planning, and Solutioning phases.
+# Implementation phase is tracked separately in sprint-status.yaml
+
+# STATUS DEFINITIONS:
+# ==================
+# Initial Status (before completion):
+#   - required: Must be completed to progress
+#   - optional: Can be completed but not required
+#   - recommended: Strongly suggested but not required
+#   - conditional: Required only if certain conditions met (e.g., if_has_ui)
+#
+# Completion Status:
+#   - {file-path}: File created/found (e.g., "docs/product-brief.md")
+#   - skipped: Optional/conditional workflow that was skipped
+
+generated: "{{generated}}"
+project: "Xentri"
+project_type: "{{project_type}}"
+selected_track: "enterprise"
+field_type: "greenfield"
+workflow_path: "{{workflow_path_file}}"
+workflow_status: "{{workflow_items}}"
+project_description: |-
+  This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:
+
+  # Xentri – Brand Guidelines (v0.2, First Principles Draft)
+
+  > Working name: **Xentri**  
+  > These guidelines describe the brand foundations for the Business OS project.  
+  > If the project is renamed later, treat "Xentri" as a placeholder and update accordingly.
+
+  ---
+
+  ## 1. Brand Core
+
+  ### 1.1 Problem From First Principles
+
+  - Small businesses and agencies run on **workflows**, not tools: lead → quote → project → invoice → payment → reporting.
+  - Today those workflows are split across **unrelated SaaS tools**, ad-hoc spreadsheets, and messaging apps (often WhatsApp).
+  - The real pain is not “missing features” but:
+    - **Fragmented state** (no single source of truth),
+    - **Manual glue work** (copy/paste, exports, screenshots),
+    - **Invisible automations** (things happen but nobody knows how or why).
+  - Owners care about **control and clarity** more than “AI magic.”
+  - Any solution that doesn’t respect **multi-tenant reality, accounting correctness, and permissions** will be rejected in practice.
+
+  ### 1.2 First-Principles Solution
+
+  From those fundamentals:
+
+  - Xentri is **not** “just another CRM or ERP.”
+  - Xentri is:
+    - A **unified shell**: one calm workspace instead of ten tabs.
+    - A **consistent data model**: clients, projects, invoices, and conversations all line up.
+    - An **event-driven backbone**: everything important (a deal closing, an invoice being paid, a bot sending a message) is an explicit event.
+    - A **visible automation layer**: workflows are inspectable, explainable, and correctable.
+    - An **AI operations brain**: the system can propose and trigger next actions across flows, based on the live state of the business.
+
+  > **Xentri is the operating system and AI brain for small businesses and agencies: one workspace, one data model, and one automation layer for the flows that actually run the business.**
+
+  ### 1.3 Refined One-Liner
+
+  > **Run your whole business with Xentri OS and Xentri’s AI operations brain – Xentri connects CRM, ERP, billing, and automations so your small or medium business can run day-to-day operations from a single workspace.**
+
+  ### 1.4 Refined Elevator Pitch
+
+  Most small businesses and agencies don’t suffer from a lack of tools; they suffer from tools that don’t agree with each other.
+
+  Leads live in one app, invoices in another, tasks in a third, and critical decisions happen in WhatsApp threads and owner memory.
+
+  Xentri starts from a different premise:
+
+  - The business has a **small number of critical flows** that must always work: from first contact to paid invoice (and beyond).
+  - Those flows deserve **one operating system and one AI brain**, not a chain of brittle integrations.
+
+  With Xentri:
+
+  - The team works in a **single shell** that feels like a native desktop app, not a pile of tabs.
+  - CRM, ERP, billing, and AI bots are **modules** on a shared data model and event system.
+  - Every automation—whether it’s creating an invoice, updating a status, or sending a reminder—is **logged and explainable**.
+  - The AI layer acts as an **operations brain**: suggesting and orchestrating next actions so day-to-day work keeps flowing with less manual oversight.
+
+  Result: operators get calm, predictable control; owners get a trustworthy picture of the business; AI becomes infrastructure for daily operations, not a gimmick.
+
+  ### 1.5 Brand Promise
+
+  > **“Bring your business tools into Xentri, and run every critical flow from one place.”**
+
+  ### 1.6 Brand Pillars (Tightened)
+
+  1. **Unity of Workflows** – From lead to invoice, flows live in one system, on one schema.
+  2. **Calm Control** – No drama: clear states, predictable automations, stable UI.
+  3. **Visible Automation** – Every automated action is logged, explainable, and overridable.
+  4. **Operational Reality** – Built for multi-tenant ledgers, permissions, and real-world constraints from day one.
+  5. **Localization-Ready** – Copy, UX, and data model are designed to work across languages and markets.
+
+  ### 1.7 Key Personas (Empathy Map)
+
+  #### Persona 1 – Owner / Founder (S/MB or Agency Lead)
+
+  **Thinks**
+
+  - “Everything depends on me seeing the whole picture.”
+  - “We have the tools, but no single place to trust.”
+  - “If I step away, will things still move?”
+
+  **Feels**
+
+  - Proud of the business, but mentally overloaded.
+  - Anxious about dropped balls, missed invoices, and unread threads.
+  - Skeptical of “AI magic,” open to help that feels controllable.
+
+  **Sees**
+
+  - Staff hopping between CRM, spreadsheets, billing apps, WhatsApp.
+  - Different numbers for “revenue” in different tools.
+  - Automations that no one fully understands or owns.
+
+  **Says**
+
+  - “Why am I hearing about this problem so late?”
+  - “Can someone show me what’s really going on this week?”
+  - “I don’t want more tools. I want one place where I can see and steer.”
+
+  **Does**
+
+  - Checks multiple dashboards and chats to piece together reality.
+  - Manually nudges people to follow up or send invoices.
+  - Tries new tools, abandons them when they add complexity.
+
+  **Pains**
+
+  - No single source of truth.
+  - Fear of missing something critical (payments, client issues).
+  - High dependency on specific people’s memory and personal systems.
+
+  **Gains (with Xentri)**
+
+  - One calm workspace that shows the real state of the business at a glance.
+  - Xentri’s AI operations brain keeps the core flows (lead → quote → project → invoice → payment) moving automatically, and surfaces what needs their attention today.
+  - Confidence that things keep moving even when they are offline or travelling.
+
+  ---
+
+  #### Persona 2 – Operations / General Manager (“Integrator”)
+
+  **Thinks**
+
+  - “If the workflow is clear, the team can execute.”
+  - “Right now I’m the human router between tools and people.”
+  - “I need systems that scale beyond my personal spreadsheets.”
+
+  **Feels**
+
+  - Responsible for “how the business actually runs.”
+  - Frustrated by brittle integrations and hidden automations.
+  - Motivated by clean processes and visible ownership.
+
+  **Sees**
+
+  - Teams creating their own side-systems (Notion, sheets, private boards).
+  - Automation rules scattered across tools (Zapier, Make, native automations).
+  - Repeated bottlenecks at the same stages of the flow.
+
+  **Says**
+
+  - “Where does this data actually come from?”
+  - “Who owns this step in the process?”
+  - “If we change this, what else breaks?”
+
+  **Does**
+
+  - Builds and maintains integrations, templates, SOPs.
+  - Reconciles data between systems at end of week/month.
+  - Translates leadership priorities into tasks across tools.
+
+  **Pains**
+
+  - Being the single point of failure for process knowledge.
+  - Debugging invisible automations when something silently fails.
+  - Wasting time reconciling data instead of improving flows.
+
+  **Gains (with Xentri)**
+
+  - One OS where end-to-end flows are modeled explicitly and can be improved centrally instead of in ten tools.
+  - An automation log that shows what Xentri (AI + workflows) did, when, and why, so debugging is transparent.
+  - Xentri takes over the routine routing, updates and reconciliations, so ops can focus on designing and improving processes instead of being the human glue.
+
+  ---
+
+  #### Persona 3 – Client-Facing Lead (Account / Project Lead)
+
+  **Thinks**
+
+  - “My job is to keep clients happy and work moving.”
+  - “I spend too much time chasing information.”
+  - “I don’t care which tool, I care about not dropping the ball.”
+
+  **Feels**
+
+  - Stressed by context switching and fragmented information.
+  - Embarrassed when the team misses follow-ups or invoices.
+  - Relieved when there’s a clear, reliable system.
+
+  **Sees**
+
+  - Client info scattered: email in one place, invoices in another, tasks in a third.
+  - Different stakeholders giving different answers about status.
+  - Last-minute scrambles before client meetings.
+
+  **Says**
+
+  - “Where’s the latest on this client?”
+  - “Did we actually send that invoice?”
+  - “Can someone please unify this view?”
+
+  **Does**
+
+  - Rebuilds client timelines from email, chat, and tools.
+  - Creates personal checklists to compensate for system gaps.
+  - Pings ops/finance for status updates.
+
+  **Pains**
+
+  - Losing time to hunting and re-stating context.
+  - Feeling responsible for errors caused by the system, not them.
+  - Lack of trust in dashboards vs “asking around.”
+
+  **Gains (with Xentri)**
+
+  - One client view with conversations, deals, projects, invoices and automations in a single place.
+  - An AI assistant in Xentri that tells them “what’s next” for each client and each day, so follow-ups and invoicing don’t depend on their memory.
+  - Confidence that important steps won’t fall through the cracks, even when they’re context switching.
+
+  ---
+
+  ## 2. Brand Personality
+
+  If Xentri were a person, it would be:
+
+  - **Analytical but human** – understands workflows and numbers, but speaks plainly.
+  - **Calm and composed** – no hype, no panic, just steady progress.
+  - **Quietly powerful** – does heavy lifting behind the scenes, without showing off.
+  - **Trustworthy and transparent** – automation is explainable, not magic.
+
+  Avoid personalities like:
+
+  - The loud “growth hacker” promising to 10x everything overnight.
+  - The jargon-heavy consultant who hides simple ideas behind complex language.
+
+  ---
+
+  ## 3. Voice & Tone
+
+  ### 3.1 Principles
+
+  1. **Plain, clear English**  
+     - Write for busy operators and owners.
+     - Short sentences. Concrete nouns. Few buzzwords.
+
+  2. **Confident, not arrogant**  
+     - We know what we’re doing, but we don’t promise miracles.
+     - Say: “Xentri reduces errors and copy-paste work,” not “eliminates all problems forever.”
+
+  3. **Calm and reassuring**  
+     - Focus on stability, consistency, and clarity.
+     - Avoid fear tactics and fake urgency.
+
+  4. **Localization-friendly**  
+     - Use language that will translate cleanly later.
+     - Avoid idioms and jokes that only make sense in one culture.
+
+  ### 3.2 Writing Examples
+
+  **Good (homepage hero):**
+
+  > Run your business from one workspace.  
+  > Xentri connects your CRM, ERP, billing, and AI bots so your team always works in sync.
+
+  **Bad (too hype):**
+
+  > Smash chaos with our AI super-suite and 10x your growth in a week!
+
+  **Good (feature explanation):**
+
+  > When a deal is marked as won, Xentri can create the project, schedule tasks, and issue the invoice.  
+  > You can see every step in the automation log.
+
+  **Bad (too vague / magical):**
+
+  > Our AI takes care of everything behind the scenes. Just sit back and relax.
+
+  ---
+
+  ## 4. Visual Identity (v0.1)
+
+  These are starting points for design; they will evolve with real UI work.
+
+  ### 4.1 Color Direction
+
+  Concept: **Orchestrated calm.**
+
+  - **Base:** Deep neutral (charcoal / ink) for backgrounds or major chrome.
+  - **Primary accent:** A modern blue or teal that suggests clarity and flow.
+  - **Secondary accents:** Soft gradients or subtle secondary colors for CRM vs ERP vs Bots.
+
+  Usage:
+
+  - Use color to signal **state** (success, warning, error) and **hierarchy**, not decoration.
+  - Each core module can lean on a slightly different accent shade while keeping the overall look cohesive.
+
+  ### 4.2 Typography
+
+  Goals:
+
+  - Highly legible for tables, metrics, and forms.
+  - Works across many locales and screen sizes.
+
+  Suggestions:
+
+  - **Headings:** Modern sans-serif (e.g., Inter, SF Pro, or similar).
+  - **Body text:** Same family, regular weight, 14–16px for readability.
+
+  Rules:
+
+  - Keep titles short and scannable.
+  - Avoid over-styling; let whitespace and hierarchy do most of the work.
+
+  ### 4.3 Iconography & Illustration
+
+  - Icons should be simple and consistent, ideally line-based or minimal solid icons.
+  - Avoid cartoon mascots and over-cute elements.
+  - If using illustrations, prefer abstract representations of flows, nodes, or grids rather than generic “businesspeople with laptops.”
+
+  ---
+
+  ## 5. Product UX Principles
+
+  1. **One Shell, Many Apps**  
+     - The sidebar and header are stable anchors across CRM, ERP, Billing, and Bots.
+     - Switching between modules should feel like changing panels, not switching websites.
+
+  2. **Keep Context With the User**  
+     - From any client record, you should be able to see related deals, invoices, tasks, and automations without opening five tabs.
+
+  3. **Explain Automations**  
+     - Every automated action (sending an invoice, updating a status, posting a message) should be visible and traceable.
+     - Provide an “automation log” or similar view.
+
+  4. **Multi-Tenant Safety by Design**  
+     - Make organization boundaries obvious.
+     - Never make it easy to confuse data between orgs or clients.
+
+  5. **Design for Everyday Use, Not Demos**  
+     - Optimize for the daily workflows of small agencies and businesses:
+       - Lead → quote → project → invoice → payment.
+     - Fancy dashboards are secondary to clean, efficient flows.
+
+  ---
+
+  ## 6. Naming System (Modules & Sub-Brands)
+
+  Assuming **Xentri** as master brand:
+
+  - **Platform:** Xentri OS
+  - **Modules:**
+    - **Xentri CRM** – Leads, pipelines, activities, deals.
+    - **Xentri ERP** – Invoices, ledgers, inventory, suppliers.
+    - **Xentri Billing** – Subscriptions, one-off invoices, payment status.
+    - **Xentri Bots** – AI assistants, chatbots, workflow automations.
+    - **Xentri Core** – Auth, organizations, users, plans, multi-tenancy.
+
+  Guidelines:
+
+  - Use full module names in documentation and marketing.
+  - Inside the app, you can shorten to **CRM**, **ERP**, **Billing**, **Bots**, **Core** once users are oriented.
+
+  ---
+
+  ## 7. Example Taglines & Messaging
+
+  Short taglines:
+
+  - “Bring your business tools into Xentri.”
+  - “One operating system for your whole business.”
+  - “From lead to invoice, in one flow.”
+
+  Homepage hero example:
+
+  > **Run your business in Xentri.**  
+  > Xentri OS connects your CRM, ERP, billing, and AI bots in a single workspace, so your team always works from the same source of truth.
+
+  Subheading example:
+
+  > No more switching apps or copying data by hand.  
+  > See every client, project, and invoice in one place, with automations you can trust and understand.
+
+  ---
+
+  ## 8. Out of Scope (What Xentri Is Not)
+
+  - Not a generic task or note-taking app.
+  - Not a “growth hack” dashboard.
+  - Not just an integration layer that tapes together other tools.
+  - Not limited to one country or language; English-first, translation-ready.
+
+  Xentri is built as **infrastructure for small businesses and agencies**: multi-tenant, schema-based, event-driven.  
+  The brand should feel as solid and coherent as the architecture.
+brainstorm_requested: true
+research_requested: true
+product_brief_requested: true

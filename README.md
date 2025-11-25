@@ -1,8 +1,8 @@
-# Business OS
+# Xentri
 
-> An "Operating System" for modern businesses.
+> The Operating System for modern businesses.
 
-**Business OS** is an opinionated platform that unifies disparate business tools—CRM, ERP, AI Agents, and Legal Automation—into a single, high-performance PWA. It solves "tab fatigue" by providing a unified shell while maintaining the scalability of microservices.
+**Xentri** is an opinionated platform that unifies disparate business tools—CRM, ERP, AI Agents, and Legal Automation—into a single, high-performance PWA. It solves "tab fatigue" by providing a unified shell while maintaining the scalability of microservices.
 
 **Status:** Early-stage, not production-ready (API and CRM MVP under active development).
 
@@ -14,8 +14,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/business-os-monorepo.git
-cd business-os-monorepo
+git clone https://github.com/carlo-spada/xentri.git
+cd xentri
 
 # 2. Configure Environment
 cp .env.example .env

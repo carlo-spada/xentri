@@ -1,0 +1,7 @@
+model = "gpt-5.1"
+model_reasoning_effort = "high"
+[projects."/Users/carlo/Desktop/Projects/nu"]
+trust_level = "trusted"
+
+[notice]
+"hide_gpt-5.1-codex-max_migration_prompt" = true
