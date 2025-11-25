@@ -4,7 +4,7 @@
 
 **Xentri** is an opinionated platform that unifies disparate business tools—CRM, ERP, AI Agents, and Legal Automation—into a single, high-performance PWA. It solves "tab fatigue" by providing a unified shell while maintaining the scalability of microservices.
 
-**Status:** Early-stage, not production-ready (API and CRM MVP under active development).
+**Status:** Early-stage, not production-ready (API and CRM MVP under active development). This repository currently contains documentation and planning artifacts; the code scaffolding described below will land in upcoming commits.
 
 ---
 

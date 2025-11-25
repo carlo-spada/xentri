@@ -1,6 +1,9 @@
-model = "gpt-5.1"
+model = "gpt-5.1-codex-max"
 model_reasoning_effort = "high"
 [projects."/Users/carlo/Desktop/Projects/nu"]
+trust_level = "trusted"
+
+[projects."/Users/carlo/Desktop/Projects/xentri"]
 trust_level = "trusted"
 
 [notice]

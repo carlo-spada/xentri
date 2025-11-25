@@ -6,7 +6,7 @@ The **Event Backbone** is the nervous system of Xentri OS.
 Instead of only storing “current state” (deals, invoices, etc.), Xentri records **what happened** as a stream of events.
 
 For v0.1, we implement this as a **log-based architecture** using an append-only table in Postgres.  
-Future versions can project this log into other systems (Redis, Kafka, n8n), but the core contract stays the same.
+Future versions can project this log into other systems (Redis, Kafka, n8n), but the core contract stays the same. This keeps the Postgres log as the **system of record**, while aligning with the broader architecture’s two-layer event system (Redis Streams for transport, n8n for orchestration) via an outbox-style publisher.
 
 **Key invariants:**
 
@@ -203,3 +203,6 @@ The Calm Prompt / LoopService will generally not call these directly; it will ty
 	•	Short dev note:
 	•	“When you change important business state, also emit an event.”
 	•	“Never modify or delete existing events; emit compensating events instead.”
+	6.	Publish to the transport layer (per architecture)
+	•	Outbox pattern from Postgres → Redis Streams for cross-service transport.
+	•	n8n subscribes as the logic layer; Postgres remains the source of truth.

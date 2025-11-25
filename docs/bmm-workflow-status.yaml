@@ -24,16 +24,16 @@ workflow_path: ".bmad/bmm/workflows/workflow-status/paths/enterprise-greenfield.
 workflow_status:
   brainstorm-project: "docs/brainstorming-session-results-2025-11-24.md"
   research: "docs/bmm-research-market-2025-11-24.md"
-  product-brief: recommended
-  prd: required
+  product-brief: "docs/product-brief-Xentri-2025-11-24.md"
+  prd: required # pending artifact
   validate-prd: recommended
   create-design: recommended
-  create-architecture: required
-  test-design: required
+  create-architecture: "architecture.md"
+  test-design: required # pending artifact
   validate-architecture: recommended
-  create-epics-and-stories: required
-  implementation-readiness: required
-  sprint-planning: required
+  create-epics-and-stories: required # pending artifact
+  implementation-readiness: required # pending artifact
+  sprint-planning: required # pending artifact
 project_description: |-
   This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:
 

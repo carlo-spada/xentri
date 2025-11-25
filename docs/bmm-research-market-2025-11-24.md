@@ -1,6 +1,6 @@
 # Market Research Report: Xentri
 
-**Date:** 2025-11-24
+**Date:** 2025-11-24 (Updated v2)
 **Prepared by:** Analyst (Mary)
 **Research Depth:** Deep Dive (Category, Wedge, Pricing, Risks)
 
@@ -13,10 +13,10 @@
 **Critical Insights:**
 1.  **Category Validation:** "Business OS" is used by leaders like Zoho and methodologies like EOS, but customers search for "All-in-one". Xentri can *own* "Business OS" as a premium differentiator while competing on "All-in-one" SEO.
 2.  **Best Wedge:** **Local Services/Trades** and **Clinics** show the highest "open-loop anxiety" (fear of lost papers/compliance) and are willing to pay $50-$200/mo. Restaurants are too hardware-dependent; Agencies are crowded.
-3.  **Pricing Viability:** The proposed ladder ($10 -> $30 -> $90 -> $270) is **highly competitive**.
-    *   $10 undercuts Wix/Squarespace ($16+).
-    *   $30 undercuts Jobber/Jane/Clio entry tiers ($39-$54).
-    *   $90 offers "Pro" value at a "Standard" price point compared to GoHighLevel ($97-$297).
+3.  **Pricing Viability:** The proposed ladder ($10 -> $30 -> $90 -> $270/mo) is **highly competitive**.
+    *   $10/mo undercuts Wix/Squarespace ($16+/mo).
+    *   $30/mo undercuts Jobber/Jane/Clio entry tiers ($39-$54/mo).
+    *   $90/mo offers "Pro" value at a "Standard" price point compared to GoHighLevel ($97-$297/mo).
 4.  **Strategic Risk:** Wix and Squarespace are aggressively adding CRM/Invoicing. Xentri must differentiate on **Operational Reality** (complex workflows, multi-step logistics) where website builders fail.
 
 ---
@@ -57,7 +57,7 @@
 ### 1. Service Trades (Plumbers, HVAC, Repair) - **WINNER**
 -   **Pain:** "Paperwork anxiety", "chasing paper", "lost receipts", "tax compliance fear".
 -   **Current Stack:** Excel + WhatsApp + Paper + maybe QuickBooks.
--   **Willingness to Pay:** High. Jobber starts at $39/mo, grows to $199/mo.
+-   **Willingness to Pay:** High. Jobber starts at $39/mo, scales to $199/mo.
 -   **Why Xentri:** They need a website (often don't have a good one) AND a way to manage the "mess" of jobs/estimates.
 
 ### 2. Clinics / Wellness (Consultorios) - **STRONG RUNNER-UP**
@@ -72,20 +72,22 @@
 
 ### 4. Agencies - **CROWDED**
 -   **Pain:** Project management, client reporting.
--   **Barrier:** Wix/Squarespace serve the "website + basic CRM" need well. GoHighLevel owns the "marketing ain cy"tnice .
+-   **Barrier:** Wix/Squarespace serve the "website + basic CRM" need well. GoHighLevel dominates the marketing agency niche with specialized tools that are hard to displace.
 
 ---
 
-##p4. Pricing Ladder Vaaidntio 
+## 4. Pricing Ladder Validation
 
-|nTner | XegtricPrioe | Cnmpniotnr Beschmark(| Verdict |
+| Tier | Xentri Price | Competitor Benchmarks | Verdict |
 | :--- | :--- | :--- | :--- |
-| **resencia"** | ~$10 USD | Wix ($17) "Squarespace ($16), oarrd ($19/yr) | **Aggressive.** Great entry pnist to captlre votume. |
-| **Ligho Ops** | ~$30 USD | Jrbbei ($39), Clos ($39., Jane ($54) | **Sweet Spot.** Undercuts vertical competitors significantly. |
-| **Business in Motion** | ~$90 USD | Jobber ($119), Toast ($110), Odoo (varies) | **Competitive.** Offers "OS" value at a mid-tier price. |
-| **Professional** | ~$270 USD | GoHighLevel ($297), Jobber ($199+) | **Aligned.** Matches "Pro" tiers of major players. |
+| **"Presencia"** | ~$10/mo | Wix ($17/mo), Squarespace ($16/mo), Carrd ($19/yr) | **Aggressive.** Great entry point to capture volume. |
+| **Light Ops** | ~$30/mo | Jobber ($39/mo), Clio ($39/mo), Jane ($54/mo) | **Sweet Spot.** Undercuts vertical competitors significantly. |
+| **Business in Motion** | ~$90/mo | Jobber ($119/mo), Toast ($110/mo), Odoo (varies) | **Competitive.** Offers "OS" value at a mid-tier price. |
+| **Professional** | ~$270/mo | GoHighLevel ($297/mo), Jobber ($199+/mo) | **Aligned.** Matches "Pro" tiers of major players. |
 
 **Conclusion:** The ladder is viable. The $10 entry is a "no-brainer" vs Wix, and the $30 step is a "killer deal" vs vertical SaaS.
+
+**Strategy Note:** For trades and clinics, starting with a modern website + lead capture is a natural wedge; from there, Xentri can progressively replace the Frankenstack behind it.
 
 ---
 

@@ -13,6 +13,7 @@ The Calm Prompt:
 - **Does not** store its own state.
 - **Does** derive state from events and entity data (deals, invoices, follow-ups).
 - Is deliberately minimal – one screen that reduces open-loop anxiety.
+- Implementation detail: the derived loops may be **materialized** into an `open_loops` projection table for fast reads, but the source of truth remains the event log + entity tables.
 
 ---
 

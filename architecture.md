@@ -279,7 +279,7 @@ npm run dev
 | Service | Owns | Responsibilities |
 |---------|------|------------------|
 | `core-api` | Users, Organizations, Billing | Authentication, Authorization, Subscription Management |
-| `crm-service` | Leads, Pipelines, Activities | Contact Management, Sales Pipeline, Activity Tracking |
+| `crm-engine` | Leads, Pipelines, Activities | Contact Management, Sales Pipeline, Activity Tracking |
 | `erp-engine` | Ledgers, Invoices, Inventory | Financial Calculations, PDF Generation, Inventory Management |
 | `bot-processor` | Conversations, AI Context | LLM Chains, WhatsApp Connectivity, Sentiment Analysis |
 | `n8n-host` | Workflows, Triggers | Business Logic Orchestration, Third-Party Integrations |
