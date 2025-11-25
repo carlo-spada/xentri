@@ -67,17 +67,21 @@ We use a **Monorepo** to share types and UI standards while enforcing strict iso
 /business-os-monorepo
 ├── /apps
 │   ├── /shell                # ASTRO. Mounts micro-apps compiled from /packages.
+│   │   ├── src/pages/cms/... # Mounts the CMS Micro-App
 │   │   ├── src/pages/crm/... # Mounts the CRM Micro-App
 │   │   └── src/pages/erp/... # Mounts the ERP Micro-App
 │
 ├── /packages                 # FRONTEND LIBRARIES (Vite Library Mode)
 │   ├── /ui                   # Shared Design System (Tailwind, Buttons, Inputs)
+│   ├── /cms-client           # React Code for the CMS UI (Exported as Component)
 │   ├── /crm-client           # React Code for the CRM UI (Exported as Component)
 │   ├── /erp-client           # React Code for the ERP UI (Exported as Component)
 │   └── /ts-schema            # Shared Types & Zod Schemas (The "Contract")
 │
 ├── /services                 # BACKEND MICROSERVICES (Dockerized)
 │   ├── /core-api             # Node.js. Users, Orgs, Billing. (Direct PG Connection)
+│   ├── /cms-engine           # Node.js. Website, CMS. (Direct PG Connection)
+│   ├── /crm-engine           # Node.js. CRM. (Direct PG Connection)
 │   ├── /erp-engine           # Python/Go. Financial math, PDF generation. (Direct PG Connection)
 │   ├── /bot-processor        # Python. LLM/WhatsApp. (Direct PG Connection)
 │   └── /n8n-host             # Self-hosted workflow automation engine.
@@ -148,9 +152,11 @@ This allows us to add new automations **without touching the code of the core se
 We do **not** bundle the ERP code with the CRM code.
 
 1. **Initial Load:** User downloads `shell.js` (~15kb). They see the Sidebar and Header immediately.
-2. **Interaction:** User clicks "CRM".
-3. **Hydration:** Astro's router intercepts the click. It fetches `chunk-crm.js` via `client:only="react"` and mounts it into the content area.
-4. **Transition:** The Sidebar persists. The content area transitions smoothly.
+2. **Interaction:** User hovers over "CRM".
+3. **Hydration:** Astro's router intercepts the hover. It fetches `chunk-crm.js` via `client:only="react"` and mounts it hidden into the content area.
+4. **Interaction:** User clicks "CRM".
+5. **Hydration:** Astro's router intercepts the click. It mounts the hidden CRM app into the content area.
+6. **Transition:** The Sidebar persists. The content area transitions smoothly.
 
 ### C. Routing
 
