@@ -1,6 +1,6 @@
 # Story 1.2: Event Backbone & Database Schema
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -198,7 +198,7 @@ apps/shell/src/
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `docs/sprint-artifacts/1-2-event-backbone-database-schema.context.xml`
 
 ### Agent Model Used
 

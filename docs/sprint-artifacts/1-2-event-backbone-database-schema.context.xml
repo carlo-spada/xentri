@@ -1,0 +1,294 @@
+<story-context id=".bmad/bmm/workflows/4-implementation/story-context/template" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>Event Backbone &amp; Database Schema</title>
+    <status>drafted</status>
+    <generatedAt>2025-11-26</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-2-event-backbone-database-schema.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>System</asA>
+    <iWant>a centralized `system_events` table with RLS policies and an org-scoped events API</iWant>
+    <soThat>we have an immutable audit trail and secure multi-tenancy from which all orchestration flows</soThat>
+    <tasks>
+      <task id="1" ac="1,3">
+        <title>Create system_events table migration</title>
+        <subtasks>
+          <subtask id="1.1">Add Prisma schema for `system_events` table with all columns per tech spec</subtask>
+          <subtask id="1.2">Write raw SQL migration to create table with proper indexes</subtask>
+          <subtask id="1.3">Add `idx_events_org_type_time` composite index for common queries</subtask>
+          <subtask id="1.4">Add CHECK constraint or trigger preventing UPDATE/DELETE (immutability)</subtask>
+        </subtasks>
+      </task>
+      <task id="2" ac="2,3">
+        <title>Implement RLS policies for system_events</title>
+        <subtasks>
+          <subtask id="2.1">Enable RLS on `system_events` table</subtask>
+          <subtask id="2.2">Create `tenant_isolation` policy with fail-closed pattern</subtask>
+          <subtask id="2.3">Create INSERT-only policy (block UPDATE/DELETE at policy level)</subtask>
+          <subtask id="2.4">Write integration test: user_a cannot read user_b's events</subtask>
+        </subtasks>
+      </task>
+      <task id="3" ac="4,5">
+        <title>Define event types in ts-schema</title>
+        <subtasks>
+          <subtask id="3.1">Add `EventType` union type with all v0.1/v0.2 event types</subtask>
+          <subtask id="3.2">Add typed payload interfaces for each event type</subtask>
+          <subtask id="3.3">Add `SystemEvent&lt;TPayload&gt;` generic Zod schema with validation</subtask>
+          <subtask id="3.4">Add `OpenLoopsProjection` placeholder type with TODO comment</subtask>
+          <subtask id="3.5">Export all types from `packages/ts-schema/src/events.ts`</subtask>
+        </subtasks>
+      </task>
+      <task id="4" ac="6,7">
+        <title>Create EventService in core-api</title>
+        <subtasks>
+          <subtask id="4.1">Create `services/core-api/src/domain/events/EventService.ts`</subtask>
+          <subtask id="4.2">Implement `createEvent(payload: SystemEvent)` with Zod validation, dedupe key, RLS context</subtask>
+          <subtask id="4.3">Implement `listEvents(orgId, options)` with filtering and cursor pagination</subtask>
+          <subtask id="4.4">Write unit tests for EventService methods</subtask>
+        </subtasks>
+      </task>
+      <task id="5" ac="6,7">
+        <title>Create events API routes</title>
+        <subtasks>
+          <subtask id="5.1">Create `POST /api/v1/events` route in core-api</subtask>
+          <subtask id="5.2">Create `GET /api/v1/events` route with query param parsing</subtask>
+          <subtask id="5.3">Add auth middleware to extract user_id from JWT</subtask>
+          <subtask id="5.4">Add org scoping middleware to verify x-org-id header</subtask>
+          <subtask id="5.5">Return Problem Details format for errors (400, 401, 403, 500)</subtask>
+          <subtask id="5.6">Write integration tests for both endpoints</subtask>
+        </subtasks>
+      </task>
+      <task id="6" ac="7">
+        <title>Shell timeline panel (vertical slice)</title>
+        <subtasks>
+          <subtask id="6.1">Create minimal React component `EventTimeline` in shell</subtask>
+          <subtask id="6.2">Fetch events from `/api/v1/events?limit=10` on mount</subtask>
+          <subtask id="6.3">Display event_type, occurred_at, source in simple list format</subtask>
+          <subtask id="6.4">Style with existing Xentri design tokens from packages/ui</subtask>
+        </subtasks>
+      </task>
+      <task id="7" ac="1-7">
+        <title>Testing and validation</title>
+        <subtasks>
+          <subtask id="7.1">Write RLS isolation test: seed org_a and org_b events, verify cross-org blocked</subtask>
+          <subtask id="7.2">Write immutability test: attempt UPDATE/DELETE, verify blocked</subtask>
+          <subtask id="7.3">Write API integration test: POST event → GET event visible</subtask>
+          <subtask id="7.4">Add smoke test case for events to existing smoke-test.ts</subtask>
+          <subtask id="7.5">Verify all tests pass: `pnpm run test`</subtask>
+        </subtasks>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <ac id="1">`system_events` table exists with `id`, `org_id`, `user_id`, `event_type`, `payload` (JSONB), `occurred_at`, `created_at`, `dedupe_key`, `correlation_id`, `trace_id`, `source`, `envelope_version`, `payload_schema` columns (append-only)</ac>
+    <ac id="2">RLS policy enforces fail-closed tenant isolation: queries without valid `app.current_org_id` return 0 rows; cross-org reads are blocked</ac>
+    <ac id="3">Events are immutable—UPDATE and DELETE operations are blocked at the policy level</ac>
+    <ac id="4">Event types for v0.1/v0.2 are registered in `ts-schema`: `xentri.user.signup.v1`, `xentri.user.login.v1`, `xentri.brief.created.v1`, `xentri.brief.updated.v1`, `xentri.website.published.v1`, `xentri.page.updated.v1`, `xentri.content.published.v1`, `xentri.lead.created.v1`, `xentri.org.created.v1`</ac>
+    <ac id="5">Future hook for `open_loops` projection is documented (placeholder comment/type) without implementing business logic</ac>
+    <ac id="6">`POST /api/v1/events` endpoint accepts SystemEvent payloads, validates via Zod schema, and returns `{event_id, acknowledged: true}`</ac>
+    <ac id="7">`GET /api/v1/events` endpoint returns org-scoped events with query params: `?type=`, `?since=`, `?limit=`; supports cursor-based pagination</ac>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Xentri Architecture</title>
+        <section>ADR-002: Event Envelope &amp; Schema</section>
+        <snippet>SystemEvent envelope with namespaced types, versioning. All services must use packages/ts-schema to validate events before emitting.</snippet>
+      </doc>
+      <doc>
+        <path>docs/architecture.md</path>
+        <title>Xentri Architecture</title>
+        <section>ADR-003: Multi-Tenant Security</section>
+        <snippet>Fail-closed RLS pattern using set_config('app.current_org_id', $1, true) at transaction start. Policies check for presence and match.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>Data Models - System Events Table</section>
+        <snippet>Full schema definition with id, org_id, user_id, event_type, payload, occurred_at, created_at, dedupe_key, correlation_id, trace_id, source, envelope_version, payload_schema columns.</snippet>
+      </doc>
+      <doc>
+        <path>docs/sprint-artifacts/tech-spec-epic-1.md</path>
+        <title>Epic 1 Technical Specification</title>
+        <section>APIs and Interfaces - Events Endpoint</section>
+        <snippet>POST /api/v1/events returns {event_id, acknowledged: true}. GET /api/v1/events supports ?type=, ?since=, ?limit= with cursor pagination.</snippet>
+      </doc>
+      <doc>
+        <path>docs/prd.md</path>
+        <title>Product Requirements Document</title>
+        <section>FR33-38: Event Backbone</section>
+        <snippet>All significant actions write to system_events. Events are immutable append-only log. v0.1 types: user_signup, user_login, brief_created, brief_updated.</snippet>
+      </doc>
+      <doc>
+        <path>docs/prd.md</path>
+        <title>Product Requirements Document</title>
+        <section>NFR5: Event Write Latency</section>
+        <snippet>Event write latency target: &lt;100ms. Every action should feel instant.</snippet>
+      </doc>
+    </docs>
+    <code>
+      <file>
+        <path>packages/ts-schema/src/events.ts</path>
+        <kind>schema</kind>
+        <symbol>SystemEvent&lt;TPayload&gt;</symbol>
+        <lines>14-27</lines>
+        <reason>Existing event envelope interface to extend with Zod schemas and typed event payloads</reason>
+      </file>
+      <file>
+        <path>services/core-api/prisma/schema.prisma</path>
+        <kind>schema</kind>
+        <symbol>SystemEvent model</symbol>
+        <lines>78-101</lines>
+        <reason>Existing Prisma model - needs source column and user_id (currently uses actorId). Review for alignment with AC1.</reason>
+      </file>
+      <file>
+        <path>services/core-api/prisma/migrations/00000000000000_init/migration.sql</path>
+        <kind>migration</kind>
+        <symbol>system_events table, RLS policies</symbol>
+        <lines>48-111</lines>
+        <reason>Existing RLS policies and tenant_isolation pattern. May need immutability constraint (no UPDATE/DELETE policy) per AC3.</reason>
+      </file>
+      <file>
+        <path>services/core-api/src/server.ts</path>
+        <kind>entrypoint</kind>
+        <symbol>Fastify server</symbol>
+        <lines>1-45</lines>
+        <reason>Server setup pattern for registering new event routes. Note: consider refactoring to avoid side-effects on import (from Story 1.1 review).</reason>
+      </file>
+      <file>
+        <path>services/core-api/src/routes/health.ts</path>
+        <kind>route</kind>
+        <symbol>healthRoutes</symbol>
+        <lines>1-21</lines>
+        <reason>Route plugin pattern to follow for events.ts route file</reason>
+      </file>
+      <file>
+        <path>scripts/smoke-test.ts</path>
+        <kind>test</kind>
+        <symbol>testRlsIsolation</symbol>
+        <lines>132-193</lines>
+        <reason>Existing RLS test patterns. Add event-specific tests (immutability, POST/GET flow) following this pattern.</reason>
+      </file>
+      <file>
+        <path>services/core-api/src/__tests__/helpers/postgres-container.ts</path>
+        <kind>test-helper</kind>
+        <symbol>setupPostgres, setOrgContext</symbol>
+        <lines>1-113</lines>
+        <reason>Test container helper with RLS context functions. Use for integration tests.</reason>
+      </file>
+    </code>
+    <dependencies>
+      <node>
+        <package>@prisma/client</package>
+        <version>^7.0.1</version>
+      </node>
+      <node>
+        <package>fastify</package>
+        <version>^5.6.2</version>
+      </node>
+      <node>
+        <package>@fastify/cors</package>
+        <version>^11.0.0</version>
+      </node>
+      <node>
+        <package>@fastify/helmet</package>
+        <version>^13.0.0</version>
+      </node>
+      <node>
+        <package>zod</package>
+        <version>^3.24.0</version>
+      </node>
+      <node dev="true">
+        <package>@testcontainers/postgresql</package>
+        <version>^10.18.0</version>
+      </node>
+      <node dev="true">
+        <package>vitest</package>
+        <version>^3.0.0</version>
+      </node>
+      <node dev="true">
+        <package>prisma</package>
+        <version>^7.0.1</version>
+      </node>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="ADR-002">Event Envelope: Must implement SystemEvent&lt;T&gt; interface with namespaced types (xentri.{boundedContext}.{action}.{version})</constraint>
+    <constraint source="ADR-003">RLS Pattern: Fail-closed using set_config('app.current_org_id', ...) with transaction-scoped true flag</constraint>
+    <constraint source="tech-spec">Immutability: Events are append-only; no UPDATE/DELETE allowed at policy level</constraint>
+    <constraint source="architecture">Naming: Event types follow pattern xentri.{boundedContext}.{action}.{version}</constraint>
+    <constraint source="architecture">API: JSON REST over HTTPS with Problem Details for errors</constraint>
+    <constraint source="architecture">Auth: All requests require x-org-id header matching JWT claims</constraint>
+    <constraint source="PRD/NFR5">Performance: Event write latency &lt;100ms</constraint>
+    <constraint source="PRD/NFR">API read response: p95 &lt;300ms</constraint>
+  </constraints>
+
+  <interfaces>
+    <interface>
+      <name>SystemEvent&lt;TPayload&gt;</name>
+      <kind>TypeScript interface</kind>
+      <signature>{ id, type, occurred_at, org_id, actor, payload_schema, payload, meta?, dedupe_key?, correlation_id?, trace_id?, envelope_version }</signature>
+      <path>packages/ts-schema/src/events.ts</path>
+    </interface>
+    <interface>
+      <name>set_current_org</name>
+      <kind>SQL function</kind>
+      <signature>set_current_org(org_id UUID) RETURNS void</signature>
+      <path>services/core-api/prisma/migrations/00000000000000_init/migration.sql</path>
+    </interface>
+    <interface>
+      <name>POST /api/v1/events</name>
+      <kind>REST endpoint</kind>
+      <signature>Request: SystemEvent payload | Response: { event_id: string, acknowledged: true }</signature>
+      <path>services/core-api/src/routes/events.ts (to create)</path>
+    </interface>
+    <interface>
+      <name>GET /api/v1/events</name>
+      <kind>REST endpoint</kind>
+      <signature>Query: ?type=, ?since=, ?limit=, ?cursor= | Response: { data: SystemEvent[], meta: { cursor?, has_more } }</signature>
+      <path>services/core-api/src/routes/events.ts (to create)</path>
+    </interface>
+    <interface>
+      <name>FastifyPluginAsync</name>
+      <kind>Fastify route plugin</kind>
+      <signature>async (fastify) =&gt; { fastify.get/post(...) }</signature>
+      <path>services/core-api/src/routes/health.ts (pattern)</path>
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Testing uses Vitest with @testcontainers/postgresql for isolated Postgres instances per test suite. Integration tests use postgres-container.ts helper with setOrgContext/clearOrgContext for RLS verification. Co-located tests follow pattern *.test.ts next to source. Smoke tests in scripts/smoke-test.ts validate RLS isolation and cross-org blocking.
+    </standards>
+    <locations>
+      <location>services/core-api/src/__tests__/</location>
+      <location>services/core-api/src/domain/events/*.test.ts</location>
+      <location>services/core-api/src/routes/*.test.ts</location>
+      <location>packages/ts-schema/src/__tests__/</location>
+      <location>scripts/smoke-test.ts</location>
+    </locations>
+    <ideas>
+      <idea ac="1,2">Integration test: Create system_events table migration succeeds and RLS is enabled</idea>
+      <idea ac="2">RLS isolation test: org_a context cannot read org_b events (follow smoke-test.ts pattern)</idea>
+      <idea ac="3">Immutability test: Attempt UPDATE on system_events returns error or 0 rows affected</idea>
+      <idea ac="3">Immutability test: Attempt DELETE on system_events returns error or 0 rows affected</idea>
+      <idea ac="4">Unit test: EventType union includes all 9 v0.1/v0.2 event types</idea>
+      <idea ac="4">Unit test: Zod schema validates SystemEvent payloads correctly</idea>
+      <idea ac="6">Integration test: POST /api/v1/events with valid payload returns 200 and event_id</idea>
+      <idea ac="6">Integration test: POST /api/v1/events with invalid payload returns 400 Problem Details</idea>
+      <idea ac="6">Integration test: POST /api/v1/events without x-org-id returns 403</idea>
+      <idea ac="7">Integration test: GET /api/v1/events returns only current org's events</idea>
+      <idea ac="7">Integration test: GET /api/v1/events?type= filters by event type</idea>
+      <idea ac="7">Integration test: GET /api/v1/events?since= filters by timestamp</idea>
+      <idea ac="7">Integration test: Cursor pagination returns correct next cursor</idea>
+    </ideas>
+  </tests>
+</story-context>
