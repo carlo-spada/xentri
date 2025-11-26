@@ -202,13 +202,48 @@ apps/shell/src/
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+claude-opus-4-5-20251101
 
 ### Debug Log References
 
+- Prisma 7.0 breaking change: Required `@prisma/adapter-pg` + `pg` packages for client initialization
+- Column rename: `type` → `event_type` to align with tech spec
+- Immutability: Combined approach using RLS (INSERT-only) + trigger (UPDATE block) + rule (DELETE no-op)
+
 ### Completion Notes List
 
+- **AC1:** `system_events` table updated with all required columns including `user_id`, `created_at`, `source`, `event_type`
+- **AC2:** Fail-closed RLS with separate INSERT/SELECT policies
+- **AC3:** Immutability via: (1) RLS INSERT-only policy, (2) `prevent_event_modification` trigger for UPDATE, (3) `no_delete_events` rule
+- **AC4:** 9 event types registered in ts-schema with Zod schemas and typed payload interfaces
+- **AC5:** `OpenLoopsProjection` placeholder with comprehensive TODO comment
+- **AC6:** `POST /api/v1/events` endpoint with Zod validation, org context verification, Problem Details errors
+- **AC7:** `GET /api/v1/events` endpoint with type/since/limit filtering and cursor-based pagination
+- **Shell:** EventTimeline React component displays recent events with formatted types and timestamps
+
 ### File List
+
+**New Files:**
+- `services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql`
+- `services/core-api/prisma.config.ts`
+- `services/core-api/src/infra/db.ts`
+- `services/core-api/src/middleware/orgContext.ts`
+- `services/core-api/src/domain/events/EventService.ts`
+- `services/core-api/src/domain/events/EventService.test.ts`
+- `services/core-api/src/routes/events.ts`
+- `services/core-api/src/routes/events.test.ts`
+- `apps/shell/src/components/EventTimeline.tsx`
+
+**Modified Files:**
+- `services/core-api/prisma/schema.prisma` - Added columns, renamed type→eventType, updated index
+- `services/core-api/package.json` - Added @prisma/adapter-pg, pg, @types/pg dependencies
+- `services/core-api/src/server.ts` - Registered events routes, added graceful shutdown
+- `services/core-api/src/__tests__/helpers/postgres-container.ts` - Updated for Prisma 7.0 adapter
+- `packages/ts-schema/src/events.ts` - Complete rewrite with Zod schemas, typed payloads, OpenLoopsProjection
+- `apps/shell/package.json` - Added @xentri/ts-schema dependency
+- `apps/shell/src/pages/index.astro` - Added EventTimeline component
+- `scripts/smoke-test.ts` - Updated for event_type column, added immutability tests
+- `docs/sprint-artifacts/sprint-status.yaml` - Status updated to in-progress
 
 ---
 
@@ -217,3 +252,4 @@ apps/shell/src/
 | Date | Author | Change |
 |------|--------|--------|
 | 2025-11-26 | SM Agent (Bob) | Initial draft created from Epic 1 tech spec, epics.md, and Story 1.1 learnings |
+| 2025-11-26 | Dev Agent (Amelia) | Implementation complete: All 7 tasks done, all ACs satisfied |
