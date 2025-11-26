@@ -18,6 +18,7 @@
 generated: "2025-11-24T21:30:00-06:00"
 project: "Xentri"
 project_type: "greenfield"
+project_level: "enterprise-greenfield"
 selected_track: "enterprise"
 field_type: "greenfield"
 workflow_path: ".bmad/bmm/workflows/workflow-status/paths/enterprise-greenfield.yaml"

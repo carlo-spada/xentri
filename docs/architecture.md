@@ -157,7 +157,7 @@ USING (
 
 ---
 
-## 4. Project Structure
+## 4. Project Structure & FR/Epic Coverage
 
 The repository follows a standard Turborepo monorepo structure:
 
@@ -179,6 +179,45 @@ The repository follows a standard Turborepo monorepo structure:
 │   └── /n8n-host             # Workflow Engine
 └── /tooling                  # Shared Configs (ESLint, TSConfig)
 ```
+
+### Mapping to PRD Functional Requirements (FR) and Epics
+- **apps/shell** → FR26-33 (shell UX, navigation, responsive), FR75-78 (notifications UI). Epic 1 (Foundation & Access).
+- **packages/ts-schema** → FR33-36 (events), FR16 (Brief schemas), all cross-service contracts. Epic 1 and 2.
+- **services/core-api** → FR1-6, FR37 (auth/signup/login events), FR82 (RLS enforcement), FR75-78 (notifications sending), FR5 (account deletion). Epic 1, 6.
+- **services/brand-engine** → FR40-59 (website/CMS), FR58 (content_published event). Epic 3.
+- **services/sales-engine** → FR60-67 (leads), FR63 (lead_created event). Epic 4.
+- **services/ai-service** → FR10-25, FR69-74 (Strategy/Brand co-pilots). Epic 2 and 5.
+- **services/n8n-host** → FR33-36 (event-driven flows), FR148 (orchestration readiness). Cross-epic automation.
+- **packages/ui** → Shared components for shell/micro-apps (supports FR40-47 UX).
+- **packages/cms-client, packages/crm-client** → Frontend micro-apps for brand/sales capabilities (FR40-67).
+
+### Service Interface Summaries (MVP scope)
+- **core-api**
+  - Endpoints: `POST /api/v1/auth/signup`, `POST /api/v1/auth/login`, `POST /api/v1/orgs` (auto-create), `DELETE /api/v1/account` (FR5).
+  - Emits: `xentri.user.signup.v1`, `xentri.user.login.v1`, `xentri.org.created.v1`.
+  - Contracts: User, Org, Notification schemas in `packages/ts-schema`.
+- **brand-engine**
+  - Endpoints: `GET/PUT /api/v1/sites/:id`, `POST /api/v1/sites/:id/publish`, `GET/PUT /api/v1/pages/:id`, `POST /api/v1/media/presign`.
+  - Emits: `xentri.website.published.v1`, `xentri.page.updated.v1`, `xentri.content.published.v1`.
+  - Contracts: Site, Page, Content, MediaAsset schemas in `packages/ts-schema`.
+- **sales-engine**
+  - Endpoints: `GET/POST /api/v1/leads`, `GET/PUT /api/v1/leads/:id`, `POST /api/v1/leads/:id/status`.
+  - Emits: `xentri.lead.created.v1`, `xentri.lead.updated.v1`, `xentri.followup.scheduled.v1`.
+  - Contracts: Lead, FollowUp schemas in `packages/ts-schema`.
+- **ai-service**
+  - Endpoints: `POST /api/v1/brief/generate` (Strategy Co-pilot), `POST /api/v1/brief/sections/:sectionId/propose`, `POST /api/v1/brand/copy/suggest`.
+  - Emits: `xentri.brief.created.v1`, `xentri.brief.updated.v1`, `xentri.ai.proposal.generated.v1`.
+  - Contracts: Brief, BriefSectionProposal, BrandCopySuggestion schemas in `packages/ts-schema`.
+- **n8n-host**
+  - Subscribes: Redis Streams for all `xentri.*` events; runs idempotent flows with org context.
+  - Responsibilities: Notifications fan-out, cache invalidation messages, cross-service orchestrations (e.g., `brief.updated` triggers website refresh prompt).
+
+### Contract Source of Truth
+- `packages/ts-schema/src/api.ts` — API envelope and Problem Details types.
+- `packages/ts-schema/src/auth.ts` — User and service JWT claims.
+- `packages/ts-schema/src/events.ts` — Event envelope and actor/meta.
+- `packages/ts-schema/src/cache.ts` — Cache keys and invalidation events (brief, site, leads).
+- CI: `.github/workflows/schema-check.yml` runs `tsc` against these definitions to prevent drift.
 
 ---
 
@@ -237,6 +276,33 @@ We use Astro's Island Architecture to lazy-load React apps.
 3.  **Orchestrate:** `n8n` executes logic (e.g., "If high value, Slack the CEO").
 4.  **React:** `n8n` may call Service B (CRM) to update a record.
 
+### D. API & Error Conventions
+- **Protocol:** JSON REST over HTTPS; versioned prefix `/api/v1`.
+- **Shape:** Envelope with `data`, `error`, `meta` (cursor/paging). Dates in ISO8601 UTC.
+- **Errors:** HTTP Problem Details (`application/problem+json`) with `type`, `title`, `status`, `detail`, `trace_id`.
+- **Auth:** JWT (Supabase) in HTTP-only cookie; services accept `Authorization: Bearer` for service-to-service calls. All requests require `x-org-id`.
+- **Idempotency:** For mutating endpoints that can retry, require `Idempotency-Key` header and persist to dedupe.
+
+### E. Auth Patterns
+- **User Auth:** Supabase GoTrue for sign-in/up. Access token includes `sub`, `org_id`, `role`. Refresh via Supabase.
+- **Service Auth:** Signed JWT with short TTL; verified per service; propagate `trace_id` and `org_id`.
+- **Org Scoping:** Middleware enforces presence of `x-org-id` header matching JWT claims; RLS enforces at DB.
+
+### F. Naming & Location Patterns
+- **API routes:** `/api/v1/{service}/{resource}` (plural nouns). Example: `/api/v1/brand/sites`.
+- **Events:** `xentri.{boundedContext}.{action}.{version}` e.g., `xentri.brief.updated.v1`.
+- **Database tables:** `snake_case`, always include `org_id`, `id` UUID primary key, `created_at`, `updated_at`.
+- **Files:** 
+  - Apps: `apps/shell/src/routes/...`, `apps/shell/src/components/...`
+  - Services: `services/{svc}/src/routes`, `services/{svc}/src/domain`, `services/{svc}/src/infra`
+  - Shared: `packages/ts-schema/src`, `packages/ui/src`, utilities in `packages/lib/src`
+- **Tests:** Co-locate as `__tests__` or `*.test.ts` next to source.
+
+### G. Lifecycle Patterns
+- **Loading/Error UX:** Skeletons for primary content; inline errors with retry; toast only for non-blocking notices.
+- **Retries:** Client retries idempotent GETs with backoff; mutations rely on server idempotency keys.
+- **Background Jobs:** n8n flows must be idempotent; retries with exponential backoff; dead-letter to `redis:stream:dlq`.
+
 ---
 
 ## 7. Cross-Cutting Concerns
@@ -247,23 +313,34 @@ We use Astro's Island Architecture to lazy-load React apps.
 *   **Testing:**
     *   Unit Tests: Jest/Vitest per package.
     *   E2E Tests: Playwright running against the full docker-compose stack.
+*   **Caching:** 
+    *   API: HTTP cache-control for GETs; CDN for public assets; service-layer Redis for hot data with TTL.
+    *   Invalidation: Event-driven (Redis Stream) to bust projections; explicit cache tags per resource type.
+*   **Object Storage:** S3/MinIO for assets; presigned PUT/GET; store only keys/metadata in DB.
+*   **Performance Budgets:** p75 FMP < 2s on 3G for shell; API p95 < 300ms for reads, < 600ms for writes; background jobs complete < 30s or enqueue follow-up.
+*   **Observability:** OpenTelemetry traces across shell/services; logs to Loki/Grafana; metrics via Prometheus; `trace_id` propagated through API and events.
+*   **n8n Reliability:** Workers run with queue-backed execution; retry with backoff (3 attempts), DLQ to Redis stream `n8n:dlq`; flows must be idempotent and check org context.
+*   **Cache/Invalidation Map:**
+    *   Brief: key `brief:{org_id}` in Redis; invalidated on `xentri.brief.updated.v1`; projections downstream rehydrate.
+    *   Site: key `site:{org_id}:{site_id}` and CDN path `/sites/{site_id}`; purge on `xentri.website.published.v1` or `xentri.page.updated.v1`.
+    *   Leads: key `leads:list:{org_id}` with cursor; bust on `xentri.lead.created.v1` and `xentri.lead.updated.v1`; entity cache `lead:{org_id}:{lead_id}` updated in write path.
 
 ## 8. Validation Summary
 
-- Architecture Completeness: Partial — deployment target and environment plan added; contracts and coverage mapping still pending.
+- Architecture Completeness: Mostly Complete — deployment/environments, init commands, caching/storage/perf, n8n reliability, PRD/epic mapping, and service interfaces documented; still need schema-level examples inline with `ts-schema`.
 - Version Specificity: Most Verified — stack versions refreshed (2025-11-26 via registry fetch); re-verify before release.
-- Pattern Clarity: Somewhat Ambiguous — API/auth/error, naming, lifecycle, and file layout conventions need depth.
-- AI Agent Readiness: Needs Work — clearer contracts between shell, micro-apps, and services required.
+- Pattern Clarity: Clear — API/auth/error, naming/location/lifecycle, file org, and event naming defined.
+- AI Agent Readiness: Mostly Ready — conventions and interfaces covered; finalize schema references and cache-topic tables in code.
 
 Critical Issues Found
-1. API/auth/error conventions and contract mapping to PRD/epics are not explicit.
-2. Performance/caching/file-storage patterns and retry/durability guidance are missing.
-3. Naming/location/lifecycle patterns and service-to-service interface contracts are not documented for agents.
+1. `packages/ts-schema` must formalize schemas and reference them from services (currently examples only).
+2. Cache-topic tables and invalidation hooks should be codified in code/config (beyond documentation).
+3. Performance/error envelope examples need to live alongside generated types to avoid drift.
 
 Recommended Actions Before Implementation
-1. Define API/auth/error conventions and map architecture components to PRD/epics.
-2. Add caching strategy, file/object storage patterns, performance budgets, and n8n durability/retry policy.
-3. Publish naming/location/lifecycle patterns and service interface contracts to remove agent guesswork.
+1. Convert examples into Zod/TS schemas in `packages/ts-schema` and import in services.
+2. Implement cache/invalidation config per bounded context (brief, site, leads) and wire to events.
+3. Keep API/error/auth envelope definitions source-controlled in `packages/ts-schema` and enforce via CI.
 
 ## 9. Future Considerations
 
