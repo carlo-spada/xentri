@@ -1,5 +1,6 @@
 ---
 // Xentri Shell - Entry Point
+import { Hero } from '../components/Hero';
 ---
 
 <!DOCTYPE html>
@@ -10,6 +11,8 @@
     <meta name="description" content="Xentri - Your Business OS" />
     <title>Xentri</title>
     <style>
+      @import url('@xentri/ui/styles.css');
+
       * {
         margin: 0;
         padding: 0;
@@ -43,9 +46,6 @@
     </style>
   </head>
   <body>
-    <div class="shell">
-      <h1>Xentri Shell</h1>
-      <p>Your Business OS is initializing...</p>
-    </div>
+    <Hero client:load />
   </body>
 </html>

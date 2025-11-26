@@ -1,0 +1,219 @@
+<story-context id="bmm/story-context" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>2</storyId>
+    <title>Event Backbone &amp; Database Schema</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-11-26</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-2-event-backbone-database-schema.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>an immutable event backbone with RLS-enforced database schema</iWant>
+    <soThat>all system events are securely stored per-org and form the foundation for audit trails, orchestration, and cross-module intelligence</soThat>
+    <tasks>
+      <task id="1" ac="1,3">Create system_events Table Migration (Partitioned)
+        <subtask>1.1 Create Prisma migration with partitioning by occurred_at</subtask>
+        <subtask>1.2 Create initial partitions (2025_11, 2025_12)</subtask>
+        <subtask>1.3 Add index: idx_events_org_type_time</subtask>
+        <subtask>1.4 Add dedupe index</subtask>
+        <subtask>1.5 Add observability indexes (trace_id, correlation_id)</subtask>
+        <note>PARTIAL: Prisma schema already has SystemEvent model - needs partitioning migration</note>
+      </task>
+      <task id="2" ac="2">Implement RLS for system_events
+        <subtask>2.1 Enable RLS on table</subtask>
+        <subtask>2.2 Create SELECT policy with Super Admin bypass</subtask>
+        <subtask>2.3 Create INSERT policy</subtask>
+        <subtask>2.4 Integration test: cross-org isolation + super admin bypass</subtask>
+      </task>
+      <task id="3" ac="3">Enforce Event Immutability
+        <subtask>3.1 Create UPDATE restriction policy (USING false)</subtask>
+        <subtask>3.2 Create DELETE restriction policy (USING false)</subtask>
+        <subtask>3.3 Integration test: UPDATE/DELETE blocked</subtask>
+      </task>
+      <task id="4" ac="4">Register v0.1/v0.2 Event Types
+        <subtask>4.1 Create event-types.ts with Zod schemas</subtask>
+        <subtask>4.2 Export from index.ts</subtask>
+        <subtask>4.3 Create event registry with validation</subtask>
+        <subtask>4.4 Unit tests for each event type</subtask>
+      </task>
+      <task id="5" ac="5">Document Open Loops Projection Hook
+        <subtask>5.1 Add TODO in domain/events/</subtask>
+        <subtask>5.2 Document contributing events</subtask>
+        <subtask>5.3 Create placeholder OpenLoopProjection interface</subtask>
+      </task>
+      <task id="6" ac="6">Implement Events API Endpoint
+        <subtask>6.1 Create routes/events.ts</subtask>
+        <subtask>6.2 Implement GET /api/v1/events with filtering</subtask>
+        <subtask>6.3 Response format with pagination</subtask>
+        <subtask>6.4 Ensure RLS context set (middleware)</subtask>
+        <subtask>6.5 Integration tests</subtask>
+      </task>
+      <task id="7" ac="1,4">Create Event Writer Utility
+        <subtask>7.1 Create event-writer.ts</subtask>
+        <subtask>7.2 writeEvent() with validation, dedupe, actor/meta mapping</subtask>
+        <subtask>7.3 Redis outbox stub</subtask>
+        <subtask>7.4 Unit tests</subtask>
+      </task>
+      <task id="8" ac="1-6">Testing &amp; Validation
+        <subtask>8.1-8.7 Full test coverage per AC</subtask>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <ac id="1">system_events table exists with org_id, actor_type, actor_id, event_type, payload, meta, occurred_at (append-only, partitioned)</ac>
+    <ac id="2">RLS enforces cross-org isolation; 0 rows unless app.is_super_admin set</ac>
+    <ac id="3">Events are immutable (no UPDATE or DELETE allowed)</ac>
+    <ac id="4">Event types registered: xentri.user.signup.v1, xentri.user.login.v1, xentri.brief.created.v1, xentri.brief.updated.v1, xentri.website.published.v1, xentri.page.updated.v1, xentri.content.published.v1, xentri.lead.created.v1</ac>
+    <ac id="5">Future hook for open_loops projection documented (TODO)</ac>
+    <ac id="6">GET /api/v1/events endpoint with pagination</ac>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="Xentri Architecture" section="ADR-002, ADR-003, Event Backbone">
+        Event envelope spec (SystemEvent), RLS fail-closed pattern with set_config, append-only immutability.
+      </doc>
+      <doc path="docs/prd.md" title="PRD" section="FR82, Critical Risks, NFR5">
+        org_id required on all tables, no cross-org leakage, event write &lt;100ms.
+      </doc>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic 1 Tech Spec" section="Data Models, APIs">
+        system_events schema, events endpoint spec, test strategy.
+      </doc>
+    </docs>
+    <code>
+      <file path="packages/ts-schema/src/events.ts" kind="types" symbol="SystemEvent, EventActor, EventMeta, EventActorType" lines="1-27" reason="Core event types - USE THESE, do not recreate">
+        SystemEvent&lt;TPayload&gt; with id, type, occurred_at, org_id, actor, payload_schema, payload, meta, dedupe_key, correlation_id, trace_id, envelope_version
+      </file>
+      <file path="packages/ts-schema/src/api.ts" kind="types" symbol="ApiResponse, ProblemDetails" reason="API response types for events endpoint">
+        ApiResponse&lt;T&gt; with data, error, meta; ProblemDetails for errors
+      </file>
+      <file path="packages/ts-schema/src/cache.ts" kind="types" symbol="InvalidationEvents" reason="Maps events to cache contexts">
+        InvalidationEvents maps xentri.brief.updated.v1 → brief cache, etc.
+      </file>
+      <file path="services/core-api/prisma/schema.prisma" kind="schema" symbol="SystemEvent model" lines="78-101" reason="EXISTING: Prisma schema already defines system_events table">
+        Model has: id, type, occurredAt, orgId, actorType, actorId, payloadSchema, payload, meta, dedupeKey, correlationId, traceId, envelopeVersion. Needs: partitioning migration, RLS policies.
+      </file>
+      <file path="services/core-api/src/server.ts" kind="server" symbol="Fastify server" reason="Main server entry - add events routes here">
+        Fastify with helmet, cors. Register events routes similar to health routes.
+      </file>
+      <file path="services/core-api/src/routes/health.ts" kind="route" symbol="healthRoutes" reason="Pattern for implementing routes">
+        FastifyPluginAsync pattern - follow this for events.ts
+      </file>
+      <file path="services/core-api/src/__tests__/helpers/postgres-container.ts" kind="test-helper" reason="Test container setup for integration tests">
+        Use for RLS and immutability integration tests
+      </file>
+      <file path="packages/ts-schema/src/__tests__/events.test.ts" kind="test" reason="Existing event type tests - extend for event-types.ts">
+        Test patterns for type validation
+      </file>
+    </code>
+    <dependencies>
+      <runtime>
+        <dep name="fastify" version="^5.6.2" scope="services/core-api" />
+        <dep name="@prisma/client" version="^7.0.1" scope="services/core-api" />
+        <dep name="zod" version="^3.x" scope="packages/ts-schema" />
+      </runtime>
+      <dev>
+        <dep name="vitest" version="^3.0.0" scope="root" />
+        <dep name="typescript" version="^5.8.3" scope="root" />
+      </dev>
+      <docker>
+        <service name="postgres" image="postgres:16.11" notes="RLS enabled" />
+        <service name="redis" image="redis:8.0" notes="For future outbox" />
+      </docker>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="docs/architecture.md#ADR-002">
+      Event envelope must match SystemEvent&lt;T&gt; interface exactly. Namespace: xentri.{context}.{action}.v{version}
+    </constraint>
+    <constraint source="docs/architecture.md#ADR-003">
+      RLS fail-closed: current_setting('app.current_org_id', true) IS NOT NULL AND org_id = ...::uuid
+    </constraint>
+    <constraint source="story-update">
+      NEW: Super admin bypass via app.is_super_admin = 'true'. Partitioning by occurred_at (RANGE).
+    </constraint>
+    <constraint source="docs/prd.md#FR82">
+      Every event MUST have org_id - no exceptions
+    </constraint>
+    <constraint source="docs/prd.md#NFR5">
+      Event write latency must be &lt;100ms
+    </constraint>
+    <constraint source="prisma-schema">
+      Prisma model exists - use raw SQL migrations for RLS policies and partitioning
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface name="SystemEvent&lt;T&gt;" kind="type" path="packages/ts-schema/src/events.ts">
+      EXISTING - use as-is. Maps to system_events table via event-writer.
+    </interface>
+    <interface name="EventActor" kind="type" path="packages/ts-schema/src/events.ts">
+      EXISTING - {type: EventActorType, id: string}. Maps to actor_type + actor_id columns.
+    </interface>
+    <interface name="EventMeta" kind="type" path="packages/ts-schema/src/events.ts">
+      EXISTING - {source, environment?, ...}. Maps to meta JSONB column.
+    </interface>
+    <interface name="GET /api/v1/events" kind="REST" path="services/core-api/src/routes/events.ts">
+      TO IMPLEMENT. Query: ?type=&amp;since=&amp;limit=&amp;cursor=. Response: ApiResponse&lt;SystemEvent[]&gt;
+    </interface>
+    <interface name="writeEvent&lt;T&gt;()" kind="function" path="services/core-api/src/domain/events/event-writer.ts">
+      TO IMPLEMENT. Validates payload, generates dedupe_key, maps actor/meta, inserts, returns event_id.
+    </interface>
+    <interface name="RLS set_config" kind="SQL">
+      EXISTING PATTERN. SELECT set_config('app.current_org_id', $org_id, true) at transaction start.
+    </interface>
+    <interface name="app.is_super_admin" kind="SQL">
+      NEW. SELECT set_config('app.is_super_admin', 'true', true) for admin bypass.
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Unit tests: Vitest with TypeScript in __tests__ directories. Integration tests: Vitest with testcontainers (postgres-container.ts helper). Coverage: &gt;70% for domain code. Co-locate tests with source.
+    </standards>
+    <locations>
+      <location glob="packages/ts-schema/src/__tests__/*.test.ts" />
+      <location glob="services/core-api/src/__tests__/*.test.ts" />
+      <location glob="services/core-api/src/domain/**/__tests__/*.test.ts" />
+      <location glob="services/core-api/src/routes/__tests__/*.test.ts" />
+    </locations>
+    <ideas>
+      <idea ac="1">Integration: Write event via Prisma, read back, verify all columns populated correctly</idea>
+      <idea ac="1">Unit: Validate partitioning key (occurred_at) included in primary key</idea>
+      <idea ac="2">Integration: Set org_id context for org_a, insert event, set org_b context, query returns 0</idea>
+      <idea ac="2">Integration: Set is_super_admin=true, query returns events from all orgs</idea>
+      <idea ac="3">Integration: Attempt UPDATE on system_events - expect policy violation error</idea>
+      <idea ac="3">Integration: Attempt DELETE on system_events - expect policy violation error</idea>
+      <idea ac="4">Unit: Each event type schema validates correct payload, rejects invalid</idea>
+      <idea ac="4">Unit: Event registry returns correct schema for event type string</idea>
+      <idea ac="5">Unit: OpenLoopProjection interface exists (placeholder)</idea>
+      <idea ac="6">Integration: GET /api/v1/events returns events for current org only</idea>
+      <idea ac="6">Integration: Pagination with cursor works correctly</idea>
+      <idea ac="6">Integration: Filter by type parameter works</idea>
+      <idea ac="6">Integration: Filter by since parameter works</idea>
+      <idea>Integration: writeEvent() validates payload, generates dedupe_key, returns event_id</idea>
+      <idea>Integration: writeEvent() with duplicate dedupe_key is idempotent or fails gracefully</idea>
+    </ideas>
+  </tests>
+
+  <learnings>
+    <fromStory key="1-1-project-initialization-infrastructure" status="done">
+      <item type="existing">Turborepo monorepo fully established with pnpm workspaces</item>
+      <item type="existing">Prisma 7.0.1 initialized in services/core-api with schema</item>
+      <item type="existing">SystemEvent model already defined in Prisma schema</item>
+      <item type="existing">Docker Compose with Postgres 16.11, Redis 8.0 running</item>
+      <item type="existing">Fastify server with health routes pattern</item>
+      <item type="existing">Test infrastructure: Vitest, testcontainers helper</item>
+      <item type="existing">14 tests passing across packages</item>
+      <item type="pattern">FastifyPluginAsync for route modules</item>
+      <item type="pattern">Test containers for Postgres integration tests</item>
+      <item type="todo">RLS policies need to be added via raw SQL migration</item>
+      <item type="todo">Partitioning needs raw SQL (not supported in Prisma)</item>
+    </fromStory>
+  </learnings>
+</story-context>

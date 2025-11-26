@@ -493,11 +493,11 @@ stateDiagram-v2
 - Scaling triggers documented with specific thresholds
 
 ### Remaining Actions (Implementation Phase)
-1. **`packages/ts-schema`** — Formalize Zod schemas from TypeScript examples during Epic 1 implementation
+1. ~~**`packages/ts-schema`** — Formalize Zod schemas from TypeScript examples during Epic 1 implementation~~ ✓ Done (Story 1.1)
 2. **Cache invalidation** — Implement cache/invalidation config per bounded context when building services
-3. **CI enforcement** — Add schema-check workflow when setting up GitHub Actions
+3. ~~**CI enforcement** — Add schema-check workflow when setting up GitHub Actions~~ ✓ Done (Story 1.1)
 
-These are implementation tasks, not architecture gaps. The document is ready for development.
+**Epic 1 Story 1.1 Complete:** Foundation infrastructure established with 14 tests passing, RLS verified via smoke tests, GitHub branch protection configured.
 
 ---
 

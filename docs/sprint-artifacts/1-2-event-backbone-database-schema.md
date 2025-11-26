@@ -1,6 +1,6 @@
 # Story 1.2: Event Backbone & Database Schema
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -244,7 +244,7 @@ From tech spec, the `system_events` table should include:
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `docs/sprint-artifacts/1-2-event-backbone-database-schema.context.xml`
 
 ### Agent Model Used
 
@@ -271,3 +271,4 @@ From tech spec, the `system_events` table should include:
 |------|--------|--------|
 | 2025-11-26 | SM Agent (Bob) | Initial draft from Epic 1 tech spec |
 | 2025-11-26 | Antigravity | Schema review: Added actor_type/id, meta, partitioning, RLS bypass |
+| 2025-11-26 | SM Agent (Bob) | Context XML generated, status changed to ready-for-dev |

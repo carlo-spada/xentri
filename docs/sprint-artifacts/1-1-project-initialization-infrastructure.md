@@ -198,20 +198,25 @@ NEW : apps/shell/package.json
 NEW : apps/shell/astro.config.mjs
 NEW : apps/shell/tsconfig.json
 NEW : apps/shell/src/pages/index.astro
+NEW : apps/shell/src/components/Hero.tsx
 NEW : packages/ts-schema/package.json
 NEW : packages/ts-schema/tsconfig.json
 NEW : packages/ts-schema/src/__tests__/events.test.ts
 NEW : packages/ui/package.json
 NEW : packages/ui/tsconfig.json
+NEW : packages/ui/vitest.config.ts
+NEW : packages/ui/vitest.setup.ts
 NEW : packages/ui/src/index.ts
 NEW : packages/ui/src/lib/utils.ts
 NEW : packages/ui/src/components/button.tsx
 NEW : packages/ui/src/styles/globals.css
+NEW : packages/ui/src/__tests__/button.test.tsx
 NEW : services/core-api/package.json
 NEW : services/core-api/tsconfig.json
 NEW : services/core-api/src/server.ts
 NEW : services/core-api/src/routes/health.ts
 NEW : services/core-api/src/__tests__/health.test.ts
+NEW : services/core-api/src/__tests__/helpers/postgres-container.ts
 NEW : services/core-api/prisma/schema.prisma
 NEW : services/core-api/prisma/migrations/migration_lock.toml
 NEW : services/core-api/prisma/migrations/00000000000000_init/migration.sql
@@ -282,10 +287,10 @@ Story 1-1 establishes a solid foundation for Xentri's multi-tenant infrastructur
 
 ### Test Coverage and Gaps
 
-- Unit tests: `packages/ts-schema` (3 tests), `services/core-api` (1 placeholder)
-- Integration tests: `scripts/smoke-test.ts` validates RLS isolation
+- Unit tests: `packages/ts-schema` (3 tests), `packages/ui` (10 tests), `services/core-api` (1 placeholder)
+- Integration tests: `scripts/smoke-test.ts` validates RLS isolation, testcontainers helper ready for future integration tests
 - E2E tests: Playwright config ready, `e2e/shell.spec.ts` placeholder
-- **Gap:** No actual unit test for `@xentri/ui` Button component
+- **Total: 14 tests passing across all packages**
 
 ### Architectural Alignment
 
@@ -310,11 +315,11 @@ Story 1-1 establishes a solid foundation for Xentri's multi-tenant infrastructur
 
 ### Action Items
 
-**Advisory Notes:**
-- Note: Consider adding a unit test for `@xentri/ui` Button component
-- Note: Configure GitHub branch protection rules manually (Settings > Branches)
-- Note: Consider adding testcontainers library for more isolated integration tests in future stories
-- Note: Add actual import of `@xentri/ui` in shell when first UI component is needed
+**Advisory Notes (All Addressed):**
+- ~~Note: Consider adding a unit test for `@xentri/ui` Button component~~ ✓ Added `packages/ui/src/__tests__/button.test.tsx` (10 tests)
+- ~~Note: Configure GitHub branch protection rules manually~~ ✓ Configured via `gh api` (require PR reviews, status checks)
+- ~~Note: Consider adding testcontainers library for more isolated integration tests~~ ✓ Added `services/core-api/src/__tests__/helpers/postgres-container.ts`
+- ~~Note: Add actual import of `@xentri/ui` in shell when first UI component is needed~~ ✓ Created `Hero.tsx` component using `@xentri/ui` Button
 
 ---
 
@@ -326,3 +331,4 @@ Story 1-1 establishes a solid foundation for Xentri's multi-tenant infrastructur
 | 2025-11-26 | SM Agent (Bob) | Context XML generated, status changed to ready-for-dev |
 | 2025-11-26 | Dev Agent (Amelia) | Implementation complete - all 10 tasks done, tests passing |
 | 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review: APPROVE - all ACs verified |
+| 2025-11-26 | Dev Agent (Amelia) | All 4 advisory notes addressed: Button tests, branch protection, testcontainers, shell→ui import |

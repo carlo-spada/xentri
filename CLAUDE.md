@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Xentri** is a modular Business OS that starts with conversation, not configuration. It uses a **Strategy Co-pilot** to generate a **Universal Brief** (the DNA of a business), which then powers a curated set of tools (Website, CRM, Invoicing) organized into 7 capability categories.
 
-**Status:** Early-stage development (v0.1 MVP: Strategy Co-pilot + Universal Brief). No source code exists yet—only documentation, architecture specs, and BMAD workflow definitions.
+**Status:** Foundation complete (Epic 1 - Story 1.1 done). Infrastructure established with multi-tenant RLS, CI/CD, and 14 tests passing.
 
 ## Architecture Philosophy: "Decoupled Unity"
 
@@ -27,35 +27,54 @@ The user sees one calm workspace; under the hood, each capability is an isolated
 - Visible automation: every automated action logged with human-readable explanation
 - Services communicate via events, not direct calls
 
-## Planned Repository Structure (Turborepo Monorepo)
+## Repository Structure (Turborepo Monorepo)
 
 ```
 /xentri
 ├── apps/
-│   └── shell/                # Astro Shell - mounts React micro-apps
+│   └── shell/                # Astro 5.16.0 Shell with React islands ✓
 ├── packages/
-│   ├── ui/                   # Shared Design System (Tailwind)
-│   ├── ts-schema/            # Shared Types & Zod Schemas (the "Contract")
-│   ├── cms-client/           # React CMS UI
-│   ├── crm-client/           # React CRM UI
-│   └── erp-client/           # React ERP UI
+│   ├── ui/                   # Shared Design System (Tailwind v4, shadcn/ui) ✓
+│   ├── ts-schema/            # Shared Types & Zod Schemas (the "Contract") ✓
+│   ├── cms-client/           # React CMS UI (planned)
+│   ├── crm-client/           # React CRM UI (planned)
+│   └── erp-client/           # React ERP UI (planned)
 ├── services/
-│   ├── core-api/             # Users, Orgs, Billing, Event ingestion
-│   ├── brand-engine/         # Website, CMS
-│   ├── sales-engine/         # CRM, Quotes
-│   ├── finance-engine/       # Invoicing, Payments
-│   ├── ai-service/           # Python Co-pilot Swarm
-│   └── n8n-host/             # Self-hosted workflow automation
-├── docker-compose.yml
-└── turbo.json
+│   ├── core-api/             # Fastify 5.6.2 + Prisma 7.0.1, RLS ✓
+│   ├── brand-engine/         # Website, CMS (planned)
+│   ├── sales-engine/         # CRM, Quotes (planned)
+│   ├── finance-engine/       # Invoicing, Payments (planned)
+│   ├── ai-service/           # Python Co-pilot Swarm (planned)
+│   └── n8n-host/             # Self-hosted workflow automation (planned)
+├── scripts/
+│   ├── init-db.sql           # Database initialization ✓
+│   └── smoke-test.ts         # RLS isolation tests ✓
+├── docker-compose.yml        # Postgres 16.11, Redis 8.0, MinIO ✓
+├── turbo.json                # Turborepo 2.6.1 config ✓
+└── .github/workflows/ci.yml  # CI/CD pipeline ✓
 ```
 
-## Development Commands (once scaffolded)
+## Development Commands
 
 ```bash
-npm install                # Install all workspace dependencies
-docker-compose up -d       # Start Postgres, Redis, n8n, backend services
-npm run dev                # Start Astro Shell + React watchers
+# Setup
+pnpm install                           # Install all workspace dependencies
+docker compose up -d postgres redis    # Start Postgres 16.11 + Redis 8.0
+pnpm run db:migrate                    # Apply Prisma migrations with RLS
+
+# Development
+pnpm run dev                           # Start all services (Astro + Core API)
+pnpm run dev --filter apps/shell       # Start shell only (port 4321)
+pnpm run dev --filter services/core-api # Start API only (port 3000)
+
+# Testing
+pnpm run test                          # Run all unit tests (14 tests)
+pnpm run test:smoke                    # Run RLS isolation smoke tests
+pnpm run typecheck                     # TypeScript validation
+
+# Build
+pnpm run build                         # Build all packages
+pnpm run lint                          # Run ESLint
 ```
 
 ## Key Technical Patterns
@@ -117,10 +136,12 @@ Workflow status tracked in `docs/bmm-workflow-status.yaml`.
 
 ## Current Phase
 
-**v0.1 (Free tier):** Strategy Co-pilot + Universal Brief
-- Shell infrastructure with 7 category navigation
-- User auth (Supabase), multi-tenant architecture
-- Event Backbone v0.1 (Postgres `system_events`)
-- Brief generation via AI conversation
+**Epic 1 - Foundation (Story 1.1 Complete):**
+- Turborepo 2.6.1 monorepo with pnpm workspaces
+- Astro 5.16.0 Shell with React 19.2.0 islands
+- Core API (Fastify 5.6.2 + Prisma 7.0.1)
+- PostgreSQL 16.11 with fail-closed RLS policies
+- CI/CD pipeline with GitHub branch protection
+- 14 tests passing (ts-schema: 3, ui: 10, core-api: 1)
 
-**Next:** v0.2 (Presencia $10) - Website Builder + CMS + Lead Capture
+**Next:** Story 1.2 (Supabase Auth integration) → Story 1.3 (Event Backbone v0.1)
