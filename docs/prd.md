@@ -682,7 +682,8 @@ The Product Brief serves as the strategic foundation for this PRD. Key sections 
 
 | Metric | Count |
 |--------|-------|
-| **Functional Requirements** | 87 |
+| **Functional Requirements (in-scope)** | 82 |
+| **Functional Requirements [FUTURE]** | 5 |
 | **Non-Functional Requirements** | 33 |
 | **Total Requirements** | 120 |
 | **MVP Scope** | v0.1-v0.2 |
