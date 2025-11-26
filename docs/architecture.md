@@ -35,6 +35,23 @@ We employ a **Monorepo** structure managed by **Turborepo**.
 | **Events** | **Redis** | The "Nervous System" transport layer for high-volume synchronization. |
 | **Orchestration** | **n8n** | Self-hosted workflow engine for complex business logic and integrations. |
 
+### Decision Summary Table
+
+| Category | Decision | Version | Rationale |
+| :--- | :--- | :--- | :--- |
+| Shell | Astro shell with React islands | Astro 5.16.0 / React 19.2.0 | Hybrid SSR/SSG with island hydration; stable React ecosystem for micro-apps. |
+| Monorepo Tooling | Turborepo + pnpm workspaces | Turbo 2.6.1 / pnpm 10.23.0 | Fast incremental builds and deterministic installs across apps/services/packages. |
+| Backend Runtime & API | Node.js + Fastify REST APIs | Node 24.11.1 LTS / Fastify 5.6.2 | Current LTS for runtime security; schema-first, high-performance JSON APIs. |
+| Database & ORM | Postgres with Prisma | Postgres 16.11 / Prisma 7.0.1 | Typed queries with RLS support; aligns with event log and multi-tenant policies. |
+| AuthN/AuthZ | Supabase Auth (GoTrue) + JWT cookies | GoTrue JS 2.84.0 | Delegates identity, supports email/OAuth, and keeps services stateless. |
+| Events & Transport | Postgres `system_events` log + Redis Streams outbox | Redis 8.4.0 | Durable source-of-truth log with streaming fan-out for cross-service transport. |
+| Orchestration | n8n (self-hosted) | n8n 1.121.2 | Visual workflows and retries; separates business logic from app code. |
+| File/Object Storage | S3-compatible blobs (prod: AWS S3, local: MinIO) | MinIO 8.0.6 client (server RELEASE.2024-09-30) | Presigned uploads for media/assets; CDN-friendly and infra-portable. |
+| Deployment Target | Managed Kubernetes | k8s 1.31.0 | Standardized runtime for services, HPA-ready, secrets and ingress consistency. |
+| Observability | OpenTelemetry traces + Pino JSON logs to Loki/Grafana | OTel SDK 1.9.0 / Pino 10.1.0 | Trace propagation across shell/services; structured logs for debugging. |
+
+Version check date: 2025-11-26 (re-verify with WebSearch before releases).
+
 ### System Diagram
 
 ```mermaid
@@ -48,7 +65,7 @@ graph TD
         Shell -->|Lazy Loads| Sales[React Sales App]
     end
 
-    subgraph "Backend (Docker Swarm / K8s)"
+    subgraph "Backend (Kubernetes Cluster)"
         Brand -->|API JSON| APIG[API Gateway]
         Sales -->|API JSON| APIG
         
@@ -165,7 +182,42 @@ The repository follows a standard Turborepo monorepo structure:
 
 ---
 
-## 5. Implementation Patterns
+## 5. Deployment & Environments
+
+### Deployment Target
+- **Target:** Managed Kubernetes v1.31.0 (GKE/EKS/AKS) with NGINX Ingress, cert-manager (ACME), ExternalDNS, and ExternalSecrets for vault-backed creds.
+- **Services:** Each service as a Deployment + HPA (min 2 replicas prod), ConfigMaps for non-secret config, Secrets for JWT keys/webhooks, and dedicated Postgres/Redis managed services.
+- **Networking:** Ingress per app domain (`app.xentri.app`, `api.xentri.app`, `n8n.xentri.app`), TLS via cert-manager, service-to-service auth via signed JWT and network policies.
+
+### Environment Plan
+- **Local (docker compose):** Postgres 16.11, Redis 8.4.0, n8n 1.121.2, MinIO (S3-compatible). Supabase Auth via hosted project or local GoTrue. Command: `docker compose up -d postgres redis n8n minio`.
+- **Staging (k8s 1.31):** Managed Postgres (RDS/CloudSQL), managed Redis (ElastiCache/MemoryStore), n8n as k8s Deployment with PVC, MinIO optional (prefer cloud blob). 1-2 replicas per service with HPA, metrics/alerts wired.
+- **Production (k8s 1.31):** Same as staging with multi-AZ Postgres/Redis, HPA min 2, PodDisruptionBudgets, and regional buckets/CDN for assets.
+
+### Project Initialization (from scratch, no starter template)
+- **Package manager:** pnpm 10.23.0 (via Corepack).
+- **Starter:** From scratch (Turborepo + pnpm). Search term for verification: "create turbo pnpm monorepo".
+- **Bootstrap commands:**
+
+```bash
+# Enable workspace tooling
+corepack enable
+
+# Install workspace deps
+pnpm install
+
+# Start data plane locally
+docker compose up -d postgres redis n8n minio
+
+# Dev servers (run in parallel shells)
+pnpm run dev --filter apps/shell
+pnpm run dev --filter services/core-api
+pnpm run dev --filter packages/ui -- --watch
+```
+
+---
+
+## 6. Implementation Patterns
 
 ### A. The "Shared Contract"
 All data shapes (API responses, Event payloads, DB models) are defined in `/packages/ts-schema`.
@@ -187,7 +239,7 @@ We use Astro's Island Architecture to lazy-load React apps.
 
 ---
 
-## 6. Cross-Cutting Concerns
+## 7. Cross-Cutting Concerns
 
 *   **Authentication:** Supabase Auth (or equivalent JWT provider). Unified user identity across all services.
 *   **Logging:** Centralized structured logging (JSON) with `trace_id` propagation.
@@ -196,7 +248,24 @@ We use Astro's Island Architecture to lazy-load React apps.
     *   Unit Tests: Jest/Vitest per package.
     *   E2E Tests: Playwright running against the full docker-compose stack.
 
-## 7. Future Considerations
+## 8. Validation Summary
+
+- Architecture Completeness: Partial — deployment target and environment plan added; contracts and coverage mapping still pending.
+- Version Specificity: Most Verified — stack versions refreshed (2025-11-26 via registry fetch); re-verify before release.
+- Pattern Clarity: Somewhat Ambiguous — API/auth/error, naming, lifecycle, and file layout conventions need depth.
+- AI Agent Readiness: Needs Work — clearer contracts between shell, micro-apps, and services required.
+
+Critical Issues Found
+1. API/auth/error conventions and contract mapping to PRD/epics are not explicit.
+2. Performance/caching/file-storage patterns and retry/durability guidance are missing.
+3. Naming/location/lifecycle patterns and service-to-service interface contracts are not documented for agents.
+
+Recommended Actions Before Implementation
+1. Define API/auth/error conventions and map architecture components to PRD/epics.
+2. Add caching strategy, file/object storage patterns, performance budgets, and n8n durability/retry policy.
+3. Publish naming/location/lifecycle patterns and service interface contracts to remove agent guesswork.
+
+## 9. Future Considerations
 
 *   **Secondary Geo Expansion:** Architecture supports adding region-specific compliance modules (e.g., `finance-engine-mx` for CFDI) without altering the core `finance-engine`.
 *   **Mobile App:** The API-first design allows a future React Native app to consume the same microservices.
