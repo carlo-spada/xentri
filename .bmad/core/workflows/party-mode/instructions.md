@@ -6,7 +6,7 @@
 <workflow>
 
 <step n="1" goal="Load Agent Manifest and Configurations">
-  <action>Load the agent manifest CSV from {{agent_manifest}}</action>
+  <action>Load the agent manifest CSV from {agent_manifest}</action>
   <action>Parse CSV to extract all agent entries with their condensed information:</action>
     - name (agent identifier)
     - displayName (agent's persona name)

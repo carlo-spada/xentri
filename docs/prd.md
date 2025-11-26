@@ -418,6 +418,34 @@ These releases extend orchestration into revenue-generating workflows. Still foc
 | **Feedback** | All actions confirm success/failure. No silent failures. |
 | **Dark mode** | Supported from v0.1. User preference stored. |
 
+### Mobile & PWA Requirements
+
+| Requirement | Detail |
+|-------------|--------|
+| Device support | Must work on iOS Safari and Android Chrome; homescreen install supported for shell and published sites. |
+| Touch targets & layout | Minimum 44px touch targets; avoid hover-only interactions; orientation-safe layouts on phone/tablet. |
+| Offline/weak connectivity | Shell provides graceful offline/weak-signal fallback for navigation (status + retry); published sites cache static assets and show user-friendly offline message for forms. |
+| Offline data entry/backfill | Brief and lead forms cache user input locally when offline/weak; on reconnect, prompt user to submit or discard; never silently auto-submit without consent. |
+| Permissions | Avoid unsolicited prompts; notifications or camera/mic prompts must be user-initiated and clearly explained. |
+| Performance on mobile | Adhere to NFR1/NFR4 budgets on 3G; avoid heavy blocking scripts in mobile views. |
+
+### Business Rules & Edge Cases (MVP focus)
+
+- Lead intake: resolve org/site from domain; strip message bodies from events/notifications; enforce rate limiting/honeypot; never echo PII in responses.
+- Brief overrides: user overrides never mutate Brief; “Reset to Brief” restores defaults; track `source` for all updates (manual vs AI).
+- Publish rollback: failed publish must leave last-good site live; retries idempotent; DNS/SSL errors surface actionable guidance.
+- Offline drafts: cached Brief/lead drafts must request consent before send on reconnect; discard option always available.
+- Notifications: in-app feed must allow read/unread per user; email preference honored before send.
+
+### FR Rationale (Critical Clusters)
+
+- Auth & Tenancy (FR1-6, FR82): Prevent data leaks; every action/org is scoped and enforced at DB (RLS).
+- Events (FR33-38): Single source of truth and automation spine; required for orchestration, audit, and cache invalidation.
+- Brief→Website (FR40-47, FR42-43): Brief is DNA; auto-population and publish guardrails keep content consistent without mutation.
+- Lead Intake & Notifications (FR60-67, FR75-78): External entry point must be safe (PII scrubbing, rate limit) and visible (notifications with preferences).
+- Data Control (FR79-81): Trust and compliance—export, soft delete, and eventual purge with RLS-safe events.
+- Vision/Innovation (FR88-90): Experiments must be opt-in, logged with rollback guidance, and not break existing contracts via safe toggles.
+
 ---
 
 ## Functional Requirements
@@ -608,9 +636,33 @@ Scope: **v0.1-v0.2 only** (MVP). Growth features (v0.3-v0.4) noted as [FUTURE] f
 
 **Note:** For MVP (v0.1-v0.2), Xentri operates in Client Zero mode. Billing/payment infrastructure is deferred to v0.4 when external customers are targeted.
 
+**Key Dependency Notes (FR-level)**
+- FR40-47 (Website Builder) depend on Brief availability (FR10-17) and Events (FR33-36) for publish/logging.
+- FR42-43 (Brief → Website) depend on Brief schema stability (FR15-16) and event logging (FR33-36).
+- FR60-67 (Leads) depend on website presence (FR40-47) and events/notifications (FR33-38, FR75-78).
+- FR75-78 (Notifications) depend on events (FR33-38) and user/org context (FR1-6, FR82).
+- FR79-81 (Data/Privacy) depend on all domain data stores and events (FR33-38).
+- FR88-90 (Vision/Innovation) depend on feature-flag/module toggle infrastructure and event logging (FR33-38).
+
 ---
 
-**Total FRs: 82 in-scope** (v0.1-v0.2) + **5 [FUTURE]** = 87 total
+### Vision & Innovation (Future)
+
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR88 | Future | Future co-pilots (Brand/Sales/Finance) can run AI-powered experiments with explicit user confirmation and no auto-publish. |
+| FR89 | Future | Experiment outcomes and proposals are logged as events with validation approach and rollback guidance for auditability. |
+| FR90 | Future | Vision bundles (Operations/Team/Advanced) can be enabled as optional modules without breaking existing orchestration contracts. |
+
+**Vision Narrative & Guardrails**
+- Experiments are opt-in, scoped to a module, and must present proposed changes plus rollback instructions before apply (FR88, FR89).
+- Applying an experiment logs an event with validation plan and rollback key; no changes deploy without user confirmation (FR88, FR89).
+- Vision bundles are toggled via feature flags/module switches; enabling must not break existing tenants or contracts (FR90).
+- Rollback guidance must be visible where the change is applied (UI surface or notification), not buried in logs (FR89).
+
+---
+
+**Total FRs: 82 in-scope** (v0.1-v0.2) + **8 [FUTURE]** = 90 total
 
 ---
 
@@ -714,9 +766,9 @@ The Product Brief serves as the strategic foundation for this PRD. Key sections 
 | Metric | Count |
 |--------|-------|
 | **Functional Requirements (in-scope)** | 82 |
-| **Functional Requirements [FUTURE]** | 5 |
+| **Functional Requirements [FUTURE]** | 8 |
 | **Non-Functional Requirements** | 33 |
-| **Total Requirements** | 120 |
+| **Total Requirements** | 123 |
 | **MVP Scope** | v0.1-v0.2 |
 | **Primary Persona** | Founders (building a business) |
 | **Validation Model** | Client Zero (Xentri runs Xentri) |
@@ -729,6 +781,7 @@ The Product Brief serves as the strategic foundation for this PRD. Key sections 
 4. **Risk Management** — Critical, High, and Accepted risks with mitigations
 5. **Scope Definition** — MVP, Growth, and Vision features with orchestration framing
 6. **SaaS Requirements** — Multi-tenancy, RBAC, subscription tiers, integrations, compliance
+7. **Operational Guardrails** — Business rules, edge cases, offline/backfill expectations
 7. **UX Principles** — Light touch defining feel, not pixels
 8. **Functional Requirements** — 87 capability-level requirements for v0.1-v0.2
 9. **Non-Functional Requirements** — Performance, security, scalability, reliability, observability, maintainability

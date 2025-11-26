@@ -27,13 +27,13 @@ workflow_status:
   research: "docs/bmm-research-market-2025-11-24.md"
   product-brief: "docs/product-brief-Xentri-2025-11-24.md"
   prd: "docs/prd.md"
-  validate-prd: recommended
+  validate-prd: "docs/validation-report-20251128T140500Z.md"
   create-design: "docs/ux-design-specification.md"
   create-architecture: "architecture.md"
-  test-design: required # pending artifact
+  test-design: "docs/test-design-system.md"
   validate-architecture: recommended
-  create-epics-and-stories: required # pending artifact
-  implementation-readiness: required # pending artifact
+  create-epics-and-stories: "docs/epics.md"
+  implementation-readiness: "docs/implementation-readiness-report-2025-11-26.md"
   sprint-planning: required # pending artifact
 project_description: |-
   This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:

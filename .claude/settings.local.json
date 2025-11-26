@@ -8,7 +8,13 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(kill:*)",
-      "Bash(killall:*)"
+      "Bash(killall:*)",
+      "SlashCommand(/bmad:core:tasks:index-docs)",
+      "SlashCommand(/bmad:bmb:workflows:audit-workflow)",
+      "Bash(find:*)",
+      "Bash(alias codex:*)",
+      "Bash(top:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,90 @@
+# generated: 2025-11-26
+# project: nu
+# tracking_system: file-system
+# story_location: {project-root}/docs/sprint-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic exists in epic file but not contexted
+#   - contexted: Next epic tech context created by *epic-tech-context (required)
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder by *create-story
+#   - ready-for-dev: Draft approved and story context created by *story-ready
+#   - in-progress: Developer actively working on implementation by *dev-story
+#   - review: Implementation complete, ready for review by *code-review
+#   - done: Story completed by *story-done
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done by *retrospective
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics should be 'contexted' before stories can be 'drafted'
+# - SM typically drafts next story ONLY after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', dev reviews, then Dev moves to 'done'
+
+generated: 2025-11-26
+project: nu
+tracking_system: file-system
+story_location: "{project-root}/docs/sprint-artifacts"
+
+development_status:
+  # Epic 1: Foundation & Access (MVP)
+  epic-1: backlog
+  1-1-project-initialization-infrastructure: backlog
+  1-2-event-backbone-database-schema: backlog
+  1-3-user-authentication-signup: backlog
+  1-4-organization-creation-provisioning: backlog
+  1-5-application-shell-navigation: backlog
+  1-6-thin-vertical-slice-signup-brief-event: backlog
+  1-7-devops-observability-test-readiness: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: Strategy & Clarity Engine (MVP)
+  epic-2: backlog
+  2-1-universal-brief-schema-storage: backlog
+  2-2-strategy-co-pilot-interface-chat-ui: backlog
+  2-3-co-pilot-intelligence-context-management: backlog
+  2-4-brief-generation-editing: backlog
+  2-5-brief-export: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: Digital Presence Builder (MVP)
+  epic-3: backlog
+  3-1-website-builder-engine-templates: backlog
+  3-2-brief-to-website-auto-population: backlog
+  3-3-cms-core-service-pages-portfolio: backlog
+  3-4-custom-domain-publishing: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Lead Capture & Growth (MVP)
+  epic-4: backlog
+  4-1-lead-capture-form-builder-security: backlog
+  4-2-lead-management-list-view: backlog
+  4-3-lead-notifications-events: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Brand Intelligence (Growth)
+  epic-5: backlog
+  5-1-brand-co-pilot-integration-context: backlog
+  5-2-content-suggestions-website-copy: backlog
+  5-3-content-review-seo-improvements: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Data Privacy & Compliance (MVP)
+  epic-6: backlog
+  6-1-data-export-takeout: backlog
+  6-2-account-deletion-recovery: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Roles, Subscription, and Conversion (Future)
+  epic-7: backlog
+  7-1-roles-permission-model: backlog
+  7-2-subscription-lifecycle-future: backlog
+  7-3-lead-to-client-conversion-future: backlog
+  7-4-innovation-experiments-vision-bundles-future: backlog
+  epic-7-retrospective: optional

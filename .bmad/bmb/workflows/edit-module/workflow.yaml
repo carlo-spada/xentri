@@ -5,8 +5,10 @@ author: "BMad"
 
 # Critical variables load from config_source
 config_source: "{project-root}/.bmad/bmb/config.yaml"
+output_folder: "{config_source}:output_folder"
 communication_language: "{config_source}:communication_language"
 user_name: "{config_source}:user_name"
+date: system-generated
 
 # Required Data Files - Critical for understanding module conventions
 module_structure_guide: "{project-root}/.bmad/bmb/workflows/create-module/module-structure.md"
