@@ -283,5 +283,146 @@ describe('Events API Routes', () => {
 
       expect(response.statusCode).toBe(403);
     });
+
+    it('should not return events from another org (RLS cross-org isolation)', async () => {
+      const otherOrgId = 'e3333333-3333-3333-3333-333333333333';
+
+      // Create other org
+      await prisma.$executeRaw`
+        INSERT INTO organizations (id, name, slug)
+        VALUES (${otherOrgId}::uuid, 'Other Org', 'other-org')
+        ON CONFLICT (slug) DO NOTHING
+      `;
+
+      // Seed event for other org (with proper RLS context)
+      await prisma.$executeRaw`SELECT set_config('app.current_org_id', ${otherOrgId}, true)`;
+      await prisma.$executeRaw`
+        INSERT INTO system_events (
+          org_id, event_type, actor_type, actor_id, payload_schema, payload, source
+        ) VALUES (
+          ${otherOrgId}::uuid,
+          'xentri.user.signup.v1',
+          'system',
+          'test',
+          'user.signup@1.0',
+          '{"email": "other@example.com"}'::jsonb,
+          'test'
+        )
+      `;
+
+      // Request events using testOrgId header - should NOT see otherOrgId events
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+        },
+      });
+
+      expect(response.statusCode).toBe(200);
+      const body = response.json();
+
+      // Verify no events from other org leaked
+      body.data.forEach((event: { org_id: string }) => {
+        expect(event.org_id).toBe(testOrgId);
+        expect(event.org_id).not.toBe(otherOrgId);
+      });
+    });
+  });
+
+  describe('Payload Validation (AC6)', () => {
+    it('should reject invalid payload shape for user.signup event', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'content-type': 'application/json',
+        },
+        payload: {
+          type: 'xentri.user.signup.v1',
+          org_id: testOrgId,
+          actor: { type: 'user', id: testUserId },
+          payload_schema: 'user.signup@1.0',
+          payload: { invalid_field: 'no email' }, // Missing required 'email'
+          source: 'test',
+          envelope_version: '1.0',
+        },
+      });
+
+      expect(response.statusCode).toBe(422);
+      const body = response.json();
+      expect(body.detail).toContain('email');
+    });
+
+    it('should reject malformed email in user.signup payload', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'content-type': 'application/json',
+        },
+        payload: {
+          type: 'xentri.user.signup.v1',
+          org_id: testOrgId,
+          actor: { type: 'user', id: testUserId },
+          payload_schema: 'user.signup@1.0',
+          payload: { email: 'not-an-email' }, // Invalid email format
+          source: 'test',
+          envelope_version: '1.0',
+        },
+      });
+
+      expect(response.statusCode).toBe(422);
+      const body = response.json();
+      expect(body.detail).toContain('email');
+    });
+
+    it('should accept valid payload matching event type schema', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'content-type': 'application/json',
+        },
+        payload: {
+          type: 'xentri.user.signup.v1',
+          org_id: testOrgId,
+          actor: { type: 'user', id: testUserId },
+          payload_schema: 'user.signup@1.0',
+          payload: { email: 'valid@example.com', name: 'Test User' },
+          source: 'test',
+          envelope_version: '1.0',
+        },
+      });
+
+      expect(response.statusCode).toBe(201);
+      const body = response.json();
+      expect(body.acknowledged).toBe(true);
+    });
+
+    it('should reject org.created payload missing required fields', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'content-type': 'application/json',
+        },
+        payload: {
+          type: 'xentri.org.created.v1',
+          org_id: testOrgId,
+          actor: { type: 'system', id: 'bootstrap' },
+          payload_schema: 'org.created@1.0',
+          payload: { name: 'Test' }, // Missing required 'slug' and 'owner_id'
+          source: 'test',
+          envelope_version: '1.0',
+        },
+      });
+
+      expect(response.statusCode).toBe(422);
+    });
   });
 });

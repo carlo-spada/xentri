@@ -1,6 +1,6 @@
 # Story 1.1: Project Initialization & Infrastructure
 
-Status: done
+Status: review
 
 ## Story
 
@@ -238,6 +238,7 @@ DELETED : packages/ts-schema/tsconfig.schema.json
 | 2025-11-26 | Dev Agent (Amelia) | Implementation complete - all 10 tasks done, tests passing |
 | 2025-11-26 | SM Agent (Bob) | Reverted status to ready-for-review per user request |
 | 2025-11-26 | Carlo | Senior Developer Review (AI) - Approved |
+| 2025-11-26 | Carlo | Senior Developer Review (AI) - Blocked (schema mismatch) |
 
 ## Senior Developer Review (AI)
 
@@ -308,3 +309,111 @@ The implementation successfully establishes the foundational infrastructure for 
 **Advisory Notes:**
 - Note: Consider refactoring `services/core-api/src/server.ts` to avoid side-effects on import (Low priority).
 
+## Senior Developer Review (AI)
+
+- **Reviewer:** Carlo
+- **Date:** 2025-11-26
+- **Outcome:** **BLOCKED**
+
+### Summary
+- Event log schema/runtime are misaligned (column names, missing fields, no immutability), causing smoke test and event API failures. Default DB credentials also diverge from docker-compose, risking boot failures for `pnpm run dev` and API routes.
+
+### Key Findings (by severity)
+- **High**: `system_events` migration uses `type` only and omits `created_at`/`user_id`, while EventService and smoke tests expect `event_type`, `created_at`, and `user_id`, so inserts/queries error and AC5 fails (services/core-api/prisma/migrations/00000000000000_init/migration.sql:49-62; services/core-api/src/domain/events/EventService.ts:74-109; scripts/smoke-test.ts:104-132).
+- **High**: Event immutability is not enforced (no UPDATE/DELETE guards) but the smoke test expects failures, so `testEventImmutability` will fail and append-only guarantees are missing (services/core-api/prisma/migrations/00000000000000_init/migration.sql:136-156; scripts/smoke-test.ts:232-277).
+- **High**: Default DB URL uses `xentri:xentri` while compose/.env use `xentri:xentri_dev`, so the core API/dev stack can’t reach Postgres without manual overrides (services/core-api/src/infra/db.ts:18-22; docker-compose.yml:8-11; .env.example:4-11).
+- **Med**: Repo pins pnpm 10.20.0 instead of required 10.23.0 from the story constraint (package.json:6).
+- **Med**: Redis service runs 8.0 instead of the requested 8.4.0 (docker-compose.yml:29).
+
+### Acceptance Criteria Coverage
+| AC# | Description | Status | Evidence |
+|-----|-------------|--------|----------|
+| 1 | `pnpm install && pnpm run dev` loads shell at :4321 | Partial | Root runs `turbo run dev` starting all workspaces including core-api (package.json:10-18; services/core-api/src/server.ts:37-50) and uses a default DB URL that does not match compose (services/core-api/src/infra/db.ts:18-22 vs docker-compose.yml:8-11), so dev may fail without custom env/DB. Shell config is on port 4321 (apps/shell/package.json:7; apps/shell/astro.config.mjs:5-13). |
+| 2 | Monorepo layout correct | Implemented | Workspace roots declared (pnpm-workspace.yaml:1-3); configs present across apps/packages/services (turbo.json:1-20; apps/shell/package.json:1-27; packages/ui/package.json:1-47; packages/ts-schema/package.json:1-30; services/core-api/package.json:1-41). |
+| 3 | Postgres with RLS enabled | Implemented | Compose sets row_security=on and mounts init SQL (docker-compose.yml:4-26); init script enforces row_security check (scripts/init-db.sql:4-20); migration enables FORCE RLS policies (services/core-api/prisma/migrations/00000000000000_init/migration.sql:79-111). |
+| 4 | CI/CD pipeline runs | Implemented | .github/workflows/ci.yml:17-165 |
+| 5 | Smoke test verifies isolation | Missing | Smoke test targets `event_type`/immutability, but migration defines `type` only and no immutability guards, so it fails (services/core-api/prisma/migrations/00000000000000_init/migration.sql:49-62,136-156; scripts/smoke-test.ts:104-132,200-277). |
+
+### Task Completion Validation
+| Task | Marked As | Verified As | Evidence |
+|------|-----------|-------------|----------|
+| 1.1 corepack enable + pnpm 10.23.0 | [x] | **NOT DONE** (pnpm 10.20.0 pinned) | package.json:6 |
+| 1.2 root package.json with workspaces config | [x] | **VERIFIED** | package.json:2-18; pnpm-workspace.yaml:1-3 |
+| 1.3 turbo.json pipeline for dev/build/test/lint | [x] | **VERIFIED** | turbo.json:1-20 |
+| 1.4 .npmrc with strict-peer-dependencies=false | [x] | **VERIFIED** | .npmrc:1-2 |
+| 1.5 .nvmrc pinning Node 24.11.1 | [x] | **VERIFIED** | .nvmrc:1 |
+| 2.1 Astro 5.16.0 project in apps/shell | [x] | **VERIFIED** | apps/shell/package.json:13-19 |
+| 2.2 Configure Astro for React islands (@astrojs/react) | [x] | **VERIFIED** | apps/shell/astro.config.mjs:5-13 |
+| 2.3 Minimal index page renders “Xentri Shell” | [x] | **VERIFIED** | apps/shell/src/pages/index.astro:35-59 |
+| 2.4 Dev script on port 4321 | [x] | **VERIFIED** | apps/shell/package.json:7; apps/shell/astro.config.mjs:5-9 |
+| 2.5 Verify `pnpm run dev --filter apps/shell` starts | [x] | **QUESTIONABLE** (no automated check) | Manual only |
+| 3.1 Create packages/ts-schema with TS + Zod | [x] | **VERIFIED** | packages/ts-schema/package.json:15-29 |
+| 3.2 Export placeholder SystemEvent interface | [x] | **VERIFIED** | packages/ts-schema/src/events.ts:1-110 |
+| 3.3 Export placeholder User/Organization types | [x] | **VERIFIED** | packages/ts-schema/src/auth.ts:1-18 |
+| 3.4 Configure tsconfig with strict mode | [x] | **VERIFIED** | packages/ts-schema/tsconfig.json:2-18 |
+| 3.5 Add build script outputting to dist/ | [x] | **VERIFIED** | packages/ts-schema/package.json:15-18; packages/ts-schema/tsconfig.json:14-16 |
+| 4.1 Create packages/ui with React 19.2.0 | [x] | **VERIFIED** | packages/ui/package.json:31-40 |
+| 4.2 Initialize shadcn/ui with Tailwind CSS | [x] | **VERIFIED** | packages/ui/package.json:17-23,35-46; packages/ui/src/styles/globals.css:1-60 |
+| 4.3 Add Xentri design tokens from UX spec | [x] | **VERIFIED** | packages/ui/src/styles/globals.css:5-45 |
+| 4.4 Export at least one component (Button) | [x] | **VERIFIED** | packages/ui/src/components/button.tsx:1-52; packages/ui/src/index.ts:1-5 |
+| 4.5 Verify apps/shell can import @xentri/ui | [x] | **VERIFIED** | apps/shell/src/components/Hero.tsx:1-12 |
+| 5.1 Create services/core-api with Fastify 5.6.2 | [x] | **VERIFIED** | services/core-api/package.json:20-30 |
+| 5.2 Add health check GET /health returning {status:"ok"} | [x] | **VERIFIED** | services/core-api/src/routes/health.ts:4-6 |
+| 5.3 Add Prisma 7.0.1 with schema | [x] | **VERIFIED** | services/core-api/package.json:20-36; services/core-api/prisma/schema.prisma:7-76 |
+| 5.4 Dev script with hot reload (tsx watch) | [x] | **VERIFIED** | services/core-api/package.json:6-18 |
+| 5.5 Verify `pnpm run dev --filter services/core-api` starts on 3000 | [x] | **NOT DONE** (default DB creds mismatch compose; server auto-starts) | services/core-api/src/infra/db.ts:18-22 vs docker-compose.yml:8-11; services/core-api/src/server.ts:37-50 |
+| 6.1 docker-compose.yml with Postgres 16.11 | [x] | **VERIFIED** | docker-compose.yml:4-26 |
+| 6.2 Add Redis 8.4.0 service | [x] | **NOT DONE** (uses redis:8.0) | docker-compose.yml:29 |
+| 6.3 Add MinIO service | [x] | **VERIFIED** | docker-compose.yml:44-60 |
+| 6.4 Create .env.example with required vars | [x] | **VERIFIED** | .env.example:1-35 |
+| 6.5 Document startup in README | [x] | **VERIFIED** | README.md:22-45 |
+| 6.6 Verify Postgres starts with row_security=on | [x] | **VERIFIED** | docker-compose.yml:23-26; scripts/init-db.sql:4-14 |
+| 7.1 Create Prisma schema with users/organizations/members | [x] | **VERIFIED** | services/core-api/prisma/schema.prisma:7-61 |
+| 7.2 Add org_id column to tenant tables | [x] | **VERIFIED** | services/core-api/prisma/schema.prisma:21-61 |
+| 7.3 Write raw SQL migration enabling RLS on all tables | [x] | **VERIFIED** | services/core-api/prisma/migrations/00000000000000_init/migration.sql:49-111 |
+| 7.4 Implement fail-closed RLS policy per ADR-003 | [x] | **VERIFIED** | services/core-api/prisma/migrations/00000000000000_init/migration.sql:79-111 |
+| 7.5 Add `pnpm run db:migrate` script | [x] | **VERIFIED** | package.json:17; services/core-api/package.json:12-16 |
+| 8.1 Create .github/workflows/ci.yml | [x] | **VERIFIED** | .github/workflows/ci.yml:1-165 |
+| 8.2 Add lint job | [x] | **VERIFIED** | .github/workflows/ci.yml:17-41 |
+| 8.3 Add typecheck job | [x] | **VERIFIED** | .github/workflows/ci.yml:42-65 |
+| 8.4 Add test job | [x] | **VERIFIED** | .github/workflows/ci.yml:66-89 |
+| 8.5 Add build job | [x] | **VERIFIED** | .github/workflows/ci.yml:90-114 |
+| 8.6 Configure branch protection requiring CI pass | [x] | **QUESTIONABLE** (not codified in repo) | No branch-protection config present |
+| 9.1 Create scripts/smoke-test.ts | [x] | **VERIFIED** | scripts/smoke-test.ts:1-352 |
+| 9.2 Seed orgs/users in smoke test | [x] | **VERIFIED** | scripts/smoke-test.ts:60-132 |
+| 9.3 Cross-org query isolation assertion | [x] | **VERIFIED** | scripts/smoke-test.ts:137-199 |
+| 9.4 Verify shell loads (HTTP 200) | [x] | **VERIFIED** | scripts/smoke-test.ts:280-307 |
+| 9.5 Add `pnpm run test:smoke` script | [x] | **VERIFIED** | package.json:14 |
+| 9.6 Integrate smoke test into CI | [x] | **VERIFIED** but **FAILING** (schema mismatch) | .github/workflows/ci.yml:115-165; services/core-api/prisma/migrations/00000000000000_init/migration.sql:49-62 |
+| 10.1 Add Vitest to root with workspace config | [x] | **VERIFIED** | vitest.config.ts:1-18 |
+| 10.2 Configure test containers for Postgres integration | [x] | **VERIFIED** | services/core-api/src/__tests__/helpers/postgres-container.ts:1-90 |
+| 10.3 Add Playwright config (E2E ready) | [x] | **VERIFIED** | playwright.config.ts:1-43 |
+| 10.4 Create first unit test in packages/ts-schema | [x] | **VERIFIED** (placeholder) | packages/ts-schema/src/__tests__/events.test.ts:1-44 |
+| 10.5 Verify `pnpm run test` runs across packages | [x] | **QUESTIONABLE** (pipeline exists; tests are placeholders and smoke fails) | package.json:13; .github/workflows/ci.yml:66-89 |
+
+### Test Coverage and Gaps
+- Vitest tests are placeholders and do not exercise event endpoints or RLS.
+- Smoke test is wired into CI but fails because the DB schema does not match the code (event_type vs type, no immutability).
+- No integration tests for EventService create/list endpoints or RLS enforcement in API routes.
+
+### Architectural Alignment
+- RLS policies follow ADR-003 (fail-closed via set_config) in the migration, but the application/runtime use mismatched column names, breaking the event backbone slice.
+- Default DB credentials in code differ from docker-compose/.env, so local dev does not align with documented infra and will fail to reach Postgres without overrides.
+
+### Security Notes
+- Event log immutability is not enforced; UPDATE/DELETE are currently allowed at the SQL layer, undermining audit integrity.
+- DB credential mismatch encourages ad-hoc overrides and could lead to running against non-RLS instances.
+
+### Best-Practices and References
+- Stack detected: Node 24 + pnpm 10 (turbo 2.6.1), Astro 5.16.0 + React 19.2.0, Fastify 5.6.2, Prisma 7.0.1, Vitest/Playwright. Aligns with architecture.md and story context; ensure pnpm matches 10.23.0 requirement.
+
+### Action Items
+**Code Changes Required:**
+- [ ] [High] Align `system_events` schema with code/smoke test: rename `type` → `event_type`, add `created_at` and `user_id`, and add immutability guards (triggers or policies) so EventService and smoke tests pass (services/core-api/prisma/migrations/00000000000000_init/migration.sql:49-62,136-156; services/core-api/src/domain/events/EventService.ts:74-109; scripts/smoke-test.ts:104-132,232-277).
+- [ ] [High] Fix default Postgres connection to match compose/.env and require DATABASE_URL for dev/tests (services/core-api/src/infra/db.ts:18-22; docker-compose.yml:8-11; .env.example:4-11).
+- [ ] [Med] Bump pnpm to 10.23.0 as per story constraint and align docs (package.json:6).
+- [ ] [Med] Set Redis image to 8.4.0 to match task requirements (docker-compose.yml:29).
+- [ ] [Low] Add DB readiness to `/health/ready` to surface infra issues during dev/CI (services/core-api/src/routes/health.ts:8-16).
+
+**Advisory Notes:**
+- Note: `pnpm run dev` spins all workspace dev tasks via turbo; consider filtering to shell-only or documenting DB requirement for core-api to avoid dev failures.

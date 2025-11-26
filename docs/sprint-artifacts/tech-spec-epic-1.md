@@ -410,6 +410,12 @@ CREATE TABLE user_preferences (
 3. Minimal load test or smoke test script for shell/Brief slice
 4. Deployment pipeline supports zero-downtime deploys
 
+## Post-Review Follow-ups
+- Story 1.2: Enforce org membership/JWT before setting org context for events (services/core-api/src/middleware/orgContext.ts; services/core-api/src/routes/events.ts).
+- Story 1.2: Rewrite listEvents query with parameterized SQL to fix filters/pagination (services/core-api/src/domain/events/EventService.ts).
+- Story 1.2: Tie CreateEvent validation to typed payload schemas and add negative tests (packages/ts-schema/src/events.ts; services/core-api/src/domain/events/EventService.test.ts).
+- Story 1.2: Add RLS/cross-org API coverage and ensure smoke-test seeds with org context (services/core-api/src/routes/events.test.ts; scripts/smoke-test.ts).
+
 ---
 
 ## Traceability Mapping

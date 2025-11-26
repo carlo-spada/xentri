@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import type { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   CreateEventSchema,
   type CreateEventInput,
@@ -147,12 +148,31 @@ export class EventService {
     // Fetch one extra to determine has_more
     const fetchLimit = Math.min(limit, 100) + 1;
 
+    // Build dynamic SQL fragments using Prisma.sql
+    const whereConditions: Prisma.Sql[] = [Prisma.sql`1=1`];
+
+    if (type) {
+      whereConditions.push(Prisma.sql`AND event_type = ${type}`);
+    }
+
+    if (since) {
+      whereConditions.push(Prisma.sql`AND occurred_at >= ${since}`);
+    }
+
+    if (cursorTimestamp && cursorId) {
+      whereConditions.push(
+        Prisma.sql`AND (occurred_at, id) < (${cursorTimestamp}, ${cursorId}::uuid)`
+      );
+    }
+
+    const whereClause = Prisma.join(whereConditions, ' ');
+
     // Build and execute query
     const events = await this.prisma.$transaction(async (tx) => {
       // Set org context for RLS
       await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
 
-      // Dynamic query with conditional filters
+      // Execute parameterized query with proper SQL fragments
       const rows = await tx.$queryRaw<Array<{
         id: string;
         event_type: string;
@@ -189,14 +209,7 @@ export class EventService {
           source,
           envelope_version
         FROM system_events
-        WHERE 1=1
-          ${type ? tx.$queryRaw`AND event_type = ${type}` : tx.$queryRaw``}
-          ${since ? tx.$queryRaw`AND occurred_at >= ${since}` : tx.$queryRaw``}
-          ${
-            cursorTimestamp && cursorId
-              ? tx.$queryRaw`AND (occurred_at, id) < (${cursorTimestamp}, ${cursorId}::uuid)`
-              : tx.$queryRaw``
-          }
+        WHERE ${whereClause}
         ORDER BY occurred_at DESC, id DESC
         LIMIT ${fetchLimit}
       `;

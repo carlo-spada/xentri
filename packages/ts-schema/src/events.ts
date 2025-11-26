@@ -116,7 +116,7 @@ export const LeadCreatedPayloadSchema = z.object({
 export type LeadCreatedPayload = z.infer<typeof LeadCreatedPayloadSchema>;
 
 // Payload schema map for type-safe event creation
-export const EventPayloadSchemas = {
+export const EventPayloadSchemas: Record<EventType, z.ZodTypeAny> = {
   'xentri.user.signup.v1': UserSignupPayloadSchema,
   'xentri.user.login.v1': UserLoginPayloadSchema,
   'xentri.org.created.v1': OrgCreatedPayloadSchema,
@@ -126,7 +126,25 @@ export const EventPayloadSchemas = {
   'xentri.page.updated.v1': PageUpdatedPayloadSchema,
   'xentri.content.published.v1': ContentPublishedPayloadSchema,
   'xentri.lead.created.v1': LeadCreatedPayloadSchema,
-} as const;
+};
+
+/**
+ * Validates that the payload matches the expected schema for the given event type.
+ * Returns an error message if validation fails, undefined if valid.
+ */
+export function validateEventPayload(type: EventType, payload: unknown): string | undefined {
+  const schema = EventPayloadSchemas[type];
+  if (!schema) {
+    return `No payload schema registered for event type: ${type}`;
+  }
+
+  const result = schema.safeParse(payload);
+  if (!result.success) {
+    return result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join('; ');
+  }
+
+  return undefined;
+}
 
 // ===================
 // System Event Envelope (AC4 - subtask 3.3)
@@ -163,13 +181,23 @@ export type SystemEvent<TPayload = Record<string, unknown>> = Omit<
 
 /**
  * Schema for creating a new event (id and timestamps auto-generated)
+ * Includes refinement to validate payload against type-specific schema (AC6)
  */
 export const CreateEventSchema = SystemEventSchema.omit({
   id: true,
   created_at: true,
 }).extend({
   occurred_at: z.string().datetime().optional(), // defaults to now()
-});
+}).refine(
+  (data) => {
+    const error = validateEventPayload(data.type, data.payload);
+    return error === undefined;
+  },
+  (data) => ({
+    message: validateEventPayload(data.type, data.payload) || 'Invalid payload for event type',
+    path: ['payload'],
+  })
+);
 
 export type CreateEventInput<TPayload = Record<string, unknown>> = Omit<
   z.infer<typeof CreateEventSchema>,

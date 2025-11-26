@@ -253,3 +253,63 @@ claude-opus-4-5-20251101
 |------|--------|--------|
 | 2025-11-26 | SM Agent (Bob) | Initial draft created from Epic 1 tech spec, epics.md, and Story 1.1 learnings |
 | 2025-11-26 | Dev Agent (Amelia) | Implementation complete: All 7 tasks done, all ACs satisfied |
+| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review notes appended (Blocked) |
+
+## Senior Developer Review (AI)
+
+- Reviewer: Amelia
+- Date: 2025-11-26
+- Outcome: Blocked (AC2 tenant isolation not enforced, AC7 GET query broken)
+- Summary: Cross-org access trusts headers, no auth/membership check. GET /api/v1/events query uses nested Prisma promises, likely throwing/ignoring filters.
+
+### Key Findings
+- **HIGH** – Tenant isolation relies on client-supplied `x-org-id`; no JWT/membership validation, so setting another org header exposes its events (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169; services/core-api/src/domain/events/EventService.ts:153-199).
+- **HIGH** – GET /api/v1/events builds SQL with nested `tx.$queryRaw` promises; Prisma will reject/ignore filters and pagination, so AC7 fails (services/core-api/src/domain/events/EventService.ts:193-201).
+- **MEDIUM** – CreateEventSchema accepts any payload shape; typed payload schemas are unused, so invalid payloads pass Zod validation (packages/ts-schema/src/events.ts:139-179). Tests only cover invalid type, not payload conformance (services/core-api/src/domain/events/EventService.test.ts:37-94).
+- **MEDIUM** – RLS paths untested: smoke-test seeds events without setting `app.current_org_id`, so fail-closed behavior isn’t exercised and API flows aren’t covered (scripts/smoke-test.ts:37-129; services/core-api/src/routes/events.test.ts:145-260 seeds via pool without verified context).
+
+### Acceptance Criteria Coverage
+| AC | Status | Evidence |
+|----|--------|----------|
+| AC1 | ✅ | Column set including org_id/user_id/payload_schema/source/dedupe/correlation/trace (services/core-api/prisma/schema.prisma:76-94; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33). |
+| AC2 | ❌ | Org scoping trusts header; no auth/membership enforcement, so cross-org reads possible (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169). |
+| AC3 | ✅ | Immutability enforced via insert-only policies + trigger + delete rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78). |
+| AC4 | ✅ | EventType union lists all nine v0.1/v0.2 types (packages/ts-schema/src/events.ts:11-21). |
+| AC5 | ✅ | OpenLoopsProjection placeholder documented (packages/ts-schema/src/events.ts:204-239). |
+| AC6 | ⚠️ Partial | POST validates envelope but payload is generic record; typed payload schemas unused; no auth on user_id (packages/ts-schema/src/events.ts:139-179; services/core-api/src/routes/events.ts:43-88). |
+| AC7 | ❌ | List query uses nested Prisma promises; filters/pagination can’t execute (services/core-api/src/domain/events/EventService.ts:193-201). |
+
+### Task Completion Validation
+| Task | Marked As | Verified As | Evidence / Notes |
+|------|-----------|-------------|------------------|
+| 1. System_events schema/migration | [x] | Verified | Columns/index + source/created_at added (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33). |
+| 2. RLS policies (fail-closed) | [x] | **Not Done – header trust allows cross-org access** | No membership/JWT check; any org header is accepted (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169). |
+| 3. ts-schema event types | [x] | Verified | EventType union and payload schemas present (packages/ts-schema/src/events.ts:11-129). |
+| 4. EventService create/list | [x] | **Partial – list query broken** | Nested `tx.$queryRaw` promises will fail/ignore filters (services/core-api/src/domain/events/EventService.ts:193-201). |
+| 5. API routes & middleware | [x] | **Partial – auth missing, list bug** | No JWT/user extraction (TODO comment) and same list query issue (services/core-api/src/middleware/orgContext.ts:62-99; services/core-api/src/routes/events.ts:43-169). |
+| 6. Shell timeline slice | [x] | Verified | EventTimeline renders recent events list (apps/shell/src/components/EventTimeline.tsx:1-122; apps/shell/src/pages/index.astro:6-40). |
+| 7. Testing & validation | [x] | **Partial – gaps** | No cross-org/RLS API test; smoke-test doesn’t exercise API and skips org context on inserts (services/core-api/src/routes/events.test.ts:145-260; scripts/smoke-test.ts:37-129). |
+
+### Test Coverage and Gaps
+- API tests cover happy-path create/list and basic validation, but no cross-org/RLS enforcement, no payload shape checks, and pagination/filter path is broken yet untested.
+- Smoke test bypasses API and may not hit RLS fail-closed paths; endpoints unvalidated in end-to-end flow.
+- Tests not re-run in this review session.
+
+### Architectural Alignment
+- ADR-003 (fail-closed RLS) isn’t enforced end-to-end because org context is trusted from headers with no membership check.
+- Event list query violates reliability expectations; pagination cannot function with current Prisma call.
+
+### Security Notes
+- Cross-tenant data exposure risk: any caller can set `x-org-id` to another org and read/write events because membership/auth is absent in middleware and routes.
+
+### Best-Practices and References
+- Use Fastify auth preHandler to verify JWT and membership, then set `app.current_org_id` from verified org claim (align with ADR-003).
+- Build dynamic queries with `Prisma.sql` or parameter arrays; never interpolate Prisma promises inside `$queryRaw`.
+- Tie CreateEvent validation to event-type-specific payload schemas to keep contracts enforceable.
+
+### Action Items
+**Code Changes Required:**
+- [ ] [High] Enforce org membership/JWT in events preHandler; derive org_id/user_id from verified claims and reject mismatched headers (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169).
+- [ ] [High] Rewrite listEvents query using `Prisma.sql`/parameterized raw SQL so filters and pagination run without Prisma promise interpolation (services/core-api/src/domain/events/EventService.ts:193-201).
+- [ ] [Medium] Bind CreateEvent payload validation to typed schemas per event type and add negative tests (packages/ts-schema/src/events.ts:139-179; services/core-api/src/domain/events/EventService.test.ts:37-94; services/core-api/src/routes/events.test.ts:50-143).
+- [ ] [Medium] Add RLS/cross-org API tests and set org context during smoke-test seeding to exercise fail-closed path (services/core-api/src/routes/events.test.ts:145-260; scripts/smoke-test.ts:37-129).

@@ -28,7 +28,20 @@
       "Bash(gh api:*)",
       "Bash(npx prisma validate:*)",
       "Bash(docker ps:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(colima start:*)",
+      "Bash(colima stop:*)",
+      "Bash(colima delete:*)",
+      "Bash(export DOCKER_HOST=\"unix://$HOME/.colima/default/docker.sock\")",
+      "Bash(docker compose:*)",
+      "Bash(pnpm run db:migrate:*)",
+      "Bash(pnpm exec prisma migrate:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" pnpm exec prisma migrate deploy:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" pnpm exec prisma db push:*)",
+      "Bash(pnpm exec prisma db push:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" pnpm exec tsx:*)",
+      "Bash(pnpm exec prisma generate:*)",
+      "Bash(pnpm run test:smoke:*)"
     ],
     "deny": [],
     "ask": []
