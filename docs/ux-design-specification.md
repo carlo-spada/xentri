@@ -628,7 +628,7 @@ Extend the default theme in `components.json`:
 | Secondary Color | Violet (#a78bfa) | AI, insight, premium feel |
 | Neutral Base | Warm Dusk | Less corporate than pure gray |
 | Interaction Model | Click/tap-first | Target users not tech-savvy |
-| Default Preset | Conservative | Safe by construction, earn trust |
+| Default Preset | Balanced | Auto-execute safe actions, batch review external — faster workflow for busy founders |
 | Training Wheels | 24h + 10 actions | Enough to calibrate, not annoying |
 
 ### Version History
@@ -637,6 +637,7 @@ Extend the default theme in `components.json`:
 |------|---------|---------|--------|
 | 2025-11-25 | 1.0 | Initial UX Design Specification | UX Designer + PM |
 | 2025-11-25 | 1.1 | Tightened specs to prevent Notification Hell: §1.5 philosophy hard rule, §5.7-5.11 operational constraints | UX Designer + PM |
+| 2025-11-26 | 1.2 | Changed default preset from Conservative to Balanced; confirmed shadcn/ui colors-only approach | Carlo + Winston |
 
 ---
 

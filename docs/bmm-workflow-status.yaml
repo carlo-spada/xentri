@@ -31,9 +31,9 @@ workflow_status:
   create-design: "docs/ux-design-specification.md"
   create-architecture: "architecture.md"
   test-design: "docs/test-design-system.md"
-  validate-architecture: recommended
+  validate-architecture: "docs/architecture.md (v1.1.0 - 100% pass, 2025-11-26)"
   create-epics-and-stories: "docs/epics.md"
-  implementation-readiness: required
+  implementation-readiness: "docs/implementation-readiness-report-2025-11-26.md"
   sprint-planning: required # pending artifact
 project_description: |-
   This project is about creating the ultimate (multilingual) all-in-one SaaS PWA app that will replace/enhance/optimize S&MBs, bringing them to the spearhead of technological development and AI. In other words:

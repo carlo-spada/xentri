@@ -23,4 +23,4 @@ jobs:
           node-version: 20
 
       - name: Type check schemas
-        run: npx typescript@5.6.3 --pretty false --project packages/ts-schema/tsconfig.schema.json --noEmit
+        run: npx typescript@5.8.3 --pretty false --project packages/ts-schema/tsconfig.json --noEmit

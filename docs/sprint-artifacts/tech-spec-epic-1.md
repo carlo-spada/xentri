@@ -454,11 +454,11 @@ CREATE TABLE user_preferences (
 
 ### Open Questions
 
-| ID | Question | Owner | Decision Needed By |
-|----|----------|-------|--------------------|
-| **Q1:** | Which transactional email provider (Resend vs Postmark)? | Backend | Story 1.7 |
-| **Q2:** | Redis hosting (ElastiCache vs self-managed)? | DevOps | Story 1.1 |
-| **Q3:** | How to handle OAuth callback state edge cases? | Backend | Story 1.3 |
+| ID | Question | Owner | Decision |
+|----|----------|-------|----------|
+| **Q1:** | Which transactional email provider? | Backend | **Resend** — Modern API, React Email templates, great DX |
+| **Q2:** | Redis hosting approach? | DevOps | **Upstash** — Pay-per-request (cheap at start), auto-scales to millions, zero ops |
+| **Q3:** | How to handle OAuth callback state edge cases? | Backend | Document during Story 1.3 implementation |
 
 ---
 

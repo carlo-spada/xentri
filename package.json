@@ -1,0 +1,29 @@
+{
+  "name": "xentri",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Modular Business OS that starts with conversation",
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:smoke": "tsx scripts/smoke-test.ts",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:migrate": "pnpm --filter services/core-api run db:migrate",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "turbo": "^2.6.1",
+    "typescript": "^5.8.3",
+    "tsx": "^4.19.0",
+    "vitest": "^3.0.0"
+  }
+}

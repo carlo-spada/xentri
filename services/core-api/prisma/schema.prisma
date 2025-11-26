@@ -1,0 +1,101 @@
+// Xentri Core API - Prisma Schema
+// Multi-tenant with RLS (Row Level Security)
+// All tenant-scoped tables MUST have org_id column
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===================
+// Core Identity Tables
+// ===================
+
+/// Organization - the tenant boundary
+model Organization {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  members Member[]
+  events  SystemEvent[]
+
+  @@map("organizations")
+}
+
+/// User - authentication identity (can belong to multiple orgs)
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  email         String   @unique
+  emailVerified Boolean  @default(false) @map("email_verified")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  memberships Member[]
+
+  @@map("users")
+}
+
+/// Member - junction table linking users to organizations with roles
+model Member {
+  id     String     @id @default(uuid()) @db.Uuid
+  role   MemberRole @default(member)
+  orgId  String     @map("org_id") @db.Uuid
+  userId String     @map("user_id") @db.Uuid
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, userId])
+  @@map("members")
+}
+
+enum MemberRole {
+  owner
+  admin
+  member
+
+  @@map("member_role")
+}
+
+// ===================
+// Event Backbone
+// ===================
+
+/// SystemEvent - append-only event log (the "nervous system")
+model SystemEvent {
+  id             String   @id @default(uuid()) @db.Uuid
+  type           String // e.g., xentri.brief.updated.v1
+  occurredAt     DateTime @default(now()) @map("occurred_at")
+  orgId          String   @map("org_id") @db.Uuid
+  actorType      String   @map("actor_type") // user | system | job
+  actorId        String   @map("actor_id")
+  payloadSchema  String   @map("payload_schema") // e.g., brief.updated@1.0
+  payload        Json
+  meta           Json?
+  dedupeKey      String?  @map("dedupe_key")
+  correlationId  String?  @map("correlation_id")
+  traceId        String?  @map("trace_id")
+  envelopeVersion String  @default("1.0") @map("envelope_version")
+
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, occurredAt])
+  @@index([type])
+  @@index([correlationId])
+  @@map("system_events")
+}

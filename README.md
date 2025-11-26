@@ -12,7 +12,7 @@ It solves "tab fatigue" and "setup paralysis" by using a **Strategy Co-pilot** t
 
 ## Quick Start
 
-**Prerequisites:** Docker, Node.js 20+
+**Prerequisites:** Docker, Node.js 24+, pnpm 10+
 
 ```bash
 # 1. Clone the repository
@@ -22,18 +22,17 @@ cd xentri
 # 2. Configure Environment
 cp .env.example .env
 
-# 3. Install Dependencies (Turborepo handles all workspaces)
-npm install
+# 3. Install Dependencies (Turborepo + pnpm workspaces)
+pnpm install
 
-# 4. Start Infrastructure (Postgres, Redis, n8n, Backend Services)
-# First run may take a few minutes to build Docker images.
-docker-compose up -d
+# 4. Start Infrastructure (Postgres, Redis, MinIO)
+docker compose up -d postgres redis minio
 
-# 5. Start Frontend (Astro Shell + React Watch Mode)
-npm run dev
+# 5. Start Development Servers
+pnpm run dev
 ```
 
-> **Note:** The App Shell will launch at `http://localhost:3000`. The API Gateway will be available at `http://localhost:8080`.
+> **Note:** The Astro Shell launches at `http://localhost:4321`. The Core API runs at `http://localhost:3000`.
 
 ---
 
