@@ -48,9 +48,11 @@ CREATE TABLE members (
 -- System Events (append-only event log)
 CREATE TABLE system_events (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  type TEXT NOT NULL,
+  event_type TEXT NOT NULL,
   occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   org_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
   actor_type TEXT NOT NULL,
   actor_id TEXT NOT NULL,
   payload_schema TEXT NOT NULL,
@@ -59,6 +61,7 @@ CREATE TABLE system_events (
   dedupe_key TEXT,
   correlation_id TEXT,
   trace_id TEXT,
+  source TEXT NOT NULL DEFAULT 'unknown',
   envelope_version TEXT NOT NULL DEFAULT '1.0'
 );
 
@@ -68,7 +71,7 @@ CREATE TABLE system_events (
 CREATE INDEX idx_members_org_id ON members(org_id);
 CREATE INDEX idx_members_user_id ON members(user_id);
 CREATE INDEX idx_system_events_org_occurred ON system_events(org_id, occurred_at);
-CREATE INDEX idx_system_events_type ON system_events(type);
+CREATE INDEX idx_system_events_type ON system_events(event_type);
 CREATE INDEX idx_system_events_correlation ON system_events(correlation_id);
 
 -- ===================
@@ -109,6 +112,26 @@ CREATE POLICY tenant_isolation_system_events ON system_events
     current_setting('app.current_org_id', true) IS NOT NULL
     AND org_id = current_setting('app.current_org_id', true)::uuid
   );
+
+-- ===================
+-- Immutability Enforcement (append-only)
+-- ===================
+
+-- Block UPDATEs with an explicit error to satisfy smoke test expectations
+CREATE OR REPLACE FUNCTION prevent_system_events_update()
+RETURNS trigger AS $$
+BEGIN
+  RAISE EXCEPTION 'UPDATE operations are not allowed on system_events';
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER system_events_no_update
+  BEFORE UPDATE ON system_events
+  FOR EACH ROW EXECUTE FUNCTION prevent_system_events_update();
+
+-- Block DELETEs by turning them into a no-op (silent, count remains unchanged)
+CREATE RULE system_events_no_delete AS
+  ON DELETE TO system_events DO INSTEAD NOTHING;
 
 -- ===================
 -- Helper Functions

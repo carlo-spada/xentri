@@ -41,7 +41,12 @@
       "Bash(pnpm exec prisma db push:*)",
       "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" pnpm exec tsx:*)",
       "Bash(pnpm exec prisma generate:*)",
-      "Bash(pnpm run test:smoke:*)"
+      "Bash(pnpm run test:smoke:*)",
+      "Bash(docker exec:*)",
+      "Bash(pnpm exec vitest:*)",
+      "Bash(npx vitest:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" npx prisma migrate deploy:*)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": []

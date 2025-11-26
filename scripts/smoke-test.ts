@@ -147,6 +147,9 @@ async function setupTestOrgs() {
     )
   `;
 
+  // Clear context after seeding
+  await prisma.$executeRaw`SELECT set_config('app.current_org_id', '', true)`;
+
   log('Test organizations created.');
 }
 

@@ -10,6 +10,53 @@ import {
   EventTypeSchema,
   type EventType,
 } from '@xentri/ts-schema';
+import { getPrisma } from '../infra/db.js';
+
+async function ensureOrgMembership(
+  request: FastifyRequest,
+  reply: FastifyReply
+): Promise<boolean> {
+  const orgId = request.orgId;
+  const userIdHeader = request.userId || request.headers['x-user-id'];
+
+  if (!orgId) {
+    reply.status(403).send(
+      problemDetails(403, 'Forbidden', 'Missing x-org-id header', request.id)
+    );
+    return false;
+  }
+
+  if (!userIdHeader || typeof userIdHeader !== 'string') {
+    reply.status(401).send(
+      problemDetails(401, 'Unauthorized', 'Missing x-user-id header', request.id)
+    );
+    return false;
+  }
+
+  const prisma = getPrisma();
+
+  // Set org context for RLS before membership lookup
+  await prisma.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+
+  const member = await prisma.member.findFirst({
+    where: { orgId, userId: userIdHeader },
+  });
+
+  if (!member) {
+    reply.status(403).send(
+      problemDetails(
+        403,
+        'Forbidden',
+        'User is not a member of this organization',
+        request.id
+      )
+    );
+    return false;
+  }
+
+  request.userId = userIdHeader;
+  return true;
+}
 
 /**
  * Events API Routes
@@ -42,6 +89,9 @@ const eventsRoutes: FastifyPluginAsync = async (fastify) => {
    */
   fastify.post('/api/v1/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
+      const membershipOk = await ensureOrgMembership(request, reply);
+      if (!membershipOk) return;
+
       const orgId = request.orgId!;
       const body = request.body as Record<string, unknown>;
 
@@ -55,6 +105,18 @@ const eventsRoutes: FastifyPluginAsync = async (fastify) => {
             403,
             'Forbidden',
             'org_id in body must match x-org-id header',
+            request.id
+          )
+        );
+      }
+
+      // Verify user_id aligns with authenticated user (if provided)
+      if (input.user_id && request.userId && input.user_id !== request.userId) {
+        return reply.status(403).send(
+          problemDetails(
+            403,
+            'Forbidden',
+            'user_id in body must match authenticated user',
             request.id
           )
         );
@@ -108,6 +170,9 @@ const eventsRoutes: FastifyPluginAsync = async (fastify) => {
    */
   fastify.get('/api/v1/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
+      const membershipOk = await ensureOrgMembership(request, reply);
+      if (!membershipOk) return;
+
       const orgId = request.orgId!;
       const query = request.query as Record<string, string | undefined>;
 

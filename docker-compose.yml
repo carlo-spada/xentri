@@ -26,7 +26,7 @@ services:
         -c log_min_duration_statement=100
 
   redis:
-    image: redis:8.0
+    image: redis:8.4.0
     container_name: xentri-redis
     restart: unless-stopped
     ports:

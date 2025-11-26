@@ -74,6 +74,21 @@ describe('EventService', () => {
       expect(result.acknowledged).toBe(true);
     });
 
+    it('should reject payloads that do not match the typed schema', async () => {
+      const input = {
+        type: 'xentri.user.signup.v1' as const,
+        org_id: testOrgId,
+        actor: { type: 'user' as const, id: testUserId },
+        payload_schema: 'user.signup@1.0',
+        // missing required email field
+        payload: { name: 'No Email' },
+        source: 'test',
+        envelope_version: '1.0' as const,
+      };
+
+      await expect(eventService.createEvent(input, testOrgId)).rejects.toThrow();
+    });
+
     it('should reject invalid event type', async () => {
       const input = {
         type: 'invalid.event.type' as 'xentri.user.signup.v1',

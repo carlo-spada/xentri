@@ -16,7 +16,10 @@ let pool: pg.Pool | null = null;
  * Required for Prisma 7.0+.
  */
 export function createPrismaClient(connectionString?: string): PrismaClient {
-  const dbUrl = connectionString || process.env.DATABASE_URL || 'postgresql://xentri:xentri@localhost:5432/xentri';
+  const dbUrl =
+    connectionString ||
+    process.env.DATABASE_URL ||
+    'postgresql://xentri:xentri_dev@localhost:5432/xentri';
 
   const pgPool = new Pool({ connectionString: dbUrl });
   pool = pgPool;

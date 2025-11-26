@@ -8,8 +8,9 @@ import {
   type EventType,
   type EventAckResponse,
   type EventListMeta,
+  EventPayloadSchemas,
 } from '@xentri/ts-schema';
-import { getPrisma, setOrgContext } from '../../infra/db.js';
+import { getPrisma } from '../../infra/db.js';
 
 // ===================
 // Types
@@ -54,6 +55,12 @@ export class EventService {
   ): Promise<EventAckResponse> {
     // Validate input with Zod
     const validated = CreateEventSchema.parse(input);
+
+    // Enforce typed payload schema for the specific event type
+    const typedPayloadSchema = EventPayloadSchemas[validated.type];
+    if (typedPayloadSchema) {
+      typedPayloadSchema.parse(validated.payload);
+    }
 
     // Generate ID and dedupe_key if not provided
     const eventId = randomUUID();
@@ -149,23 +156,26 @@ export class EventService {
     const fetchLimit = Math.min(limit, 100) + 1;
 
     // Build dynamic SQL fragments using Prisma.sql
-    const whereConditions: Prisma.Sql[] = [Prisma.sql`1=1`];
+    const whereConditions: Prisma.Sql[] = [Prisma.sql`org_id = ${orgId}`];
 
     if (type) {
-      whereConditions.push(Prisma.sql`AND event_type = ${type}`);
+      whereConditions.push(Prisma.sql`event_type = ${type}`);
     }
 
     if (since) {
-      whereConditions.push(Prisma.sql`AND occurred_at >= ${since}`);
+      whereConditions.push(Prisma.sql`occurred_at >= ${since}`);
     }
 
     if (cursorTimestamp && cursorId) {
       whereConditions.push(
-        Prisma.sql`AND (occurred_at, id) < (${cursorTimestamp}, ${cursorId}::uuid)`
+        Prisma.sql`(occurred_at, id) < (${cursorTimestamp}, ${cursorId}::uuid)`
       );
     }
 
-    const whereClause = Prisma.join(whereConditions, ' ');
+    const whereClause =
+      whereConditions.length > 0
+        ? Prisma.sql`WHERE ${Prisma.join(whereConditions, ' AND ')}`
+        : Prisma.sql``;
 
     // Build and execute query
     const events = await this.prisma.$transaction(async (tx) => {
@@ -209,7 +219,7 @@ export class EventService {
           source,
           envelope_version
         FROM system_events
-        WHERE ${whereClause}
+        ${whereClause}
         ORDER BY occurred_at DESC, id DESC
         LIMIT ${fetchLimit}
       `;

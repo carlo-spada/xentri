@@ -34,6 +34,12 @@ describe('Events API Routes', () => {
       VALUES (${testUserId}::uuid, 'api-test@example.com')
       ON CONFLICT (email) DO NOTHING
     `;
+
+    await prisma.$executeRaw`
+      INSERT INTO members (org_id, user_id, role)
+      VALUES (${testOrgId}::uuid, ${testUserId}::uuid, 'owner')
+      ON CONFLICT (org_id, user_id) DO NOTHING
+    `;
   }, 60000);
 
   afterAll(async () => {
@@ -53,11 +59,13 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
           type: 'xentri.user.signup.v1',
           org_id: testOrgId,
+          user_id: testUserId,
           actor: { type: 'user', id: testUserId },
           payload_schema: 'user.signup@1.0',
           payload: { email: 'new@example.com' },
@@ -101,11 +109,58 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
           type: 'xentri.user.signup.v1',
           org_id: 'e2222222-2222-2222-2222-222222222222', // Different org
+          user_id: testUserId,
+          actor: { type: 'user', id: testUserId },
+          payload_schema: 'user.signup@1.0',
+          payload: {},
+          source: 'test',
+          envelope_version: '1.0',
+        },
+      });
+
+      expect(response.statusCode).toBe(403);
+    });
+
+    it('should return 401 when x-user-id is missing', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'content-type': 'application/json',
+        },
+        payload: {
+          type: 'xentri.user.signup.v1',
+          org_id: testOrgId,
+          actor: { type: 'user', id: testUserId },
+          payload_schema: 'user.signup@1.0',
+          payload: {},
+          source: 'test',
+          envelope_version: '1.0',
+        },
+      });
+
+      expect(response.statusCode).toBe(401);
+    });
+
+    it('should return 403 when user is not a member of the org', async () => {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'x-user-id': '00000000-0000-0000-0000-000000000000',
+          'content-type': 'application/json',
+        },
+        payload: {
+          type: 'xentri.user.signup.v1',
+          org_id: testOrgId,
           actor: { type: 'user', id: testUserId },
           payload_schema: 'user.signup@1.0',
           payload: {},
@@ -123,11 +178,13 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
           type: 'invalid.event.type', // Invalid type
           org_id: testOrgId,
+          user_id: testUserId,
           actor: { type: 'user', id: testUserId },
           payload_schema: 'test@1.0',
           payload: {},
@@ -170,6 +227,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
         },
       });
 
@@ -187,6 +245,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events?type=xentri.user.login.v1',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
         },
       });
 
@@ -206,6 +265,7 @@ describe('Events API Routes', () => {
         url: `/api/v1/events?since=${yesterday.toISOString()}`,
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
         },
       });
 
@@ -218,6 +278,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events?limit=2',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
         },
       });
 
@@ -228,13 +289,14 @@ describe('Events API Routes', () => {
 
     it('should support cursor-based pagination', async () => {
       // Get first page
-      const page1Response = await app.inject({
-        method: 'GET',
-        url: '/api/v1/events?limit=2',
-        headers: {
-          'x-org-id': testOrgId,
-        },
-      });
+        const page1Response = await app.inject({
+          method: 'GET',
+          url: '/api/v1/events?limit=2',
+          headers: {
+            'x-org-id': testOrgId,
+            'x-user-id': testUserId,
+          },
+        });
 
       const page1 = page1Response.json();
 
@@ -245,6 +307,7 @@ describe('Events API Routes', () => {
           url: `/api/v1/events?limit=2&cursor=${page1.meta.cursor}`,
           headers: {
             'x-org-id': testOrgId,
+            'x-user-id': testUserId,
           },
         });
 
@@ -267,12 +330,39 @@ describe('Events API Routes', () => {
         url: '/api/v1/events?type=invalid.type',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
         },
       });
 
       expect(response.statusCode).toBe(400);
       const body = response.json();
       expect(body.type).toBe('https://xentri.app/errors/bad-request');
+    });
+
+    it('should return 401 when x-user-id is missing', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          // x-user-id intentionally omitted to test 401 response
+        },
+      });
+
+      expect(response.statusCode).toBe(401);
+    });
+
+    it('should return 403 when user is not a member of the org', async () => {
+      const response = await app.inject({
+        method: 'GET',
+        url: '/api/v1/events',
+        headers: {
+          'x-org-id': testOrgId,
+          'x-user-id': '00000000-0000-0000-0000-000000000000',
+        },
+      });
+
+      expect(response.statusCode).toBe(403);
     });
 
     it('should return 403 when x-org-id is missing', async () => {
@@ -316,6 +406,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
         },
       });
 
@@ -337,6 +428,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
@@ -361,6 +453,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
@@ -385,6 +478,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
@@ -409,6 +503,7 @@ describe('Events API Routes', () => {
         url: '/api/v1/events',
         headers: {
           'x-org-id': testOrgId,
+          'x-user-id': testUserId,
           'content-type': 'application/json',
         },
         payload: {
