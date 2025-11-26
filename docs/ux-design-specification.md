@@ -41,6 +41,20 @@ This is fundamentally different from task management apps. Xentri is about **obs
 | **No Surprises** | User should never be surprised by system actions |
 | **Earned Trust** | Autonomy ramps via real experience, not promises |
 
+### 1.5 Resolving "No Surprises" vs "Gradual Autonomy"
+
+These principles coexist via one **hard rule**:
+
+> **Nudges are policy upgrades only — never requests for permission on individual actions.**
+
+When Xentri suggests increased automation:
+- It's proposing a **policy change** ("Auto-send all lead replies using Warm Welcome template")
+- It's **not** asking "Can I send this specific email?"
+- The nudge includes a **preview** of what would change (see §5.7)
+- Accepting a nudge **updates the policy** — future similar actions just happen
+
+This prevents "AI intern asking permission every 3 minutes" while still giving users control over their automation boundaries.
+
 ### 1.4 Platform Split
 
 | Platform | Role | Mental Model |
@@ -215,12 +229,12 @@ Open Today → Scan "Needs You" (exceptions) → Handle/Approve/Skip → Check "
 4. **Overflow State** — More items than notification budget allows
 
 **Key Specs:**
-- **Autopilot Degraded Mode** — When autonomy reduced due to errors/limits
+- **Autopilot Degraded Mode** — See §5.7 for operational definition
 - **Needs-Classification Quarantine** — Items that couldn't be auto-classified
-- **Batch Approve/Undo** — Handle multiple similar items at once
-- **Overflow Triage** — Smart prioritization when over budget
-- **Policy Change Preview** — See impact before saving changes
-- **Quick Feedback** — Train the system with thumbs up/down
+- **Batch Approve/Undo** — See §5.9 for constraints
+- **Overflow Triage** — See §5.10 for deterministic sort order
+- **Policy Change Preview** — See §5.8 for diff + blast radius format
+- **Quick Feedback** — See §5.11 for passive-only rules
 
 **Wireframes:** [ux-daily-loop-wireframes-v2.html](./ux-daily-loop-wireframes-v2.html)
 
@@ -305,6 +319,173 @@ Lightweight mechanism to train the system:
 - Good: Strengthens pattern
 - Wrong: Opens follow-up question
 - Could be better: Direction right, details off
+
+### 5.7 Autopilot Degraded Mode (Operational Definition)
+
+Degraded Mode is not just a label — it's a **deterministic state change** with clear rules.
+
+**Triggers (any one activates Degraded Mode):**
+
+| Trigger | Example | Detection |
+|---------|---------|-----------|
+| **Provider Outage** | Email API down, AI service unavailable | Health check fails 3x in 5 min |
+| **Confidence Drop** | System-wide confidence below 60% | Rolling 24h average |
+| **Rate Limits** | External API throttling | 429 response or quota exhausted |
+| **Error Threshold** | 3+ consecutive failures in same domain | Error counter per domain |
+| **Missing Integration** | Required connection expired/revoked | OAuth token invalid |
+
+**What Changes:**
+
+| Normal Behavior | Degraded Behavior |
+|-----------------|-------------------|
+| Auto-send (Autonomous preset) | → Auto-draft only |
+| Auto-execute low-risk | → Queue for review |
+| Confidence-based routing | → Conservative fallback |
+
+**Where It Appears:**
+
+1. **Header badge:** "Autopilot: High" → "Degraded" (yellow)
+2. **One timeline entry:** "Autopilot entered degraded mode: [reason]"
+3. **Inline on affected cards:** "Would auto-send, but degraded mode active"
+
+**No pop-ups. No interrupts.** User discovers it naturally when they open Today.
+
+**Recovery:**
+- **Auto-recovery:** When trigger condition clears (e.g., API comes back)
+- **Manual recovery:** User clicks "Resume autopilot" after reviewing
+
+### 5.8 Policy Change Preview (Diff + Blast Radius)
+
+Policy changes are **not scary modals** — they're inline previews that build confidence.
+
+**Required Elements:**
+
+```
+┌─────────────────────────────────────────────────────┐
+│ LEAD RESPONSE POLICY                                │
+├─────────────────────────────────────────────────────┤
+│ Before: Auto-draft lead replies                     │
+│ After:  Auto-send with 5-min undo window            │
+├─────────────────────────────────────────────────────┤
+│ EXPECTED IMPACT                                     │
+│ ~12 actions/week will become auto-executed          │
+│ Based on your last 30 days of activity              │
+├─────────────────────────────────────────────────────┤
+│ GUARDRAILS UNCHANGED                                │
+│ ✓ Payments still require approval                   │
+│ ✓ Publishing still require approval                 │
+│ ✓ Deletes still require approval                    │
+├─────────────────────────────────────────────────────┤
+│ [Save Changes]                    [Cancel]          │
+│ You can undo this from Timeline                     │
+└─────────────────────────────────────────────────────┘
+```
+
+**Blast Radius Calculation:**
+- Look back 30 days of historical data
+- Count items that would have been handled differently
+- Show as "~X actions/week" (rounded, not precise)
+
+**Guardrails Reminder:**
+- Always show which high-risk actions are **unchanged** by this policy
+- Reassures user they're not opening floodgates
+
+### 5.9 Batch Approve/Undo (Constrained)
+
+Batch operations are powerful but dangerous. **Constraints prevent foot-guns.**
+
+**Batching Requirements (ALL must match):**
+
+| Constraint | Rationale |
+|------------|-----------|
+| Same template | Ensures consistent quality |
+| Same policy | Ensures same risk level |
+| Same channel | Email batch ≠ WhatsApp batch |
+
+**UI Pattern:**
+
+```
+┌─────────────────────────────────────────────────────┐
+│ BATCH APPROVE                                       │
+├─────────────────────────────────────────────────────┤
+│ Preview (1 of 8):                                   │
+│ ┌─────────────────────────────────────────────────┐ │
+│ │ To: Sarah Martinez                              │ │
+│ │ "Hi Sarah, thanks for reaching out..."          │ │
+│ └─────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────┤
+│ Apply to 8 similar items                            │
+│ All using: Warm Welcome template                    │
+│ All via: Email                                      │
+├─────────────────────────────────────────────────────┤
+│ [Send All 8]                      [Review Each]     │
+└─────────────────────────────────────────────────────┘
+```
+
+**Hard Rules:**
+- Always show **1-item preview** before batch action
+- Always show **count** ("Apply to 8 similar items")
+- Always show **what makes them similar** (template, channel)
+- **Never batch across different templates or channels**
+- Batch undo follows same pattern: "Undo all 8? [Yes] [No, pick individually]"
+
+### 5.10 Overflow Triage (Deterministic Sort Order)
+
+When items exceed notification budget, they're sorted by a **stable, predictable recipe** — not arbitrary AI judgment.
+
+**Priority Recipe (in order):**
+
+```
+1. Risk Level        (High > Medium > Low)
+2. Time Sensitivity  (SLA timer active > deadline today > this week > none)
+3. Revenue Impact    ($ amount > no $ attached)
+4. Staleness         (Newer > Older, as tie-breaker only)
+```
+
+**Overflow Bucket Header:**
+
+Always explain **why** items were moved:
+
+```
+┌─────────────────────────────────────────────────────┐
+│ OVERFLOW (14 items)                                 │
+│ Moved 14 low-risk FYIs to protect your interrupt    │
+│ budget. Nothing here needs immediate action.        │
+├─────────────────────────────────────────────────────┤
+│ [Review Overflow]           [Adjust Budget]         │
+└─────────────────────────────────────────────────────┘
+```
+
+**Transparency Rules:**
+- User can always see **why** an item is in overflow vs "Needs You"
+- Each overflow item shows its priority score breakdown on tap
+- User can **pin** specific contacts/types to "always show in Needs You"
+
+### 5.11 Quick Feedback (Passive-Only Rules)
+
+Feedback buttons are essential for training, but must **never create notification sludge**.
+
+**When Feedback Prompts Appear:**
+
+| Condition | Appears | Rationale |
+|-----------|---------|-----------|
+| User **undid** an auto-action | ✅ Yes | User disagreed with the action |
+| User **edited** a draft before sending | ✅ Yes | Draft wasn't quite right |
+| Item was **quarantined** (low confidence) | ✅ Yes | System explicitly uncertain |
+| Auto-action completed successfully | ❌ No | Assume correct unless told otherwise |
+| Draft was approved without edits | ❌ No | Silence = consent |
+
+**Display Rules:**
+- **Passive only:** Feedback buttons appear inline on cards, never as push notifications
+- **No nag:** If user ignores feedback prompt, it disappears after 7 days
+- **No reminder:** Never send "You haven't given feedback on..." messages
+- **Aggregate learning:** System learns from implicit signals (approvals, edits, undos) even without explicit feedback
+
+**Implicit Feedback Signals:**
+- Approved without edit → Positive signal
+- Edited before approve → "Could be better" signal
+- Undone → Strong negative signal
+- Ignored for 24h+ → Neutral (don't count)
 
 ---
 
@@ -455,6 +636,7 @@ Extend the default theme in `components.json`:
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
 | 2025-11-25 | 1.0 | Initial UX Design Specification | UX Designer + PM |
+| 2025-11-25 | 1.1 | Tightened specs to prevent Notification Hell: §1.5 philosophy hard rule, §5.7-5.11 operational constraints | UX Designer + PM |
 
 ---
 
