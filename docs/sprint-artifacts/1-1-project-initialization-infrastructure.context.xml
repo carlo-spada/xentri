@@ -1,0 +1,229 @@
+<story-context id="bmm/story-context" v="1.0">
+  <metadata>
+    <epicId>1</epicId>
+    <storyId>1</storyId>
+    <title>Project Initialization &amp; Infrastructure</title>
+    <status>ready-for-dev</status>
+    <generatedAt>2025-11-26</generatedAt>
+    <generator>BMAD Story Context Workflow</generator>
+    <sourceStoryPath>docs/sprint-artifacts/1-1-project-initialization-infrastructure.md</sourceStoryPath>
+  </metadata>
+
+  <story>
+    <asA>Developer</asA>
+    <iWant>the core repository and build system set up with multi-tenant infrastructure</iWant>
+    <soThat>we have a stable foundation for development with RLS enforced from day zero</soThat>
+    <tasks>
+      <task id="1" ac="1,2">Initialize Turborepo Monorepo
+        <subtask>1.1 Run corepack enable and initialize pnpm 10.23.0</subtask>
+        <subtask>1.2 Create root package.json with workspaces config</subtask>
+        <subtask>1.3 Create turbo.json with pipeline for dev/build/test/lint</subtask>
+        <subtask>1.4 Create .npmrc with strict-peer-dependencies=false</subtask>
+        <subtask>1.5 Create .nvmrc or .node-version pinning Node 24.11.1 LTS</subtask>
+      </task>
+      <task id="2" ac="1,2">Scaffold apps/shell (Astro)
+        <subtask>2.1 Initialize Astro 5.16.0 project in apps/shell</subtask>
+        <subtask>2.2 Configure Astro for React islands (@astrojs/react)</subtask>
+        <subtask>2.3 Create minimal index page that renders "Xentri Shell"</subtask>
+        <subtask>2.4 Add dev script that runs on port 4321</subtask>
+        <subtask>2.5 Verify pnpm run dev --filter apps/shell starts successfully</subtask>
+      </task>
+      <task id="3" ac="2">Scaffold packages/ts-schema
+        <subtask>3.1 Create packages/ts-schema with TypeScript + Zod</subtask>
+        <subtask>3.2 Export placeholder SystemEvent interface per ADR-002</subtask>
+        <subtask>3.3 Export placeholder User, Organization types</subtask>
+        <subtask>3.4 Configure tsconfig.json with strict mode</subtask>
+        <subtask>3.5 Add build script outputting to dist/</subtask>
+        <note>EXISTING CODE: packages/ts-schema/src/ already contains api.ts, auth.ts, events.ts, cache.ts, index.ts - integrate rather than recreate</note>
+      </task>
+      <task id="4" ac="2">Scaffold packages/ui
+        <subtask>4.1 Create packages/ui with React 19.2.0</subtask>
+        <subtask>4.2 Initialize shadcn/ui with Tailwind CSS</subtask>
+        <subtask>4.3 Add Xentri design tokens from UX spec (colors, layers)</subtask>
+        <subtask>4.4 Export at least one component (Button) for testing</subtask>
+        <subtask>4.5 Verify apps/shell can import from @xentri/ui</subtask>
+      </task>
+      <task id="5" ac="2">Scaffold services/core-api
+        <subtask>5.1 Create services/core-api with Node.js + Fastify 5.6.2</subtask>
+        <subtask>5.2 Add health check endpoint GET /health returning {status: "ok"}</subtask>
+        <subtask>5.3 Add Prisma 7.0.1 with empty schema</subtask>
+        <subtask>5.4 Configure dev script with hot reload (tsx watch)</subtask>
+        <subtask>5.5 Verify pnpm run dev --filter services/core-api starts on port 3000</subtask>
+      </task>
+      <task id="6" ac="3">Docker Compose for Local Dev
+        <subtask>6.1 Create docker-compose.yml with Postgres 16.11 service</subtask>
+        <subtask>6.2 Add Redis 8.4.0 service (for future event transport)</subtask>
+        <subtask>6.3 Add MinIO service (for future asset storage)</subtask>
+        <subtask>6.4 Create .env.example with required variables</subtask>
+        <subtask>6.5 Document startup in README: docker compose up -d postgres redis minio</subtask>
+        <subtask>6.6 Verify Postgres starts with ALTER SYSTEM SET row_security = on</subtask>
+      </task>
+      <task id="7" ac="3,5">Database Schema with RLS
+        <subtask>7.1 Create Prisma schema with users, organizations, members tables</subtask>
+        <subtask>7.2 Add org_id column to all tenant-scoped tables</subtask>
+        <subtask>7.3 Write raw SQL migration enabling RLS on all tables</subtask>
+        <subtask>7.4 Implement fail-closed RLS policy per ADR-003</subtask>
+        <subtask>7.5 Add pnpm run db:migrate script</subtask>
+      </task>
+      <task id="8" ac="4">CI/CD Pipeline
+        <subtask>8.1 Create .github/workflows/ci.yml</subtask>
+        <subtask>8.2 Add job: lint (ESLint across all packages)</subtask>
+        <subtask>8.3 Add job: typecheck (tsc --noEmit across all packages)</subtask>
+        <subtask>8.4 Add job: test (Vitest unit tests)</subtask>
+        <subtask>8.5 Add job: build (turbo run build)</subtask>
+        <subtask>8.6 Configure branch protection requiring CI pass</subtask>
+      </task>
+      <task id="9" ac="5">Smoke Test Script
+        <subtask>9.1 Create scripts/smoke-test.ts</subtask>
+        <subtask>9.2 Seed two orgs (org_a, org_b) with test users</subtask>
+        <subtask>9.3 Attempt cross-org query as user_a - assert 0 rows returned</subtask>
+        <subtask>9.4 Verify shell loads (HTTP 200 from localhost:4321)</subtask>
+        <subtask>9.5 Add pnpm run test:smoke script to root package.json</subtask>
+        <subtask>9.6 Integrate smoke test into CI as final job</subtask>
+      </task>
+      <task id="10" ac="4,5">Testing Infrastructure
+        <subtask>10.1 Add Vitest to root with workspace config</subtask>
+        <subtask>10.2 Configure test containers for Postgres integration tests</subtask>
+        <subtask>10.3 Add Playwright for future E2E tests (config only)</subtask>
+        <subtask>10.4 Create first unit test in packages/ts-schema</subtask>
+        <subtask>10.5 Verify pnpm run test runs across all packages</subtask>
+      </task>
+    </tasks>
+  </story>
+
+  <acceptanceCriteria>
+    <ac id="1">Given a fresh clone, when pnpm install and pnpm run dev runs, then the Astro shell loads locally at localhost:4321</ac>
+    <ac id="2">Given the project structure, when inspected, then it follows the monorepo layout: apps/shell, packages/ui, packages/ts-schema, services/core-api</ac>
+    <ac id="3">Given the database, when docker compose up -d postgres runs, then a local Postgres 16.11 instance starts with RLS enabled</ac>
+    <ac id="4">Given CI/CD, when code is pushed to a PR, then lint/test/build run headless and block merge on failure</ac>
+    <ac id="5">Given the smoke script (pnpm run test:smoke), when executed, then it seeds org A/B, confirms cross-org read returns 0 rows, and shell still loads</ac>
+  </acceptanceCriteria>
+
+  <artifacts>
+    <docs>
+      <doc path="docs/architecture.md" title="Xentri Architecture" section="The Stack, ADRs, Project Structure">
+        Defines Turborepo/pnpm monorepo, Astro shell with React islands, Node.js/Fastify backend, Postgres with RLS, and Redis event transport.
+      </doc>
+      <doc path="docs/prd.md" title="Product Requirements Document" section="Multi-Tenancy Model, FR82, NFRs">
+        Mandates RLS on all tenant-scoped tables, org_id enforcement, and performance targets (FMP &lt;2s, event write &lt;100ms).
+      </doc>
+      <doc path="docs/ux-design-specification.md" title="UX Design Specification" section="Design System Foundation">
+        Specifies shadcn/ui with Tailwind, 4-layer neutral system, Sky Blue primary (#38bdf8), Violet secondary (#a78bfa).
+      </doc>
+      <doc path="docs/sprint-artifacts/tech-spec-epic-1.md" title="Epic 1 Technical Specification" section="Data Models, APIs, Workflows">
+        Complete technical context for Epic 1 including database schemas, API endpoints, RLS policies, and test strategy.
+      </doc>
+      <doc path="docs/epics.md" title="Epics and Stories" section="Epic 1: Foundation &amp; Access">
+        Story breakdown and acceptance criteria for all Epic 1 stories.
+      </doc>
+    </docs>
+    <code>
+      <file path="packages/ts-schema/src/index.ts" kind="barrel" symbol="*" reason="Re-exports all types - entry point for shared contracts">
+        export * from './api';
+        export * from './auth';
+        export * from './events';
+        export * from './cache';
+      </file>
+      <file path="packages/ts-schema/src/events.ts" kind="types" symbol="SystemEvent, EventActor, EventMeta" reason="Event envelope per ADR-002 - already implemented, DO NOT recreate">
+        SystemEvent&lt;TPayload&gt; type with id, type, occurred_at, org_id, actor, payload_schema, payload, meta, dedupe_key, correlation_id, trace_id, envelope_version
+      </file>
+      <file path="packages/ts-schema/src/api.ts" kind="types" symbol="ApiResponse, ProblemDetails, ApiMeta" reason="API envelope and error types - already implemented">
+        ApiResponse&lt;T&gt; with data, error, meta; ProblemDetails with type, title, status, detail, trace_id
+      </file>
+      <file path="packages/ts-schema/src/auth.ts" kind="types" symbol="UserClaims, ServiceTokenClaims, UserRole" reason="JWT claims types - already implemented">
+        UserClaims with sub, email, org_id, role; ServiceTokenClaims for service-to-service auth
+      </file>
+      <file path="packages/ts-schema/src/cache.ts" kind="types" symbol="CacheKeys, InvalidationEvents" reason="Cache key builders and invalidation mapping - already implemented">
+        CacheContext types (brief, site, leads) with key builders and event-to-cache invalidation map
+      </file>
+    </code>
+    <dependencies>
+      <note>No package.json exists yet - this story creates the monorepo structure</note>
+      <planned>
+        <runtime>
+          <dep name="astro" version="^5.16.0" scope="apps/shell" />
+          <dep name="react" version="^19.2.0" scope="apps/shell, packages/ui" />
+          <dep name="@astrojs/react" version="latest" scope="apps/shell" />
+          <dep name="fastify" version="^5.6.2" scope="services/core-api" />
+          <dep name="@prisma/client" version="^7.0.1" scope="services/core-api" />
+          <dep name="zod" version="^3.x" scope="packages/ts-schema" />
+        </runtime>
+        <dev>
+          <dep name="turbo" version="^2.6.1" scope="root" />
+          <dep name="typescript" version="^5.x" scope="root" />
+          <dep name="vitest" version="latest" scope="root" />
+          <dep name="playwright" version="latest" scope="root" />
+          <dep name="eslint" version="latest" scope="root" />
+          <dep name="prisma" version="^7.0.1" scope="services/core-api" />
+          <dep name="tailwindcss" version="^4.x" scope="packages/ui" />
+        </dev>
+      </planned>
+      <docker>
+        <service name="postgres" image="postgres:16.11" />
+        <service name="redis" image="redis:8.4.0" />
+        <service name="minio" image="minio/minio:latest" />
+      </docker>
+    </dependencies>
+  </artifacts>
+
+  <constraints>
+    <constraint source="docs/architecture.md#ADR-003">
+      RLS must use fail-closed pattern: current_setting('app.current_org_id', true) IS NOT NULL AND org_id = current_setting(...)::uuid
+    </constraint>
+    <constraint source="docs/architecture.md#Decision-Summary-Table">
+      Use exact versions: Astro 5.16.0, React 19.2.0, Node 24.11.1, Fastify 5.6.2, Prisma 7.0.1, Postgres 16.11, Redis 8.4.0, Turborepo 2.6.1, pnpm 10.23.0
+    </constraint>
+    <constraint source="docs/prd.md#FR82">
+      Every tenant-scoped table MUST have org_id column with RLS enabled - no exceptions
+    </constraint>
+    <constraint source="docs/prd.md#NFR1">
+      Shell FMP must be under 2 seconds on 3G connection
+    </constraint>
+    <constraint source="docs/ux-design-specification.md#3.1">
+      Use shadcn/ui with Tailwind CSS for all UI components
+    </constraint>
+    <constraint source="CLAUDE.md">
+      Project uses pnpm workspaces with Turborepo - do not use npm or yarn
+    </constraint>
+  </constraints>
+
+  <interfaces>
+    <interface name="SystemEvent&lt;T&gt;" kind="type" path="packages/ts-schema/src/events.ts">
+      Already defined - use for all event payloads. Includes org_id, actor, payload_schema, envelope_version.
+    </interface>
+    <interface name="ApiResponse&lt;T&gt;" kind="type" path="packages/ts-schema/src/api.ts">
+      Already defined - use for all API responses. Includes data, error (ProblemDetails), meta.
+    </interface>
+    <interface name="UserClaims" kind="type" path="packages/ts-schema/src/auth.ts">
+      Already defined - use for user JWT validation. Includes sub, org_id, role.
+    </interface>
+    <interface name="GET /health" kind="REST" path="services/core-api">
+      To be implemented - returns {status: "ok"} for health checks
+    </interface>
+    <interface name="RLS set_config" kind="SQL" path="services/core-api">
+      SELECT set_config('app.current_org_id', $org_id, true) - must be called at start of every transaction
+    </interface>
+  </interfaces>
+
+  <tests>
+    <standards>
+      Unit tests use Vitest with TypeScript. Integration tests use Vitest with testcontainers for Postgres. E2E tests use Playwright (config only for this story). All tests co-located with source as __tests__ or *.test.ts. Coverage target: &gt;70% for core modules.
+    </standards>
+    <locations>
+      <location glob="packages/*/src/**/*.test.ts" />
+      <location glob="services/*/src/**/*.test.ts" />
+      <location glob="apps/shell/src/**/*.test.ts" />
+      <location glob="scripts/smoke-test.ts" />
+    </locations>
+    <ideas>
+      <idea ac="1">E2E: Fresh clone, pnpm install, pnpm run dev - assert shell responds at localhost:4321</idea>
+      <idea ac="2">Unit: Directory structure assertion - apps/shell, packages/ui, packages/ts-schema, services/core-api exist</idea>
+      <idea ac="3">Integration: docker compose up postgres - assert connection succeeds, SHOW row_security returns 'on'</idea>
+      <idea ac="4">CI: Push to PR - assert lint/test/build jobs complete successfully</idea>
+      <idea ac="5">Integration (smoke): Seed org_a and org_b, query as user_a - assert 0 rows from org_b data</idea>
+      <idea ac="5">Integration (smoke): After seeding, GET localhost:4321 - assert HTTP 200</idea>
+      <idea>Unit (ts-schema): Import SystemEvent type - assert type checking works</idea>
+      <idea>Unit (RLS): INSERT with org_id, query without set_config - assert 0 rows (fail-closed)</idea>
+    </ideas>
+  </tests>
+</story-context>

@@ -41,8 +41,8 @@
 | Risk ID | Category | Description | Probability | Impact | Score | Mitigation | Owner |
 | ------- | -------- | ----------- | ----------- | ------ | ----- | ---------- | ----- |
 | R-006 | PERF | Shell and published sites exceed perf budgets (NFR1/NFR4) on 3G | 2 | 2 | 4 | Lighthouse/LCP budget tests; asset size guardrails; synthetic checks on 3G profile | Eng |
-| R-007 | TECH | Event schema/version drift vs `ts-schema` contracts | 2 | 2 | 4 | Pact/contract tests on event payloads; schema lint in CI; require version bump on breaking change | Eng |
-| R-008 | OPS | n8n workflows not idempotent/retry-safe causing duplicate side effects | 2 | 2 | 4 | Replay tests with DLQ; idempotency keys; chaos tests for retry paths | Eng |
+| R-007 | TECH | Event schema/version drift vs `ts-schema` contracts | 2 | 2 | 4 | Static analysis via shared 'packages/ts-schema' (Zod); compile-time checks; require version bump on breaking change | Eng |
+| R-008 | OPS | n8n workflows not idempotent/retry-safe causing duplicate side effects | 2 | 2 | 4 | Trigger/Effect isolation tests (API emits -> API handles); idempotency keys on endpoints | Eng |
 
 ### Low-Priority Risks (Score 1-2)
 
@@ -90,10 +90,10 @@
 | CMS publish pipeline (`content_published` with org scoping) | API/E2E | R-007 | 2 | QA | Draft vs publish; event payload contract |
 | Lead status transitions (New/Contacted/Archived) with events | API | R-003 | 2 | QA | Idempotent status changes |
 | Notification preferences honored (email toggle + in-app) | API/E2E | R-003 | 2 | QA | Preferences drive delivery |
-| n8n workflow idempotency on retries | Integration | R-008 | 2 | QA | Replay same message, side effects once |
-| Supabase session renewal keeps org binding intact | API | R-001 | 2 | QA | Refresh token rotation preserves `org_id` |
+| n8n workflow side-effect idempotency | Unit/API | R-008 | 2 | Eng | API endpoint handles duplicate calls gracefully |
+| Auth Token Mocking & Context Binding | API | R-001 | 2 | Eng | Mint local JWTs; verify middleware parses `org_id` |
 | Performance budget checks (shell LCP, published site TTFB) | Perf | R-006 | 2 | QA | Synthetic 3G profile |
-| Schema/version lint (`ts-schema` vs emitted events) | Integration | R-007 | 2 | QA | Break build on drift |
+| Schema/version lint (`ts-schema` vs emitted events) | Static/Unit | R-007 | 2 | Eng | Break build on drift (Zod type inference) |
 | Data export completeness (Brief, leads, content) | API | R-001 | 2 | QA | Version header `xentri-export-v1` present |
 | Domain verification retry path (DNS pending → later success) | E2E | R-005 | 1 | QA | No wrong-tenant exposure |
 | Outbox DLQ replay to Redis/n8n | Integration | R-002 | 1 | QA | Replay restores delivery |
@@ -203,9 +203,10 @@
 
 **Tooling:**
 
-- Playwright for E2E; contract tests for events (`ts-schema`)  
-- k6/Lighthouse synthetic checks for budgets  
-- Pact/contract tests for event payloads and APIs  
+- Playwright for E2E
+- k6/Lighthouse synthetic checks for budgets
+- Local JWT Minter (for fast auth mocking)
+- Shared Zod Schemas (packages/ts-schema) for compile-time contracts
 - DB seed/reset utilities that set `app.current_org_id` per test
 
 **Environment:**
