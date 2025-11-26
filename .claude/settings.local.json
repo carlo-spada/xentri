@@ -25,7 +25,9 @@
       "Bash(pnpm run test:*)",
       "Bash(pnpm run build:*)",
       "Bash(gh auth status:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(npx prisma validate:*)",
+      "Bash(docker ps:*)"
     ],
     "deny": [],
     "ask": []

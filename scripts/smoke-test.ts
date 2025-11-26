@@ -101,28 +101,30 @@ async function setupTestOrgs() {
     ON CONFLICT (org_id, user_id) DO NOTHING
   `;
 
-  // Insert test events for each org
+  // Insert test events for each org (using event_type per Story 1.2)
   await prisma.$executeRaw`
-    INSERT INTO system_events (org_id, type, actor_type, actor_id, payload_schema, payload)
+    INSERT INTO system_events (org_id, event_type, actor_type, actor_id, payload_schema, payload, source)
     VALUES (
       'a0000000-0000-0000-0000-000000000001'::uuid,
       'xentri.test.created.v1',
       'system',
       'smoke-test',
       'test.created@1.0',
-      '{"test": "org_a_data"}'::jsonb
+      '{"test": "org_a_data"}'::jsonb,
+      'smoke-test'
     )
   `;
 
   await prisma.$executeRaw`
-    INSERT INTO system_events (org_id, type, actor_type, actor_id, payload_schema, payload)
+    INSERT INTO system_events (org_id, event_type, actor_type, actor_id, payload_schema, payload, source)
     VALUES (
       'b0000000-0000-0000-0000-000000000002'::uuid,
       'xentri.test.created.v1',
       'system',
       'smoke-test',
       'test.created@1.0',
-      '{"test": "org_b_data"}'::jsonb
+      '{"test": "org_b_data"}'::jsonb,
+      'smoke-test'
     )
   `;
 
@@ -192,6 +194,54 @@ async function testRlsIsolation() {
   }
 }
 
+async function testEventImmutability() {
+  log('Testing event immutability (AC3)...');
+
+  // Set context to org_a for testing
+  await prisma.$executeRaw`SELECT set_config('app.current_org_id', 'a0000000-0000-0000-0000-000000000001', true)`;
+
+  // Test UPDATE is blocked (trigger should raise exception)
+  try {
+    await prisma.$executeRaw`
+      UPDATE system_events
+      SET payload = '{"modified": true}'::jsonb
+      WHERE actor_id = 'smoke-test'
+    `;
+    fail('Immutability: UPDATE blocked', 'UPDATE should have raised an exception');
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    if (errorMessage.includes('immutable') || errorMessage.includes('UPDATE operations are not allowed')) {
+      pass('Immutability: UPDATE blocked', 'UPDATE correctly raises exception');
+    } else {
+      fail('Immutability: UPDATE blocked', `Unexpected error: ${errorMessage}`);
+    }
+  }
+
+  // Test DELETE does nothing (rule converts to no-op)
+  const beforeDelete = await prisma.$queryRaw<{ count: bigint }[]>`
+    SELECT COUNT(*) as count FROM system_events WHERE actor_id = 'smoke-test'
+  `;
+
+  await prisma.$executeRaw`
+    DELETE FROM system_events WHERE actor_id = 'smoke-test'
+  `;
+
+  const afterDelete = await prisma.$queryRaw<{ count: bigint }[]>`
+    SELECT COUNT(*) as count FROM system_events WHERE actor_id = 'smoke-test'
+  `;
+
+  const beforeCount = Number(beforeDelete[0].count);
+  const afterCount = Number(afterDelete[0].count);
+
+  if (beforeCount === afterCount && afterCount > 0) {
+    pass('Immutability: DELETE blocked', `DELETE silently ignored (${beforeCount} rows unchanged)`);
+  } else if (afterCount === 0) {
+    fail('Immutability: DELETE blocked', 'DELETE should be blocked but rows were deleted');
+  } else {
+    fail('Immutability: DELETE blocked', `Unexpected: before=${beforeCount}, after=${afterCount}`);
+  }
+}
+
 async function testShellLoads() {
   log('Testing shell loads...');
 
@@ -226,13 +276,11 @@ async function testShellLoads() {
 async function cleanup() {
   log('Cleaning up test data...');
 
-  // Delete test events
-  await prisma.$executeRaw`
-    DELETE FROM system_events
-    WHERE actor_id = 'smoke-test'
-  `;
+  // Note: system_events has immutability constraints (DELETE rule does nothing)
+  // Use TRUNCATE which bypasses rules, or drop/recreate for full cleanup
+  // For smoke tests, we leave events in place (they're isolated by RLS anyway)
 
-  // Delete test memberships
+  // Delete test memberships (not immutable)
   await prisma.$executeRaw`
     DELETE FROM members
     WHERE org_id IN (
@@ -247,11 +295,20 @@ async function cleanup() {
     WHERE email LIKE '%@test.xentri.io'
   `;
 
-  // Delete test organizations
+  // Delete test organizations (cascades won't delete events due to immutability)
   await prisma.$executeRaw`
     DELETE FROM organizations
     WHERE slug IN ('test-org-a', 'test-org-b')
   `;
+
+  // For test environments, truncate system_events to clean up
+  // This bypasses the immutability rule (only works for superuser/table owner)
+  try {
+    await prisma.$executeRaw`TRUNCATE system_events RESTART IDENTITY CASCADE`;
+    log('Events truncated for test cleanup.');
+  } catch {
+    log('Note: Could not truncate system_events (expected in production).');
+  }
 
   log('Cleanup complete.');
 }
@@ -271,6 +328,7 @@ async function main() {
 
     // Run tests
     await testRlsIsolation();
+    await testEventImmutability();
     await testShellLoads();
 
     // Cleanup

@@ -3,13 +3,11 @@
 // All tenant-scoped tables MUST have org_id column
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // ===================
@@ -76,26 +74,29 @@ enum MemberRole {
 // ===================
 
 /// SystemEvent - append-only event log (the "nervous system")
+/// IMMUTABLE: No UPDATE or DELETE allowed per AC3
 model SystemEvent {
-  id             String   @id @default(uuid()) @db.Uuid
-  type           String // e.g., xentri.brief.updated.v1
-  occurredAt     DateTime @default(now()) @map("occurred_at")
-  orgId          String   @map("org_id") @db.Uuid
-  actorType      String   @map("actor_type") // user | system | job
-  actorId        String   @map("actor_id")
-  payloadSchema  String   @map("payload_schema") // e.g., brief.updated@1.0
-  payload        Json
-  meta           Json?
-  dedupeKey      String?  @map("dedupe_key")
-  correlationId  String?  @map("correlation_id")
-  traceId        String?  @map("trace_id")
-  envelopeVersion String  @default("1.0") @map("envelope_version")
+  id              String   @id @default(uuid()) @db.Uuid
+  eventType       String   @map("event_type") // e.g., xentri.brief.updated.v1
+  occurredAt      DateTime @default(now()) @map("occurred_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  orgId           String   @map("org_id") @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid // Nullable for system events
+  actorType       String   @map("actor_type") // user | system | job
+  actorId         String   @map("actor_id")
+  payloadSchema   String   @map("payload_schema") // e.g., brief.updated@1.0
+  payload         Json
+  meta            Json?
+  dedupeKey       String?  @map("dedupe_key")
+  correlationId   String?  @map("correlation_id")
+  traceId         String?  @map("trace_id")
+  source          String   @default("unknown") // e.g., core-api, strategy-co-pilot
+  envelopeVersion String   @default("1.0") @map("envelope_version")
 
   // Relations
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
-  @@index([orgId, occurredAt])
-  @@index([type])
+  @@index([orgId, eventType, occurredAt(sort: Desc)], name: "idx_events_org_type_time")
   @@index([correlationId])
   @@map("system_events")
 }
