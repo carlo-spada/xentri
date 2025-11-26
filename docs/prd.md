@@ -38,6 +38,13 @@ Together, these create the first complete value loop: **Idea → Brief → Websi
 
 > **The emotional job Xentri solves:** Turn chronic, background anxiety into a manageable, visible list of responsibilities—so founders and owners feel caught up instead of constantly behind.
 
+### Innovation & Validation Approach
+
+- **Innovation thread:** Conversation-first Universal Brief that auto-orchestrates downstream modules (website, CMS, leads) plus visible automation log via the Event Backbone.
+- **Validation loop:** Every AI proposal is user-confirmed; all AI outputs log `ai_proposal_*` events; Client Zero runs the same Brief → Website → Leads loop to prove orchestration works.
+- **Fallbacks:** Guided forms mirror the conversational path; overrides never mutate the Brief (source of truth stays intact).
+- **Measurement:** Success criteria below map to epics (Epic 1 foundation, Epic 2 Brief, Epic 3 website, Epic 4 leads, Epic 5 brand, Epic 6 data controls).
+
 ### The Core Value: Orchestration, Not Modules
 
 **Any individual module can be "good enough" elsewhere.** Wix builds websites. Jobber manages jobs. Jane handles appointments. Each does their thing adequately.
@@ -128,6 +135,8 @@ External customers before v1.0 are not the success metric. The question is: **"I
 | **Event Backbone logs reliably** | Pass/Fail | `brief_created`, `brief_updated` events fire correctly. Events are queryable. |
 | **Multi-tenancy is airtight** | Pass/Fail | Every query includes `org_id`. RLS enforced. No data leaks in testing. |
 | **Shell loads fast** | <2s on 3G | First meaningful paint under 2 seconds. |
+
+**Epic linkage:** Epic 1 (foundation/auth/events) satisfies these gates; Epic 2 ensures Brief creation; Epic 3 leverages Brief for website; Epic 4 validates lead capture wiring; Epic 6 guards data controls.
 
 ### v0.2 Readiness (Presencia: Website + CMS + Leads)
 
@@ -282,6 +291,28 @@ These releases extend orchestration into revenue-generating workflows. Still foc
 
 ## SaaS B2B Specific Requirements
 
+### API & Auth Contract (v0.1-v0.2)
+
+| Area | Expectation |
+|------|-------------|
+| Auth | Supabase Auth (email/password + Google/GitHub). HTTP-only cookies preferred; short-lived access tokens with refresh rotation. |
+| Tenancy | Server resolves `org_id` from session/context—never from client input. Every request enforced by RLS. |
+| Core endpoints | `POST /api/briefs` (create), `PATCH /api/briefs/:id` (update section), `GET /api/briefs/:id`, `POST /api/events` (append-only), `GET /api/events?type=&since=`, `POST /api/websites/:id/publish`, `POST /api/leads` (public form, domain-bound), `GET /api/leads`. |
+| Event payloads | Include `org_id`, `user_id` (nullable for public lead), `event_type`, `payload`, `timestamp`, `source`. |
+| Publish guardrails | Website publish validates Brief `schema_version` and content source map before firing `website_published`. |
+| Lead intake | Public endpoint resolves org from domain/site id; applies rate limiting + honeypot; strips PII from events as needed. |
+
+**Response shapes (examples):**
+- `GET /api/briefs/:id` → `{ id, org_id, schema_version, sections: {...}, completion_status, updated_at }`
+- `POST /api/events` → `{ event_id, acknowledged: true }`
+- `POST /api/leads` → `{ lead_id, status: "received" }` (never echo raw message body)
+
+**Error handling:**
+- Auth/tenancy errors → `401/403` with no sensitive detail.
+- Validation errors → `422` with field-specific messages.
+- Rate limits (lead intake) → `429` with retry-after header.
+- Server faults → `500` with correlation id (aligns with NFR24 logging).
+
 ### Multi-Tenancy Model
 
 **Architecture:** Single-schema with `org_id` column + Row-Level Security (RLS).
@@ -408,172 +439,172 @@ Scope: **v0.1-v0.2 only** (MVP). Growth features (v0.3-v0.4) noted as [FUTURE] f
 
 ### User Account & Access
 
-| FR# | Requirement |
-|-----|-------------|
-| FR1 | Users can create an account with email/password |
-| FR2 | Users can sign in with social authentication (Google, GitHub) |
-| FR3 | Users can reset password via email verification |
-| FR4 | Users can update their profile (name, email, avatar) |
-| FR5 | Users can delete their account and all associated data |
-| FR6 | System creates a new Organization when user signs up (user becomes Owner) |
-| FR7 | [FUTURE v0.4] Owners can invite team members to their organization |
-| FR8 | [FUTURE v0.4] Owners can assign roles (Admin, Member) to team members |
-| FR9 | [FUTURE v0.4] Owners can revoke access for team members |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR1 | MVP | Users can create an account with email/password |
+| FR2 | MVP | Users can sign in with social authentication (Google, GitHub) |
+| FR3 | MVP | Users can reset password via email verification |
+| FR4 | MVP | Users can update their profile (name, email, avatar) |
+| FR5 | MVP | Users can delete their account and all associated data |
+| FR6 | MVP | System creates a new Organization when user signs up (user becomes Owner) |
+| FR7 | Future | [FUTURE v0.4] Owners can invite team members to their organization |
+| FR8 | Future | [FUTURE v0.4] Owners can assign roles (Admin, Member) to team members |
+| FR9 | Future | [FUTURE v0.4] Owners can revoke access for team members |
 
 ---
 
 ### Universal Brief
 
-| FR# | Requirement |
-|-----|-------------|
-| FR10 | Users can create their Universal Brief via conversation with Strategy Co-pilot |
-| FR11 | Users can create their Universal Brief via guided form (fallback) |
-| FR12 | Users can view their complete Brief at any time |
-| FR13 | Users can edit any section of their Brief |
-| FR14 | Brief updates fire `brief_updated` event to Event Backbone |
-| FR15 | Brief contains 7 sections: Identity, Audience, Offerings, Positioning, Operations, Goals, Proof |
-| FR16 | Brief data is stored as structured JSON (BrandBrief, OpsModel, OfferCatalog schemas) |
-| FR17 | Brief can be exported as PDF or Markdown |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR10 | MVP | Users can create their Universal Brief via conversation with Strategy Co-pilot |
+| FR11 | MVP | Users can create their Universal Brief via guided form (fallback) |
+| FR12 | MVP | Users can view their complete Brief at any time |
+| FR13 | MVP | Users can edit any section of their Brief |
+| FR14 | MVP | Brief updates fire `brief_updated` event to Event Backbone |
+| FR15 | MVP | Brief contains 7 sections: Identity, Audience, Offerings, Positioning, Operations, Goals, Proof |
+| FR16 | MVP | Brief data is stored as structured JSON (BrandBrief, OpsModel, OfferCatalog schemas) |
+| FR17 | MVP | Brief can be exported as PDF or Markdown |
 
 ---
 
 ### Strategy Co-pilot
 
-| FR# | Requirement |
-|-----|-------------|
-| FR18 | Co-pilot conducts conversational interview to understand the business |
-| FR19 | Co-pilot asks context-aware follow-up questions based on previous answers |
-| FR20 | Co-pilot can handle short/unclear responses gracefully (re-ask or infer) |
-| FR21 | Co-pilot generates Brief sections from conversation content |
-| FR22 | User must confirm/edit Co-pilot-generated content before it's saved |
-| FR23 | Co-pilot conversation can be paused and resumed |
-| FR24 | Co-pilot logs all proposals as events (`ai_proposal_generated`) |
-| FR25 | If Co-pilot fails or user opts out, system falls back to guided form |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR18 | MVP | Co-pilot conducts conversational interview to understand the business |
+| FR19 | MVP | Co-pilot asks context-aware follow-up questions based on previous answers |
+| FR20 | MVP | Co-pilot can handle short/unclear responses gracefully (re-ask or infer) |
+| FR21 | MVP | Co-pilot generates Brief sections from conversation content |
+| FR22 | MVP | User must confirm/edit Co-pilot-generated content before it's saved |
+| FR23 | MVP | Co-pilot conversation can be paused and resumed |
+| FR24 | MVP | Co-pilot logs all proposals as events (`ai_proposal_generated`) |
+| FR25 | MVP | If Co-pilot fails or user opts out, system falls back to guided form |
 
 ---
 
 ### Shell & Navigation
 
-| FR# | Requirement |
-|-----|-------------|
-| FR26 | Shell displays stable header with user menu and notifications |
-| FR27 | Shell displays collapsible sidebar with 7 category icons |
-| FR28 | Only subscribed/active categories are interactable in sidebar |
-| FR29 | Clicking a category expands its subcategories; other categories collapse |
-| FR30 | Switching between categories does not trigger full page reload |
-| FR31 | Shell supports light and dark mode; preference persisted per user |
-| FR32 | Shell is responsive; sidebar collapses to icons on mobile |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR26 | MVP | Shell displays stable header with user menu and notifications |
+| FR27 | MVP | Shell displays collapsible sidebar with 7 category icons |
+| FR28 | MVP | Only subscribed/active categories are interactable in sidebar |
+| FR29 | MVP | Clicking a category expands its subcategories; other categories collapse |
+| FR30 | MVP | Switching between categories does not trigger full page reload |
+| FR31 | MVP | Shell supports light and dark mode; preference persisted per user |
+| FR32 | MVP | Shell is responsive; sidebar collapses to icons on mobile |
 
 ---
 
 ### Event Backbone
 
-| FR# | Requirement |
-|-----|-------------|
-| FR33 | All significant actions write to `system_events` table |
-| FR34 | Events include: `org_id`, `user_id`, `event_type`, `payload`, `timestamp` |
-| FR35 | Events are immutable (append-only log) |
-| FR36 | Events can be queried by org, type, and time range |
-| FR37 | v0.1 event types: `brief_created`, `brief_updated`, `user_signup`, `user_login` |
-| FR38 | v0.2 event types: `website_published`, `page_updated`, `content_published`, `lead_created` |
-| FR39 | [FUTURE] Events power cross-module projections (e.g., `open_loops` view) |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR33 | MVP | All significant actions write to `system_events` table |
+| FR34 | MVP | Events include: `org_id`, `user_id`, `event_type`, `payload`, `timestamp` |
+| FR35 | MVP | Events are immutable (append-only log) |
+| FR36 | MVP | Events can be queried by org, type, and time range |
+| FR37 | MVP | v0.1 event types: `brief_created`, `brief_updated`, `user_signup`, `user_login` |
+| FR38 | MVP | v0.2 event types: `website_published`, `page_updated`, `content_published`, `lead_created` |
+| FR39 | Future | [FUTURE] Events power cross-module projections (e.g., `open_loops` view) |
 
 ---
 
 ### Website Builder (v0.2)
 
-| FR# | Requirement |
-|-----|-------------|
-| FR40 | Users can create a website with drag-and-drop page builder |
-| FR41 | Website Builder offers 3-4 pre-built templates for target segments (founders, trades, clinics) |
-| FR42 | Website content auto-populates from Universal Brief (business name, services, tagline) |
-| FR43 | Users can override any auto-populated content |
-| FR44 | Users can add/remove/reorder pages |
-| FR45 | Users can add/remove/configure page sections (hero, services, about, contact, etc.) |
-| FR46 | Website is mobile-responsive by default |
-| FR47 | Users can preview website before publishing |
-| FR48 | Users can publish website to Xentri subdomain (orgname.xentri.app) |
-| FR49 | Users can connect custom domain to their website |
-| FR50 | Custom domains receive automatic SSL certificate |
-| FR51 | Website publish fires `website_published` event |
-| FR52 | Page updates fire `page_updated` event |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR40 | MVP | Users can create a website with drag-and-drop page builder |
+| FR41 | MVP | Website Builder offers 3-4 pre-built templates for target segments (founders, trades, clinics) |
+| FR42 | MVP | Website content auto-populates from Universal Brief (business name, services, tagline) |
+| FR43 | MVP | Users can override any auto-populated content |
+| FR44 | MVP | Users can add/remove/reorder pages |
+| FR45 | MVP | Users can add/remove/configure page sections (hero, services, about, contact, etc.) |
+| FR46 | MVP | Website is mobile-responsive by default |
+| FR47 | MVP | Users can preview website before publishing |
+| FR48 | MVP | Users can publish website to Xentri subdomain (orgname.xentri.app) |
+| FR49 | MVP | Users can connect custom domain to their website |
+| FR50 | MVP | Custom domains receive automatic SSL certificate |
+| FR51 | MVP | Website publish fires `website_published` event |
+| FR52 | MVP | Page updates fire `page_updated` event |
 
 ---
 
 ### CMS / Portfolio (v0.2)
 
-| FR# | Requirement |
-|-----|-------------|
-| FR53 | Users can create, edit, and delete blog posts |
-| FR54 | Users can create, edit, and delete service pages |
-| FR55 | Users can upload and manage images (photo gallery / portfolio) |
-| FR56 | Content supports rich text editing (headings, lists, links, images) |
-| FR57 | Content can be tagged and categorized |
-| FR58 | Content publish fires `content_published` event |
-| FR59 | Published content appears on user's website (blog section, service pages) |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR53 | MVP | Users can create, edit, and delete blog posts |
+| FR54 | MVP | Users can create, edit, and delete service pages |
+| FR55 | MVP | Users can upload and manage images (photo gallery / portfolio) |
+| FR56 | MVP | Content supports rich text editing (headings, lists, links, images) |
+| FR57 | MVP | Content can be tagged and categorized |
+| FR58 | MVP | Content publish fires `content_published` event |
+| FR59 | MVP | Published content appears on user's website (blog section, service pages) |
 
 ---
 
 ### Lead Capture (v0.2)
 
-| FR# | Requirement |
-|-----|-------------|
-| FR60 | Users can add a contact form to their website |
-| FR61 | Contact form fields are customizable (name, email, phone, message, custom fields) |
-| FR62 | Form submissions create a Lead record in the system |
-| FR63 | Lead creation fires `lead_created` event |
-| FR64 | Users receive notification when new lead is captured (email + in-app) |
-| FR65 | Users can view list of all captured leads |
-| FR66 | Users can view individual lead details (submitted info, timestamp, source page) |
-| FR67 | Users can mark leads as contacted/archived |
-| FR68 | [FUTURE v0.3] Leads can be converted to Clients |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR60 | MVP | Users can add a contact form to their website |
+| FR61 | MVP | Contact form fields are customizable (name, email, phone, message, custom fields) |
+| FR62 | MVP | Form submissions create a Lead record in the system |
+| FR63 | MVP | Lead creation fires `lead_created` event |
+| FR64 | MVP | Users receive notification when new lead is captured (email + in-app) |
+| FR65 | MVP | Users can view list of all captured leads |
+| FR66 | MVP | Users can view individual lead details (submitted info, timestamp, source page) |
+| FR67 | MVP | Users can mark leads as contacted/archived |
+| FR68 | Future | [FUTURE v0.3] Leads can be converted to Clients |
 
 ---
 
 ### Brand Co-pilot (v0.2)
 
-| FR# | Requirement |
-|-----|-------------|
-| FR69 | Brand Co-pilot is available when user has Brand & Marketing modules |
-| FR70 | Brand Co-pilot can suggest website copy based on Brief |
-| FR71 | Brand Co-pilot can review and improve user-written content |
-| FR72 | Brand Co-pilot can suggest SEO improvements for pages |
-| FR73 | All Brand Co-pilot suggestions require user confirmation before applying |
-| FR74 | Brand Co-pilot reads Universal Brief for context |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR69 | Growth | Brand Co-pilot is available when user has Brand & Marketing modules |
+| FR70 | Growth | Brand Co-pilot can suggest website copy based on Brief |
+| FR71 | Growth | Brand Co-pilot can review and improve user-written content |
+| FR72 | Growth | Brand Co-pilot can suggest SEO improvements for pages |
+| FR73 | Growth | All Brand Co-pilot suggestions require user confirmation before applying |
+| FR74 | Growth | Brand Co-pilot reads Universal Brief for context |
 
 ---
 
 ### Notifications & Communication
 
-| FR# | Requirement |
-|-----|-------------|
-| FR75 | System sends transactional emails (welcome, password reset, lead notification) |
-| FR76 | Users can view in-app notifications |
-| FR77 | Users can mark notifications as read |
-| FR78 | Users can configure notification preferences (email on/off per type) |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR75 | MVP | System sends transactional emails (welcome, password reset, lead notification) |
+| FR76 | MVP | Users can view in-app notifications |
+| FR77 | MVP | Users can mark notifications as read |
+| FR78 | MVP | Users can configure notification preferences (email on/off per type) |
 
 ---
 
 ### Data & Privacy
 
-| FR# | Requirement |
-|-----|-------------|
-| FR79 | Users can export all their data (Brief, leads, content) as JSON/CSV |
-| FR80 | Users can request account deletion (soft delete with 30-day recovery) |
-| FR81 | After 30 days, deleted account data is permanently purged |
-| FR82 | All data access is scoped to user's organization (RLS enforced) |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR79 | MVP | Users can export all their data (Brief, leads, content) as JSON/CSV |
+| FR80 | MVP | Users can request account deletion (soft delete with 30-day recovery) |
+| FR81 | MVP | After 30 days, deleted account data is permanently purged |
+| FR82 | MVP | All data access is scoped to user's organization (RLS enforced) |
 
 ---
 
 ### Subscription & Billing
 
-| FR# | Requirement |
-|-----|-------------|
-| FR83 | [FUTURE v0.4] Users can view available subscription tiers |
-| FR84 | [FUTURE v0.4] Users can upgrade from Free to Presencia tier |
-| FR85 | [FUTURE v0.4] Subscription management handled via Stripe Customer Portal (or equivalent) |
-| FR86 | [FUTURE v0.4] Users can view their current subscription status and billing history |
-| FR87 | [FUTURE v0.4] Downgrade/cancellation takes effect at end of billing period |
+| FR# | Priority | Requirement |
+|-----|----------|-------------|
+| FR83 | Future | [FUTURE v0.4] Users can view available subscription tiers |
+| FR84 | Future | [FUTURE v0.4] Users can upgrade from Free to Presencia tier |
+| FR85 | Future | [FUTURE v0.4] Subscription management handled via Stripe Customer Portal (or equivalent) |
+| FR86 | Future | [FUTURE v0.4] Users can view their current subscription status and billing history |
+| FR87 | Future | [FUTURE v0.4] Downgrade/cancellation takes effect at end of billing period |
 
 **Note:** For MVP (v0.1-v0.2), Xentri operates in Client Zero mode. Billing/payment infrastructure is deferred to v0.4 when external customers are targeted.
 
@@ -706,6 +737,7 @@ The Product Brief serves as the strategic foundation for this PRD. Key sections 
 
 | Phase | Workflow | Owner |
 |-------|----------|-------|
+| **Epic Index (v0.1-v0.2)** | `epic-1` Foundation & Access (MVP), `epic-2` Strategy & Clarity (MVP), `epic-3` Digital Presence (MVP), `epic-4` Lead Capture (MVP), `epic-5` Brand Intelligence (Growth), `epic-6` Data Privacy (MVP), `epic-7` Roles & Subscription (Future) | PM |
 | **UX Design** | `create-ux-design` | UX Designer |
 | **Architecture** | `create-architecture` | Architect |
 | **Epic Breakdown** | `create-epics-and-stories` | PM |
