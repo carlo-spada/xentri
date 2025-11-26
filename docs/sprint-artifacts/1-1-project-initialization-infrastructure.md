@@ -1,6 +1,6 @@
 # Story 1.1: Project Initialization & Infrastructure
 
-Status: done
+Status: ready-for-review
 
 ## Story
 
@@ -229,100 +229,6 @@ DELETED : packages/ts-schema/tsconfig.schema.json
 
 ---
 
-## Senior Developer Review (AI)
-
-### Reviewer
-Carlo (via Dev Agent - Amelia)
-
-### Date
-2025-11-26
-
-### Outcome
-**APPROVE** - All acceptance criteria implemented with evidence. Minor advisory notes below.
-
-### Summary
-Story 1-1 establishes a solid foundation for Xentri's multi-tenant infrastructure. The Turborepo monorepo is correctly configured, the Astro shell builds successfully, RLS policies implement the fail-closed pattern per ADR-003, and CI/CD pipeline covers all required jobs. The implementation follows architectural constraints and security requirements.
-
-### Key Findings
-
-**No HIGH severity issues found.**
-
-**MEDIUM severity:**
-- Task 10.2 claims "test containers for Postgres integration tests" but uses raw Prisma queries against existing Postgres rather than the testcontainers library. Functionally equivalent for this story's scope.
-
-**LOW severity:**
-- Task 4.5 "Verify apps/shell can import from @xentri/ui" - infrastructure supports this but no actual import demonstrated in shell code
-- Task 8.6 "Configure branch protection" - GitHub setting, not verifiable from code (documented in CI workflow)
-- pnpm version 10.20.0 vs specified 10.23.0 (minor deviation)
-- Redis version 8.0 vs specified 8.4.0 (minor deviation)
-
-### Acceptance Criteria Coverage
-
-| AC# | Description | Status | Evidence |
-|-----|-------------|--------|----------|
-| AC1 | Shell loads at localhost:4321 | IMPLEMENTED | `apps/shell/package.json:7` (`--port 4321`), `turbo.json:4-6` (dev task) |
-| AC2 | Monorepo layout | IMPLEMENTED | `apps/shell/`, `packages/ui/`, `packages/ts-schema/`, `services/core-api/` verified via ls |
-| AC3 | Postgres 16.11 with RLS | IMPLEMENTED | `docker-compose.yml:5` (postgres:16.11), `docker-compose.yml:24` (`row_security=on`) |
-| AC4 | CI/CD lint/test/build | IMPLEMENTED | `.github/workflows/ci.yml:18-113` (lint, typecheck, test, build jobs) |
-| AC5 | Smoke test RLS isolation | IMPLEMENTED | `scripts/smoke-test.ts:132-192` (RLS tests), `scripts/smoke-test.ts:195-223` (shell check) |
-
-**Summary: 5 of 5 acceptance criteria fully implemented**
-
-### Task Completion Validation
-
-| Task | Marked As | Verified As | Evidence |
-|------|-----------|-------------|----------|
-| Task 1: Turborepo Monorepo | [x] | VERIFIED | `package.json`, `turbo.json`, `pnpm-workspace.yaml`, `.npmrc`, `.nvmrc` |
-| Task 2: Scaffold shell | [x] | VERIFIED | `apps/shell/package.json`, `apps/shell/astro.config.mjs`, `apps/shell/src/pages/index.astro` |
-| Task 3: Scaffold ts-schema | [x] | VERIFIED | `packages/ts-schema/package.json`, `packages/ts-schema/tsconfig.json` |
-| Task 4: Scaffold ui | [x] | VERIFIED | `packages/ui/package.json`, `packages/ui/src/components/button.tsx`, design tokens in `globals.css` |
-| Task 5: Scaffold core-api | [x] | VERIFIED | `services/core-api/package.json`, `services/core-api/src/routes/health.ts:4-6` |
-| Task 6: Docker Compose | [x] | VERIFIED | `docker-compose.yml` with postgres, redis, minio services |
-| Task 7: RLS Schema | [x] | VERIFIED | `services/core-api/prisma/migrations/00000000000000_init/migration.sql:79-105` |
-| Task 8: CI/CD Pipeline | [x] | VERIFIED | `.github/workflows/ci.yml` with lint/typecheck/test/build/smoke jobs |
-| Task 9: Smoke Test | [x] | VERIFIED | `scripts/smoke-test.ts` with RLS isolation and shell checks |
-| Task 10: Testing Infra | [x] | VERIFIED | `vitest.config.ts`, `playwright.config.ts`, `packages/ts-schema/src/__tests__/events.test.ts` |
-
-**Summary: 10 of 10 completed tasks verified, 0 questionable, 0 false completions**
-
-### Test Coverage and Gaps
-
-- Unit tests: `packages/ts-schema` (3 tests), `packages/ui` (10 tests), `services/core-api` (1 placeholder)
-- Integration tests: `scripts/smoke-test.ts` validates RLS isolation, testcontainers helper ready for future integration tests
-- E2E tests: Playwright config ready, `e2e/shell.spec.ts` placeholder
-- **Total: 14 tests passing across all packages**
-
-### Architectural Alignment
-
-- Turborepo 2.6.1 with pnpm workspaces (per architecture.md)
-- Astro 5.16.0 with React 19.2.0 islands (per architecture.md)
-- Fastify 5.6.2 with Prisma 7.0.1 (per architecture.md)
-- RLS fail-closed pattern implemented exactly per ADR-003
-- Design tokens match UX spec (Sky Blue #38bdf8, Violet #a78bfa, 4-layer neutral system)
-
-### Security Notes
-
-- RLS enabled on all tenant-scoped tables with FORCE ROW LEVEL SECURITY
-- Fail-closed pattern correctly implemented: queries return 0 rows when `app.current_org_id` not set
-- HTTP-only cookie patterns not yet implemented (deferred to Story 1.3)
-
-### Best-Practices and References
-
-- [Turborepo docs](https://turbo.build/repo/docs)
-- [Astro React integration](https://docs.astro.build/en/guides/integrations-guide/react/)
-- [PostgreSQL RLS](https://www.postgresql.org/docs/16/ddl-rowsecurity.html)
-- [Tailwind CSS v4](https://tailwindcss.com/docs/v4-beta)
-
-### Action Items
-
-**Advisory Notes (All Addressed):**
-- ~~Note: Consider adding a unit test for `@xentri/ui` Button component~~ ✓ Added `packages/ui/src/__tests__/button.test.tsx` (10 tests)
-- ~~Note: Configure GitHub branch protection rules manually~~ ✓ Configured via `gh api` (require PR reviews, status checks)
-- ~~Note: Consider adding testcontainers library for more isolated integration tests~~ ✓ Added `services/core-api/src/__tests__/helpers/postgres-container.ts`
-- ~~Note: Add actual import of `@xentri/ui` in shell when first UI component is needed~~ ✓ Created `Hero.tsx` component using `@xentri/ui` Button
-
----
-
 ## Change Log
 
 | Date | Author | Change |
@@ -330,5 +236,4 @@ Story 1-1 establishes a solid foundation for Xentri's multi-tenant infrastructur
 | 2025-11-26 | SM Agent (Bob) | Initial draft created from Epic 1 tech spec |
 | 2025-11-26 | SM Agent (Bob) | Context XML generated, status changed to ready-for-dev |
 | 2025-11-26 | Dev Agent (Amelia) | Implementation complete - all 10 tasks done, tests passing |
-| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review: APPROVE - all ACs verified |
-| 2025-11-26 | Dev Agent (Amelia) | All 4 advisory notes addressed: Button tests, branch protection, testcontainers, shell→ui import |
+| 2025-11-26 | SM Agent (Bob) | Reverted status to ready-for-review per user request |
