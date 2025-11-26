@@ -23,10 +23,15 @@
 
 import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import { execSync } from 'child_process';
+
+const { Pool } = pg;
 
 let container: StartedPostgreSqlContainer | null = null;
 let prisma: PrismaClient | null = null;
+let pool: pg.Pool | null = null;
 
 /**
  * Starts a PostgreSQL container and runs migrations.
@@ -56,12 +61,11 @@ export async function setupPostgres(): Promise<string> {
     stdio: 'pipe',
   });
 
-  // Create Prisma client
-  prisma = new PrismaClient({
-    datasources: {
-      db: { url: connectionString },
-    },
-  });
+  // Create Prisma client with pg adapter (Prisma 7.0+)
+  pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
+
+  prisma = new PrismaClient({ adapter });
 
   await prisma.$connect();
 
@@ -76,6 +80,11 @@ export async function teardownPostgres(): Promise<void> {
   if (prisma) {
     await prisma.$disconnect();
     prisma = null;
+  }
+
+  if (pool) {
+    await pool.end();
+    pool = null;
   }
 
   if (container) {

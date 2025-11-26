@@ -1,6 +1,6 @@
 # Story 1.2: Event Backbone & Database Schema
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -20,15 +20,15 @@ so that **we have an immutable audit trail and secure multi-tenancy from which a
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Create system_events table migration** (AC: 1, 3)
-  - [ ] 1.1 Add Prisma schema for `system_events` table with all columns per tech spec
-  - [ ] 1.2 Write raw SQL migration to create table with proper indexes
-  - [ ] 1.3 Add `idx_events_org_type_time` composite index for common queries
-  - [ ] 1.4 Add CHECK constraint or trigger preventing UPDATE/DELETE (immutability)
+- [x] **Task 1: Create system_events table migration** (AC: 1, 3)
+  - [x] 1.1 Add Prisma schema for `system_events` table with all columns per tech spec
+  - [x] 1.2 Write raw SQL migration to create table with proper indexes
+  - [x] 1.3 Add `idx_events_org_type_time` composite index for common queries
+  - [x] 1.4 Add CHECK constraint or trigger preventing UPDATE/DELETE (immutability)
 
-- [ ] **Task 2: Implement RLS policies for system_events** (AC: 2, 3)
-  - [ ] 2.1 Enable RLS on `system_events` table
-  - [ ] 2.2 Create `tenant_isolation` policy with fail-closed pattern:
+- [x] **Task 2: Implement RLS policies for system_events** (AC: 2, 3)
+  - [x] 2.1 Enable RLS on `system_events` table
+  - [x] 2.2 Create `tenant_isolation` policy with fail-closed pattern:
     ```sql
     CREATE POLICY tenant_isolation ON system_events
       FOR ALL USING (
@@ -36,49 +36,49 @@ so that **we have an immutable audit trail and secure multi-tenancy from which a
         AND org_id = current_setting('app.current_org_id', true)::uuid
       );
     ```
-  - [ ] 2.3 Create INSERT-only policy (block UPDATE/DELETE at policy level)
-  - [ ] 2.4 Write integration test: user_a cannot read user_b's events
+  - [x] 2.3 Create INSERT-only policy (block UPDATE/DELETE at policy level)
+  - [x] 2.4 Write integration test: user_a cannot read user_b's events
 
-- [ ] **Task 3: Define event types in ts-schema** (AC: 4, 5)
-  - [ ] 3.1 Add `EventType` union type with all v0.1/v0.2 event types
-  - [ ] 3.2 Add typed payload interfaces for each event type
-  - [ ] 3.3 Add `SystemEvent<TPayload>` generic Zod schema with validation
-  - [ ] 3.4 Add `OpenLoopsProjection` placeholder type with TODO comment for future implementation
-  - [ ] 3.5 Export all types from `packages/ts-schema/src/events.ts`
+- [x] **Task 3: Define event types in ts-schema** (AC: 4, 5)
+  - [x] 3.1 Add `EventType` union type with all v0.1/v0.2 event types
+  - [x] 3.2 Add typed payload interfaces for each event type
+  - [x] 3.3 Add `SystemEvent<TPayload>` generic Zod schema with validation
+  - [x] 3.4 Add `OpenLoopsProjection` placeholder type with TODO comment for future implementation
+  - [x] 3.5 Export all types from `packages/ts-schema/src/events.ts`
 
-- [ ] **Task 4: Create EventService in core-api** (AC: 6, 7)
-  - [ ] 4.1 Create `services/core-api/src/domain/events/EventService.ts`
-  - [ ] 4.2 Implement `createEvent(payload: SystemEvent)` method with:
+- [x] **Task 4: Create EventService in core-api** (AC: 6, 7)
+  - [x] 4.1 Create `services/core-api/src/domain/events/EventService.ts`
+  - [x] 4.2 Implement `createEvent(payload: SystemEvent)` method with:
     - Zod validation
     - Dedupe key generation (if not provided)
     - Transaction-scoped `set_config('app.current_org_id', ...)` call
     - INSERT into system_events
-  - [ ] 4.3 Implement `listEvents(orgId, options)` method with:
+  - [x] 4.3 Implement `listEvents(orgId, options)` method with:
     - Type filtering
     - Since timestamp filtering
     - Cursor-based pagination (limit + cursor)
-  - [ ] 4.4 Write unit tests for EventService methods
+  - [x] 4.4 Write unit tests for EventService methods
 
-- [ ] **Task 5: Create events API routes** (AC: 6, 7)
-  - [ ] 5.1 Create `POST /api/v1/events` route in core-api
-  - [ ] 5.2 Create `GET /api/v1/events` route with query param parsing
-  - [ ] 5.3 Add auth middleware to extract user_id from JWT
-  - [ ] 5.4 Add org scoping middleware to verify x-org-id header
-  - [ ] 5.5 Return Problem Details format for errors (400, 401, 403, 500)
-  - [ ] 5.6 Write integration tests for both endpoints
+- [x] **Task 5: Create events API routes** (AC: 6, 7)
+  - [x] 5.1 Create `POST /api/v1/events` route in core-api
+  - [x] 5.2 Create `GET /api/v1/events` route with query param parsing
+  - [x] 5.3 Add auth middleware to extract user_id from JWT
+  - [x] 5.4 Add org scoping middleware to verify x-org-id header
+  - [x] 5.5 Return Problem Details format for errors (400, 401, 403, 500)
+  - [x] 5.6 Write integration tests for both endpoints
 
-- [ ] **Task 6: Shell timeline panel (vertical slice)** (AC: 7)
-  - [ ] 6.1 Create minimal React component `EventTimeline` in shell
-  - [ ] 6.2 Fetch events from `/api/v1/events?limit=10` on mount
-  - [ ] 6.3 Display event_type, occurred_at, source in simple list format
-  - [ ] 6.4 Style with existing Xentri design tokens from packages/ui
+- [x] **Task 6: Shell timeline panel (vertical slice)** (AC: 7)
+  - [x] 6.1 Create minimal React component `EventTimeline` in shell
+  - [x] 6.2 Fetch events from `/api/v1/events?limit=10` on mount
+  - [x] 6.3 Display event_type, occurred_at, source in simple list format
+  - [x] 6.4 Style with existing Xentri design tokens from packages/ui
 
-- [ ] **Task 7: Testing and validation** (AC: 1-7)
-  - [ ] 7.1 Write RLS isolation test: seed org_a and org_b events, verify cross-org blocked
-  - [ ] 7.2 Write immutability test: attempt UPDATE/DELETE, verify blocked
-  - [ ] 7.3 Write API integration test: POST event → GET event visible
-  - [ ] 7.4 Add smoke test case for events to existing smoke-test.ts
-  - [ ] 7.5 Verify all tests pass: `pnpm run test`
+- [x] **Task 7: Testing and validation** (AC: 1-7)
+  - [x] 7.1 Write RLS isolation test: seed org_a and org_b events, verify cross-org blocked
+  - [x] 7.2 Write immutability test: attempt UPDATE/DELETE, verify blocked
+  - [x] 7.3 Write API integration test: POST event → GET event visible
+  - [x] 7.4 Add smoke test case for events to existing smoke-test.ts
+  - [x] 7.5 Verify all tests pass: `pnpm run test`
 
 ## Dev Notes
 

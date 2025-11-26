@@ -2,6 +2,8 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import healthRoutes from './routes/health.js';
+import eventsRoutes from './routes/events.js';
+import { disconnectDb } from './infra/db.js';
 
 const server = Fastify({
   logger: {
@@ -25,6 +27,12 @@ await server.register(cors, {
 
 // Routes
 await server.register(healthRoutes);
+await server.register(eventsRoutes);
+
+// Graceful shutdown
+server.addHook('onClose', async () => {
+  await disconnectDb();
+});
 
 const start = async () => {
   try {

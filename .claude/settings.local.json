@@ -27,7 +27,8 @@
       "Bash(gh auth status:*)",
       "Bash(gh api:*)",
       "Bash(npx prisma validate:*)",
-      "Bash(docker ps:*)"
+      "Bash(docker ps:*)",
+      "Bash(npx prisma:*)"
     ],
     "deny": [],
     "ask": []
