@@ -25,7 +25,7 @@ workflow_status:
   brainstorm-project: "docs/brainstorming-session-results-2025-11-24.md"
   research: "docs/bmm-research-market-2025-11-24.md"
   product-brief: "docs/product-brief-Xentri-2025-11-24.md"
-  prd: required # pending artifact
+  prd: "docs/prd.md"
   validate-prd: recommended
   create-design: recommended
   create-architecture: "architecture.md"

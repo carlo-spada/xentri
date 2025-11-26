@@ -25,17 +25,17 @@ An **Open Loop** is a *derived state* that:
 2. Requires some form of resolution (an action or an explicit dismissal).
 3. Is important enough to justify attention from the owner/ops role.
 
-For v0.1 we focus on four core loop categories.
+For v0.1 we focus on the five loop categories defined in the Product Brief.
 
 ### 2.1 Loop Categories (Initial Set)
 
 | Category            | Trigger Condition                                      | Resolution Condition                                 | Default Severity |
 |---------------------|--------------------------------------------------------|------------------------------------------------------|------------------|
-| **Quote Needed**    | `quote_requested` exists and **no** `quote_sent`      | `quote_sent` emitted for the same deal              | High             |
-| **Decision Pending**| `quote_sent` exists and **no** `quote_accepted` / `quote_rejected` | `quote_accepted` OR `quote_rejected` emitted | Medium           |
+| **New Lead**        | `lead_created` exists, **no** interaction events yet  | `quote_requested` OR `followup_scheduled` OR `note_added` | Medium           |
+| **Quote Pending**   | `quote_requested` exists and **no** `quote_sent`      | `quote_sent` emitted for the same deal              | High             |
 | **Invoice Overdue** | `invoice_issued` exists, `due_date < now`, **no** `payment_received` | `payment_received` emitted for that invoice | High             |
 | **Follow-up Due**   | `followup_scheduled` date ≤ now, **no** `followup_sent` / `followup_dismissed` | `followup_sent` OR `followup_dismissed` emitted | Medium           |
-| **New Lead**        | `lead_created` exists, **no** interaction events yet | `quote_requested` OR `followup_scheduled` OR `note_added` | Medium           |
+| **Brief Incomplete**| No `brief_created` (or latest brief payload marks `status: incomplete`) | `brief_completed` (or `brief_updated` with `status: complete`) | Medium           |
 
 Notes:
 
@@ -55,12 +55,16 @@ Top of screen. A small, card-based list of **highest-severity, time-sensitive** 
 Example cards:
 
 > **Sarah / ACME Co**  
-> 🔴 Quote Needed (Due: Tomorrow – Board Meeting)  
+> 🔴 Quote Pending (Due: Tomorrow – Board Meeting)  
 > [Draft Quote] [Dismiss]
 
 > **Project Alpha / Invoice #102**  
 > 🟠 Invoice Overdue (3 days)  
 > [Resend Invoice] [Mark Paid]
+
+> **Your Business Brief**  
+> 🟡 Brief Incomplete (Finish to unlock bundles)  
+> [Complete Brief] [Remind Me Later]
 
 Principles:
 
@@ -75,7 +79,7 @@ Below the critical section, lighter-weight list.
 
 Examples:
 
-- **Tomorrow:** Decision Pending – Quote for Client B (Quote Sent 2 days ago)  
+- **Tomorrow:** Quote Pending – Client B (Requested today, board review tomorrow)  
 - **Wed:** Invoice #103 Due (Client C, $1,200)
 - **New Lead:** "Client D" (Needs acknowledgement)
 
@@ -102,7 +106,7 @@ This endpoint:
   "critical": [
     {
       "id": "loop_123",
-      "type": "quote_needed",
+      "type": "quote_pending",
       "client_name": "Sarah / ACME Co",
       "entity_type": "deal",
       "entity_id": "deal_456",
@@ -124,13 +128,12 @@ This endpoint:
   "upcoming": [
     {
       "id": "loop_200",
-      "type": "decision_pending",
-      "client_name": "Client B",
-      "entity_type": "deal",
-      "entity_id": "deal_789",
+      "type": "brief_incomplete",
+      "entity_type": "brief",
+      "entity_id": "org_brief",
       "due_at": "2025-11-26T10:00:00Z",
       "severity": "medium",
-      "suggested_action": "check_in"
+      "suggested_action": "complete_brief"
     }
   ]
 }
