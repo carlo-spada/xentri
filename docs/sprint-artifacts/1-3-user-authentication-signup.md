@@ -1,6 +1,6 @@
 # Story 1.3: User Authentication & Signup
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
