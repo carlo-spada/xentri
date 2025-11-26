@@ -10,9 +10,9 @@ so that **all system events are securely stored per-org and form the foundation 
 
 ## Acceptance Criteria
 
-1. **AC1:** `system_events` table exists with `org_id`, `event_type`, `payload`, `occurred_at` columns (append-only)
-2. **AC2:** Queries under an authenticated role enforce RLS automatically; cross-org reads return 0 rows
-3. **AC3:** Events are immutable (no UPDATE or DELETE allowed) and include `user_id` when present
+1. **AC1:** `system_events` table exists with `org_id`, `actor_type`, `actor_id`, `event_type`, `payload`, `meta`, `occurred_at` columns (append-only, partitioned)
+2. **AC2:** Queries under an authenticated role enforce RLS automatically; cross-org reads return 0 rows unless `app.is_super_admin` is set
+3. **AC3:** Events are immutable (no UPDATE or DELETE allowed)
 4. **AC4:** Event types for v0.1/v0.2 registered: `xentri.user.signup.v1`, `xentri.user.login.v1`, `xentri.brief.created.v1`, `xentri.brief.updated.v1`, `xentri.website.published.v1`, `xentri.page.updated.v1`, `xentri.content.published.v1`, `xentri.lead.created.v1`
 5. **AC5:** Future hook for `open_loops` projection documented (TODO comment) without implementing logic
 6. **AC6:** Org-scoped events endpoint `GET /api/v1/events` allows viewing recent events per org with pagination
@@ -20,46 +20,73 @@ so that **all system events are securely stored per-org and form the foundation 
 ## Tasks / Subtasks
 
 - [ ] **Task 1: Create system_events Table Migration** (AC: 1, 3)
-  - [ ] 1.1 Create Prisma migration for `system_events` table with schema:
+  - [ ] 1.1 Create Prisma migration for `system_events` table with schema (Partitioned by RANGE on occurred_at):
     ```sql
     CREATE TABLE system_events (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id UUID NOT NULL DEFAULT gen_random_uuid(), -- Removed PRIMARY KEY constraint for partitioning compatibility
       org_id UUID NOT NULL,
-      user_id UUID,
+      actor_type TEXT NOT NULL, -- 'user', 'system', 'job'
+      actor_id UUID NOT NULL,
       event_type TEXT NOT NULL,
       payload JSONB NOT NULL DEFAULT '{}',
+      meta JSONB NOT NULL DEFAULT '{}', -- Stores environment, source, etc.
       occurred_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       dedupe_key TEXT,
       correlation_id TEXT,
       trace_id TEXT,
-      source TEXT NOT NULL,
+      source TEXT NOT NULL, -- Kept for quick access, also in meta
       envelope_version TEXT NOT NULL DEFAULT '1.0',
-      payload_schema TEXT NOT NULL
-    );
+      payload_schema TEXT NOT NULL,
+      
+      -- Partitioning requires the partition key to be part of the primary key
+      PRIMARY KEY (id, occurred_at)
+    ) PARTITION BY RANGE (occurred_at);
     ```
-  - [ ] 1.2 Add index: `CREATE INDEX idx_events_org_type_time ON system_events(org_id, event_type, occurred_at DESC)`
-  - [ ] 1.3 Add index for dedupe: `CREATE UNIQUE INDEX idx_events_dedupe ON system_events(dedupe_key) WHERE dedupe_key IS NOT NULL`
+  - [ ] 1.2 Create initial partitions (e.g., current month + next month):
+    ```sql
+    CREATE TABLE system_events_2025_11 PARTITION OF system_events
+      FOR VALUES FROM ('2025-11-01') TO ('2025-12-01');
+    CREATE TABLE system_events_2025_12 PARTITION OF system_events
+      FOR VALUES FROM ('2025-12-01') TO ('2026-01-01');
+    ```
+  - [ ] 1.3 Add index: `CREATE INDEX idx_events_org_type_time ON system_events(org_id, event_type, occurred_at DESC)`
+  - [ ] 1.4 Add index for dedupe: `CREATE UNIQUE INDEX idx_events_dedupe ON system_events(dedupe_key, occurred_at) WHERE dedupe_key IS NOT NULL`
+  - [ ] 1.5 Add observability indexes:
+    ```sql
+    CREATE INDEX idx_events_trace_id ON system_events(trace_id);
+    CREATE INDEX idx_events_correlation_id ON system_events(correlation_id);
+    ```
 
 - [ ] **Task 2: Implement RLS for system_events** (AC: 2)
   - [ ] 2.1 Enable RLS: `ALTER TABLE system_events ENABLE ROW LEVEL SECURITY`
-  - [ ] 2.2 Create fail-closed SELECT policy:
+  - [ ] 2.2 Create fail-closed SELECT policy with Super Admin bypass:
     ```sql
     CREATE POLICY events_select_isolation ON system_events
       FOR SELECT USING (
-        current_setting('app.current_org_id', true) IS NOT NULL
-        AND org_id = current_setting('app.current_org_id', true)::uuid
+        (current_setting('app.is_super_admin', true) = 'true') -- Bypass for System/Admin
+        OR
+        (
+          current_setting('app.current_org_id', true) IS NOT NULL
+          AND org_id = current_setting('app.current_org_id', true)::uuid
+        )
       );
     ```
   - [ ] 2.3 Create INSERT policy allowing service to write with valid org_id:
     ```sql
     CREATE POLICY events_insert_policy ON system_events
       FOR INSERT WITH CHECK (
-        current_setting('app.current_org_id', true) IS NOT NULL
-        AND org_id = current_setting('app.current_org_id', true)::uuid
+        -- Allow system/jobs to insert without org context if needed (e.g. cross-org events), 
+        -- OR enforce org_id match. For now, enforce org_id match or super_admin.
+        (current_setting('app.is_super_admin', true) = 'true')
+        OR
+        (
+          current_setting('app.current_org_id', true) IS NOT NULL
+          AND org_id = current_setting('app.current_org_id', true)::uuid
+        )
       );
     ```
-  - [ ] 2.4 Write integration test: User A cannot read User B's events
+  - [ ] 2.4 Write integration test: User A cannot read User B's events; Super Admin can read both.
 
 - [ ] **Task 3: Enforce Event Immutability** (AC: 3)
   - [ ] 3.1 Create UPDATE restriction policy:
@@ -115,18 +142,21 @@ so that **all system events are securely stored per-org and form the foundation 
   - [ ] 7.2 Implement `writeEvent<T>(event: SystemEvent<T>)` function:
     - Validate payload against Zod schema
     - Generate `dedupe_key` if not provided
+    - Map `actor` object to `actor_type` and `actor_id` columns
+    - Map `meta` object to `meta` column
     - INSERT into `system_events`
     - Return event_id
   - [ ] 7.3 Add optional Redis outbox publish (stub for future n8n integration)
   - [ ] 7.4 Write unit tests for event writer
 
 - [ ] **Task 8: Testing & Validation** (AC: 1-6)
-  - [ ] 8.1 Integration test: Write event, read back, verify all fields
+  - [ ] 8.1 Integration test: Write event, read back, verify all fields (including meta, actor)
   - [ ] 8.2 Integration test: Cross-org isolation (org_a cannot read org_b events)
-  - [ ] 8.3 Integration test: Immutability (UPDATE/DELETE blocked)
-  - [ ] 8.4 Integration test: Events endpoint pagination
-  - [ ] 8.5 Unit test: Event type validation with invalid payloads
-  - [ ] 8.6 Verify `pnpm run test` passes all new tests
+  - [ ] 8.3 Integration test: Super Admin bypass (can read all)
+  - [ ] 8.4 Integration test: Immutability (UPDATE/DELETE blocked)
+  - [ ] 8.5 Integration test: Events endpoint pagination
+  - [ ] 8.6 Unit test: Event type validation with invalid payloads
+  - [ ] 8.7 Verify `pnpm run test` passes all new tests
 
 ## Dev Notes
 
@@ -148,7 +178,7 @@ The following types already exist in `packages/ts-schema/src/`:
 
 - Every event MUST have `org_id` [Source: docs/prd.md#FR82]
 - RLS enabled with fail-closed policy [Source: docs/prd.md#Critical-Risks]
-- No cross-org data leakage under any circumstances
+- No cross-org data leakage under any circumstances (except Super Admin)
 
 ### Performance Targets
 
@@ -181,11 +211,10 @@ packages/ts-schema/
 ### Database Schema Reference
 
 From tech spec, the `system_events` table should include:
-- `id`, `org_id`, `user_id`, `event_type`, `payload`, `occurred_at`, `created_at`
+- `id`, `org_id`, `actor_type`, `actor_id`, `event_type`, `payload`, `meta`, `occurred_at`, `created_at`
 - `dedupe_key`, `correlation_id`, `trace_id` (reliability)
 - `source`, `envelope_version`, `payload_schema` (metadata)
-
-[Source: docs/sprint-artifacts/tech-spec-epic-1.md#Data-Models]
+- **Partitioned by:** `occurred_at` (Range)
 
 ### Learnings from Previous Story
 
@@ -240,4 +269,5 @@ From tech spec, the `system_events` table should include:
 
 | Date | Author | Change |
 |------|--------|--------|
-| 2025-11-26 | SM Agent (Bob) | Initial draft created from Epic 1 tech spec |
+| 2025-11-26 | SM Agent (Bob) | Initial draft from Epic 1 tech spec |
+| 2025-11-26 | Antigravity | Schema review: Added actor_type/id, meta, partitioning, RLS bypass |

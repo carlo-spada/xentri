@@ -1,0 +1,40 @@
+{
+  "name": "Xentri Brand",
+  "colors": {
+    "component": {
+      "fill": "#e0f2fe",
+      "stroke": "#0284c7",
+      "text": "#0c4a6e"
+    },
+    "database": {
+      "fill": "#ede9fe",
+      "stroke": "#7c3aed",
+      "text": "#4c1d95"
+    },
+    "service": {
+      "fill": "#f0f9ff",
+      "stroke": "#0ea5e9",
+      "text": "#075985"
+    },
+    "external": {
+      "fill": "#faf5ff",
+      "stroke": "#a78bfa",
+      "text": "#5b21b6"
+    },
+    "event": {
+      "fill": "#fef3c7",
+      "stroke": "#f59e0b",
+      "text": "#92400e"
+    },
+    "arrow": {
+      "stroke": "#64748b"
+    },
+    "label": {
+      "text": "#1e293b"
+    }
+  },
+  "fonts": {
+    "primary": "Inter, sans-serif",
+    "mono": "JetBrains Mono, monospace"
+  }
+}

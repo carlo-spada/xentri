@@ -19,6 +19,7 @@
     "dev": "tsup src/index.ts --format esm --dts --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
+    "test": "vitest run",
     "clean": "rm -rf dist"
   },
   "dependencies": {
@@ -31,13 +32,16 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
+    "jsdom": "^25.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "@tailwindcss/cli": "^4.0.0",
     "tailwindcss": "^4.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.0.0"
   }
 }
