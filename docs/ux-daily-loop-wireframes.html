@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xentri Daily Loop — UX Wireframes</title>
+  <style>
+    :root {
+      /* Xentri Dark Mode Tokens */
+      --bg: #1a1625;
+      --surface: #221d2e;
+      --muted: #2d2640;
+      --border: #3d3455;
+      --primary: #38bdf8;
+      --secondary: #a78bfa;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --error: #f87171;
+      --text: #e8e4f0;
+      --text-muted: #a5a0b5;
+      --text-dim: #6b6580;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #0a0a0a;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .doc-header {
+      padding: 48px 40px;
+      border-bottom: 1px solid #222;
+      background: linear-gradient(180deg, var(--bg) 0%, #0a0a0a 100%);
+    }
+
+    .doc-header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .doc-header p {
+      color: var(--text-muted);
+      max-width: 700px;
+    }
+
+    /* Section */
+    .section {
+      padding: 48px 40px;
+      border-bottom: 1px solid #222;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-number {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Flow Map */
+    .flow-map {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .flow-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-node {
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .flow-node.primary {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .flow-node.success {
+      background: rgba(52, 211, 153, 0.15);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .flow-arrow {
+      color: var(--text-dim);
+      font-size: 1.2rem;
+    }
+
+    .flow-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    /* Wireframe Container */
+    .wireframe-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    @media (max-width: 1000px) {
+      .wireframe-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .wireframe-column h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* Mobile Frame */
+    .mobile-frame {
+      width: 320px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .mobile-header {
+      background: var(--surface);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-header-left h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .mobile-header-left .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .autonomy-badge {
+      font-size: 0.65rem;
+      padding: 4px 8px;
+      border-radius: 100px;
+      background: rgba(167, 139, 250, 0.15);
+      color: var(--secondary);
+      font-weight: 500;
+    }
+
+    .mobile-body {
+      padding: 16px;
+      min-height: 500px;
+    }
+
+    .mobile-section {
+      margin-bottom: 20px;
+    }
+
+    .mobile-section-header {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-count {
+      background: var(--primary);
+      color: var(--bg);
+      font-size: 0.6rem;
+      padding: 2px 6px;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+
+    /* Exception Card */
+    .exception-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .exception-card.highlighted {
+      border-color: var(--warning);
+      box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.2);
+    }
+
+    .exception-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .exception-what {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .exception-why {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .risk-badge {
+      font-size: 0.6rem;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .risk-low {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+    }
+
+    .risk-med {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--warning);
+    }
+
+    .risk-high {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--error);
+    }
+
+    .exception-status {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-dot.drafted { background: var(--warning); }
+    .status-dot.executed { background: var(--success); }
+    .status-dot.blocked { background: var(--error); }
+
+    .exception-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--bg);
+    }
+
+    .btn-secondary {
+      background: var(--muted);
+      color: var(--text-muted);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      padding: 8px 10px;
+    }
+
+    /* Activity Item */
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+
+    .activity-icon.success { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-title {
+      margin-bottom: 2px;
+    }
+
+    .activity-meta {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* Desktop Frame */
+    .desktop-frame {
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 500px;
+    }
+
+    .desktop-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: 500px;
+    }
+
+    .desktop-left {
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      background: var(--surface);
+    }
+
+    .desktop-right {
+      padding: 24px;
+    }
+
+    .desktop-header {
+      margin-bottom: 20px;
+    }
+
+    .desktop-header h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .desktop-header .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Detail Panel */
+    .detail-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .detail-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-header h5 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .detail-header .meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .detail-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--muted);
+    }
+
+    .detail-section:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .detail-value {
+      font-size: 0.9rem;
+    }
+
+    .detail-actions {
+      padding: 16px 20px;
+      display: flex;
+      gap: 10px;
+      background: var(--bg);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--muted);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .empty-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .empty-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 240px;
+      margin: 0 auto;
+    }
+
+    /* Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--muted) 25%, var(--surface) 50%, var(--muted) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-line {
+      height: 14px;
+      margin-bottom: 8px;
+    }
+
+    .skeleton-line.short { width: 60%; }
+    .skeleton-line.medium { width: 80%; }
+
+    .skeleton-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    /* Undo Toast */
+    .undo-toast {
+      background: var(--surface);
+      border: 1px solid var(--success);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .undo-toast-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .undo-toast-icon {
+      color: var(--success);
+      font-size: 1.1rem;
+    }
+
+    .undo-toast-text {
+      font-size: 0.9rem;
+    }
+
+    .undo-toast-text strong {
+      color: var(--success);
+    }
+
+    .undo-link {
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Policy Sheet */
+    .policy-sheet {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .policy-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .policy-header h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .policy-header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .policy-section {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--muted);
+    }
+
+    .policy-section:last-child {
+      border-bottom: none;
+    }
+
+    .policy-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .policy-value {
+      font-size: 0.75rem;
+      color: var(--secondary);
+    }
+
+    /* Slider */
+    .slider-track {
+      height: 6px;
+      background: var(--muted);
+      border-radius: 100px;
+      position: relative;
+    }
+
+    .slider-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--primary);
+      border-radius: 100px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    .slider-labels span.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Microcopy Box */
+    .microcopy-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 32px;
+    }
+
+    .microcopy-box h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--secondary);
+      margin-bottom: 16px;
+    }
+
+    .microcopy-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--muted);
+    }
+
+    .microcopy-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .microcopy-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .microcopy-text {
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .microcopy-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* Timeline */
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--muted);
+    }
+
+    .timeline-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-what {
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+
+    .timeline-meta {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    /* Footer */
+    .doc-footer {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .tab.active {
+      background: var(--muted);
+      color: var(--text);
+    }
+
+    /* Bottom Bar */
+    .mobile-bottom {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-bar {
+      background: var(--muted);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Annotation */
+    .annotation {
+      background: rgba(167, 139, 250, 0.1);
+      border-left: 3px solid var(--secondary);
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 0.85rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .annotation-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--secondary);
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-header">
+    <h1>Xentri Daily Loop — UX Wireframes</h1>
+    <p>The defining user journey: Open → Scan → Handle Exceptions → Close. This is where trust is earned. These wireframes show Mobile Cockpit and Desktop Workshop views across all key states.</p>
+  </div>
+
+  <!-- SECTION 1: FLOW MAP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 1</div>
+      <h2>Daily Loop Flow Map</h2>
+      <p class="section-desc">The complete state machine for the daily check-in experience.</p>
+    </div>
+
+    <div class="flow-map">
+      <div class="flow-label">Happy Path</div>
+      <div class="flow-row">
+        <div class="flow-node">Open App</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Loading (< 1s)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node primary">Today View</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Scan Summary</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node success">All Caught Up</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Close App</div>
+      </div>
+
+      <div class="flow-label">Exception Path</div>
+      <div class="flow-row">
+        <div class="flow-node primary">Today View</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node" style="border-color: var(--warning); color: var(--warning);">Exceptions Present</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Tap Exception</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Review Detail</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node primary">Action (Approve/Undo/Edit)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node success">Done Toast</div>
+      </div>
+
+      <div class="flow-label">Policy Tuning Path</div>
+      <div class="flow-row">
+        <div class="flow-node">Exception Card</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">"Edit Policy"</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node" style="border-color: var(--secondary); color: var(--secondary);">Policy Sheet</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">Adjust Autonomy</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node success">Policy Saved</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: LOADING STATE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 2</div>
+      <h2>State 1: Loading / Cold Start</h2>
+      <p class="section-desc">Target: Meaningful content in < 1 second. Skeleton UI preserves layout stability.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile Cockpit</h3>
+        <div class="mobile-frame">
+          <div class="mobile-header">
+            <div class="mobile-header-left">
+              <div class="skeleton skeleton-line" style="width: 80px; height: 18px; margin-bottom: 4px;"></div>
+              <div class="skeleton skeleton-line short" style="height: 12px; margin-bottom: 0;"></div>
+            </div>
+            <div class="skeleton" style="width: 80px; height: 24px; border-radius: 100px;"></div>
+          </div>
+          <div class="mobile-body">
+            <div class="mobile-section">
+              <div class="skeleton skeleton-line" style="width: 100px; height: 12px; margin-bottom: 12px;"></div>
+              <div class="skeleton-card">
+                <div class="skeleton skeleton-line medium"></div>
+                <div class="skeleton skeleton-line short"></div>
+              </div>
+              <div class="skeleton-card">
+                <div class="skeleton skeleton-line medium"></div>
+                <div class="skeleton skeleton-line short"></div>
+              </div>
+            </div>
+            <div class="mobile-section">
+              <div class="skeleton skeleton-line" style="width: 120px; height: 12px; margin-bottom: 12px;"></div>
+              <div class="skeleton-card">
+                <div class="skeleton skeleton-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Desktop Workshop</h3>
+        <div class="desktop-frame">
+          <div class="desktop-layout">
+            <div class="desktop-left">
+              <div class="skeleton skeleton-line" style="width: 100px; height: 20px; margin-bottom: 16px;"></div>
+              <div class="skeleton-card">
+                <div class="skeleton skeleton-line medium"></div>
+                <div class="skeleton skeleton-line short"></div>
+              </div>
+              <div class="skeleton-card">
+                <div class="skeleton skeleton-line medium"></div>
+                <div class="skeleton skeleton-line short"></div>
+              </div>
+              <div class="skeleton-card">
+                <div class="skeleton skeleton-line medium"></div>
+                <div class="skeleton skeleton-line short"></div>
+              </div>
+            </div>
+            <div class="desktop-right">
+              <div class="skeleton skeleton-line" style="width: 200px; height: 24px; margin-bottom: 24px;"></div>
+              <div class="skeleton" style="height: 300px; border-radius: 12px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">UX Note</div>
+          Skeletons match the exact layout of loaded content. No layout shift on load. Header loads first (< 200ms), then content streams in.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: ALL CAUGHT UP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 3</div>
+      <h2>State 2: All Caught Up</h2>
+      <p class="section-desc">The quiet competence empty state. No exceptions = trust earned. This should feel like a reward.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile Cockpit</h3>
+        <div class="mobile-frame">
+          <div class="mobile-header">
+            <div class="mobile-header-left">
+              <h4>Today</h4>
+              <div class="subtitle">Tuesday, Nov 25</div>
+            </div>
+            <div class="autonomy-badge">Autopilot: High</div>
+          </div>
+          <div class="mobile-body">
+            <div class="empty-state">
+              <div class="empty-icon">✓</div>
+              <div class="empty-title">You're all caught up</div>
+              <div class="empty-desc">Xentri handled 12 items since yesterday. Nothing needs your attention.</div>
+            </div>
+
+            <div class="mobile-section" style="margin-top: 32px;">
+              <div class="mobile-section-header">
+                What Changed
+                <span style="font-size: 0.7rem; color: var(--text-dim);">12 items</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <div class="activity-title">3 leads captured</div>
+                  <div class="activity-meta">Auto-replied · 2h ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <div class="activity-title">2 follow-ups sent</div>
+                  <div class="activity-meta">Per your policy · 5h ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-bottom">
+            <div class="search-bar">Search Timeline</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Desktop Workshop</h3>
+        <div class="desktop-frame">
+          <div class="desktop-layout">
+            <div class="desktop-left">
+              <div class="desktop-header">
+                <h4>Today</h4>
+                <div class="subtitle">Tuesday, November 25</div>
+              </div>
+              <div class="empty-state" style="padding: 40px 20px;">
+                <div class="empty-icon">✓</div>
+                <div class="empty-title">You're all caught up</div>
+                <div class="empty-desc">Nothing needs your attention right now.</div>
+              </div>
+            </div>
+            <div class="desktop-right">
+              <h4 style="font-size: 1rem; margin-bottom: 16px; color: var(--text-muted);">What Changed Today</h4>
+              <div class="timeline-item">
+                <div class="timeline-dot" style="background: var(--success);"></div>
+                <div class="timeline-content">
+                  <div class="timeline-what">3 leads captured and auto-replied</div>
+                  <div class="timeline-meta">Via contact form · Policy: "Reply within 5 min"</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot" style="background: var(--success);"></div>
+                <div class="timeline-content">
+                  <div class="timeline-what">2 follow-ups sent</div>
+                  <div class="timeline-meta">Scheduled yesterday · Sent at 9:00 AM</div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot" style="background: var(--success);"></div>
+                <div class="timeline-content">
+                  <div class="timeline-what">Website published</div>
+                  <div class="timeline-meta">Brief update auto-synced · 7 pages refreshed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="microcopy-box">
+          <h4>Microcopy: All Caught Up</h4>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Primary Message</div>
+            <div class="microcopy-text">"You're all caught up"</div>
+            <div class="microcopy-note">Simple, confident. Not "Nothing to do!" (feels dismissive) or "Great job!" (feels patronizing).</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Supporting Message</div>
+            <div class="microcopy-text">"Xentri handled 12 items since yesterday. Nothing needs your attention."</div>
+            <div class="microcopy-note">Shows value delivered. "Handled" implies competence. "Nothing needs your attention" = permission to close the app.</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Alternative (No Activity)</div>
+            <div class="microcopy-text">"All quiet. Check back later or review your timeline."</div>
+            <div class="microcopy-note">For truly empty states (new user, no activity).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: EXCEPTIONS PRESENT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 4</div>
+      <h2>State 3: Exceptions Present</h2>
+      <p class="section-desc">The star of the UX. This is where trust is built or broken. Clear, actionable, one-click resolution.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile Cockpit</h3>
+        <div class="mobile-frame">
+          <div class="mobile-header">
+            <div class="mobile-header-left">
+              <h4>Today</h4>
+              <div class="subtitle">Tuesday, Nov 25</div>
+            </div>
+            <div class="autonomy-badge">Autopilot: Medium</div>
+          </div>
+          <div class="mobile-body">
+            <div class="mobile-section">
+              <div class="mobile-section-header">
+                Needs You
+                <span class="section-count">2</span>
+              </div>
+
+              <!-- Exception Card 1 -->
+              <div class="exception-card highlighted">
+                <div class="exception-top">
+                  <div>
+                    <div class="exception-what">New lead: Sarah Martinez</div>
+                    <div class="exception-why">Reply drafted but tone unclear</div>
+                  </div>
+                  <div class="risk-badge risk-med">Med</div>
+                </div>
+                <div class="exception-status">
+                  <span class="status-dot drafted"></span>
+                  Auto-drafted · Awaiting approval
+                </div>
+                <div class="exception-actions">
+                  <button class="btn btn-primary">Send</button>
+                  <button class="btn btn-secondary">Edit</button>
+                  <button class="btn btn-ghost">···</button>
+                </div>
+              </div>
+
+              <!-- Exception Card 2 -->
+              <div class="exception-card">
+                <div class="exception-top">
+                  <div>
+                    <div class="exception-what">Website publish blocked</div>
+                    <div class="exception-why">Domain DNS not verified</div>
+                  </div>
+                  <div class="risk-badge risk-high">High</div>
+                </div>
+                <div class="exception-status">
+                  <span class="status-dot blocked"></span>
+                  Blocked · Requires setup
+                </div>
+                <div class="exception-actions">
+                  <button class="btn btn-primary">Fix Now</button>
+                  <button class="btn btn-ghost">Skip</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mobile-section">
+              <div class="mobile-section-header">
+                What Changed
+                <span style="font-size: 0.7rem; color: var(--text-dim);">8 items</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <div class="activity-title">2 leads auto-replied</div>
+                  <div class="activity-meta">Within policy · 3h ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-bottom">
+            <div class="search-bar">Search Timeline</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Desktop Workshop</h3>
+        <div class="desktop-frame">
+          <div class="desktop-layout">
+            <div class="desktop-left">
+              <div class="desktop-header">
+                <h4>Today</h4>
+                <div class="subtitle">2 items need you</div>
+              </div>
+
+              <div class="exception-card highlighted" style="cursor: pointer;">
+                <div class="exception-top">
+                  <div>
+                    <div class="exception-what">New lead: Sarah Martinez</div>
+                    <div class="exception-why">Reply drafted but tone unclear</div>
+                  </div>
+                  <div class="risk-badge risk-med">Med</div>
+                </div>
+                <div class="exception-status">
+                  <span class="status-dot drafted"></span>
+                  Auto-drafted · Awaiting approval
+                </div>
+              </div>
+
+              <div class="exception-card" style="cursor: pointer; opacity: 0.7;">
+                <div class="exception-top">
+                  <div>
+                    <div class="exception-what">Website publish blocked</div>
+                    <div class="exception-why">Domain DNS not verified</div>
+                  </div>
+                  <div class="risk-badge risk-high">High</div>
+                </div>
+                <div class="exception-status">
+                  <span class="status-dot blocked"></span>
+                  Blocked · Requires setup
+                </div>
+              </div>
+            </div>
+
+            <div class="desktop-right">
+              <div class="detail-panel">
+                <div class="detail-header">
+                  <h5>New lead: Sarah Martinez</h5>
+                  <div class="meta">Via contact form · 2 hours ago</div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-label">What Happened</div>
+                  <div class="detail-value">Lead submitted contact form. Xentri drafted a reply using your "Warm Welcome" template.</div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-label">Why It Needs You</div>
+                  <div class="detail-value">Message mentions "urgent project" — tone classifier confidence: 72%. Below your 80% auto-send threshold.</div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-label">Draft Preview</div>
+                  <div class="detail-value" style="background: var(--muted); padding: 12px; border-radius: 8px; font-size: 0.85rem;">
+                    "Hi Sarah, thanks for reaching out! I'd love to hear more about your project. When's a good time to chat this week?"
+                  </div>
+                </div>
+                <div class="detail-section">
+                  <div class="detail-label">Audit Trail</div>
+                  <div class="detail-value" style="font-size: 0.8rem; color: var(--text-muted);">
+                    Lead created → Template matched → Draft generated → Confidence check failed → Queued for review
+                  </div>
+                </div>
+                <div class="detail-actions">
+                  <button class="btn btn-primary">Send Reply</button>
+                  <button class="btn btn-secondary">Edit Draft</button>
+                  <button class="btn btn-ghost">Edit Policy</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">Exception Card Anatomy</div>
+          <strong>What:</strong> 1 line summary · <strong>Why:</strong> 1 line reason · <strong>Status:</strong> drafted/executed/blocked · <strong>Risk:</strong> low/med/high badge · <strong>Actions:</strong> Primary CTA + Secondary + Overflow (Edit Policy, View Details)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: UNDO-FIRST EXECUTION -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 5</div>
+      <h2>State 4: Undo-First Execution</h2>
+      <p class="section-desc">"Done. Undo?" — Every action is reversible. This is the safety net that enables autonomy.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile Cockpit</h3>
+        <div class="mobile-frame">
+          <div class="mobile-header">
+            <div class="mobile-header-left">
+              <h4>Today</h4>
+              <div class="subtitle">Tuesday, Nov 25</div>
+            </div>
+            <div class="autonomy-badge">Autopilot: Medium</div>
+          </div>
+          <div class="mobile-body">
+            <!-- Undo Toast -->
+            <div class="undo-toast">
+              <div class="undo-toast-content">
+                <span class="undo-toast-icon">✓</span>
+                <span class="undo-toast-text"><strong>Sent.</strong> Reply to Sarah</span>
+              </div>
+              <span class="undo-link">Undo</span>
+            </div>
+
+            <div class="mobile-section">
+              <div class="mobile-section-header">
+                Needs You
+                <span class="section-count">1</span>
+              </div>
+
+              <div class="exception-card">
+                <div class="exception-top">
+                  <div>
+                    <div class="exception-what">Website publish blocked</div>
+                    <div class="exception-why">Domain DNS not verified</div>
+                  </div>
+                  <div class="risk-badge risk-high">High</div>
+                </div>
+                <div class="exception-status">
+                  <span class="status-dot blocked"></span>
+                  Blocked · Requires setup
+                </div>
+                <div class="exception-actions">
+                  <button class="btn btn-primary">Fix Now</button>
+                  <button class="btn btn-ghost">Skip</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mobile-section">
+              <div class="mobile-section-header">
+                Just Now
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <div class="activity-title">Reply sent to Sarah Martinez</div>
+                  <div class="activity-meta">Just now · You approved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Undo Behavior Spec</h3>
+        <div class="microcopy-box" style="margin-top: 0;">
+          <h4>Undo Mechanics</h4>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Toast Pattern</div>
+            <div class="microcopy-text">"[Action]. [Object]" + "Undo" link</div>
+            <div class="microcopy-note">Examples: "Sent. Reply to Sarah" / "Archived. 3 leads" / "Published. Homepage"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Undo Window</div>
+            <div class="microcopy-text">5 seconds for toast, unlimited in timeline</div>
+            <div class="microcopy-note">Toast auto-dismisses after 5s. User can always undo from timeline (if action is reversible).</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Undo for Emails</div>
+            <div class="microcopy-text">"Retract" sends a correction email</div>
+            <div class="microcopy-note">"Oops, please disregard my last message. Here's the correct info:" — only if within 2 minutes.</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Non-Reversible Actions</div>
+            <div class="microcopy-text">Marked clearly before execution</div>
+            <div class="microcopy-note">Payments, legal docs, permanent deletes show "This cannot be undone" warning.</div>
+          </div>
+        </div>
+
+        <div class="microcopy-box">
+          <h4>Microcopy: Undo</h4>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Success + Undo</div>
+            <div class="microcopy-text">"Sent. Undo" / "Done. Undo" / "Archived. Undo"</div>
+            <div class="microcopy-note">Terse. Confident. Not "Successfully sent!" (too eager).</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">After Undo</div>
+            <div class="microcopy-text">"Undone. Back in your queue."</div>
+            <div class="microcopy-note">Confirms the undo worked and where to find it.</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Undo Expired</div>
+            <div class="microcopy-text">"Can't undo — already delivered. Send a correction?"</div>
+            <div class="microcopy-note">Offer the next best action.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: POLICY TUNING -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 6</div>
+      <h2>State 5: Policy Tuning</h2>
+      <p class="section-desc">Not per-action permissions — user sets the rules, Xentri executes within them. Accessed via "Edit Policy" from exception cards.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Policy Sheet</h3>
+        <div class="mobile-frame">
+          <div class="mobile-header">
+            <div class="mobile-header-left">
+              <h4>Lead Response Policy</h4>
+              <div class="subtitle">Leads domain</div>
+            </div>
+            <button class="btn btn-ghost" style="padding: 4px 8px;">✕</button>
+          </div>
+          <div class="mobile-body" style="padding: 0;">
+            <div class="policy-section">
+              <div class="policy-label">
+                Autonomy Level
+                <span class="policy-value">Auto-draft</span>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill" style="width: 50%;"></div>
+              </div>
+              <div class="slider-labels">
+                <span>Suggest</span>
+                <span class="active">Auto-draft</span>
+                <span>Auto-send</span>
+              </div>
+            </div>
+
+            <div class="policy-section">
+              <div class="policy-label">
+                Response Time
+                <span class="policy-value">Within 5 min</span>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill" style="width: 80%;"></div>
+              </div>
+              <div class="slider-labels">
+                <span>1 hour</span>
+                <span>15 min</span>
+                <span class="active">5 min</span>
+                <span>Instant</span>
+              </div>
+            </div>
+
+            <div class="policy-section">
+              <div class="policy-label">
+                Confidence Threshold
+                <span class="policy-value">80%</span>
+              </div>
+              <div class="slider-track">
+                <div class="slider-fill" style="width: 80%;"></div>
+              </div>
+              <div class="slider-labels">
+                <span>50%</span>
+                <span class="active">80%</span>
+                <span>95%</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 8px;">
+                Below this, Xentri drafts instead of auto-sending
+              </div>
+            </div>
+
+            <div class="policy-section">
+              <div class="policy-label">Template</div>
+              <div style="background: var(--muted); padding: 12px; border-radius: 8px; font-size: 0.85rem;">
+                "Warm Welcome" — asks about project, offers call
+              </div>
+              <button class="btn btn-ghost" style="margin-top: 8px; padding: 6px 0;">Change template →</button>
+            </div>
+
+            <div class="policy-section">
+              <div class="policy-label">Rules</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">
+                • Never offer discounts<br>
+                • Ask 3 qualifying questions<br>
+                • Escalate if "urgent" mentioned
+              </div>
+              <button class="btn btn-ghost" style="margin-top: 8px; padding: 6px 0;">Edit rules →</button>
+            </div>
+          </div>
+          <div class="mobile-bottom">
+            <button class="btn btn-primary" style="flex: 1;">Save Policy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Desktop: Policy Panel</h3>
+        <div class="policy-sheet">
+          <div class="policy-header">
+            <h5>Lead Response Policy</h5>
+            <p>Controls how Xentri handles incoming leads from your website</p>
+          </div>
+
+          <div class="policy-section">
+            <div class="policy-label">
+              Autonomy Level
+              <span class="policy-value">Auto-draft</span>
+            </div>
+            <div class="tabs" style="margin-bottom: 0;">
+              <div class="tab">Suggest Only</div>
+              <div class="tab active">Auto-draft</div>
+              <div class="tab">Auto-send</div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 12px;">
+              <strong>Suggest:</strong> Shows recommendation, you write<br>
+              <strong>Auto-draft:</strong> Writes draft, you approve<br>
+              <strong>Auto-send:</strong> Sends if confidence > threshold
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <div class="policy-label">
+              Auto-send Confidence Threshold
+              <span class="policy-value">80%</span>
+            </div>
+            <div class="slider-track">
+              <div class="slider-fill" style="width: 80%;"></div>
+            </div>
+            <div class="slider-labels">
+              <span>50% (more auto)</span>
+              <span class="active">80%</span>
+              <span>95% (more review)</span>
+            </div>
+          </div>
+
+          <div class="policy-section">
+            <div class="policy-label">Response Time Target</div>
+            <div class="tabs" style="margin-bottom: 0;">
+              <div class="tab">1 hour</div>
+              <div class="tab">15 min</div>
+              <div class="tab active">5 min</div>
+              <div class="tab">Instant</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">Policy Model</div>
+          User approves <strong>bundles</strong> (template + tone + rules), not individual actions. "Respond to new leads within 5 min using Warm Welcome; ask 3 qualifying questions; never offer discounts; escalate if 'urgent' mentioned."
+        </div>
+
+        <div class="microcopy-box">
+          <h4>Notification Budget Rules</h4>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Interrupts (Push/Sound)</div>
+            <div class="microcopy-text">Only: Money movement, time-sensitive deadlines, high-risk blocks</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Badge + Daily Digest</div>
+            <div class="microcopy-text">Everything else: leads captured, follow-ups sent, content published</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Timeline Only</div>
+            <div class="microcopy-text">Background activity: page views, minor updates, system maintenance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: TRACEABILITY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Section 7</div>
+      <h2>State 6: Traceability UI</h2>
+      <p class="section-desc">"What happened / Why / Source / Confidence / Actor" — The audit trail that builds trust.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Timeline Search</h3>
+        <div class="mobile-frame">
+          <div class="mobile-header">
+            <div class="mobile-header-left">
+              <h4>Timeline</h4>
+              <div class="subtitle">All activity</div>
+            </div>
+            <button class="btn btn-ghost" style="padding: 4px 8px;">Filter</button>
+          </div>
+          <div class="mobile-body" style="padding: 0 16px;">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-what">Reply sent to Sarah Martinez</div>
+                <div class="timeline-meta">
+                  <strong>Why:</strong> Lead form submitted · <strong>Actor:</strong> You approved · <strong>Confidence:</strong> 72%
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background: var(--success);"></div>
+              <div class="timeline-content">
+                <div class="timeline-what">Auto-reply sent to James Cooper</div>
+                <div class="timeline-meta">
+                  <strong>Why:</strong> Lead form · <strong>Actor:</strong> Autopilot · <strong>Confidence:</strong> 94%
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background: var(--success);"></div>
+              <div class="timeline-content">
+                <div class="timeline-what">Lead captured: Maria Lopez</div>
+                <div class="timeline-meta">
+                  <strong>Source:</strong> /contact form · <strong>Actor:</strong> System
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background: var(--secondary);"></div>
+              <div class="timeline-content">
+                <div class="timeline-what">Policy updated: Lead Response</div>
+                <div class="timeline-meta">
+                  <strong>Change:</strong> Threshold 70% → 80% · <strong>Actor:</strong> You
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Traceability Spec</h3>
+        <div class="microcopy-box" style="margin-top: 0;">
+          <h4>Timeline Entry Anatomy</h4>
+          <div class="microcopy-item">
+            <div class="microcopy-label">What</div>
+            <div class="microcopy-text">1-line description of the action</div>
+            <div class="microcopy-note">"Reply sent to Sarah Martinez" / "Lead captured" / "Policy updated"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Why</div>
+            <div class="microcopy-text">Trigger that caused the action</div>
+            <div class="microcopy-note">"Lead form submitted" / "Follow-up scheduled" / "Brief updated"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Source</div>
+            <div class="microcopy-text">Where the input came from</div>
+            <div class="microcopy-note">"/contact form" / "WhatsApp forward" / "Manual entry"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Confidence</div>
+            <div class="microcopy-text">AI certainty (for automated actions)</div>
+            <div class="microcopy-note">72% / 94% — helps user understand why some things auto-executed</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Actor</div>
+            <div class="microcopy-text">Who/what performed the action</div>
+            <div class="microcopy-note">"You" / "Autopilot" / "System" / "Team member name"</div>
+          </div>
+        </div>
+
+        <div class="microcopy-box">
+          <h4>Microcopy: Why It Happened</h4>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Auto-executed</div>
+            <div class="microcopy-text">"Sent automatically — confidence 94%, above your 80% threshold"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Drafted for review</div>
+            <div class="microcopy-text">"Drafted for you — confidence 72%, below your 80% threshold"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Blocked</div>
+            <div class="microcopy-text">"Blocked — requires DNS setup before publishing"</div>
+          </div>
+          <div class="microcopy-item">
+            <div class="microcopy-label">Policy link</div>
+            <div class="microcopy-text">"Per your Lead Response policy" (tappable)</div>
+            <div class="microcopy-note">Links to the policy that governed this action.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <p><strong>Xentri UX Design Workshop</strong></p>
+    <p>Daily Loop Wireframes v1.0 — Mobile Cockpit + Desktop Workshop</p>
+    <p style="margin-top: 16px; opacity: 0.6;">
+      Design System: shadcn/ui patterns · Color tokens: Xentri Sky Blue on Dusk
+    </p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xentri Journey 1: First-Time User — Consent Once, Stay Calm</title>
+  <style>
+    :root {
+      /* Xentri 4-Layer Dark Neutral System */
+      --base: #0d0b12;
+      --chrome: #16131e;
+      --surface: #1e1a28;
+      --surface-plus: #2d2840;
+
+      /* Borders */
+      --border-subtle: #2a2538;
+      --border-default: #352f45;
+      --border-strong: #453d5a;
+
+      /* Accent Colors */
+      --primary: #38bdf8;
+      --secondary: #a78bfa;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --error: #f87171;
+      --info: #60a5fa;
+
+      /* Text */
+      --text: #f0ecf7;
+      --text-secondary: #b8b0c8;
+      --text-muted: #7a7289;
+      --text-dim: #5a5368;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--base);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ===== DOCUMENT STRUCTURE ===== */
+    .doc-header {
+      padding: 48px 40px;
+      border-bottom: 1px solid var(--border-strong);
+      background: linear-gradient(180deg, var(--chrome) 0%, var(--base) 100%);
+    }
+
+    .doc-header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .doc-header p {
+      color: var(--text-secondary);
+      max-width: 700px;
+    }
+
+    .section {
+      padding: 48px 40px;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-number {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* ===== FLOW MAP ===== */
+    .flow-map {
+      background: var(--surface);
+      border: 1px solid var(--border-default);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .flow-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow-node {
+      background: var(--surface-plus);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .flow-node.highlight {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .flow-node.success {
+      background: rgba(52, 211, 153, 0.12);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .flow-node.secondary {
+      background: rgba(167, 139, 250, 0.12);
+      border-color: var(--secondary);
+      color: var(--secondary);
+    }
+
+    .flow-arrow {
+      color: var(--text-dim);
+      font-size: 1rem;
+    }
+
+    .flow-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    /* ===== WIREFRAME CONTAINERS ===== */
+    .wireframe-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    @media (max-width: 1100px) {
+      .wireframe-grid { grid-template-columns: 1fr; }
+    }
+
+    .wireframe-column h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* ===== MOBILE FRAME ===== */
+    .mobile-frame {
+      width: 380px;
+      background: var(--base);
+      border: 2px solid var(--border-strong);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .mobile-status-bar {
+      background: var(--chrome);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .mobile-header {
+      background: var(--chrome);
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    .mobile-header h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .mobile-header .subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .mobile-body {
+      background: var(--base);
+      padding: 20px;
+      min-height: 500px;
+    }
+
+    .mobile-bottom {
+      background: var(--chrome);
+      border-top: 1px solid var(--border-default);
+      padding: 16px 20px;
+    }
+
+    /* ===== CONTENT CANVAS ===== */
+    .content-canvas {
+      background: var(--surface);
+      border: 1px solid var(--border-default);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .canvas-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--surface-plus);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .canvas-body {
+      padding: 20px;
+    }
+
+    /* ===== CHAT UI ===== */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 350px;
+    }
+
+    .chat-message {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .chat-message.assistant {
+      background: var(--surface);
+      border: 1px solid var(--border-default);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-message.user {
+      background: var(--primary);
+      color: var(--base);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .chat-input input {
+      flex: 1;
+      background: var(--surface-plus);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .chat-input input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .chat-input button {
+      background: var(--primary);
+      color: var(--base);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* ===== BRIEF PREVIEW ===== */
+    .brief-preview {
+      background: var(--surface);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .brief-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brief-section:last-child {
+      border-bottom: none;
+    }
+
+    .brief-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .brief-value {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .brief-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: var(--success);
+      margin-top: 4px;
+    }
+
+    /* ===== PRESET CARDS ===== */
+    .preset-card {
+      background: var(--surface);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .preset-card:hover {
+      background: var(--surface-plus);
+      border-color: var(--border-strong);
+    }
+
+    .preset-card.selected {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: var(--primary);
+    }
+
+    .preset-card.recommended {
+      border-color: var(--secondary);
+    }
+
+    .preset-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .preset-name {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .preset-badge {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .preset-badge.default {
+      background: rgba(167, 139, 250, 0.15);
+      color: var(--secondary);
+    }
+
+    .preset-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .preset-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .preset-tag {
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--surface-plus);
+      color: var(--text-secondary);
+    }
+
+    .preset-tag.auto {
+      background: rgba(52, 211, 153, 0.12);
+      color: var(--success);
+    }
+
+    .preset-tag.review {
+      background: rgba(251, 191, 36, 0.12);
+      color: var(--warning);
+    }
+
+    .preset-tag.blocked {
+      background: rgba(248, 113, 113, 0.12);
+      color: var(--error);
+    }
+
+    /* ===== SETUP SECTIONS ===== */
+    .setup-section {
+      margin-bottom: 24px;
+    }
+
+    .setup-section-header {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .setup-section-number {
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      color: var(--base);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    /* ===== INPUT FIELDS ===== */
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .input-field {
+      width: 100%;
+      background: var(--surface-plus);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-dim);
+    }
+
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* ===== TOGGLE ROW ===== */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .toggle-row:last-child {
+      border-bottom: none;
+    }
+
+    .toggle-label {
+      font-size: 0.85rem;
+    }
+
+    .toggle-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--surface-plus);
+      border-radius: 100px;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid var(--border-default);
+    }
+
+    .toggle.active {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.15s ease;
+    }
+
+    .toggle.active::after {
+      transform: translateX(20px);
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--base);
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: #5fcbfa;
+    }
+
+    .btn-secondary {
+      background: var(--surface-plus);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-default);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    /* ===== TRAINING WHEELS BANNER ===== */
+    .training-wheels {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(167, 139, 250, 0.08) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .training-wheels-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .training-wheels-icon {
+      font-size: 1.2rem;
+    }
+
+    .training-wheels-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .training-wheels-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .training-wheels-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tw-feature {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--primary);
+    }
+
+    /* ===== PROGRESS DOTS ===== */
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 0;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-default);
+    }
+
+    .progress-dot.active {
+      background: var(--primary);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    .progress-dot.complete {
+      background: var(--success);
+    }
+
+    /* ===== SPEC BOX ===== */
+    .spec-box {
+      background: var(--surface);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .spec-box h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .spec-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .spec-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .spec-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .spec-text {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .spec-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* ===== ANNOTATIONS ===== */
+    .annotation {
+      background: rgba(167, 139, 250, 0.08);
+      border-left: 3px solid var(--secondary);
+      padding: 14px 18px;
+      margin: 20px 0;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .annotation-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--secondary);
+      margin-bottom: 6px;
+    }
+
+    .annotation p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== GUARDRAIL BOX ===== */
+    .guardrail-box {
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+
+    .guardrail-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: var(--error);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .guardrail-content {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .guardrail-list {
+      margin-top: 8px;
+      padding-left: 20px;
+    }
+
+    .guardrail-list li {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    /* ===== NUDGE CARD ===== */
+    .nudge-card {
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, var(--surface) 100%);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .nudge-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .nudge-icon {
+      font-size: 1.1rem;
+    }
+
+    .nudge-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .nudge-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .nudge-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nudge-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nudge-btn-primary {
+      background: var(--success);
+      color: var(--base);
+    }
+
+    .nudge-btn-secondary {
+      background: var(--surface-plus);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-default);
+    }
+
+    /* ===== FOOTER ===== */
+    .doc-footer {
+      padding: 48px 40px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      background: var(--chrome);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <h1>Journey 1: First-Time User</h1>
+    <p>"Consent Once, Stay Calm" — Smart defaults + single Autopilot Setup moment + Training Wheels Mode. No wizards, no permission fatigue, no spooky auto-actions.</p>
+  </div>
+
+  <!-- SECTION: GUARDRAILS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Foundation</div>
+      <h2>Day-0 Guardrails</h2>
+      <p class="section-desc">Non-negotiable safety constraints that make the FTU flow "safe by construction."</p>
+    </div>
+
+    <div class="guardrail-box">
+      <div class="guardrail-header">
+        <span>🛡</span>
+        Day-0 Autopilot Cannot Irreversibly Affect External World
+      </div>
+      <div class="guardrail-content">
+        Until the user has had at least one explicit opt-in moment, autopilot can <strong>prepare</strong> but never <strong>send/publish/spend</strong>.
+        <ul class="guardrail-list">
+          <li>No sending emails, SMS, or WhatsApp</li>
+          <li>No publishing to real domains</li>
+          <li>No money movement (payments, refunds)</li>
+          <li>No permanent deletes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow-map">
+      <div class="flow-label">FTU Journey Flow</div>
+      <div class="flow-row">
+        <div class="flow-node">Sign Up</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node secondary">Strategy Co-pilot</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node secondary">Build Brief</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node highlight">Autopilot Setup</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node success">Training Wheels</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">"Today" View</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: STEP 1 - SIGN UP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Step 1</div>
+      <h2>Sign Up — Minimal Friction</h2>
+      <p class="section-desc">Get to value fast. Social auth preferred. No lengthy forms.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Sign Up</h3>
+        <div class="mobile-frame">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span>⚡ 100%</span>
+          </div>
+          <div class="mobile-body" style="display: flex; flex-direction: column; justify-content: center; padding: 32px 24px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+              <div style="font-size: 2rem; margin-bottom: 8px;">✦</div>
+              <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 8px;">Welcome to Xentri</h2>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">Your business, finally visible.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <button class="btn" style="background: white; color: #1a1625; width: 100%;">
+                <span>G</span> Continue with Google
+              </button>
+              <button class="btn" style="background: var(--surface-plus); color: var(--text); border: 1px solid var(--border-default); width: 100%;">
+                Continue with Email
+              </button>
+            </div>
+
+            <div style="text-align: center; margin-top: 24px; font-size: 0.75rem; color: var(--text-dim);">
+              By continuing, you agree to our Terms and Privacy Policy
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Sign Up Spec</h3>
+        <div class="spec-box">
+          <h4>Minimal Data Collection</h4>
+          <div class="spec-item">
+            <div class="spec-label">Required</div>
+            <div class="spec-text">Email + Password (or OAuth)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Deferred</div>
+            <div class="spec-text">Name, company, everything else → collected naturally during Brief</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">No Forms</div>
+            <div class="spec-text">Everything comes from conversation, not fields</div>
+          </div>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">UX Goal</div>
+          <p>Under 30 seconds from landing to meeting the Strategy Co-pilot. No friction, no "tell us about yourself" forms.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: STEP 2 - STRATEGY CO-PILOT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Step 2</div>
+      <h2>Strategy Co-pilot — Build the Brief</h2>
+      <p class="section-desc">Conversational onboarding. No forms. The Brief emerges from dialogue.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Co-pilot Conversation</h3>
+        <div class="mobile-frame">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span>⚡ 100%</span>
+          </div>
+          <div class="mobile-header">
+            <h4>Strategy Co-pilot</h4>
+            <div class="subtitle">Building your Brief</div>
+          </div>
+          <div class="mobile-body" style="padding: 16px;">
+            <div class="progress-dots">
+              <div class="progress-dot complete"></div>
+              <div class="progress-dot active"></div>
+              <div class="progress-dot"></div>
+              <div class="progress-dot"></div>
+            </div>
+
+            <div class="chat-container">
+              <div class="chat-message assistant">
+                Hey! I'm here to help you get clear on your business. Let's start simple: <strong>What do you do?</strong>
+                <br><br>
+                Just tell me like you'd tell a friend at a coffee shop.
+              </div>
+
+              <div class="chat-message user">
+                I run a small plumbing business. Mostly residential work — repairs, installations, that kind of thing. Been doing it for 5 years.
+              </div>
+
+              <div class="chat-message assistant">
+                Got it — residential plumbing, repairs and installations, 5 years in. That's solid experience.
+                <br><br>
+                <strong>Who's your ideal customer?</strong> The kind of job you love to get called for?
+              </div>
+
+              <div class="chat-input">
+                <input type="text" placeholder="Type your answer...">
+                <button>Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Live Brief Preview (Desktop)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">As the conversation progresses, the Brief fills in real-time:</p>
+
+        <div class="brief-preview">
+          <div class="brief-section">
+            <div class="brief-label">Business Identity</div>
+            <div class="brief-value">Residential plumbing — repairs & installations</div>
+            <div class="brief-status">
+              <span>✓</span> Captured from conversation
+            </div>
+          </div>
+          <div class="brief-section">
+            <div class="brief-label">Experience</div>
+            <div class="brief-value">5 years in business</div>
+            <div class="brief-status">
+              <span>✓</span> Captured
+            </div>
+          </div>
+          <div class="brief-section" style="opacity: 0.5;">
+            <div class="brief-label">Target Audience</div>
+            <div class="brief-value" style="color: var(--text-dim);">Waiting for response...</div>
+          </div>
+          <div class="brief-section" style="opacity: 0.3;">
+            <div class="brief-label">Services & Pricing</div>
+            <div class="brief-value" style="color: var(--text-dim);">Not yet discussed</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Brief Sections (7 Total)</h4>
+          <div class="spec-item">
+            <div class="spec-text">1. Identity — What you do</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-text">2. Audience — Who you serve</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-text">3. Offerings — Services & pricing</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-text">4. Positioning — Why you, not them</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-text">5. Operations — How work flows</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-text">6. Goals — Where you're headed</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-text">7. Proof — Testimonials, portfolio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: STEP 3 - AUTOPILOT SETUP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Step 3</div>
+      <h2>Autopilot Setup — Single Sheet, Three Presets</h2>
+      <p class="section-desc">"Consent once" — not a wizard, not per-action permissions. One moment, one decision, done.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Autopilot Setup Sheet</h3>
+        <div class="mobile-frame">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span>⚡ 98%</span>
+          </div>
+          <div class="mobile-header">
+            <h4>Set Up Autopilot</h4>
+            <div class="subtitle">How should Xentri work for you?</div>
+          </div>
+          <div class="mobile-body" style="padding: 16px;">
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px;">
+              Choose how much Xentri does automatically. You can always adjust later.
+            </p>
+
+            <!-- Conservative -->
+            <div class="preset-card recommended selected">
+              <div class="preset-header">
+                <div class="preset-name">Conservative</div>
+                <div class="preset-badge default">Recommended</div>
+              </div>
+              <div class="preset-desc">
+                Xentri prepares everything, you approve before anything goes out.
+              </div>
+              <div class="preset-details">
+                <span class="preset-tag auto">Auto-capture</span>
+                <span class="preset-tag auto">Auto-classify</span>
+                <span class="preset-tag review">Review before send</span>
+              </div>
+            </div>
+
+            <!-- Balanced -->
+            <div class="preset-card">
+              <div class="preset-header">
+                <div class="preset-name">Balanced</div>
+              </div>
+              <div class="preset-desc">
+                Auto-execute safe actions, batch review the rest.
+              </div>
+              <div class="preset-details">
+                <span class="preset-tag auto">Auto internal</span>
+                <span class="preset-tag review">Batch review</span>
+                <span class="preset-tag blocked">Block risky</span>
+              </div>
+            </div>
+
+            <!-- Autonomous -->
+            <div class="preset-card">
+              <div class="preset-header">
+                <div class="preset-name">Autonomous</div>
+              </div>
+              <div class="preset-desc">
+                Maximum automation. Only high-risk actions need approval.
+              </div>
+              <div class="preset-details">
+                <span class="preset-tag auto">Auto low-risk</span>
+                <span class="preset-tag auto">Undo window</span>
+                <span class="preset-tag blocked">Block high-risk</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; background: var(--surface); border-radius: 8px; font-size: 0.8rem; color: var(--text-muted);">
+              <strong style="color: var(--text);">Start conservative, level up later.</strong> As you use Xentri, we'll suggest when you're ready for more automation.
+            </div>
+          </div>
+          <div class="mobile-bottom">
+            <button class="btn btn-primary">Continue with Conservative</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Preset Definitions</h3>
+
+        <div class="spec-box">
+          <h4>Conservative (Default)</h4>
+          <div class="spec-item">
+            <div class="spec-label">Auto-capture</div>
+            <div class="spec-text">Leads, messages, form submissions → automatically logged</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Auto-classify</div>
+            <div class="spec-text">AI tags items (lead, inquiry, spam) — user can correct</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Auto-draft</div>
+            <div class="spec-text">Responses prepared but never sent without approval</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Never Auto-send</div>
+            <div class="spec-text">All external actions require explicit tap</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Balanced</h4>
+          <div class="spec-item">
+            <div class="spec-label">Everything in Conservative, plus:</div>
+            <div class="spec-text">Auto-execute reversible internal actions (tagging, moving, scheduling)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Batch Review</div>
+            <div class="spec-text">Similar drafts grouped for quick approval</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Autonomous</h4>
+          <div class="spec-item">
+            <div class="spec-label">Everything in Balanced, plus:</div>
+            <div class="spec-text">Auto-execute low-risk external actions (lead replies below confidence threshold)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Undo Window</div>
+            <div class="spec-text">All auto-actions have 5-min undo + retract option</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Still Blocked</div>
+            <div class="spec-text">Payments, publishing, deletes always require approval</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: STEP 4 - MINIMAL CONFIG -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Step 4</div>
+      <h2>Minimal Config — Only What Autopilot Needs</h2>
+      <p class="section-desc">Just enough to not embarrass the user. Everything else comes from Brief or defaults.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Quick Config</h3>
+        <div class="mobile-frame">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span>⚡ 98%</span>
+          </div>
+          <div class="mobile-header">
+            <h4>Quick Setup</h4>
+            <div class="subtitle">A few essentials, then you're in</div>
+          </div>
+          <div class="mobile-body" style="padding: 20px;">
+            <div class="setup-section">
+              <div class="setup-section-header">
+                <div class="setup-section-number">1</div>
+                Business Hours
+              </div>
+              <div style="display: flex; gap: 12px;">
+                <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                  <div class="input-label">Open</div>
+                  <select class="input-field" style="appearance: auto;">
+                    <option>9:00 AM</option>
+                  </select>
+                </div>
+                <div class="input-group" style="flex: 1; margin-bottom: 0;">
+                  <div class="input-label">Close</div>
+                  <select class="input-field" style="appearance: auto;">
+                    <option>6:00 PM</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input-hint">Xentri won't auto-send outside these hours</div>
+            </div>
+
+            <div class="setup-section">
+              <div class="setup-section-header">
+                <div class="setup-section-number">2</div>
+                Response Time Goal
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">Instant</button>
+                <button class="btn" style="background: var(--primary); color: var(--base); padding: 10px 16px; font-size: 0.85rem;">15 min</button>
+                <button class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">1 hour</button>
+                <button class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.85rem;">Same day</button>
+              </div>
+            </div>
+
+            <div class="setup-section">
+              <div class="setup-section-header">
+                <div class="setup-section-number">3</div>
+                Your Reply-to Email
+              </div>
+              <div class="input-group" style="margin-bottom: 0;">
+                <input type="email" class="input-field" placeholder="you@business.com" value="mike@mikesplumbing.com">
+              </div>
+              <div class="input-hint">Where customers can reply to auto-sent messages</div>
+            </div>
+
+            <div class="setup-section" style="margin-bottom: 0;">
+              <div class="setup-section-header">
+                <div class="setup-section-number">4</div>
+                Tone (from your Brief)
+              </div>
+              <div style="background: var(--surface); border: 1px solid var(--border-default); border-radius: 8px; padding: 12px;">
+                <div style="font-size: 0.85rem; margin-bottom: 8px;">Friendly Professional</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">
+                  Based on how you described your business. Warm but competent.
+                </div>
+                <button class="btn btn-ghost" style="padding: 6px 0; font-size: 0.8rem; margin-top: 8px;">Change tone →</button>
+              </div>
+            </div>
+          </div>
+          <div class="mobile-bottom">
+            <button class="btn btn-primary">Finish Setup</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>What We Collect (and Why)</h3>
+
+        <div class="spec-box">
+          <h4>Required at Setup</h4>
+          <div class="spec-item">
+            <div class="spec-label">Business Hours</div>
+            <div class="spec-text">So auto-messages don't go out at 3 AM</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Response Time Goal</div>
+            <div class="spec-text">Sets urgency for lead follow-ups</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Reply-to Email</div>
+            <div class="spec-text">Where customers respond to auto-messages</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Tone</div>
+            <div class="spec-text">Pre-filled from Brief, user can adjust</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Everything Else = Defaults or Brief</h4>
+          <div class="spec-item">
+            <div class="spec-label">Business Name</div>
+            <div class="spec-text">From Brief</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Services</div>
+            <div class="spec-text">From Brief</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Response Templates</div>
+            <div class="spec-text">System defaults, customizable later</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Domain Autonomy</div>
+            <div class="spec-text">Follows preset, adjustable per-domain later</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: STEP 5 - TRAINING WHEELS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Step 5</div>
+      <h2>Training Wheels Mode — First 24h</h2>
+      <p class="section-desc">Safe by construction. Everything is reversible. Surprises are basically impossible.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Training Wheels Active</h3>
+        <div class="mobile-frame">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span>⚡ 95%</span>
+          </div>
+          <div class="mobile-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h4>Today</h4>
+              <div class="subtitle">Wednesday, Nov 26</div>
+            </div>
+            <div style="font-size: 0.7rem; padding: 6px 12px; border-radius: 100px; background: rgba(56, 189, 248, 0.12); color: var(--primary); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; gap: 6px;">
+              <span>🎓</span> Training Mode
+            </div>
+          </div>
+          <div class="mobile-body" style="padding: 16px;">
+            <div class="training-wheels">
+              <div class="training-wheels-header">
+                <span class="training-wheels-icon">🎓</span>
+                <span class="training-wheels-title">Training Wheels Active</span>
+              </div>
+              <div class="training-wheels-desc">
+                For the next 24 hours, Xentri will draft everything for your review. No surprises.
+              </div>
+              <div class="training-wheels-features">
+                <span class="tw-feature">All drafts reviewed</span>
+                <span class="tw-feature">Why + Undo on every card</span>
+                <span class="tw-feature">Learn your preferences</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 12px;">Needs You</div>
+
+            <div class="preset-card" style="cursor: default; margin-bottom: 10px; border-left: 3px solid var(--warning);">
+              <div class="preset-header">
+                <div>
+                  <div style="font-size: 0.9rem; font-weight: 500;">New lead: Sarah Martinez</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">Draft reply ready · Via contact form</div>
+                </div>
+                <span class="preset-badge" style="background: rgba(251, 191, 36, 0.15); color: var(--warning);">Review</span>
+              </div>
+              <div style="background: var(--surface-plus); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary); margin: 10px 0;">
+                "Hi Sarah! Thanks for reaching out about your bathroom renovation..."
+              </div>
+              <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <button class="btn btn-primary" style="padding: 8px 14px; font-size: 0.8rem;">Send</button>
+                <button class="btn btn-secondary" style="padding: 8px 14px; font-size: 0.8rem;">Edit</button>
+                <button class="btn btn-ghost" style="padding: 8px 14px; font-size: 0.8rem;">Skip</button>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-dim); padding-top: 10px; border-top: 1px solid var(--border-subtle);">
+                <strong>Why:</strong> Lead submitted form · Template: Warm Welcome · <span style="color: var(--primary); cursor: pointer;">Tune policy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Training Wheels Spec</h3>
+
+        <div class="spec-box">
+          <h4>Duration</h4>
+          <div class="spec-item">
+            <div class="spec-label">Default</div>
+            <div class="spec-text">First 24 hours OR first 10 actions, whichever comes later</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">User Can Exit Early</div>
+            <div class="spec-text">"I've got it, turn off Training Wheels" (with confirmation)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Can Re-enable</div>
+            <div class="spec-text">From Settings → Autopilot → "Turn on Training Wheels"</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Behavior</h4>
+          <div class="spec-item">
+            <div class="spec-label">All Actions = Draft + Review</div>
+            <div class="spec-text">Even if preset is "Balanced" or "Autonomous"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Enhanced Cards</div>
+            <div class="spec-text">Every card shows: Why + Undo + "Tune Policy"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Learning Mode</div>
+            <div class="spec-text">System watches approvals/edits to calibrate</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Exit Criteria</h4>
+          <div class="spec-item">
+            <div class="spec-label">Auto-Exit After</div>
+            <div class="spec-text">24h + 10 actions with <80% edit rate</div>
+            <div class="spec-note">If user edits >80% of drafts, extend Training Wheels + suggest policy tune</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: PROGRESSIVE AUTONOMY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">After FTU</div>
+      <h2>Progressive Autonomy — Earned Trust</h2>
+      <p class="section-desc">Autonomy ramps via real experience. Exceptions teach the system. Nudges, not demands.</p>
+    </div>
+
+    <div class="wireframe-grid">
+      <div class="wireframe-column">
+        <h3>Mobile: Autonomy Nudge</h3>
+        <div class="mobile-frame">
+          <div class="mobile-status-bar">
+            <span>9:41</span>
+            <span>⚡ 90%</span>
+          </div>
+          <div class="mobile-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h4>Today</h4>
+              <div class="subtitle">One week later...</div>
+            </div>
+            <div style="font-size: 0.7rem; padding: 6px 12px; border-radius: 100px; background: rgba(52, 211, 153, 0.12); color: var(--success); border: 1px solid rgba(52, 211, 153, 0.3); display: flex; align-items: center; gap: 6px;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--success);"></span>
+              Conservative
+            </div>
+          </div>
+          <div class="mobile-body" style="padding: 16px;">
+            <div class="nudge-card">
+              <div class="nudge-header">
+                <span class="nudge-icon">🚀</span>
+                <span class="nudge-title">Ready for more automation?</span>
+              </div>
+              <div class="nudge-desc">
+                You approved <strong>8 of 8</strong> lead replies this week with no edits. Xentri could auto-send these for you.
+              </div>
+              <div class="nudge-actions">
+                <button class="nudge-btn nudge-btn-primary">Enable Auto-send</button>
+                <button class="nudge-btn nudge-btn-secondary">Not yet</button>
+              </div>
+            </div>
+
+            <div class="empty-state" style="padding: 32px 20px;">
+              <div style="width: 56px; height: 56px; background: var(--surface); border: 1px solid var(--border-default); border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--success);">✓</div>
+              <div style="font-size: 1rem; font-weight: 600; margin-bottom: 4px;">You're all caught up</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Xentri handled 23 items this week.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wireframe-column">
+        <h3>Progressive Autonomy Spec</h3>
+
+        <div class="spec-box">
+          <h4>Nudge Triggers</h4>
+          <div class="spec-item">
+            <div class="spec-label">High Approval Rate</div>
+            <div class="spec-text">"You approved 8/8 lead replies. Auto-send?"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Low Edit Rate</div>
+            <div class="spec-text">"You haven't edited a draft in 2 weeks. Increase confidence threshold?"</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Usage Patterns</div>
+            <div class="spec-text">"You always approve these within 5 min. Auto-approve after 5 min?"</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Nudge UX</h4>
+          <div class="spec-item">
+            <div class="spec-label">One-Tap Accept</div>
+            <div class="spec-text">Opens Policy Change Preview (from Journey 2 spec)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Easy Dismiss</div>
+            <div class="spec-text">"Not yet" → snooze 7 days</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-label">Never Nag</div>
+            <div class="spec-text">Max 1 nudge per week per domain</div>
+          </div>
+        </div>
+
+        <div class="spec-box">
+          <h4>Autonomy Levels Path</h4>
+          <div class="spec-item">
+            <div class="spec-text">
+              <strong>Day 1:</strong> Conservative (Training Wheels)<br>
+              <strong>Week 1:</strong> Conservative (normal)<br>
+              <strong>Week 2+:</strong> Balanced (if nudge accepted)<br>
+              <strong>Month 1+:</strong> Autonomous (if trust earned)
+            </div>
+            <div class="spec-note">This is the natural path, not mandatory. User controls the pace.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: MICROCOPY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">Reference</div>
+      <h2>FTU Microcopy Guide</h2>
+      <p class="section-desc">Key copy for the first-time experience. Calm, clear, no hype.</p>
+    </div>
+
+    <div class="spec-box" style="max-width: 800px;">
+      <h4>Welcome & Sign Up</h4>
+      <div class="spec-item">
+        <div class="spec-label">Tagline</div>
+        <div class="spec-text">"Your business, finally visible."</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Sub-tagline</div>
+        <div class="spec-text">"Xentri captures, organizes, and acts — so nothing slips."</div>
+      </div>
+    </div>
+
+    <div class="spec-box" style="max-width: 800px;">
+      <h4>Autopilot Setup</h4>
+      <div class="spec-item">
+        <div class="spec-label">Header</div>
+        <div class="spec-text">"How should Xentri work for you?"</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Subheader</div>
+        <div class="spec-text">"Choose how much Xentri does automatically. You can always adjust later."</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Reassurance</div>
+        <div class="spec-text">"Start conservative, level up later. As you use Xentri, we'll suggest when you're ready for more automation."</div>
+      </div>
+    </div>
+
+    <div class="spec-box" style="max-width: 800px;">
+      <h4>Training Wheels</h4>
+      <div class="spec-item">
+        <div class="spec-label">Banner Title</div>
+        <div class="spec-text">"Training Wheels Active"</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Banner Description</div>
+        <div class="spec-text">"For the next 24 hours, Xentri will draft everything for your review. No surprises."</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Exit Prompt</div>
+        <div class="spec-text">"Ready to let Xentri run on its own? Turn off Training Wheels."</div>
+      </div>
+    </div>
+
+    <div class="spec-box" style="max-width: 800px;">
+      <h4>Progressive Nudges</h4>
+      <div class="spec-item">
+        <div class="spec-label">Auto-send Nudge</div>
+        <div class="spec-text">"You approved 8 of 8 lead replies this week. Xentri could auto-send these for you."</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Confidence Nudge</div>
+        <div class="spec-text">"Your drafts are 95% accurate. Raise the confidence threshold to auto-send more?"</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Decline Button</div>
+        <div class="spec-text">"Not yet" (never "No thanks" or dismissive)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <p><strong>Xentri Journey 1: First-Time User</strong></p>
+    <p>Consent Once, Stay Calm — Smart defaults + Training Wheels + Progressive Autonomy</p>
+    <p style="margin-top: 12px; opacity: 0.6;">
+      This flow ensures Day-0 is safe by construction, and autonomy is earned through trust.
+    </p>
+  </div>
+
+</body>
+</html>

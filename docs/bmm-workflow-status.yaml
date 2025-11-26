@@ -27,7 +27,7 @@ workflow_status:
   product-brief: "docs/product-brief-Xentri-2025-11-24.md"
   prd: "docs/prd.md"
   validate-prd: recommended
-  create-design: recommended
+  create-design: "docs/ux-design-specification.md"
   create-architecture: "architecture.md"
   test-design: required # pending artifact
   validate-architecture: recommended
