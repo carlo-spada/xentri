@@ -158,6 +158,7 @@ This document provides the complete epic and story breakdown for Xentri, decompo
 2. **Given** the project structure, **When** inspected, **Then** it follows the monorepo layout (apps/shell, packages/ui, services/core-api).
 3. **Given** the database, **When** initialized, **Then** it runs a local Postgres instance via Docker with RLS enabled.
 4. **Given** CI/CD, **When** code is pushed, **Then** lint/test/build run headless.
+5. **Given** the smoke script, **When** executed, **Then** it seeds org A/B and confirms cross-org read is blocked while shell still loads.
 
 **Technical Notes:**
 - Stack: Astro (Shell), React (Islands), Node.js (Backend), Postgres (DB).
@@ -286,7 +287,8 @@ This document provides the complete epic and story breakdown for Xentri, decompo
 3. Updating a brief logs `brief_updated`.
 4. Schema validation enforces structure; allows partial data when section status is `draft`.
 5. Each section tracks `completion_status` (draft vs ready).
-6. Traceability: FR14, FR15, FR16.
+6. Schema includes 7 sections matching product brief research (Identity, Audience, Offerings, Positioning, Operations, Goals, Proof).
+7. Traceability: FR14, FR15, FR16.
 
 **Technical Notes:**
 - Define TypeScript interfaces for `BrandBrief`, `OpsModel`, `OfferCatalog`.
@@ -399,7 +401,8 @@ This document provides the complete epic and story breakdown for Xentri, decompo
 2. Offerings section populates Services automatically.
 3. Overrides save to `website_content` without mutating the Brief.
 4. "Reset to Brief" restores Brief content.
-5. Traceability: FR42, FR43.
+5. Initial page render meets performance target (<3s on 3G) with Brief defaults applied (NFR4).
+6. Traceability: FR42, FR43.
 
 **Technical Notes:**
 - Orchestration: Website service reads `briefs` table via internal API.
@@ -463,7 +466,8 @@ This document provides the complete epic and story breakdown for Xentri, decompo
 2. Submissions include anti-spam (honeypot, rate limiting per IP, optional CAPTCHA).
 3. Server validates field types/lengths and enforces CORS.
 4. `org_id` resolved securely from `website_id` or domain (never client-supplied).
-5. Traceability: FR60, FR61, FR62.
+5. Submission payload stored without PII leakage in events (aligns NFR11).
+6. Traceability: FR60, FR61, FR62.
 
 **Technical Notes:**
 - Form schema stored in `website_content`.
@@ -481,7 +485,8 @@ This document provides the complete epic and story breakdown for Xentri, decompo
 2. `leads` table includes `id`, `org_id`, `source_page_url`, `referrer`, `created_at`, `status`, `payload` (JSONB).
 3. Lead status transitions: New ↔ Contacted ↔ Archived (with unarchive).
 4. Status changes log `lead_status_changed`.
-5. Traceability: FR65, FR66, FR67.
+5. Lead list respects org scoping and hides message body from list view for privacy.
+6. Traceability: FR65, FR66, FR67.
 
 **Technical Notes:**
 - Optional: Simple dedupe logic (flag if same email within 24h).
@@ -498,7 +503,8 @@ This document provides the complete epic and story breakdown for Xentri, decompo
 1. New lead submission logs `lead_created` (payload excludes raw message body).
 2. `lead_created` triggers an email notification to Org Owner (idempotent).
 3. Notification settings allow toggling email on/off (FR78).
-4. Traceability: FR63, FR64, FR75, FR78.
+4. Email content includes link to lead detail but not full message body.
+5. Traceability: FR63, FR64, FR75, FR78.
 
 **Technical Notes:**
 - Use transactional email service (Resend/Postmark).
