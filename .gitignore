@@ -27,3 +27,4 @@ logs/
 # Codex (OpenAI CLI)
 .codex/log/
 .codex/sessions/
+.codex/history.jsonl
