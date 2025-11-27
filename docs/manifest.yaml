@@ -1,0 +1,136 @@
+# Xentri Documentation Manifest
+# This file is the source of truth for navigating the documentation hierarchy.
+# AI agents should read this file first to understand the documentation structure.
+#
+# Structure: docs/{category}/{module}/
+# Each module follows full BMAD project structure.
+
+version: "1.0"
+last_updated: "2025-11-27"
+project: Xentri
+
+# =============================================================================
+# CATEGORIES
+# =============================================================================
+# Categories organize modules by business domain.
+# Each category has its own folder with a README.md explaining its purpose.
+
+categories:
+  platform:
+    purpose: "Core infrastructure - always present, powers all other categories"
+    modules: [orchestration, shell, core-api, ts-schema, ui]
+
+  strategy:
+    purpose: "Strategy & Clarity Engine - Universal Brief, AI strategy conversations"
+    modules: []  # Future: universal-brief, strategy-copilot, war-room
+
+  brand:
+    purpose: "Brand & Marketing - digital presence, website, content, leads"
+    modules: []  # Future: website-builder, cms, lead-capture
+
+  sales:
+    purpose: "Sales & Pipeline - CRM, quotes, deal management"
+    modules: []  # Future: crm, quotes, pipeline
+
+  finance:
+    purpose: "Finance & Accounting - invoicing, payments, bookkeeping"
+    modules: []  # Future: invoicing, payments, accounting
+
+  operations:
+    purpose: "Operations & Projects - project management, tasks, scheduling"
+    modules: []  # Future: projects, tasks, calendar
+
+  team:
+    purpose: "Team & HR - human resources, payroll, roles"
+    modules: []  # Future: hr, payroll, roles
+
+  legal:
+    purpose: "Legal & Compliance - contracts, compliance, documents"
+    modules: []  # Future: contracts, compliance, documents
+
+# =============================================================================
+# MODULES
+# =============================================================================
+# Each module is a full BMAD project with its own:
+# - README.md, prd.md, architecture.md, epics.md
+# - sprint-artifacts/ folder with stories and sprint-status.yaml
+# - research/ folder (if applicable)
+
+modules:
+  # ---------------------------------------------------------------------------
+  # PLATFORM CATEGORY
+  # ---------------------------------------------------------------------------
+  orchestration:
+    category: platform
+    purpose: "System-wide architecture, cross-cutting concerns, platform infrastructure"
+    scope: "Big picture ONLY - no module-specific implementation details"
+    package: null  # Not a code package - pure documentation
+    status: active
+    key_files:
+      - architecture.md
+      - prd.md
+      - product-brief.md
+      - deployment-plan.md
+      - incident-response.md
+
+  shell:
+    category: platform
+    purpose: "Astro application shell - routing, layout, React island host"
+    package: "apps/shell"
+    dependencies: [ui, ts-schema]
+    status: active
+
+  core-api:
+    category: platform
+    purpose: "Core API service - authentication, events, organizations, webhooks"
+    package: "services/core-api"
+    dependencies: [ts-schema]
+    status: active
+
+  ts-schema:
+    category: platform
+    purpose: "Shared TypeScript types and Zod schemas - the contract layer"
+    package: "packages/ts-schema"
+    dependencies: []
+    status: active
+
+  ui:
+    category: platform
+    purpose: "Design system - shared components, Tailwind config, shadcn/ui"
+    package: "packages/ui"
+    dependencies: []
+    status: active
+
+# =============================================================================
+# MODULE CONTEXT SELECTION
+# =============================================================================
+# When starting a session, agents should ask the user which module they're
+# working on. This sets {current_category} and {current_module} for the session.
+#
+# All documentation paths then resolve to:
+#   docs/{current_category}/{current_module}/
+#
+# Example session start:
+#   Agent: "Which module are you working on?"
+#   User: "core-api"
+#   Agent: "Working in platform/core-api for this session."
+
+# =============================================================================
+# STANDARD MODULE STRUCTURE
+# =============================================================================
+# Every module folder should contain (as applicable):
+#
+# docs/{category}/{module}/
+# ├── README.md              # Module overview, ownership, quick start
+# ├── product-brief.md       # Module vision (optional for utility packages)
+# ├── prd.md                 # Module requirements
+# ├── architecture.md        # Technical decisions, ADRs
+# ├── epics.md               # Module implementation roadmap
+# ├── ux-design.md           # UI/UX specs (if applicable)
+# ├── testing-strategy.md    # Module test approach
+# ├── research/              # Module-specific research
+# ├── sprint-artifacts/      # Implementation tracking
+# │   ├── sprint-status.yaml # Module sprint state
+# │   ├── tech-spec-*.md     # Per-epic tech specs
+# │   └── {story-files}.md   # Individual stories
+# └── changelog.md           # Version history (optional)

@@ -1,153 +1,86 @@
-# Xentri Documentation Index
+# Xentri Documentation
 
-Project documentation for Xentri - a clarity-first Business OS that starts with conversation, not configuration.
+> A clarity-first Business OS that starts with conversation, not configuration.
 
 **Current Phase:** Epic 1 Foundation (Story 1.7 in review)
 **Live API:** https://core-api-production-8016.up.railway.app
 
 ---
 
-## Core Documents
+## Navigation
 
-Primary artifacts defining the product vision, requirements, and architecture.
+Documentation is organized by **category** and **module**. Each module is a full BMAD project with its own requirements, architecture, and sprint artifacts.
 
-| Document | Purpose |
-|----------|---------|
-| [product-brief-Xentri-2025-11-24.md](./product-brief-Xentri-2025-11-24.md) | Complete product vision, personas, and market positioning |
-| [prd.md](./prd.md) | Product Requirements Document for v0.1-v0.2 MVP |
-| [architecture.md](./architecture.md) | Technical architecture decisions and system design |
-| [epics.md](./epics.md) | Epic and story breakdown for implementation |
-| [ux-design-specification.md](./ux-design-specification.md) | UX patterns, flows, and component specifications |
-| [backlog.md](./backlog.md) | Product backlog and future items |
+**Manifest:** [manifest.yaml](./manifest.yaml) — Machine-readable navigation for AI agents
 
 ---
 
-## DevOps & Operations
+## Categories
 
-Deployment, operations, and incident response documentation.
-
-| Document | Purpose |
-|----------|---------|
-| [deployment-plan.md](./deployment-plan.md) | Railway deployment guide with step-by-step instructions |
-| [incident-response.md](./incident-response.md) | Incident runbook and troubleshooting guide |
-| [k8s-migration-runbook.md](./k8s-migration-runbook.md) | Kubernetes migration triggers and checklist |
-| [testing-strategy.md](./testing-strategy.md) | Test categories, coverage requirements, CI integration |
-
----
-
-## Architecture Documents
-
-Technical architecture deep-dives.
-
-| Document | Purpose |
-|----------|---------|
-| [architecture/adr-004-railway-bootstrap.md](./architecture/adr-004-railway-bootstrap.md) | ADR: Railway Bootstrap Strategy decision |
-| [architecture/event-model-v0.1.md](./architecture/event-model-v0.1.md) | Event Backbone schema and patterns |
+| Category | Purpose | Status |
+|----------|---------|--------|
+| [platform/](./platform/) | Core infrastructure - always present | Active |
+| [strategy/](./strategy/) | Strategy & Clarity Engine | Planned |
+| [brand/](./brand/) | Brand & Marketing | Planned |
+| [sales/](./sales/) | Sales & Pipeline | Planned |
+| [finance/](./finance/) | Finance & Accounting | Planned |
+| [operations/](./operations/) | Operations & Projects | Planned |
+| [team/](./team/) | Team & HR | Planned |
+| [legal/](./legal/) | Legal & Compliance | Planned |
 
 ---
 
-## Sprint Artifacts
+## Platform Modules (Active)
 
-Implementation artifacts for current sprint (Epic 1).
-
-**Status File:** [sprint-artifacts/sprint-status.yaml](./sprint-artifacts/sprint-status.yaml)
-
-### Story Files
-
-| Story | Status | Description |
-|-------|--------|-------------|
-| [1-1-project-initialization-infrastructure.md](./sprint-artifacts/1-1-project-initialization-infrastructure.md) | Done | Turborepo, CI/CD, base infrastructure |
-| [1-2-event-backbone-database-schema.md](./sprint-artifacts/1-2-event-backbone-database-schema.md) | Done | Prisma schema, RLS policies |
-| [1-3-user-authentication-signup.md](./sprint-artifacts/1-3-user-authentication-signup.md) | Done | Clerk integration, auth middleware |
-| [1-4-organization-creation-provisioning.md](./sprint-artifacts/1-4-organization-creation-provisioning.md) | Done | Org webhooks, provisioning |
-| [1-5-application-shell-navigation.md](./sprint-artifacts/1-5-application-shell-navigation.md) | Done | Astro shell, React islands |
-| [1-6-thin-vertical-slice-signup-brief-event.md](./sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md) | Done | End-to-end signup → Brief flow |
-| [1-7-devops-observability-test-readiness.md](./sprint-artifacts/1-7-devops-observability-test-readiness.md) | Review | Logging, CI gates, Railway deploy |
-
-### Tech Specs
-
-| Document | Purpose |
-|----------|---------|
-| [sprint-artifacts/tech-spec-epic-1.md](./sprint-artifacts/tech-spec-epic-1.md) | Technical specification for Epic 1 |
-
----
-
-## Research Documents
-
-Market, competitive, and technical research conducted during discovery.
-
-All research docs are in [bmm-research/](./bmm-research/):
-
-| Document | Purpose |
-|----------|---------|
-| [brainstorming-session-results-2025-11-24.md](./bmm-research/brainstorming-session-results-2025-11-24.md) | Initial product brainstorming |
-| [bmm-research-market-2025-11-24.md](./bmm-research/bmm-research-market-2025-11-24.md) | Market size and trends |
-| [bmm-research-competitive-2025-11-24.md](./bmm-research/bmm-research-competitive-2025-11-24.md) | Competitive landscape |
-| [bmm-research-technical-2025-11-24.md](./bmm-research/bmm-research-technical-2025-11-24.md) | Technical feasibility |
-| [bmm-research-customer-2025-11-24.md](./bmm-research/bmm-research-customer-2025-11-24.md) | Customer segments |
-| [bmm-research-industry-2025-11-24.md](./bmm-research/bmm-research-industry-2025-11-24.md) | Industry context |
-| [bmm-research-deep-prompts-2025-11-24.md](./bmm-research/bmm-research-deep-prompts-2025-11-24.md) | Deep research prompts |
-
----
-
-## Product Concepts
-
-Feature designs and product explorations.
-
-| Document | Purpose |
-|----------|---------|
-| [product/calm-prompt-open-loops.md](./product/calm-prompt-open-loops.md) | Open Loops and Calm Prompt design |
-| [product/xentri-inbox-v0.1.md](./product/xentri-inbox-v0.1.md) | Unified inbox concept |
-
----
-
-## UX Design Artifacts
-
-Visual prototypes and wireframes.
-
-| File | Description |
-|------|-------------|
-| [ux-color-themes-v2.html](./ux-color-themes-v2.html) | Color palette exploration |
-| [ux-daily-loop-wireframes-v2.html](./ux-daily-loop-wireframes-v2.html) | Daily Loop dashboard wireframes |
-| [ux-journey-1-ftu.html](./ux-journey-1-ftu.html) | First-time user journey wireframes |
-
----
-
-## Validation & Readiness
-
-Quality checks and readiness assessments.
-
-| Document | Purpose |
-|----------|---------|
-| [implementation-readiness-report-2025-11-26.md](./implementation-readiness-report-2025-11-26.md) | Pre-implementation readiness check |
-| [validation-report-20251128T140500Z.md](./validation-report-20251128T140500Z.md) | PRD validation |
-
----
-
-## Workflow Status
-
-- [bmm-workflow-status.yaml](./bmm-workflow-status.yaml) - BMAD workflow progress tracker
+| Module | Purpose | Package |
+|--------|---------|---------|
+| [orchestration](./platform/orchestration/) | System-wide architecture, cross-cutting concerns | - |
+| [shell](./platform/shell/) | Astro app shell, routing, React islands | `apps/shell` |
+| [core-api](./platform/core-api/) | Authentication, events, organizations | `services/core-api` |
+| [ts-schema](./platform/ts-schema/) | Shared TypeScript types and Zod schemas | `packages/ts-schema` |
+| [ui](./platform/ui/) | Design system, shared components | `packages/ui` |
 
 ---
 
 ## Quick Links
 
-**Start Here:**
-1. [Product Brief](./product-brief-Xentri-2025-11-24.md) - Understand the vision
-2. [PRD](./prd.md) - See MVP requirements
-3. [Architecture](./architecture.md) - Technical decisions
-4. [Epics](./epics.md) - Implementation roadmap
+### Getting Started
+1. [Product Brief](./platform/orchestration/product-brief.md) — Vision and personas
+2. [PRD](./platform/orchestration/prd.md) — Product requirements
+3. [Architecture](./platform/orchestration/architecture.md) — Technical decisions
+4. [Epics](./platform/orchestration/epics.md) — Implementation roadmap
 
-**Operations:**
-1. [Deployment Plan](./deployment-plan.md) - Deploy to Railway
-2. [Incident Response](./incident-response.md) - Troubleshooting guide
-3. [Testing Strategy](./testing-strategy.md) - Run tests
+### Operations
+1. [Deployment Plan](./platform/orchestration/deployment-plan.md) — Railway deployment
+2. [Incident Response](./platform/orchestration/incident-response.md) — Troubleshooting
+3. [Testing Strategy](./platform/orchestration/testing-strategy.md) — Test philosophy
 
-**Key Concepts:**
-- **Universal Brief:** The DNA of a business, generated through AI conversation
-- **Event Backbone:** Immutable event log powering all cross-module intelligence
-- **Calm Prompt:** Daily view of what needs attention
-- **Open Loops:** Invisible commitments made visible
+### Sprint Status
+- [Epic Status](./platform/orchestration/sprint-artifacts/sprint-status.yaml) — Overall progress
+- [Core API Stories](./platform/core-api/sprint-artifacts/) — API implementation
+- [Shell Stories](./platform/shell/sprint-artifacts/) — Frontend implementation
+
+---
+
+## Key Concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Universal Brief** | The DNA of a business, generated through AI conversation |
+| **Event Backbone** | Immutable event log powering all cross-module intelligence |
+| **Calm Prompt** | Daily view of what needs attention |
+| **Open Loops** | Invisible commitments made visible |
+
+---
+
+## For AI Agents
+
+When starting a session, first determine which module you're working on:
+
+1. Read [manifest.yaml](./manifest.yaml) to understand the structure
+2. Ask: "Which module are you working on?"
+3. Navigate to `docs/{category}/{module}/`
+4. All paths resolve relative to the selected module
 
 ---
 

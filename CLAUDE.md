@@ -10,6 +10,56 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Live API:** https://core-api-production-8016.up.railway.app
 
+## Documentation Navigation
+
+Documentation follows a **hierarchical structure** organized by category and module.
+
+### First: Determine Your Module Context
+
+When starting a session, ask the user which module they're working on:
+
+```
+Categories:
+1. platform (orchestration, shell, core-api, ts-schema, ui)
+2. strategy (future)
+3. brand (future)
+4. sales (future)
+5. finance (future)
+6. operations (future)
+7. team (future)
+8. legal (future)
+```
+
+Store the selection as `{current_category}/{current_module}` and resolve all doc paths accordingly.
+
+### Documentation Structure
+
+```
+docs/
+├── index.md                    # Navigation hub
+├── manifest.yaml               # Machine-readable module registry
+├── platform/                   # Core infrastructure
+│   ├── orchestration/          # System-wide "big picture"
+│   ├── shell/                  # apps/shell
+│   ├── core-api/               # services/core-api
+│   ├── ts-schema/              # packages/ts-schema
+│   └── ui/                     # packages/ui
+├── strategy/                   # Strategy & Clarity Engine (planned)
+├── brand/                      # Brand & Marketing (planned)
+└── ...                         # Other categories
+```
+
+### Key Documentation
+
+| Document | Location |
+|----------|----------|
+| Documentation Hub | `docs/index.md` |
+| Module Manifest | `docs/manifest.yaml` |
+| System Architecture | `docs/platform/orchestration/architecture.md` |
+| Product Requirements | `docs/platform/orchestration/prd.md` |
+| Deployment Guide | `docs/platform/orchestration/deployment-plan.md` |
+| Incident Response | `docs/platform/orchestration/incident-response.md` |
+
 ## Architecture Philosophy: "Decoupled Unity"
 
 The user sees one calm workspace; under the hood, each capability is an isolated module:
@@ -34,26 +84,15 @@ The user sees one calm workspace; under the hood, each capability is an isolated
 ```
 /xentri
 ├── apps/
-│   └── shell/                # Astro 5.16.0 Shell with React islands ✓
+│   └── shell/                # Astro 5.16.0 Shell with React islands
 ├── packages/
-│   ├── ui/                   # Shared Design System (Tailwind v4, shadcn/ui) ✓
-│   ├── ts-schema/            # Shared Types & Zod Schemas (the "Contract") ✓
-│   ├── cms-client/           # React CMS UI (planned)
-│   ├── crm-client/           # React CRM UI (planned)
-│   └── erp-client/           # React ERP UI (planned)
+│   ├── ui/                   # Shared Design System (Tailwind v4, shadcn/ui)
+│   └── ts-schema/            # Shared Types & Zod Schemas (the "Contract")
 ├── services/
-│   ├── core-api/             # Fastify 5.6.2 + Prisma 7.0.1, RLS ✓
-│   ├── brand-engine/         # Website, CMS (planned)
-│   ├── sales-engine/         # CRM, Quotes (planned)
-│   ├── finance-engine/       # Invoicing, Payments (planned)
-│   ├── ai-service/           # Python Co-pilot Swarm (planned)
-│   └── n8n-host/             # Self-hosted workflow automation (planned)
-├── scripts/
-│   ├── init-db.sql           # Database initialization ✓
-│   └── smoke-test.ts         # RLS isolation tests ✓
-├── docker-compose.yml        # Postgres 16.11, Redis 8.0, MinIO ✓
-├── turbo.json                # Turborepo 2.6.1 config ✓
-└── .github/workflows/ci.yml  # CI/CD pipeline ✓
+│   └── core-api/             # Fastify 5.6.2 + Prisma 7.0.1, RLS
+├── docs/                     # Hierarchical documentation (see above)
+├── .bmad/                    # BMAD framework
+└── .claude/commands/         # Slash commands (/bmad:*)
 ```
 
 ## Development Commands
@@ -72,59 +111,16 @@ pnpm run dev --filter services/core-api # Start API only (port 3000)
 # Testing
 pnpm run test                          # Run all unit tests
 pnpm run test -- --coverage            # Run tests with coverage report
-pnpm run test:smoke                    # Run smoke tests (RLS, Brief flow, timing)
 pnpm run typecheck                     # TypeScript validation
 
 # Build & Quality
 pnpm run build                         # Build all packages
 pnpm run lint                          # Run ESLint
 
-# Observability (Story 1.7)
-LOG_LEVEL=debug pnpm run dev           # Enable debug logging
-curl http://localhost:3000/api/v1/health       # API health check
-curl http://localhost:3000/api/v1/health/ready # API readiness with DB check
+# Health Checks
+curl http://localhost:3000/health       # API liveness
+curl http://localhost:3000/health/ready # API readiness with DB check
 ```
-
-## Observability
-
-**Structured Logging (NFR24):**
-- JSON format in production, pretty print in development
-- Correlation IDs: `trace_id`, `org_id`, `user_id` in every log entry
-- PII scrubbing: email, name, auth headers redacted
-- Log levels: `LOG_LEVEL=error|warn|info|debug`
-
-**Error Tracking (NFR25):**
-- Sentry integration (configure `SENTRY_DSN`)
-- Stack traces with request context
-- Automatic error capture in API and shell
-
-**Health Checks:**
-- `GET /api/v1/health` - Basic liveness
-- `GET /api/v1/health/ready` - Readiness with database check
-
-**Trace Propagation:**
-- `x-trace-id` header for request correlation
-- W3C `traceparent` header support
-
-## Key Technical Patterns
-
-### Event Backbone
-- All events stored in `system_events` table (append-only, immutable)
-- Events power: timelines, audit trails, Open Loops/Calm Prompt, cross-module intelligence
-- Corrections via compensating events, never edit history
-- Outbox pattern: Postgres → Redis Streams for cross-service transport
-
-### Frontend Architecture
-- Shell loads instantly (~15kb), sidebar/header persist across navigation
-- React SPAs lazy-loaded via `client:only="react"` with hover prefetching
-- Cross-app state via Nano Stores, server state via TanStack Query
-- Error boundaries prevent "white screen of death"
-
-### AI Co-pilots
-- Swarm model: one `ai-service` hosts all co-pilots as configured runtimes
-- Stateless: spin up per request with system prompt + tools + model config
-- Scaffolding only: AI proposes, user confirms—no auto-publish
-- Each category has a specialized co-pilot that unlocks with first module subscription
 
 ## BMAD Framework
 
@@ -144,50 +140,23 @@ Key workflows:
 - `/bmad:bmm:workflows:create-story` - Create user stories
 - `/bmad:bmm:workflows:dev-story` - Implement stories
 
-Workflow status tracked in `docs/bmm-workflow-status.yaml`.
-
-## Key Documentation
-
-| Document | Purpose |
-|----------|---------|
-| `docs/index.md` | Documentation navigation hub |
-| `docs/architecture.md` | Technical Constitution - data governance, service boundaries |
-| `docs/product-brief-Xentri-2025-11-24.md` | Complete product vision, personas, MVP scope |
-| `docs/prd.md` | Product Requirements Document for MVP |
-| `docs/epics.md` | Epic and story breakdown |
-| `docs/deployment-plan.md` | Railway deployment guide |
-| `docs/incident-response.md` | Troubleshooting and operational runbooks |
-| `docs/architecture/event-model-v0.1.md` | Event Backbone schema and patterns |
-| `docs/sprint-artifacts/sprint-status.yaml` | Current sprint progress |
-
 ## Design Principles
 
 1. **Clarity First** - Universal Brief before tools; AI generates structure, not just content
 2. **Calm UX** - One daily view of what matters; no notification flood
 3. **Visible, Not Magical** - Every automation logged with explanation
-4. **Modular Growth** - Start free, add $5 modules, grow to bundles
+4. **Modular Growth** - Start free, add modules, grow to bundles
 5. **Works With Reality** - WhatsApp copy-paste flows, not rigid forms
 
 ## Current Phase
 
 **Epic 1 - Foundation (Complete, Story 1.7 in Review):**
-- ✅ Story 1.1: Project initialization & infrastructure
-- ✅ Story 1.2: Event backbone & database schema
-- ✅ Story 1.3: User authentication (Clerk)
-- ✅ Story 1.4: Organization creation & provisioning
-- ✅ Story 1.5: Application shell & navigation
-- ✅ Story 1.6: Thin vertical slice (signup → Brief event)
-- 🔄 Story 1.7: DevOps, observability, test readiness (in review)
-
-**Technical Stack:**
-- Turborepo 2.6.1 monorepo with pnpm workspaces
-- Astro 5.16.0 Shell with React 19.2.0 islands
-- Core API (Fastify 5.6.2 + Prisma 7.0.1) deployed on Railway
-- PostgreSQL 16.11 with fail-closed RLS policies
-- CI/CD pipeline with GitHub branch protection
-- Clerk authentication with org-scoped access
-- Structured logging with Pino (trace_id, org_id, user_id)
-- Sentry error tracking integration
-- 25+ tests passing with coverage thresholds
+- ✅ Story 1.1: Project initialization & infrastructure (orchestration)
+- ✅ Story 1.2: Event backbone & database schema (core-api)
+- ✅ Story 1.3: User authentication (core-api)
+- ✅ Story 1.4: Organization creation & provisioning (core-api)
+- ✅ Story 1.5: Application shell & navigation (shell)
+- ✅ Story 1.6: Thin vertical slice (core-api)
+- 🔄 Story 1.7: DevOps, observability, test readiness (orchestration)
 
 **Next:** Epic 2 - Strategy & Clarity Engine (Universal Brief, Strategy Co-pilot)

@@ -7,20 +7,37 @@
 **Current Phase:** Epic 1 Foundation complete (Story 1.7 in review)
 **Live API:** https://core-api-production-8016.up.railway.app
 
-## Project Structure
+## Documentation Navigation
+
+Documentation is organized by **category** and **module**. Always determine which module you're working on first.
+
+**Manifest:** `docs/manifest.yaml` — Machine-readable module registry
+
+### Module Context Prompt
+
+At session start, ask: "Which module are you working on?"
 
 ```
-/xentri
-├── apps/
-│   └── shell/                # Astro 5.16 Shell with React islands
-├── packages/
-│   ├── ui/                   # Shared Design System (Tailwind v4, shadcn/ui)
-│   └── ts-schema/            # Shared Types & Zod Schemas
-├── services/
-│   └── core-api/             # Fastify 5.6 + Prisma 7.0, deployed on Railway
-├── docs/                     # All documentation (see docs/index.md)
-├── .bmad/                    # BMAD framework (agents, workflows)
-└── .claude/commands/         # Slash commands for Claude Code
+Categories:
+1. platform (orchestration, shell, core-api, ts-schema, ui)
+2. strategy, brand, sales, finance, operations, team, legal (future)
+```
+
+All paths resolve to: `docs/{category}/{module}/`
+
+### Structure
+
+```
+docs/
+├── index.md                    # Navigation hub
+├── manifest.yaml               # Module registry
+├── platform/
+│   ├── orchestration/          # System-wide architecture (big picture)
+│   ├── shell/                  # apps/shell docs
+│   ├── core-api/               # services/core-api docs
+│   ├── ts-schema/              # packages/ts-schema docs
+│   └── ui/                     # packages/ui docs
+└── {other-categories}/         # Future modules
 ```
 
 ## Build & Development Commands
@@ -42,7 +59,7 @@ pnpm run build                         # Build all packages
 - **2-space indentation**, trailing commas, named exports (no defaults in shared packages)
 - **Event-first**: All business actions write to `system_events` before domain tables
 - **Multi-tenant**: Every table has `org_id` with Row-Level Security
-- Follow event contracts from `docs/architecture/event-model-v0.1.md`
+- Follow event contracts from `docs/platform/orchestration/architecture/event-model-v0.1.md`
 
 ## Testing
 
@@ -59,7 +76,10 @@ pnpm run build                         # Build all packages
 
 ## Key Documentation
 
-- `docs/index.md` - Documentation hub
-- `docs/architecture.md` - Technical decisions
-- `docs/deployment-plan.md` - Railway deployment
-- `docs/incident-response.md` - Troubleshooting
+| Document | Location |
+|----------|----------|
+| Hub | `docs/index.md` |
+| Manifest | `docs/manifest.yaml` |
+| Architecture | `docs/platform/orchestration/architecture.md` |
+| Deployment | `docs/platform/orchestration/deployment-plan.md` |
+| Incidents | `docs/platform/orchestration/incident-response.md` |

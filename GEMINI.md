@@ -13,7 +13,48 @@
 - **Modular Growth:** Subscribe to capabilities as you grow
 - **Calm UX:** Unified shell preventing "tab fatigue"
 
-## 2. Architecture & Tech Stack
+## 2. Documentation Navigation
+
+### Module Context Selection
+
+At session start, determine which module you're working on:
+
+```
+Categories:
+1. platform (orchestration, shell, core-api, ts-schema, ui)
+2. strategy (future)
+3. brand (future)
+4. sales, finance, operations, team, legal (future)
+```
+
+Store selection and resolve paths to: `docs/{category}/{module}/`
+
+### Documentation Structure
+
+```
+docs/
+├── index.md                    # Navigation hub
+├── manifest.yaml               # Machine-readable module registry
+├── platform/                   # Core infrastructure (active)
+│   ├── orchestration/          # System-wide "big picture"
+│   │   ├── architecture.md
+│   │   ├── prd.md
+│   │   ├── epics.md
+│   │   └── sprint-artifacts/
+│   ├── shell/                  # apps/shell
+│   ├── core-api/               # services/core-api
+│   ├── ts-schema/              # packages/ts-schema
+│   └── ui/                     # packages/ui
+├── strategy/                   # Future
+├── brand/                      # Future
+└── ...                         # Other categories
+```
+
+Each module is a **full BMAD project** with its own:
+- README.md, prd.md, architecture.md, epics.md
+- sprint-artifacts/ folder with stories and status
+
+## 3. Architecture & Tech Stack
 
 Monorepo managed by **Turborepo 2.6**, following "Decoupled Unity" philosophy.
 
@@ -31,30 +72,6 @@ Monorepo managed by **Turborepo 2.6**, following "Decoupled Unity" philosophy.
 2. **Multi-Tenancy:** Postgres RLS - every table has `org_id`
 3. **Lazy Loading:** React micro-apps loaded on demand by Astro shell
 4. **Shared Contract:** Types in `packages/ts-schema`
-
-## 3. Directory Structure
-
-```
-/xentri
-├── apps/shell/               # Astro Shell with React islands
-├── packages/
-│   ├── ui/                   # Design System (Tailwind v4, shadcn/ui)
-│   └── ts-schema/            # Shared Types & Zod Schemas
-├── services/core-api/        # Fastify API (deployed on Railway)
-├── docs/                     # Documentation (see docs/index.md)
-│   ├── architecture.md       # Technical decisions
-│   ├── prd.md                # Product requirements
-│   ├── epics.md              # Implementation roadmap
-│   ├── deployment-plan.md    # Railway deployment
-│   ├── incident-response.md  # Troubleshooting
-│   └── sprint-artifacts/     # Story files & status
-├── .bmad/                    # BMAD framework
-│   ├── bmm/                  # BMad Method workflows
-│   ├── bmb/                  # BMad Builder tools
-│   ├── cis/                  # Creative & Innovation Suite
-│   └── core/                 # Core utilities
-└── .claude/commands/         # Slash commands (/bmad:*)
-```
 
 ## 4. Development Commands
 
@@ -84,9 +101,10 @@ pnpm run build                         # Build all packages
 
 ## 6. Current Status
 
-**Epic 1 - Foundation (Complete):**
-- Story 1.1-1.6: Done
-- Story 1.7 (DevOps/Observability): In review
+**Epic 1 - Foundation:**
+- orchestration: 1-1 (done), 1-7 (review)
+- core-api: 1-2, 1-3, 1-4, 1-6 (all done)
+- shell: 1-5 (done)
 
 **Next:** Epic 2 - Strategy & Clarity Engine (Universal Brief, Strategy Co-pilot)
 
@@ -94,4 +112,5 @@ pnpm run build                         # Build all packages
 
 - **NEVER SKIP AHEAD:** Do not perform tasks without explicit request
 - **VALIDATION ONLY:** When asked to validate, check existing files only
+- **MODULE CONTEXT:** Always determine which module before starting work
 - **DOCUMENTATION:** See `docs/index.md` for complete navigation
