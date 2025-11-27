@@ -11,6 +11,7 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "@clerk/astro": "^1.6.10",
     "@xentri/ts-schema": "workspace:*",
     "@xentri/ui": "workspace:*",
     "astro": "^5.16.0",

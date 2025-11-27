@@ -144,4 +144,4 @@ Workflow status tracked in `docs/bmm-workflow-status.yaml`.
 - CI/CD pipeline with GitHub branch protection
 - 14 tests passing (ts-schema: 3, ui: 10, core-api: 1)
 
-**Next:** Story 1.2 (Supabase Auth integration) → Story 1.3 (Event Backbone v0.1)
+**Next:** Story 1.3 (User Authentication with Clerk) — Story 1.2 (Event Backbone) in review

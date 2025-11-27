@@ -43,7 +43,8 @@ We employ a **Monorepo** structure managed by **Turborepo**.
 | Monorepo Tooling | Turborepo + pnpm workspaces | Turbo 2.6.1 / pnpm 10.23.0 | Fast incremental builds and deterministic installs across apps/services/packages. |
 | Backend Runtime & API | Node.js + Fastify REST APIs | Node 24.11.1 LTS / Fastify 5.6.2 | Current LTS for runtime security; schema-first, high-performance JSON APIs. |
 | Database & ORM | Postgres with Prisma | Postgres 16.11 / Prisma 7.0.1 | Typed queries with RLS support; aligns with event log and multi-tenant policies. |
-| AuthN/AuthZ | Supabase Auth (GoTrue) + JWT cookies | GoTrue JS 2.84.0 | Delegates identity, supports email/OAuth, and keeps services stateless. |
+| AuthN/AuthZ | Clerk + JWT cookies | @clerk/fastify 3.x / @clerk/astro 1.x | Delegates identity with native Organizations support; email/OAuth/SSO; multi-tenant JWT claims (org_id, role) out of the box. |
+| Billing/Subscriptions | Clerk Billing (Stripe-backed) | Clerk Billing 1.x | Unified auth+billing; subscriptions tied to Clerk Organizations; supports module-based pricing model. (v0.4 scope) |
 | Events & Transport | Postgres `system_events` log + Upstash Redis Streams | Upstash Redis (managed) | Durable source-of-truth log with pay-per-request streaming; scales from zero to millions. |
 | Orchestration | n8n (self-hosted) | n8n 1.121.2 | Visual workflows and retries; separates business logic from app code. |
 | File/Object Storage | S3-compatible blobs (prod: AWS S3, local: MinIO) | MinIO 8.0.6 client (server RELEASE.2024-09-30) | Presigned uploads for media/assets; CDN-friendly and infra-portable. |
@@ -242,7 +243,7 @@ The repository follows a standard Turborepo monorepo structure:
 - **Networking:** Ingress per app domain (`app.xentri.app`, `api.xentri.app`, `n8n.xentri.app`), TLS via cert-manager, service-to-service auth via signed JWT and network policies.
 
 ### Environment Plan
-- **Local (docker compose):** Postgres 16.11, Redis 8.4.0, n8n 1.121.2, MinIO (S3-compatible). Supabase Auth via hosted project or local GoTrue. Command: `docker compose up -d postgres redis n8n minio`.
+- **Local (docker compose):** Postgres 16.11, Redis 8.4.0, n8n 1.121.2, MinIO (S3-compatible). Clerk Auth via hosted project (no local container needed). Command: `docker compose up -d postgres redis n8n minio`.
 - **Staging (k8s 1.31):** Managed Postgres (RDS/CloudSQL), managed Redis (ElastiCache/MemoryStore), n8n as k8s Deployment with PVC, MinIO optional (prefer cloud blob). 1-2 replicas per service with HPA, metrics/alerts wired.
 - **Production (k8s 1.31):** Same as staging with multi-AZ Postgres/Redis, HPA min 2, PodDisruptionBudgets, and regional buckets/CDN for assets.
 
@@ -293,13 +294,14 @@ We use Astro's Island Architecture to lazy-load React apps.
 - **Protocol:** JSON REST over HTTPS; versioned prefix `/api/v1`.
 - **Shape:** Envelope with `data`, `error`, `meta` (cursor/paging). Dates in ISO8601 UTC.
 - **Errors:** HTTP Problem Details (`application/problem+json`) with `type`, `title`, `status`, `detail`, `trace_id`.
-- **Auth:** JWT (Supabase) in HTTP-only cookie; services accept `Authorization: Bearer` for service-to-service calls. All requests require `x-org-id`.
+- **Auth:** JWT (Clerk) in HTTP-only cookie via `@clerk/fastify` middleware; services accept `Authorization: Bearer` for service-to-service calls. Org context from JWT `org_id` claim; `x-org-id` header optional for org-switching.
 - **Idempotency:** For mutating endpoints that can retry, require `Idempotency-Key` header and persist to dedupe.
 
 ### E. Auth Patterns
-- **User Auth:** Supabase GoTrue for sign-in/up. Access token includes `sub`, `org_id`, `role`. Refresh via Supabase.
+- **User Auth:** Clerk for sign-in/up with native Organizations support. Access token includes `sub`, `org_id`, `org_role`, `org_permissions`. Session managed via Clerk SDK.
+- **Social OAuth:** Multiple providers supported via Clerk (Google, Apple, Microsoft, etc.). Adding providers is a dashboard configuration, not code change. MVP: Google + Apple.
 - **Service Auth:** Signed JWT with short TTL; verified per service; propagate `trace_id` and `org_id`.
-- **Org Scoping:** Middleware enforces presence of `x-org-id` header matching JWT claims; RLS enforces at DB.
+- **Org Scoping:** Middleware extracts `org_id` from Clerk JWT claims (set when user selects active organization); RLS enforces at DB. Header `x-org-id` used only for org-switching validation.
 
 ### F. Naming & Location Patterns
 - **API routes:** `/api/v1/{service}/{resource}` (plural nouns). Example: `/api/v1/brand/sites`.
@@ -320,7 +322,7 @@ We use Astro's Island Architecture to lazy-load React apps.
 
 ## 7. Cross-Cutting Concerns
 
-*   **Authentication:** Supabase Auth (or equivalent JWT provider). Unified user identity across all services.
+*   **Authentication:** Clerk with native Organizations. Unified user identity across all services; org membership and roles managed by Clerk.
 *   **Logging:** Centralized structured logging (JSON) with `trace_id` propagation.
 *   **Error Handling:** Standardized error responses (Problem Details for HTTP APIs).
 *   **Testing:**
@@ -365,7 +367,7 @@ This project is built using **AI-first development** via the BMAD Method. One hu
 | **Quality Gates** | Review AI-generated code before merge; run validation workflows |
 | **Architectural Decisions** | Make trade-off decisions when agents surface options; approve ADR changes |
 | **Security Review** | Audit auth flows, RLS policies, and secrets handling before production |
-| **External Integrations** | Configure third-party services (Supabase, cloud providers, payment processors) |
+| **External Integrations** | Configure third-party services (Clerk, cloud providers, payment processors) |
 | **Production Operations** | Monitor alerts, handle incidents, approve deployments |
 
 ### AI Agent Boundaries

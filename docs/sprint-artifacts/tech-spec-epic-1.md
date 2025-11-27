@@ -20,7 +20,7 @@ The architectural philosophy is "Decoupled Unity"—a unified shell providing se
 - **Infrastructure:** Turborepo monorepo with Astro shell, React islands architecture, Docker-compose local dev environment
 - **Multi-tenancy:** Postgres RLS policies on all tables, `org_id` enforcement, fail-closed transaction pattern
 - **Event Backbone:** `system_events` table, v0.1 event types (`user_signup`, `user_login`, `brief_created`, `brief_updated`), org-scoped query API
-- **Authentication:** Supabase Auth (email/password + Google OAuth), HTTP-only cookies, refresh token rotation
+- **Authentication:** Clerk (email/password + Social OAuth via Google, Apple), HTTP-only cookies, session management via Clerk SDK
 - **Organization Creation:** Auto-provisioning on signup, Owner role assignment, `org_created` event
 - **Shell UX:** 7-category sidebar, expand/collapse behavior, light/dark mode, responsive mobile layout
 - **Notifications Infrastructure:** Transactional email setup (Resend/Postmark), in-app notification feed, preferences storage
@@ -224,15 +224,16 @@ CREATE TABLE user_preferences (
 **Signup → Organization Provisioning Flow:**
 
 ```
-1. User submits signup form (email/password or OAuth)
-2. core-api creates user record in auth.users (Supabase)
-3. Trigger: on auth.users INSERT
-4.   → Create organizations record (name from email domain or user name)
-5.   → Create members record (user_id, org_id, role='owner')
-6.   → Emit xentri.user.signup.v1 event
-7.   → Emit xentri.org.created.v1 event
-8. Return session with access_token (HTTP-only cookie)
-9. Redirect to shell with authenticated session
+1. User submits signup form (email/password or OAuth) via Clerk components
+2. Clerk creates user record; webhook fires to core-api
+3. Webhook handler (user.created):
+4.   → Sync user to local `users` table (id from Clerk)
+5.   → Create Clerk Organization via API (name from email domain or user name)
+6.   → Clerk auto-assigns user as org admin
+7.   → Emit xentri.user.signup.v1 event
+8.   → Emit xentri.org.created.v1 event
+9. Clerk session established (HTTP-only cookie managed by Clerk)
+10. Redirect to shell with authenticated session
 ```
 
 **Request → RLS Enforcement Flow:**
@@ -344,7 +345,7 @@ CREATE TABLE user_preferences (
 | Prisma | 7.0.1 | Database ORM |
 | Postgres | 16.11 | Primary database |
 | Redis | 8.4.0 | Event transport, caching |
-| Supabase GoTrue | 2.84.0 | Authentication |
+| Clerk | @clerk/fastify 3.x, @clerk/astro 1.x | Authentication with native Organizations |
 | Turborepo | 2.6.1 | Monorepo tooling |
 | pnpm | 10.23.0 | Package manager |
 
@@ -382,9 +383,9 @@ CREATE TABLE user_preferences (
 
 ### Story 1.3: User Authentication & Signup
 1. Email/password login redirects to shell on success
-2. Google OAuth login succeeds and redirects to shell
+2. Social OAuth login (Google, Apple, or other configured providers) succeeds and redirects to shell
 3. `user_signup` and `user_login` events log with `org_id` + `user_id`
-4. Sessions use HTTP-only cookies; refresh rotation in place
+4. Sessions use HTTP-only cookies; session managed by Clerk SDK
 
 ### Story 1.4: Organization Creation & Provisioning
 1. On new user signup, an Organization record is automatically created
@@ -459,7 +460,7 @@ CREATE TABLE user_preferences (
 
 | ID | Assumption |
 |----|------------|
-| **A1:** | Supabase Auth is sufficient for MVP (no custom auth server needed) |
+| **A1:** | Clerk Auth is sufficient for MVP (no custom auth server needed) |
 | **A2:** | Single Postgres cluster handles MVP load (no read replicas yet) |
 | **A3:** | Event throughput <1000/sec is sufficient for MVP |
 | **A4:** | Mobile PWA is acceptable (no native app for v0.1) |
