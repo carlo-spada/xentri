@@ -228,7 +228,9 @@ LOG_LEVEL=info
 CORS_ORIGIN=https://xentri.com
 
 # Clerk (production keys)
+# IMPORTANT: Set BOTH forms - some Clerk SDK components expect different prefixes
 CLERK_PUBLISHABLE_KEY=pk_live_xxxxx
+PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_xxxxx
 CLERK_SECRET_KEY=sk_live_xxxxx
 CLERK_WEBHOOK_SECRET=whsec_xxxxx
 
@@ -569,6 +571,7 @@ Railway keeps deployment history:
 - Verify production keys (not dev keys)
 - Check allowed origins in Clerk dashboard
 - Verify webhook secret matches
+- **CRITICAL:** Set BOTH `CLERK_PUBLISHABLE_KEY` and `PUBLIC_CLERK_PUBLISHABLE_KEY` - different Clerk SDK components read different env var names
 
 **R2 access denied:**
 - Check bucket permissions
@@ -602,6 +605,7 @@ Railway keeps deployment history:
 | `LOG_LEVEL` | `info` | No |
 | `CORS_ORIGIN` | `https://xentri.com` | Yes |
 | `CLERK_PUBLISHABLE_KEY` | `pk_live_...` | Yes |
+| `PUBLIC_CLERK_PUBLISHABLE_KEY` | `pk_live_...` | Yes |
 | `CLERK_SECRET_KEY` | `sk_live_...` | Yes |
 | `CLERK_WEBHOOK_SECRET` | `whsec_...` | Yes |
 | `R2_ENDPOINT` | `https://xxx.r2.cloudflarestorage.com` | Later |

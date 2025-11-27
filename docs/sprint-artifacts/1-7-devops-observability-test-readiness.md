@@ -1,6 +1,6 @@
 # Story 1.7: DevOps, Observability, and Test Readiness
 
-Status: ready-for-dev
+Status: in-progress
 
 ## Story
 
@@ -359,6 +359,7 @@ CLAUDE.md                                  (add deployment and observability com
 | 2025-11-27 | SM Agent (Bob) | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, ADR-004, and Story 1.6 learnings |
 | 2025-11-27 | SM Agent (Bob) | Updated task checkboxes based on validation; added validation summary with blocking items |
 | 2025-11-27 | Dev Agent (Amelia) | Added Senior Developer Review (AI) with findings and action items |
+| 2025-11-27 | Dev Agent (Amelia) | Re-review CORRECTED: Deployment crashing. Fixed Dockerfile (pnpm deploy), documented PUBLIC_CLERK_PUBLISHABLE_KEY. Status → in-progress. |
 
 ## Senior Developer Review (AI)
 
@@ -418,3 +419,80 @@ CLAUDE.md                                  (add deployment and observability com
 
 **Advisory Notes**
 - Note: Clean or git-ignore generated coverage outputs (packages/ts-schema/coverage, services/core-api/coverage) to prevent drift.
+
+---
+
+## Senior Developer Review (AI) - Re-Review
+
+**Reviewer:** Carlo
+**Date:** 2025-11-27
+**Outcome:** ❌ **BLOCKED** - Deployment crashes, health check fails
+
+### Summary
+
+Local validation was incorrectly marked as APPROVE. Production deployment is crashing:
+
+1. **Runtime crash:** `Cannot find package 'fastify'` in deployed container
+2. **Health check 500:** Missing `PUBLIC_CLERK_PUBLISHABLE_KEY` env var
+3. **No production verification:** Smoke test never ran against deployed environment
+
+### Previous Review Findings - Resolution Status
+
+| Finding | Previous Status | Current Status |
+|---------|-----------------|----------------|
+| Missing `crypto` import in server.ts | HIGH - Blocked | ✅ FIXED locally (server.ts:6) |
+| Coverage thresholds 20-30% vs 70% | HIGH - Blocked | ✅ FIXED (vitest.config.ts:33-38) |
+| Smoke test skips shell/Brief flow | HIGH - Blocked | ⚠️ EXISTS but not validated in prod |
+
+### NEW Blocking Issues (Production Deployment)
+
+| # | Severity | Issue | Root Cause | Fix |
+|---|----------|-------|------------|-----|
+| 1 | **HIGH** | Container crash: `Cannot find package 'fastify'` | pnpm hoisting breaks when copying only service node_modules | Use `pnpm deploy` for self-contained output |
+| 2 | **HIGH** | Health check 500: missing publishable key | `PUBLIC_CLERK_PUBLISHABLE_KEY` not set (only `CLERK_PUBLISHABLE_KEY`) | Set both env var forms in Railway |
+| 3 | **MEDIUM** | No prod smoke test evidence | Smoke test only ran locally, not against deployed API/shell | Redeploy and verify health endpoints |
+
+### Fixes Applied This Session
+
+1. **Dockerfile rewritten** (`services/core-api/Dockerfile`):
+   - Now uses `pnpm deploy --filter @xentri/core-api --prod /app/deploy` to create self-contained deployment
+   - Copies resolved deps (not symlinks) to runner stage
+   - Added verification steps at build time
+
+2. **Deployment docs updated** (`docs/deployment-plan.md`):
+   - Added `PUBLIC_CLERK_PUBLISHABLE_KEY` to Core API env vars
+   - Added troubleshooting note for Clerk env var naming
+   - Updated Reference table with both env var forms
+
+### Next Steps Before APPROVE
+
+1. [ ] **Push Dockerfile fix** and trigger Railway redeploy
+2. [ ] **Set `PUBLIC_CLERK_PUBLISHABLE_KEY`** in Railway → Core API → Variables
+3. [ ] **Verify health check passes:**
+   ```bash
+   curl -s https://api.xentri.com/api/v1/health
+   # Expected: {"status":"healthy"}
+   ```
+4. [ ] **Run smoke test against production** (or Railway shell):
+   ```bash
+   railway shell --service core-api
+   curl -s -w ' %{http_code}\n' http://127.0.0.1:3000/api/v1/health
+   ```
+5. [ ] Return for final review when deploy is healthy
+
+### Local Validation (Still Valid)
+
+- Typecheck: 0 errors ✅
+- Unit tests: 25 pass ✅
+- Coverage thresholds: 70% configured ✅
+- Logging/Sentry: Implemented ✅
+- Railway config: Exists ✅
+
+### AC Status (Pending Production Verification)
+
+| AC | Local | Production | Notes |
+|----|-------|------------|-------|
+| AC1 | ✅ | ⚠️ Pending | CI gates work, need deploy to pass |
+| AC2 | ✅ | ⚠️ Pending | Logging implemented, needs running service |
+| AC3 | ✅ | ❌ Blocked | Smoke test can't run if service crashes |
+| AC4 | ✅ | ❌ Blocked | Zero-downtime meaningless if service won't start |
