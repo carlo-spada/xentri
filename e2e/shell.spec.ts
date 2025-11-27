@@ -13,4 +13,26 @@ test.describe('Xentri Shell', () => {
 
     await expect(page).toHaveTitle(/Xentri/);
   });
+
+  test('applies stored theme from localStorage on load', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('xentri-theme', 'light');
+    });
+    await page.reload();
+
+    const hasLightClass = await page.evaluate(() =>
+      document.documentElement.classList.contains('light')
+    );
+    expect(hasLightClass).toBeTruthy();
+  });
+
+  test('shows offline banner when offline', async ({ page, context }) => {
+    await page.goto('/');
+    await context.setOffline(true);
+    await expect(
+      page.getByText("You're offline. Some features may be limited.")
+    ).toBeVisible();
+    await context.setOffline(false);
+  });
 });

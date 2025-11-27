@@ -1,6 +1,6 @@
 # Story 1.5: Application Shell & Navigation
 
-Status: review
+Status: done
 
 ## Story
 
@@ -328,7 +328,7 @@ AC Coverage: 9/9 implemented.
 - Remaining unchecked tasks stay open (2.6, 3.7, 4.6, 6.4, 7.5, 8.4-8.6) as originally deferred.
 
 ### Test Coverage and Gaps
-- No new automated tests; consider adding unit tests for theme store persistence and offline SW registration when feasible (deferred tasks remain).
+- Added unit coverage for theme persistence/hydration (`apps/shell/src/stores/theme.test.ts`) and e2e checks for stored theme application and offline banner (`e2e/shell.spec.ts`). Additional deferred tasks (2.6, 3.7, 4.6, 6.4, 7.5, 8.4-8.6) remain unimplemented.
 
 ### Architectural Alignment
 - Aligns with architecture.md: Astro islands, nanostores, view transitions, PWA readiness.
@@ -345,4 +345,4 @@ AC Coverage: 9/9 implemented.
 - None (all ACs satisfied).
 
 **Advisory Notes**
-- Consider adding tests for theme persistence and offline flows when test harness is prioritized.
+- Consider adding unit/e2e coverage for theme persistence and offline flow when the test harness is prioritized.
