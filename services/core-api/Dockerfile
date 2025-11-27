@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 RUN pnpm install --frozen-lockfile
 # Build the specific package
-# Generate Prisma Client
+# Generate Prisma Client (explicit to ensure .prisma/client exists in image)
 RUN pnpm --filter @xentri/core-api db:generate
 
 # Build dependencies (ts-schema) and the package

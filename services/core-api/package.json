@@ -15,7 +15,11 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "postinstall": "prisma generate"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": []
   },
   "dependencies": {
     "@clerk/fastify": "^2.6.5",
