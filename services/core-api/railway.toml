@@ -1,0 +1,30 @@
+# Railway Config as Code
+# Docs: https://docs.railway.app/reference/config-as-code
+#
+# This file ensures reproducible deployments - no clickops drift.
+# All settings here override Railway dashboard configuration.
+
+[build]
+# CRITICAL: Use Dockerfile, not Nixpacks (per ADR-004)
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Health check configuration
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 30
+numReplicas = 1
+
+# Restart policy
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+# Resource hints (Railway auto-scales, but these are starting points)
+# Uncomment and adjust as needed:
+# startCommand = "pnpm run start"
+
+[deploy.environmentVariables]
+# These are defaults/documentation - actual secrets set in Railway dashboard
+# PORT = "3000"
+# HOST = "0.0.0.0"
+# NODE_ENV = "production"
