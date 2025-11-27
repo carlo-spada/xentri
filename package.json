@@ -11,7 +11,7 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "test": "turbo run test",
-    "test:smoke": "tsx scripts/smoke-test.ts",
+    "test:smoke": "TSX_DAEMON=0 tsx scripts/smoke-test.ts",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "db:migrate": "pnpm --filter services/core-api run db:migrate",

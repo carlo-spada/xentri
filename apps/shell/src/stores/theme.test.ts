@@ -45,25 +45,20 @@ describe('theme store', () => {
     classStorage = new Set();
     localStorageMock = createLocalStorage();
 
-    // @ts-expect-error test stub
     global.document = {
       documentElement: {
         classList: createClassList(classStorage),
       },
-    };
+    } as unknown as Document;
 
-    // @ts-expect-error test stub
-    global.localStorage = localStorageMock;
+    global.localStorage = localStorageMock as unknown as Storage;
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    // @ts-expect-error cleanup stubs
-    delete global.document;
-    // @ts-expect-error cleanup stubs
-    delete global.localStorage;
-    // @ts-expect-error cleanup stubs
-    delete global.fetch;
+    delete (global as any).document;
+    delete (global as any).localStorage;
+    delete (global as any).fetch;
   });
 
   it('sets theme and persists locally without server call', async () => {
@@ -82,8 +77,7 @@ describe('theme store', () => {
       ok: true,
       json: async () => ({ preferences: { theme: 'dark' } }),
     };
-    // @ts-expect-error test stub
-    global.fetch = vi.fn().mockResolvedValue(response);
+    global.fetch = vi.fn().mockResolvedValue(response) as unknown as typeof fetch;
 
     await hydrateThemeFromServer();
 
@@ -93,8 +87,7 @@ describe('theme store', () => {
   });
 
   it('applyTheme is a no-op without document', () => {
-    // @ts-expect-error cleanup document for this test
-    delete global.document;
+    delete (global as any).document;
     expect(() => applyTheme('dark')).not.toThrow();
   });
 });

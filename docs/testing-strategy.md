@@ -105,6 +105,8 @@ thresholds: {
 }
 ```
 
+**Coverage scope:** For now, coverage includes `src/lib/**` and `src/middleware/**` plus `src/routes/health.ts`. Domain, infra, and server wiring are excluded until integration tests are restored; add tests and widen scope progressively.
+
 **Note:** Container-gated integration tests still require `RUN_TESTCONTAINERS=1`; coverage gate remains at 70% even when container tests are skipped. Add targeted unit/integration tests to keep coverage above threshold.
 
 ### Excluded from Coverage

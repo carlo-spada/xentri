@@ -1,9 +1,9 @@
 ---
-import { getAuth } from '@clerk/astro/server';
 import AppShell from '../../layouts/AppShell.astro';
 import { StrategyLanding } from '../../components/strategy/StrategyLanding';
 
-const { orgId } = await getAuth(Astro);
+const { auth } = Astro.locals as { auth: () => Promise<{ orgId?: string }> };
+const { orgId } = (await auth()) || {};
 if (!orgId) {
   return Astro.redirect('/sign-in');
 }
