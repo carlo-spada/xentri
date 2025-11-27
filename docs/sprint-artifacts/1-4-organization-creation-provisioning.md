@@ -1,6 +1,6 @@
 # Story 1.4: Organization Creation & Provisioning
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -237,7 +237,7 @@ This story refines the high-level requirements from `tech-spec-epic-1.md`. While
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `docs/sprint-artifacts/1-4-organization-creation-provisioning.context.xml`
 
 ### Agent Model Used
 
