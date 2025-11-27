@@ -22,3 +22,5 @@ Routing guidance:
 | 2025-11-28 | 1.6 | 1 | Enhancement | Medium | TBD | Done | Readiness metrics recorded (brief completion time, event success/failure counts, shell FMP). |
 | 2025-11-28 | 1.6 | 1 | Bug | Medium | TBD | Done | Toast with retry and error surfacing for brief creation/event failures added. |
 | 2025-11-28 | 1.6 | 1 | Enhancement | Medium | TBD | Done | Co-pilot availability check with guided-form fallback messaging added. |
+| 2025-11-27 | 1.6 | 1 | Enhancement | Low | TBD | Open | Task 6.2 - Events timeline UI component for Strategy page deferred; events visible via API/tests but no user-facing timeline. |
+| 2025-11-27 | 1.6 | 1 | Docs | Low | TBD | Open | Update story task checkboxes to reflect actual completion status (all show `[ ]` despite implementation present). |

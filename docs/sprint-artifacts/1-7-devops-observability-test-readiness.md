@@ -1,6 +1,6 @@
 # Story 1.7: DevOps, Observability, and Test Readiness
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -309,7 +309,7 @@ CLAUDE.md                                  (add deployment and observability com
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `docs/sprint-artifacts/1-7-devops-observability-test-readiness.context.xml`
 
 ### Agent Model Used
 
