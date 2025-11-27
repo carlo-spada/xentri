@@ -1,6 +1,6 @@
 # Story 1.6: Thin Vertical Slice (Signup → Brief → Event)
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -301,7 +301,7 @@ apps/shell/src/stores/navigation.ts        (mark Strategy as active)
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.context.xml`
 
 ### Agent Model Used
 
@@ -320,3 +320,4 @@ apps/shell/src/stores/navigation.ts        (mark Strategy as active)
 | Date | Author | Change |
 |------|--------|--------|
 | 2025-11-26 | SM Agent (Bob) | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, PRD, UX design spec, and Story 1.5 learnings |
+| 2025-11-26 | SM Agent (Bob) | Story context generated, status updated to ready-for-dev |

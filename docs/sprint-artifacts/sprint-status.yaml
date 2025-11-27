@@ -40,7 +40,7 @@ development_status:
   1-3-user-authentication-signup: done
   1-4-organization-creation-provisioning: done
   1-5-application-shell-navigation: done
-  1-6-thin-vertical-slice-signup-brief-event: drafted
+  1-6-thin-vertical-slice-signup-brief-event: ready-for-dev
   1-7-devops-observability-test-readiness: backlog
   epic-1-retrospective: optional
 
