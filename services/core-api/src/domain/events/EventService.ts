@@ -1,6 +1,8 @@
 import { randomUUID } from 'crypto';
 import type { PrismaClient } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import type { Prisma as PrismaNamespace } from '@prisma/client';
+import pkg from '@prisma/client';
+const { Prisma } = pkg;
 import {
   CreateEventSchema,
   type CreateEventInput,
@@ -156,7 +158,7 @@ export class EventService {
     const fetchLimit = Math.min(limit, 100) + 1;
 
     // Build dynamic SQL fragments using Prisma.sql
-    const whereConditions: Prisma.Sql[] = [Prisma.sql`org_id = ${orgId}`];
+    const whereConditions: PrismaNamespace.Sql[] = [Prisma.sql`org_id = ${orgId}`];
 
     if (type) {
       whereConditions.push(Prisma.sql`event_type = ${type}`);
@@ -255,9 +257,9 @@ export class EventService {
       payload: row.payload,
       meta: row.meta
         ? {
-            source: (row.meta as Record<string, unknown>).source as string,
-            ...(row.meta as Record<string, unknown>),
-          }
+          source: (row.meta as Record<string, unknown>).source as string,
+          ...(row.meta as Record<string, unknown>),
+        }
         : undefined,
       dedupe_key: row.dedupe_key || undefined,
       correlation_id: row.correlation_id || undefined,

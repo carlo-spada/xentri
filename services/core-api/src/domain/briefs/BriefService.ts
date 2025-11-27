@@ -377,9 +377,9 @@ export class BriefService {
             ${userId},
             'brief.updated@1.0',
             ${JSON.stringify({
-              brief_id: briefId,
-              sections_changed: sectionsChanged,
-            })}::jsonb,
+          brief_id: briefId,
+          sections_changed: sectionsChanged,
+        })}::jsonb,
             NULL,
             ${`brief-updated:${briefId}:${now.getTime()}`},
             NULL,
