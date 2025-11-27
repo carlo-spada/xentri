@@ -1,6 +1,6 @@
 # Story 1.5: Application Shell & Navigation
 
-Status: drafted
+Status: ready-for-dev
 
 ## Story
 
@@ -223,7 +223,7 @@ packages/ts-schema/src/index.ts               (export users module)
 
 ### Context Reference
 
-<!-- Path(s) to story context XML will be added here by context workflow -->
+- `docs/sprint-artifacts/1-5-application-shell-navigation.context.xml`
 
 ### Agent Model Used
 
