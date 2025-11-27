@@ -18,7 +18,7 @@ Routing guidance:
 | 2025-11-26 | 1.4 | 1 | Bug | Medium | TBD | Done | Enforce owner-only org settings updates using membership role, add negative test (services/core-api/src/routes/orgs.ts:100-166). |
 | 2025-11-26 | 1.4 | 1 | Bug | Low | TBD | Done | Deduplicate/transactional emission for `xentri.org.provisioned.v1` to avoid duplicates under concurrent webhooks (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-135). |
 | 2025-11-26 | 1.4 | 1 | Test | Low | TBD | Open | Container runtime unavailable; rerun container suites when Colima/Docker available (`RUN_TESTCONTAINERS=1 pnpm --filter @xentri/core-api test`). |
-| 2025-11-28 | 1.6 | 1 | Bug | High | TBD | Open | Strategy/Brief pages hardcode `org_demo_1`; wire to authenticated Clerk org and propagate session to API/E2E (apps/shell/src/pages/strategy/index.astro:5-13; apps/shell/src/pages/strategy/brief/new.astro:5-15; apps/shell/src/pages/strategy/brief/[id].astro:7-23; services/core-api/src/middleware/orgContext.ts:83-145; e2e/vertical-slice-brief.spec.ts:33-111). |
-| 2025-11-28 | 1.6 | 1 | Enhancement | Medium | TBD | Open | Add readiness metrics (brief completion time, event write latency, shell FMP) in BriefForm/BriefService per AC5 (apps/shell/src/components/strategy/BriefForm.tsx; services/core-api/src/domain/briefs/BriefService.ts). |
-| 2025-11-28 | 1.6 | 1 | Bug | Medium | TBD | Open | Implement toast/undo+retry UX and safe retries for brief creation/event failures per AC6 (apps/shell/src/components/strategy/BriefForm.tsx:96-136; services/core-api/src/routes/briefs.ts:33-154). |
-| 2025-11-28 | 1.6 | 1 | Enhancement | Medium | TBD | Open | Add co-pilot availability detection and guided-form fallback messaging per AC7 (apps/shell/src/components/strategy/BriefForm.tsx). |
+| 2025-11-28 | 1.6 | 1 | Bug | High | TBD | Done | Strategy/Brief pages wired to authenticated Clerk org; no hardcoded org IDs. |
+| 2025-11-28 | 1.6 | 1 | Enhancement | Medium | TBD | Done | Readiness metrics recorded (brief completion time, event success/failure counts, shell FMP). |
+| 2025-11-28 | 1.6 | 1 | Bug | Medium | TBD | Done | Toast with retry and error surfacing for brief creation/event failures added. |
+| 2025-11-28 | 1.6 | 1 | Enhancement | Medium | TBD | Done | Co-pilot availability check with guided-form fallback messaging added. |

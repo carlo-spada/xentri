@@ -73,3 +73,7 @@ This project appears to utilize the **BMAD** (Business Model Agent Developer?) f
 *   **Manifests:** Check `.bmad/_cfg/manifest.yaml` for installed modules/capabilities.
 
 When asked to work on "agents" or "workflows", refer to these directories and the specific Markdown files within `.agent/workflows/` for context on how tasks are structured.
+
+## 7. User Rules
+- **NEVER SKIP AHEAD**: Do not perform tasks or create artifacts without explicit user request.
+- **VALIDATION ONLY**: When asked to validate, only check existing files; do not create missing ones.

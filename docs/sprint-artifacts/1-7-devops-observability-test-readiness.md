@@ -1,0 +1,362 @@
+# Story 1.7: DevOps, Observability, and Test Readiness
+
+Status: drafted
+
+## Story
+
+As a **Developer/Operator**,
+I want **production-ready CI/CD, structured logging with correlation IDs, and deployment automation**,
+so that **the system is observable, deployable with zero downtime, and quality gates prevent regressions**.
+
+## Acceptance Criteria
+
+1. **AC1:** CI runs lint + unit tests + type checks on PRs; failing checks block merge (FR82, NFR29)
+2. **AC2:** Logging uses structured JSON with correlation IDs (`trace_id`, `org_id`, `user_id`); error tracking hooked to capture exceptions (NFR24, NFR25)
+3. **AC3:** Minimal smoke test script validates shell + Brief slice in CI environment (NFR26)
+4. **AC4:** Deployment pipeline supports zero-downtime deploys via Railway Config as Code (ADR-004)
+
+## Tasks / Subtasks
+
+- [x] **Task 1: Enhance CI Pipeline with Quality Gates** (AC: 1) — PARTIAL
+  - [x] 1.1 Update `.github/workflows/ci.yml` to run `pnpm run lint` on all workspaces
+  - [x] 1.2 Add type check step: `pnpm run typecheck` across all packages/services
+  - [x] 1.3 Add unit test step: `pnpm run test` with coverage reporting
+  - [x] 1.4 Configure branch protection rules requiring CI pass before merge
+  - [ ] 1.5 Add test coverage threshold check (>70% for core modules) ❌ **MISSING**
+  - [x] 1.6 Add CI matrix for Node 24.x to catch compatibility issues early
+
+- [ ] **Task 2: Implement Structured Logging with Pino** (AC: 2) ❌ **NOT STARTED**
+  - [ ] 2.1 Configure Pino logger in `services/core-api/src/lib/logger.ts` with JSON format
+  - [ ] 2.2 Add `trace_id` generation middleware using `crypto.randomUUID()` or OpenTelemetry
+  - [ ] 2.3 Inject `trace_id`, `org_id`, `user_id` into all log entries via Fastify request context
+  - [ ] 2.4 Configure log levels: `error`, `warn`, `info`, `debug` (debug only in dev)
+  - [ ] 2.5 Ensure PII scrubbing: email/name redacted from logs (NFR11)
+  - [ ] 2.6 Add Pino transport for Astro shell server logs (SSR mode)
+  - **Note:** server.ts uses default Fastify logger without trace_id/org_id/user_id injection
+
+- [ ] **Task 3: Integrate Error Tracking** (AC: 2) ❌ **NOT STARTED**
+  - [ ] 3.1 Add Sentry or equivalent error tracking SDK to `services/core-api`
+  - [ ] 3.2 Configure error boundary capture with stack traces and context (org_id, user_id, trace_id)
+  - [ ] 3.3 Add Sentry SDK to `apps/shell` for client-side error capture
+  - [ ] 3.4 Configure source maps upload for production builds
+  - [ ] 3.5 Add test for error capture (trigger intentional error, verify captured)
+
+- [x] **Task 4: Create Smoke Test Script** (AC: 3) — PARTIAL
+  - [ ] 4.1 Extend `scripts/smoke-test.ts` to exercise signup → Brief → event flow ❌ **MISSING**
+  - [x] 4.2 Add health check endpoints: `GET /health`, `GET /health/ready` (core-api)
+  - [x] 4.3 Verify smoke test checks: shell loads, API responds, RLS isolation holds
+  - [x] 4.4 Integrate smoke test into CI pipeline as post-deploy verification
+  - [ ] 4.5 Add timing assertions: shell FMP < 2s, API response < 300ms ❌ **MISSING**
+  - **Note:** Current smoke test validates RLS isolation and shell load but not Brief flow
+
+- [x] **Task 5: Railway Deployment Configuration** (AC: 4) ✅ **COMPLETE**
+  - [x] 5.1 Create `services/core-api/railway.toml` with build command, start command, health check
+  - [x] 5.2 Create `apps/shell/railway.toml` with Astro build/start, static asset handling
+  - [x] 5.3 Document environment variables in `docs/deployment-plan.md` (DATABASE_URL, CLERK_*, etc.)
+  - [x] 5.4 Configure zero-downtime deploys via rolling update strategy
+  - [x] 5.5 Add Railway-specific Dockerfile optimizations (multi-stage build, minimal image)
+  - [x] 5.6 Create `docs/k8s-migration-runbook.md` stub with migration triggers (ADR-004)
+
+- [ ] **Task 6: Observability Infrastructure** (AC: 2, 3) ❌ **NOT STARTED**
+  - [ ] 6.1 Add OpenTelemetry SDK to `services/core-api` for trace propagation
+  - [ ] 6.2 Configure trace context propagation via `traceparent` header
+  - [ ] 6.3 Add basic metrics endpoint: `GET /api/v1/metrics` (request count, latency histogram)
+  - [ ] 6.4 Document observability setup in `docs/observability.md` ❌ **MISSING**
+  - [ ] 6.5 Verify trace_id flows from shell → core-api → database logs
+
+- [ ] **Task 7: Testing Infrastructure Hardening** (AC: 1, 3) — PARTIAL
+  - [x] 7.1 Configure Vitest with coverage reporter (v8 or istanbul)
+  - [ ] 7.2 Add coverage thresholds to `vitest.config.ts` (70% lines/branches for core) ❌ **MISSING**
+  - [x] 7.3 Create test utilities for auth mocking (Clerk session fixtures)
+  - [x] 7.4 Add integration test for RLS cross-org isolation (smoke test covers this)
+  - [ ] 7.5 Document test strategy in `docs/testing-strategy.md` ❌ **MISSING**
+
+- [x] **Task 8: Documentation and Runbooks** (AC: 4) — PARTIAL
+  - [x] 8.1 Create `docs/deployment-plan.md` with step-by-step Railway deployment guide
+  - [x] 8.2 Create `docs/architecture/adr-004-railway-bootstrap.md` formalizing the Bridge Strategy decision
+  - [x] 8.3 Create `docs/k8s-migration-runbook.md` with migration triggers and checklist
+  - [ ] 8.4 Add incident response runbook stub: `docs/incident-response.md` ❌ **MISSING**
+  - [ ] 8.5 Update CLAUDE.md with new deployment and observability commands
+
+## Dev Notes
+
+### Architecture Constraints
+
+- **Structured Logging:** Use Pino JSON logs with `trace_id`, `org_id`, `user_id` propagation [Source: docs/architecture.md#Cross-Cutting-Concerns]
+- **Error Tracking:** Exception capture with stack traces (NFR25) [Source: docs/sprint-artifacts/tech-spec-epic-1.md#Non-Functional-Requirements]
+- **OpenTelemetry:** Trace propagation across shell/services [Source: docs/architecture.md#Cross-Cutting-Concerns]
+- **Railway Config as Code:** All settings in `railway.toml` files—no clickops drift [Source: docs/architecture.md#ADR-004]
+- **CI Quality Gates:** PRs blocked on failing lint/test/typecheck [Source: docs/sprint-artifacts/tech-spec-epic-1.md#Story-1.7]
+
+### Technical Specifications
+
+**Pino Logger Configuration:**
+```typescript
+// services/core-api/src/lib/logger.ts
+import pino from 'pino';
+
+export const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  formatters: {
+    level: (label) => ({ level: label }),
+  },
+  redact: ['req.headers.authorization', 'req.headers.cookie', 'email', 'name'],
+  timestamp: pino.stdTimeFunctions.isoTime,
+});
+
+// Request context enrichment
+export function createRequestLogger(req: FastifyRequest) {
+  return logger.child({
+    trace_id: req.headers['x-trace-id'] || crypto.randomUUID(),
+    org_id: req.orgContext?.orgId,
+    user_id: req.auth?.userId,
+    request_id: req.id,
+  });
+}
+```
+
+**Health Check Endpoint:**
+```typescript
+// services/core-api/src/routes/health.ts
+import { FastifyInstance } from 'fastify';
+import { prisma } from '../lib/prisma';
+
+export async function healthRoutes(app: FastifyInstance) {
+  app.get('/api/v1/health', async (req, reply) => {
+    const dbHealthy = await prisma.$queryRaw`SELECT 1`.then(() => true).catch(() => false);
+
+    return reply.send({
+      status: dbHealthy ? 'healthy' : 'degraded',
+      timestamp: new Date().toISOString(),
+      version: process.env.APP_VERSION || 'unknown',
+      checks: {
+        database: dbHealthy ? 'ok' : 'fail',
+      },
+    });
+  });
+}
+```
+
+**Railway Config (core-api):**
+```toml
+# services/core-api/railway.toml
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[service]
+internalPort = 3000
+```
+
+**CI Pipeline Enhancement:**
+```yaml
+# .github/workflows/ci.yml additions
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.23.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type Check
+        run: pnpm run typecheck
+
+      - name: Unit Tests
+        run: pnpm run test -- --coverage
+
+      - name: Coverage Check
+        run: |
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          if (( $(echo "$COVERAGE < 70" | bc -l) )); then
+            echo "Coverage $COVERAGE% is below 70% threshold"
+            exit 1
+          fi
+```
+
+### Project Structure Notes
+
+**Files to Create (still missing):**
+```
+services/core-api/
+├── src/
+│   ├── lib/
+│   │   └── logger.ts                      (MISSING - Pino logger with correlation IDs)
+│   └── middleware/
+│       └── tracing.ts                     (MISSING - trace context middleware)
+
+docs/
+├── observability.md                       (MISSING - logging/tracing docs)
+├── testing-strategy.md                    (MISSING - test strategy docs)
+└── incident-response.md                   (MISSING - runbook stub)
+```
+
+**Files that Exist (verified):**
+```
+services/core-api/
+├── src/routes/health.ts                   ✅ EXISTS - /health and /health/ready endpoints
+├── railway.toml                           ✅ EXISTS
+
+apps/shell/
+├── railway.toml                           ✅ EXISTS
+
+scripts/
+└── smoke-test.ts                          ✅ EXISTS (but needs Brief flow extension)
+
+docs/
+├── deployment-plan.md                     ✅ EXISTS
+├── k8s-migration-runbook.md               ✅ EXISTS
+└── architecture/
+    └── adr-004-railway-bootstrap.md       ✅ EXISTS
+
+.github/workflows/ci.yml                   ✅ EXISTS (but needs coverage threshold)
+```
+
+**Files to Modify:**
+```
+.github/workflows/ci.yml                   (add coverage threshold check)
+services/core-api/src/server.ts            (integrate custom logger with correlation IDs)
+services/core-api/package.json             (add @sentry/node deps)
+apps/shell/package.json                    (add @sentry/astro dep)
+scripts/smoke-test.ts                      (extend with Brief flow + timing assertions)
+CLAUDE.md                                  (add deployment and observability commands)
+```
+
+### Learnings from Previous Story
+
+**From Story 1-6-thin-vertical-slice-signup-brief-event (Status: done)**
+
+- **Client-Side Metrics Utility:** `apps/shell/src/utils/metrics.ts` created for FCP/timing capture - extend for observability [Source: docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md#Senior-Developer-Review]
+
+- **E2E Auth Requirements:** E2E tests now require `E2E_ORG_ID` and `E2E_AUTH_COOKIE` environment variables for authenticated flows [Source: docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md#Test-Coverage-and-Gaps]
+
+- **Container-Gated Tests:** Brief API tests gated behind `RUN_TESTCONTAINERS=1` flag - document in test strategy [Source: docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md#Test-Coverage-and-Gaps]
+
+- **Metrics Persistence Gap:** Review noted "metrics are in-memory client-side; persist/ship to telemetry in future" - this story should address [Source: docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md#Senior-Developer-Review]
+
+- **Test Count Baseline:** 26+ tests passing across packages (ui:10, ts-schema:3, core-api:13+) - maintain or increase [Source: docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md#Learnings-from-Previous-Story]
+
+### ADR-004 Key Points (Railway Bootstrap Strategy)
+
+**Decision:** Deploy to Railway (PaaS) for bootstrapping, migrate to Kubernetes when triggered.
+
+**Migration Triggers:**
+- Monthly spend > $500
+- Compliance requirement (SOC2, GDPR DPA)
+- First paying customer (Redis HA becomes critical)
+- Any written SLA commitment
+
+**Constraints:**
+1. Docker-first: Standard Dockerfile, no Nixpacks
+2. Redis with Volume: Attached volume for Streams persistence
+3. Config as Code: All settings in railway.toml files
+4. n8n Queue Mode: Separate main + worker services
+
+[Source: docs/architecture.md#ADR-004]
+
+### NFR Alignment
+
+| NFR | Target | How Achieved |
+|-----|--------|--------------|
+| NFR24 | Structured JSON logs | Pino logger with correlation IDs |
+| NFR25 | Error tracking | Sentry SDK with stack traces |
+| NFR26 | Performance monitoring | OpenTelemetry traces, metrics endpoint |
+| NFR28 | Alerting | Sentry alerts, Railway health checks |
+| NFR29 | >70% test coverage | Vitest coverage thresholds in CI |
+| NFR1 | Shell load <2s | Smoke test timing assertions |
+
+### Edge Cases
+
+- **Health Check Degraded:** If DB is down, return `degraded` status not `error` to allow Railway to keep container running for debugging
+- **Trace ID Propagation:** If no `x-trace-id` header, generate one; always return in response headers
+- **Log Level Toggle:** Support runtime log level change via `LOG_LEVEL` env without restart
+- **Coverage Flakiness:** If coverage dips due to test additions, fail CI but allow manual override with label
+
+### Dependencies
+
+- Story 1.1 (infrastructure): Complete ✓ - CI pipeline exists
+- Story 1.2 (events): Complete ✓ - system_events table ready for observability
+- Story 1.3 (auth): Complete ✓ - Clerk session for test fixtures
+- Story 1.4 (orgs): Complete ✓ - org context for logging
+- Story 1.5 (shell): Complete ✓ - shell ready for client-side error tracking
+- Story 1.6 (vertical slice): Complete ✓ - Brief flow ready for smoke tests
+
+### References
+
+- [Source: docs/architecture.md#ADR-004] - Railway Bootstrap Deployment Strategy
+- [Source: docs/architecture.md#Cross-Cutting-Concerns] - Logging and Observability patterns
+- [Source: docs/sprint-artifacts/tech-spec-epic-1.md#Story-1.7] - Acceptance Criteria
+- [Source: docs/sprint-artifacts/tech-spec-epic-1.md#Non-Functional-Requirements] - NFR targets
+- [Source: docs/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md] - Previous Story Learnings
+
+## Dev Agent Record
+
+### Context Reference
+
+<!-- Path(s) to story context XML will be added here by context workflow -->
+
+### Agent Model Used
+
+{{agent_model_name_version}}
+
+### Debug Log References
+
+### Completion Notes List
+
+### File List
+
+---
+
+## Validation Summary
+
+**Status: INCOMPLETE** (validated 2025-11-27)
+
+### Acceptance Criteria Coverage
+
+| AC | Status | Evidence |
+|----|--------|----------|
+| AC1 | ⚠️ Partial | CI runs lint/typecheck/test but missing >70% coverage threshold check |
+| AC2 | ❌ Not Met | `logger.ts` missing; server.ts uses default Fastify logger without trace_id/org_id/user_id; Sentry not integrated |
+| AC3 | ⚠️ Partial | Smoke test exists but only tests RLS/shell; missing signup→Brief→event flow and timing assertions |
+| AC4 | ✅ Met | railway.toml files exist; deployment-plan.md and ADR-004 documented |
+
+### Blocking Items for Story Completion
+
+1. **Structured Logging (AC2):** Create `services/core-api/src/lib/logger.ts` with trace_id, org_id, user_id injection
+2. **Error Tracking (AC2):** Integrate Sentry SDK in core-api and shell
+3. **Coverage Threshold (AC1):** Add >70% coverage check to CI pipeline
+4. **Smoke Test Scope (AC3):** Extend smoke test to cover signup → Brief → event flow
+5. **Documentation:** Create `docs/observability.md` and `docs/testing-strategy.md`
+
+### What's Already Complete
+
+- CI pipeline with lint, typecheck, test jobs
+- Health endpoints at `/health` and `/health/ready`
+- Smoke test for RLS isolation in CI
+- Railway deployment config (railway.toml for core-api and shell)
+- Deployment documentation (deployment-plan.md, ADR-004, k8s-migration-runbook.md)
+
+---
+
+## Change Log
+
+| Date | Author | Change |
+|------|--------|--------|
+| 2025-11-27 | SM Agent (Bob) | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, ADR-004, and Story 1.6 learnings |
+| 2025-11-27 | SM Agent (Bob) | Updated task checkboxes based on validation; added validation summary with blocking items |

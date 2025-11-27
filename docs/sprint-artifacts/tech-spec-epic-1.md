@@ -437,11 +437,8 @@ CREATE TABLE user_preferences (
 - **[MEDIUM] Enforce owner-only org settings updates** by checking membership role (MemberRole.owner) instead of trusting `orgRole` string; add negative test (services/core-api/src/routes/orgs.ts:100-166).
 - **[LOW] Deduplicate/transactional provisioned event emission** to avoid duplicate `xentri.org.provisioned.v1` events on concurrent webhook replays (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-135).
 
-### Story 1.6 (Open)
-- Wire Strategy/Brief flows to authenticated Clerk org context (remove `org_demo_1` hardcoding) and authenticate Playwright/E2E/API calls so orgContext passes.
-- Instrument AC5 readiness metrics (brief completion time, event write latency, shell FMP) across BriefForm/BriefService and client perf hooks.
-- Add AC6 event failure UX with toast/undo+retry and safe retries for brief creation/event emission.
-- Implement AC7 co-pilot availability detection and guided-form fallback messaging.
+### Story 1.6 (Resolved 2025-11-28)
+- Strategy/Brief flows use authenticated Clerk org context; brief events emitted under RLS; readiness metrics recorded; failure UX with retry and co-pilot fallback added. E2E updated to require session cookie and org envs.
 
 ---
 

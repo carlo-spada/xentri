@@ -40,8 +40,8 @@ development_status:
   1-3-user-authentication-signup: done
   1-4-organization-creation-provisioning: done
   1-5-application-shell-navigation: done
-  1-6-thin-vertical-slice-signup-brief-event: review
-  1-7-devops-observability-test-readiness: backlog
+  1-6-thin-vertical-slice-signup-brief-event: done
+  1-7-devops-observability-test-readiness: drafted
   epic-1-retrospective: optional
 
   # Epic 2: Strategy & Clarity Engine (MVP)
