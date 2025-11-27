@@ -1,33 +1,65 @@
-# Repository Guidelines
+# Repository Guidelines (Codex)
 
-## Project Structure & Module Organization
-- Current footprint is documentation-first (`architecture.md`, `docs/architecture`, `docs/product`). Treat these as the source of truth for architecture and product intent.
-- Planned monorepo (see `architecture.md`): `apps/` (Astro shell + React micro-apps), `packages/` (shared UI, `ts-schema` contracts), `services/` (Dockerized backends), `tooling/` (shared configs). Mirror this layout when adding code.
-- Keep new assets and specs co-located with their module (e.g., `services/core-api/docs`, `packages/ts-schema/README.md`).
-- **BMAD Files**: Remember that all BMAD files are located in the `.bmad` folder.
+## Project Status
 
-## Build, Test, and Development Commands
-- `npm install` — install workspace dependencies (Turborepo layout anticipated).
-- `docker-compose up -d` — start Postgres, Redis, n8n, and backend services locally.
-- `npm run dev` — run the Astro shell + React watch mode.
-- When services/packages exist, prefer module-scoped scripts (e.g., `npm run dev --workspace apps/shell`).
+**Xentri** - A modular Business OS that starts with conversation, not configuration.
 
-## Coding Style & Naming Conventions
-- Prefer TypeScript across frontend/backends; keep interfaces/types in `packages/ts-schema` and update on schema changes.
-- 2-space indentation, trailing commas where language allows, and descriptive, domain-oriented naming (e.g., `emitEvent`, `LoopService`).
-- Use named exports for shared utilities; avoid default exports in shared packages.
-- Follow event model contracts from `docs/architecture/event-model-v0.1.md` for any event payloads.
+**Current Phase:** Epic 1 Foundation complete (Story 1.7 in review)
+**Live API:** https://core-api-production-8016.up.railway.app
 
-## Testing Guidelines
-- Target: add tests alongside code (`__tests__/` or `*.test.ts` next to source) per module. No test harness exists yet—adopt the framework natural to the stack (Vitest/Playwright for frontend, Jest/TS-Jest for Node services).
-- Name tests after behavior, not implementation (e.g., `events.spec.ts` covering append-only invariants).
-- Run the full test suite before PRs (`npm test` once introduced); block merges on red.
+## Project Structure
 
-## Commit & Pull Request Guidelines
-- Commit messages: concise imperative (see history: “Add…”, “Align…”, “Update…”). Group related doc/code changes together.
-- PRs should include: summary of changes, linked issue/story, testing performed, and any schema/contract updates (call out `ts-schema` changes explicitly).
-- Add screenshots or sample payloads when touching UI or APIs. For migrations/events, include the migration file path and a brief rollback note.
+```
+/xentri
+├── apps/
+│   └── shell/                # Astro 5.16 Shell with React islands
+├── packages/
+│   ├── ui/                   # Shared Design System (Tailwind v4, shadcn/ui)
+│   └── ts-schema/            # Shared Types & Zod Schemas
+├── services/
+│   └── core-api/             # Fastify 5.6 + Prisma 7.0, deployed on Railway
+├── docs/                     # All documentation (see docs/index.md)
+├── .bmad/                    # BMAD framework (agents, workflows)
+└── .claude/commands/         # Slash commands for Claude Code
+```
 
-## Architecture Overview (Essentials)
-- The system is “Decoupled Unity”: Astro shell hosts lazy-loaded React micro-apps; backend services communicate through APIs and an event backbone (Postgres log → outbox to Redis Streams → n8n for orchestration).
-- Every table/event must be org-scoped; emit events instead of mutating history. Keep modules isolated and talk through contracts, not ad-hoc calls.
+## Build & Development Commands
+
+```bash
+pnpm install                           # Install dependencies
+docker compose up -d postgres redis    # Start infrastructure
+pnpm run db:migrate                    # Apply Prisma migrations
+
+pnpm run dev                           # Start all services
+pnpm run test                          # Run tests
+pnpm run typecheck                     # TypeScript validation
+pnpm run build                         # Build all packages
+```
+
+## Coding Conventions
+
+- **TypeScript** across all packages; shared types in `packages/ts-schema`
+- **2-space indentation**, trailing commas, named exports (no defaults in shared packages)
+- **Event-first**: All business actions write to `system_events` before domain tables
+- **Multi-tenant**: Every table has `org_id` with Row-Level Security
+- Follow event contracts from `docs/architecture/event-model-v0.1.md`
+
+## Testing
+
+- Tests alongside code (`*.test.ts` or `__tests__/`)
+- Vitest for unit tests, Playwright for E2E
+- 25+ tests passing with coverage thresholds
+- Run `pnpm run test` before PRs
+
+## Commits & PRs
+
+- Concise imperative messages ("Add...", "Fix...", "Update...")
+- Include: summary, linked issue, testing performed
+- Call out `ts-schema` changes explicitly
+
+## Key Documentation
+
+- `docs/index.md` - Documentation hub
+- `docs/architecture.md` - Technical decisions
+- `docs/deployment-plan.md` - Railway deployment
+- `docs/incident-response.md` - Troubleshooting

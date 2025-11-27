@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Xentri** is a modular Business OS that starts with conversation, not configuration. It uses a **Strategy Co-pilot** to generate a **Universal Brief** (the DNA of a business), which then powers a curated set of tools (Website, CRM, Invoicing) organized into 7 capability categories.
 
-**Status:** Foundation complete (Epic 1 - Story 1.1 done). Infrastructure established with multi-tenant RLS, CI/CD, and 14 tests passing.
+**Status:** Epic 1 Foundation complete (Story 1.7 in review). Live API deployed on Railway.
+
+**Live API:** https://core-api-production-8016.up.railway.app
 
 ## Architecture Philosophy: "Decoupled Unity"
 
@@ -148,10 +150,15 @@ Workflow status tracked in `docs/bmm-workflow-status.yaml`.
 
 | Document | Purpose |
 |----------|---------|
-| `architecture.md` | Technical Constitution - data governance, service boundaries |
-| `docs/product-brief-*.md` | Complete product vision, personas, MVP scope |
+| `docs/index.md` | Documentation navigation hub |
+| `docs/architecture.md` | Technical Constitution - data governance, service boundaries |
+| `docs/product-brief-Xentri-2025-11-24.md` | Complete product vision, personas, MVP scope |
+| `docs/prd.md` | Product Requirements Document for MVP |
+| `docs/epics.md` | Epic and story breakdown |
+| `docs/deployment-plan.md` | Railway deployment guide |
+| `docs/incident-response.md` | Troubleshooting and operational runbooks |
 | `docs/architecture/event-model-v0.1.md` | Event Backbone schema and patterns |
-| `docs/bmm-workflow-status.yaml` | Current workflow progress |
+| `docs/sprint-artifacts/sprint-status.yaml` | Current sprint progress |
 
 ## Design Principles
 
@@ -163,16 +170,24 @@ Workflow status tracked in `docs/bmm-workflow-status.yaml`.
 
 ## Current Phase
 
-**Epic 1 - Foundation (Stories 1.1-1.7 In Progress):**
+**Epic 1 - Foundation (Complete, Story 1.7 in Review):**
+- ✅ Story 1.1: Project initialization & infrastructure
+- ✅ Story 1.2: Event backbone & database schema
+- ✅ Story 1.3: User authentication (Clerk)
+- ✅ Story 1.4: Organization creation & provisioning
+- ✅ Story 1.5: Application shell & navigation
+- ✅ Story 1.6: Thin vertical slice (signup → Brief event)
+- 🔄 Story 1.7: DevOps, observability, test readiness (in review)
+
+**Technical Stack:**
 - Turborepo 2.6.1 monorepo with pnpm workspaces
 - Astro 5.16.0 Shell with React 19.2.0 islands
-- Core API (Fastify 5.6.2 + Prisma 7.0.1)
+- Core API (Fastify 5.6.2 + Prisma 7.0.1) deployed on Railway
 - PostgreSQL 16.11 with fail-closed RLS policies
 - CI/CD pipeline with GitHub branch protection
 - Clerk authentication with org-scoped access
 - Structured logging with Pino (trace_id, org_id, user_id)
 - Sentry error tracking integration
-- Railway deployment configuration (ADR-004)
 - 25+ tests passing with coverage thresholds
 
-**Story 1.7 (DevOps/Observability):** In review
+**Next:** Epic 2 - Strategy & Clarity Engine (Universal Brief, Strategy Co-pilot)

@@ -6,16 +6,21 @@
 
 It solves "tab fatigue" and "setup paralysis" by using a **Strategy Co-pilot** to generate a **Universal Brief**—the DNA of your business—which then powers a curated set of tools (Website, CRM, Invoicing) that grow with you.
 
-**Status:** Foundation complete (Epic 1 - Story 1.1 done). Infrastructure established with multi-tenant RLS, CI/CD, and test coverage.
+**Status:** Epic 1 Foundation complete (Story 1.7 in review). Live API deployed on Railway.
+
+**Live API:** https://core-api-production-8016.up.railway.app
 
 **What's Working:**
 - Turborepo 2.6.1 monorepo with pnpm workspaces
 - Astro 5.16.0 Shell with React 19.2.0 islands
-- Core API (Fastify 5.6.2 + Prisma 7.0.1)
+- Core API (Fastify 5.6.2 + Prisma 7.0.1) - deployed on Railway
 - PostgreSQL 16.11 with fail-closed RLS policies
 - CI/CD pipeline (GitHub Actions)
+- Clerk authentication with org-scoped access
+- Structured logging (Pino) with trace correlation
+- Sentry error tracking integration
 - Test infrastructure (Vitest + Playwright)
-- 14 tests passing across all packages
+- 25+ tests passing with coverage thresholds
 
 ---
 
@@ -61,9 +66,11 @@ pnpm run dev
 
 This project is architected to scale from 1 to 1,000,000 users without a rewrite.
 
-- **[Technical Architecture](./architecture.md)** - Deep dive into the "Nervous System," Data Governance, and Frontend Lazy Loading strategies.
-- **Service Boundaries** - Which service owns what data? (See Architecture doc appendix)
-- **Contributing Guide** - Branch naming and code style. *(Coming soon)*
+- **[Documentation Index](./docs/index.md)** - Complete documentation navigation
+- **[Technical Architecture](./docs/architecture.md)** - System design, data governance, service boundaries
+- **[Deployment Guide](./docs/deployment-plan.md)** - Railway deployment instructions
+- **[Incident Response](./docs/incident-response.md)** - Troubleshooting and runbooks
+- **[Product Brief](./docs/product-brief-Xentri-2025-11-24.md)** - Vision, personas, MVP scope
 
 ---
 

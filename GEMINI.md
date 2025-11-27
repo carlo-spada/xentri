@@ -1,79 +1,97 @@
-# Xentri - Business OS Project Context
+# Xentri - Business OS Project Context (Gemini)
 
 ## 1. Project Overview
 
-**Xentri** is a modular **Business OS** designed to unify Strategy, Marketing, Sales, Finance, and Operations into a single workspace. It distinguishes itself by starting with a **Strategy Co-pilot** conversation that generates a **Universal Brief**, which then acts as the "DNA" for configuring the rest of the system (website, CRM, invoices, etc.).
+**Xentri** is a modular **Business OS** that unifies Strategy, Marketing, Sales, Finance, and Operations. It starts with a **Strategy Co-pilot** conversation that generates a **Universal Brief** - the "DNA" that configures all other modules.
+
+**Current Phase:** Epic 1 Foundation complete (Story 1.7 in review)
+**Live API:** https://core-api-production-8016.up.railway.app
 
 ### Core Value Proposition
-*   **Clarity First:** Starts with a conversation, not configuration.
-*   **Universal Brief:** A living document that powers all other modules.
-*   **Modular Growth:** Users subscribe to specific capabilities (modules) as they grow.
-*   **"Calm" UX:** A unified shell that prevents "tab fatigue".
+- **Clarity First:** Starts with conversation, not configuration
+- **Universal Brief:** Living document that powers all modules
+- **Modular Growth:** Subscribe to capabilities as you grow
+- **Calm UX:** Unified shell preventing "tab fatigue"
 
 ## 2. Architecture & Tech Stack
 
-The project uses a **Monorepo** structure managed by **Turborepo**, following a "Decoupled Unity" philosophy.
+Monorepo managed by **Turborepo 2.6**, following "Decoupled Unity" philosophy.
 
 | Layer | Technology | Role |
-| :--- | :--- | :--- |
-| **Frontend Shell** | **Astro** | The container application. Handles routing, auth, and layout. |
-| **Micro-Apps** | **React** | Interactive capabilities (CRM, CMS, etc.) loaded as "Islands" within the Shell. |
-| **Backend** | **Node.js** | Dockerized microservices for business logic (Sales, Finance, etc.). |
-| **AI Service** | **Python** | Hosts the Co-pilot Swarm (Strategy, Brand, Sales agents). |
-| **Data** | **Postgres** | Single cluster with **RLS (Row Level Security)** for multi-tenancy. |
-| **Events** | **Redis** | The "Nervous System" for high-volume internal synchronization. |
-| **Orchestration** | **n8n** | Self-hosted workflow engine for complex business logic. |
+|-------|------------|------|
+| **Shell** | Astro 5.16 | Container app - routing, auth, layout |
+| **Micro-Apps** | React 19.2 | Interactive capabilities loaded as Islands |
+| **Backend** | Fastify 5.6 + Prisma 7.0 | Core API deployed on Railway |
+| **Data** | PostgreSQL 16.11 | RLS for multi-tenancy |
+| **Auth** | Clerk | Organization-scoped authentication |
+| **Events** | Redis Streams | Async event transport |
 
-### Key Architectural Patterns
-1.  **The "Nervous System":** Services do *not* talk directly to each other. They emit events to Redis/n8n.
-2.  **Multi-Tenancy:** Enforced via Postgres RLS. Every table **MUST** have an `organization_id`.
-3.  **Lazy Loading:** React micro-apps are loaded on demand by the Astro shell.
-4.  **Shared Contract:** Types and Schemas are shared via `/packages/ts-schema`.
+### Key Patterns
+1. **Event Backbone:** Services emit events to `system_events`, not direct calls
+2. **Multi-Tenancy:** Postgres RLS - every table has `org_id`
+3. **Lazy Loading:** React micro-apps loaded on demand by Astro shell
+4. **Shared Contract:** Types in `packages/ts-schema`
 
 ## 3. Directory Structure
 
-```text
-/Users/carlo/Desktop/Projects/xentri/
-├── architecture.md         # Technical Constitution & Data Governance
-├── README.md               # Quick Start & Roadmap
-├── .agent/                 # Agent workflows and definitions (BMAD framework)
-├── .bmad/                  # BMAD framework configuration and manifests
-├── docs/                   # Product research, briefs, and architectural deep dives
-│   └── product-brief-*.md  # The core product vision and requirements
-├── .git/                   # Git repository
-└── (Expected Monorepo Structure - based on architecture.md)
-    ├── apps/               # shell (Astro)
-    ├── packages/           # ui, cms-client, ts-schema
-    └── services/           # core-api, brand-engine, ai-service
+```
+/xentri
+├── apps/shell/               # Astro Shell with React islands
+├── packages/
+│   ├── ui/                   # Design System (Tailwind v4, shadcn/ui)
+│   └── ts-schema/            # Shared Types & Zod Schemas
+├── services/core-api/        # Fastify API (deployed on Railway)
+├── docs/                     # Documentation (see docs/index.md)
+│   ├── architecture.md       # Technical decisions
+│   ├── prd.md                # Product requirements
+│   ├── epics.md              # Implementation roadmap
+│   ├── deployment-plan.md    # Railway deployment
+│   ├── incident-response.md  # Troubleshooting
+│   └── sprint-artifacts/     # Story files & status
+├── .bmad/                    # BMAD framework
+│   ├── bmm/                  # BMad Method workflows
+│   ├── bmb/                  # BMad Builder tools
+│   ├── cis/                  # Creative & Innovation Suite
+│   └── core/                 # Core utilities
+└── .claude/commands/         # Slash commands (/bmad:*)
 ```
 
-## 4. Development Conventions
+## 4. Development Commands
 
-### Commands (Inferred)
-*   **Setup:** `cp .env.example .env`
-*   **Install:** `npm install` (Turborepo handles workspaces)
-*   **Infrastructure:** `docker-compose up -d` (Postgres, Redis, n8n)
-*   **Dev Server:** `npm run dev` (Starts Astro Shell + React Watchers)
+```bash
+# Setup
+pnpm install                           # Install dependencies
+docker compose up -d postgres redis    # Start infrastructure
+pnpm run db:migrate                    # Apply Prisma migrations
 
-### Coding Standards
-*   **Strict Isolation:** No service assumes the existence of another. Use Events.
-*   **Type Safety:** Changes to DB schema require updates to `packages/ts-schema`.
-*   **No "Magic":** Automated actions must be logged with human-readable explanations.
-*   **Agent/Workflow Files:** The `.agent` and `.bmad` directories contain workflow definitions. Respect the existing format when creating new agents or workflows.
+# Development
+pnpm run dev                           # Start all services
+pnpm run dev --filter apps/shell       # Shell only (port 4321)
+pnpm run dev --filter services/core-api # API only (port 3000)
 
-## 5. Current Status (v0.1 MVP)
-*   **Focus:** Strategy Co-pilot + Universal Brief.
-*   **Goal:** Validate that users complete the brief and find value in the conversation.
-*   **Next Steps:** Building out the `Brand & Marketing` modules (v0.2).
+# Quality
+pnpm run test                          # Run tests (25+ passing)
+pnpm run typecheck                     # TypeScript validation
+pnpm run build                         # Build all packages
+```
 
-## 6. AI Agent Guidelines (The "BMAD" Context)
-This project appears to utilize the **BMAD** (Business Model Agent Developer?) framework.
-*   **Agents:** Defined in `.bmad/_cfg/agents/` or `.gemini/commands/`.
-*   **Workflows:** Defined in `.agent/workflows/`.
-*   **Manifests:** Check `.bmad/_cfg/manifest.yaml` for installed modules/capabilities.
+## 5. Coding Standards
 
-When asked to work on "agents" or "workflows", refer to these directories and the specific Markdown files within `.agent/workflows/` for context on how tasks are structured.
+- **Strict Isolation:** Services communicate via events, not direct calls
+- **Type Safety:** Schema changes require `packages/ts-schema` updates
+- **No Magic:** Automated actions logged with human-readable explanations
+- **BMAD Workflows:** Use `/bmad:bmm:workflows:*` for development tasks
+
+## 6. Current Status
+
+**Epic 1 - Foundation (Complete):**
+- Story 1.1-1.6: Done
+- Story 1.7 (DevOps/Observability): In review
+
+**Next:** Epic 2 - Strategy & Clarity Engine (Universal Brief, Strategy Co-pilot)
 
 ## 7. User Rules
-- **NEVER SKIP AHEAD**: Do not perform tasks or create artifacts without explicit user request.
-- **VALIDATION ONLY**: When asked to validate, only check existing files; do not create missing ones.
+
+- **NEVER SKIP AHEAD:** Do not perform tasks without explicit request
+- **VALIDATION ONLY:** When asked to validate, check existing files only
+- **DOCUMENTATION:** See `docs/index.md` for complete navigation

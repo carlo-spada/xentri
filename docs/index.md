@@ -121,7 +121,6 @@ Quality checks and readiness assessments.
 |----------|---------|
 | [implementation-readiness-report-2025-11-26.md](./implementation-readiness-report-2025-11-26.md) | Pre-implementation readiness check |
 | [validation-report-20251128T140500Z.md](./validation-report-20251128T140500Z.md) | PRD validation |
-| [test-design-system.md](./test-design-system.md) | Design system test specs |
 
 ---
 
