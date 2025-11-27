@@ -65,7 +65,10 @@
       "Bash(DOCKER_HOST=\"unix://$HOME/.colima/default/docker.sock\" docker info:*)",
       "Bash(DOCKER_HOST=\"unix://$HOME/.colima/default/docker.sock\" TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=\"/var/run/docker.sock\" pnpm:*)",
       "Bash(npm view:*)",
-      "Bash(npm search:*)"
+      "Bash(npm search:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" pnpm exec prisma migrate:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" pnpm exec prisma migrate status:*)",
+      "Bash(pnpm --filter @xentri/ts-schema run test:*)"
     ],
     "deny": [],
     "ask": []

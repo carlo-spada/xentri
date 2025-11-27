@@ -1,0 +1,15 @@
+---
+import AppShell from '../../layouts/AppShell.astro';
+import { StrategyLanding } from '../../components/strategy/StrategyLanding';
+
+// TODO: Get orgId from Clerk session context in production
+// For now, use demo org ID for development
+const orgId = 'org_demo_1';
+---
+
+<AppShell title="Strategy">
+  <StrategyLanding
+    client:only="react"
+    orgId={orgId}
+  />
+</AppShell>

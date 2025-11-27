@@ -1,0 +1,25 @@
+---
+import AppShell from '../../../layouts/AppShell.astro';
+import { BriefForm } from '../../../components/strategy/BriefForm';
+
+// TODO: Get orgId from Clerk session context in production
+// For now, use demo org ID for development
+const orgId = 'org_demo_1';
+---
+
+<AppShell title="Create Brief">
+  <div class="brief-create-page">
+    <BriefForm
+      client:only="react"
+      orgId={orgId}
+    />
+  </div>
+</AppShell>
+
+<style>
+  .brief-create-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+</style>

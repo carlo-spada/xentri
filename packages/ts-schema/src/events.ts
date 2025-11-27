@@ -89,7 +89,9 @@ export type OrgProvisionedPayload = z.infer<typeof OrgProvisionedPayloadSchema>;
 // Brief Events
 export const BriefCreatedPayloadSchema = z.object({
   brief_id: z.string(),
-  title: z.string().optional(),
+  schema_version: z.string(),
+  completion_status: z.enum(['draft', 'complete']),
+  sections_populated: z.array(z.string()), // e.g., ['identity', 'offerings']
 });
 export type BriefCreatedPayload = z.infer<typeof BriefCreatedPayloadSchema>;
 

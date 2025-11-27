@@ -5,6 +5,7 @@ import rawBody from 'fastify-raw-body';
 import { clerkPlugin } from '@clerk/fastify';
 import healthRoutes from './routes/health.js';
 import eventsRoutes from './routes/events.js';
+import briefsRoutes from './routes/briefs.js';
 import usersRoutes from './routes/users.js';
 import orgsRoutes from './routes/orgs.js';
 import clerkWebhookRoutes from './routes/webhooks/clerk.js';
@@ -45,6 +46,7 @@ await server.register(rawBody, {
 // Routes
 await server.register(healthRoutes);
 await server.register(eventsRoutes);
+await server.register(briefsRoutes);
 await server.register(usersRoutes);
 await server.register(orgsRoutes);
 await server.register(clerkWebhookRoutes);

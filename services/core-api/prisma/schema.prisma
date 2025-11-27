@@ -105,6 +105,27 @@ enum MemberRole {
 }
 
 // ===================
+// Business Data: Strategy
+// ===================
+
+/// Brief - the Universal Brief (business DNA) for an organization
+/// MUTABLE: Can be updated, but changes are tracked via events
+model Brief {
+  id               String   @id @default(uuid())
+  orgId            String   @map("org_id")
+  userId           String   @map("user_id") // Creator's Clerk ID
+  schemaVersion    String   @default("1.0") @map("schema_version")
+  sections         Json     @default("{}") // JSONB - 7 sections
+  sectionStatus    Json     @default("{}") @map("section_status") // JSONB - status per section
+  completionStatus String   @default("draft") @map("completion_status") // draft | complete
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@index([orgId], name: "idx_briefs_org")
+  @@map("briefs")
+}
+
+// ===================
 // Event Backbone
 // ===================
 

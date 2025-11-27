@@ -1,0 +1,55 @@
+---
+import AppShell from '../../../layouts/AppShell.astro';
+import { BriefView } from '../../../components/strategy/BriefView';
+
+const { id } = Astro.params;
+
+// TODO: Get orgId from Clerk session context in production
+// For now, use demo org ID for development
+const orgId = 'org_demo_1';
+
+// Validate briefId format (UUID)
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const isValidId = id && uuidRegex.test(id);
+---
+
+<AppShell title="Universal Brief">
+  <div class="brief-page">
+    {isValidId ? (
+      <BriefView
+        client:only="react"
+        briefId={id}
+        orgId={orgId}
+      />
+    ) : (
+      <div class="error-state">
+        <p>Invalid Brief ID</p>
+        <a href="/strategy" class="back-link">Back to Strategy</a>
+      </div>
+    )}
+  </div>
+</AppShell>
+
+<style>
+  .brief-page {
+    padding: 1rem;
+  }
+
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 4rem;
+    color: var(--color-error);
+  }
+
+  .back-link {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -29,9 +29,9 @@ export const CATEGORIES: Category[] = [
     label: 'Management & Strategy',
     active: true,
     modules: [
-      { id: 'dashboard', label: 'Dashboard', href: '/dashboard' },
-      { id: 'brief', label: 'Universal Brief', href: '/brief' },
-      { id: 'strategy', label: 'Strategy Co-pilot', href: '/strategy' },
+      { id: 'dashboard', label: 'Dashboard', href: '/' },
+      { id: 'strategy', label: 'Strategy', href: '/strategy' },
+      { id: 'brief', label: 'Universal Brief', href: '/strategy/brief/new' },
     ],
   },
   {
