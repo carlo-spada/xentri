@@ -411,10 +411,16 @@ CREATE TABLE user_preferences (
 4. Deployment pipeline supports zero-downtime deploys
 
 ## Post-Review Follow-ups
-- Story 1.2: Enforce org membership/JWT before setting org context for events (services/core-api/src/middleware/orgContext.ts; services/core-api/src/routes/events.ts).
-- Story 1.2: Rewrite listEvents query with parameterized SQL to fix filters/pagination (services/core-api/src/domain/events/EventService.ts).
-- Story 1.2: Tie CreateEvent validation to typed payload schemas and add negative tests (packages/ts-schema/src/events.ts; services/core-api/src/domain/events/EventService.test.ts).
-- Story 1.2: Add RLS/cross-org API coverage and ensure smoke-test seeds with org context (services/core-api/src/routes/events.test.ts; scripts/smoke-test.ts).
+
+### Story 1.2 (Resolved)
+- ~~Story 1.2: Enforce org membership/JWT before setting org context for events~~ → Membership check implemented; JWT binding deferred to Story 1.3
+- ~~Story 1.2: Rewrite listEvents query with parameterized SQL~~ → Implemented with Prisma.sql fragments
+- ~~Story 1.2: Tie CreateEvent validation to typed payload schemas~~ → Implemented with schema refinement
+- ~~Story 1.2: Add RLS/cross-org API coverage~~ → Integration tests added
+
+### Story 1.3 (CRITICAL - from Story 1.2 deferral)
+- **[HIGH] Story 1.3 MUST implement JWT-backed org/user verification** before any deployment. Current events API trusts x-user-id header without JWT binding, creating cross-tenant exposure risk. (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58)
+- **[MEDIUM] Story 1.3 should add auth spoof tests** to verify JWT binding prevents header spoofing (services/core-api/src/routes/events.test.ts)
 
 ---
 
