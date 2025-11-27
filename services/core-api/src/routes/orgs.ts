@@ -102,19 +102,12 @@ async function updateOrgSettings(
   reply: FastifyReply
 ): Promise<UpdateOrgSettingsResponse | void> {
   const auth = getAuth(request);
+  const prisma = getPrisma();
 
   if (!auth.userId || !auth.orgId) {
     return reply.status(401).send({
       error: 'Unauthorized',
       message: 'Valid authentication with organization context required',
-    });
-  }
-
-  // Check if user is owner (AC requirement: owner only can update settings)
-  if (auth.orgRole !== 'org:admin') {
-    return reply.status(403).send({
-      error: 'Forbidden',
-      message: 'Only organization owners can update settings',
     });
   }
 
@@ -129,6 +122,27 @@ async function updateOrgSettings(
   }
 
   const { preferences } = parseResult.data;
+
+  // Verify membership role from DB (owner-only)
+  const membership = await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${auth.orgId}, true)`;
+    return tx.member.findUnique({
+      where: {
+        orgId_userId: {
+          orgId: auth.orgId,
+          userId: auth.userId,
+        },
+      },
+      select: { role: true },
+    });
+  });
+
+  if (!membership || membership.role !== 'owner') {
+    return reply.status(403).send({
+      error: 'Forbidden',
+      message: 'Only organization owners can update settings',
+    });
+  }
 
   // Nothing to update
   if (!preferences || Object.keys(preferences).length === 0) {

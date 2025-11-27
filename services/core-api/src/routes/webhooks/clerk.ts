@@ -120,20 +120,24 @@ async function handleUserCreated(data: UserCreatedData): Promise<void> {
 async function handleOrganizationCreated(data: OrganizationCreatedData): Promise<void> {
   const prisma = getPrisma();
 
-  // Sync organization to local database first (before provisioning)
-  await prisma.organization.upsert({
-    where: { id: data.id },
-    update: {
-      name: data.name,
-      slug: data.slug,
-      updatedAt: new Date(),
-    },
-    create: {
-      id: data.id,
-      name: data.name,
-      slug: data.slug,
-      createdAt: new Date(data.created_at),
-    },
+  // Sync organization to local database first (before provisioning) with org context set for RLS
+  await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${data.id}, true)`;
+
+    await tx.organization.upsert({
+      where: { id: data.id },
+      update: {
+        name: data.name,
+        slug: data.slug,
+        updatedAt: new Date(),
+      },
+      create: {
+        id: data.id,
+        name: data.name,
+        slug: data.slug,
+        createdAt: new Date(data.created_at),
+      },
+    });
   });
 
   // Full provisioning: org_settings + membership + provisioned event (AC1-AC7)

@@ -1,6 +1,5 @@
 import type { PrismaClient } from '@prisma/client';
 import { getPrisma } from '../../infra/db.js';
-import { eventService } from '../events/EventService.js';
 import type { OrgProvisionedPayload, Plan } from '@xentri/ts-schema';
 
 const MAX_RETRIES = 3;
@@ -115,23 +114,57 @@ export class OrgProvisioningService {
             },
           });
 
+          // 4. Emit provisioned event in-transaction (deduped on dedupe_key)
+          const provisionedAt = new Date();
+          const payload: OrgProvisionedPayload = {
+            org_id: clerkOrgId,
+            org_name: orgName,
+            owner_user_id: clerkUserId,
+            plan: 'free' as Plan,
+            provisioned_at: provisionedAt.toISOString(),
+          };
+
+          await tx.$executeRaw`
+            INSERT INTO system_events (
+              id,
+              event_type,
+              occurred_at,
+              created_at,
+              org_id,
+              user_id,
+              actor_type,
+              actor_id,
+              payload_schema,
+              payload,
+              meta,
+              dedupe_key,
+              correlation_id,
+              trace_id,
+              source,
+              envelope_version
+            ) VALUES (
+              gen_random_uuid()::text,
+              'xentri.org.provisioned.v1',
+              ${provisionedAt},
+              NOW(),
+              ${clerkOrgId},
+              ${clerkUserId},
+              'system',
+              'org-provisioning-service',
+              'org.provisioned@1.0',
+              ${JSON.stringify(payload)}::jsonb,
+              NULL,
+              ${`org-provisioned:${clerkOrgId}`},
+              NULL,
+              NULL,
+              'org-provisioning-service',
+              '1.0'
+            )
+            ON CONFLICT (dedupe_key) DO NOTHING
+          `;
+
           return { settings, membership };
         });
-
-        // 4. Emit provisioned event (AC4) if missing or to complete partial run
-        const provisionedAt = new Date().toISOString();
-        const payload: OrgProvisionedPayload = {
-          org_id: clerkOrgId,
-          org_name: orgName,
-          owner_user_id: clerkUserId,
-          plan: 'free' as Plan,
-          provisioned_at: provisionedAt,
-        };
-
-        const hasProvisionEvent = await this.hasProvisionedEvent(clerkOrgId);
-        if (!hasProvisionEvent) {
-          await this.emitProvisionedEvent(payload, clerkOrgId);
-        }
 
         console.log(
           `[OrgProvisioning] Provisioned: ${clerkOrgId}, settings: ${result.settings.id}, attempt: ${attempt}`
@@ -183,34 +216,6 @@ export class OrgProvisioningService {
         },
       });
     });
-  }
-
-  private async hasProvisionedEvent(orgId: string): Promise<boolean> {
-    return this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
-      const existing = await tx.systemEvent.findFirst({
-        where: { orgId, eventType: 'xentri.org.provisioned.v1' },
-        select: { id: true },
-      });
-      return Boolean(existing);
-    });
-  }
-
-  private async emitProvisionedEvent(payload: OrgProvisionedPayload, orgId: string) {
-    await eventService.createEvent(
-      {
-        type: 'xentri.org.provisioned.v1',
-        org_id: orgId,
-        user_id: payload.owner_user_id,
-        actor: { type: 'system', id: 'org-provisioning-service' },
-        payload_schema: 'org.provisioned@1.0',
-        payload,
-        source: 'org-provisioning-service',
-        envelope_version: '1.0',
-        dedupe_key: `org-provisioned:${orgId}`,
-      },
-      orgId
-    );
   }
 
   private async sleep(ms: number) {

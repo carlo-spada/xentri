@@ -122,6 +122,24 @@ describeIf('OrgProvisioningService', () => {
       expect(settingsCount).toBe(1);
       expect(memberCount).toBe(1);
     });
+
+    it('dedupes provisioned event on replay (dedupe_key)', async () => {
+      await service.provisionOrg({
+        clerkOrgId: orgA.id,
+        clerkUserId: userA.id,
+        orgName: orgA.name,
+        orgSlug: orgA.slug,
+      });
+
+      const provisionedEvents = await prisma.$transaction(async (tx) => {
+        await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgA.id}, true)`;
+        return tx.systemEvent.count({
+          where: { orgId: orgA.id, eventType: 'xentri.org.provisioned.v1' },
+        });
+      });
+
+      expect(provisionedEvents).toBe(1);
+    });
   });
 
   describe('RLS Isolation - org_settings (AC5 - Task 3.5)', () => {
@@ -261,7 +279,7 @@ describeIf('OrgProvisioningService', () => {
           where: { orgId: orgA.id, eventType: 'xentri.org.provisioned.v1' },
         });
       });
-      expect(provisionedEvents).toBeGreaterThanOrEqual(1);
+      expect(provisionedEvents).toBe(1);
     });
 
     it('rolls back when membership creation fails (no partial state)', async () => {

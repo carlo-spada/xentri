@@ -6,6 +6,15 @@ import clerkWebhookRoutes from './clerk.js';
 // Mock dependencies
 vi.mock('../../infra/db.js', () => ({
   getPrisma: vi.fn(() => ({
+    $transaction: vi.fn(async (fn: (tx: any) => Promise<unknown>) => {
+      const tx = {
+        $executeRaw: vi.fn(),
+        organization: {
+          upsert: vi.fn().mockResolvedValue({ id: 'org_123', name: 'Test Org', slug: 'test-org' }),
+        },
+      };
+      return fn(tx);
+    }),
     user: {
       upsert: vi.fn().mockResolvedValue({ id: 'user_123', email: 'test@example.com' }),
       findUnique: vi.fn().mockResolvedValue({ email: 'test@example.com' }),

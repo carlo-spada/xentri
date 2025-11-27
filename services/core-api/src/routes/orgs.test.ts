@@ -87,11 +87,19 @@ describeIf('Org Routes', () => {
   });
 
   it('rejects settings update for non-owner', async () => {
+    await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${testOrgId}, true)`;
+      await tx.member.update({
+        where: { orgId_userId: { orgId: testOrgId, userId: testUserId } },
+        data: { role: 'member' },
+      });
+    });
+
     vi.mocked(getAuth).mockReturnValueOnce({
       userId: testUserId,
       sessionId: 'sess_test',
       orgId: testOrgId,
-      orgRole: 'org:member',
+      orgRole: 'org:admin',
       orgSlug: 'route-test-org',
       getToken: vi.fn(),
       has: vi.fn(),

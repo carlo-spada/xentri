@@ -423,6 +423,11 @@ CREATE TABLE user_preferences (
 - **[HIGH] Story 1.3 MUST implement JWT-backed org/user verification** before any deployment. Current events API trusts x-user-id header without JWT binding, creating cross-tenant exposure risk. (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58)
 - **[MEDIUM] Story 1.3 should add auth spoof tests** to verify JWT binding prevents header spoofing (services/core-api/src/routes/events.test.ts)
 
+### Story 1.4 (Resolved 2025-11-26)
+- **[HIGH] Set org context before organization.upsert in organization.created webhook** to satisfy RLS and allow provisioning under non-superuser roles (services/core-api/src/routes/webhooks/clerk.ts:123-137; services/core-api/prisma/migrations/20251126093000_clerk_ids_text/migration.sql:45-58).
+- **[MEDIUM] Enforce owner-only org settings updates** by checking membership role (MemberRole.owner) instead of trusting `orgRole` string; add negative test (services/core-api/src/routes/orgs.ts:100-166).
+- **[LOW] Deduplicate/transactional provisioned event emission** to avoid duplicate `xentri.org.provisioned.v1` events on concurrent webhook replays (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-135).
+
 ---
 
 ## Traceability Mapping
