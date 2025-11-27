@@ -1,18 +1,23 @@
 ---
+import { auth } from '@clerk/astro/server';
 import AppShell from '../layouts/AppShell.astro';
 import { Hero } from '../components/Hero';
 import { EventTimeline } from '../components/EventTimeline';
+
+const { orgId } = await auth();
+if (!orgId) {
+  return Astro.redirect('/sign-in');
+}
 ---
 
 <AppShell title="Dashboard">
   <div class="dashboard-content">
     <Hero client:load />
     <!-- EventTimeline: Story 1.2 vertical slice - displays recent system events -->
-    <!-- Demo mode: Uses placeholder org ID. In production, org context comes from auth. -->
     <EventTimeline
       client:only="react"
       apiUrl="http://localhost:3000"
-      orgId="org_demo_1"
+      orgId={orgId}
       limit={10}
     />
   </div>

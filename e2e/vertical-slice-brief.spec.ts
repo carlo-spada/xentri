@@ -12,15 +12,21 @@ import { test, expect } from '@playwright/test';
  * - AC4: Brief and events are org-scoped (implicit via demo org)
  */
 test.describe('Vertical Slice: Brief Creation Flow', () => {
-  const API_URL = 'http://localhost:3000';
-  const testOrgId = 'org_demo_1';
+  const API_URL = process.env.E2E_API_URL || 'http://localhost:3000';
+  const testOrgId = process.env.E2E_ORG_ID;
+  const authCookie = process.env.E2E_AUTH_COOKIE;
+
+  test.skip(!testOrgId, 'Requires E2E_ORG_ID (Clerk org) and E2E_AUTH_COOKIE session for authenticated flow.');
 
   test.beforeEach(async ({ request }) => {
-    // Clean up any existing briefs for the demo org before each test
-    // Note: In production, this would require auth. For dev, using demo org.
+    // Clean up any existing briefs for the org before each test (auth required)
+    if (!authCookie || !testOrgId) return;
     try {
       const currentBrief = await request.get(`${API_URL}/api/v1/briefs/current`, {
-        headers: { 'x-org-id': testOrgId },
+        headers: {
+          'x-org-id': testOrgId,
+          Cookie: `__session=${authCookie}`,
+        },
       });
 
       if (currentBrief.ok()) {
@@ -36,6 +42,19 @@ test.describe('Vertical Slice: Brief Creation Flow', () => {
   });
 
   test('shows Strategy landing page with Create Brief CTA for new user', async ({ page }) => {
+    if (authCookie) {
+      await page.context().addCookies([
+        {
+          name: '__session',
+          value: authCookie,
+          domain: 'localhost',
+          path: '/',
+          httpOnly: true,
+          secure: false,
+        },
+      ]);
+    }
+
     await page.goto('/strategy');
 
     // Should show Strategy header
@@ -51,6 +70,19 @@ test.describe('Vertical Slice: Brief Creation Flow', () => {
   });
 
   test('navigates to Brief creation form', async ({ page }) => {
+    if (authCookie) {
+      await page.context().addCookies([
+        {
+          name: '__session',
+          value: authCookie,
+          domain: 'localhost',
+          path: '/',
+          httpOnly: true,
+          secure: false,
+        },
+      ]);
+    }
+
     await page.goto('/strategy/brief/new');
 
     // Should show the Brief form with step indicator
@@ -59,6 +91,19 @@ test.describe('Vertical Slice: Brief Creation Flow', () => {
   });
 
   test('completes Brief creation wizard and saves', async ({ page, request }) => {
+    if (authCookie) {
+      await page.context().addCookies([
+        {
+          name: '__session',
+          value: authCookie,
+          domain: 'localhost',
+          path: '/',
+          httpOnly: true,
+          secure: false,
+        },
+      ]);
+    }
+
     await page.goto('/strategy/brief/new');
 
     // Wait for form to load
@@ -91,12 +136,15 @@ test.describe('Vertical Slice: Brief Creation Flow', () => {
 
     // Verify the event was created by checking the API
     const briefId = page.url().split('/').pop();
-    if (briefId) {
-      // Check that brief.created event exists
-      const eventsResponse = await request.get(`${API_URL}/api/v1/events`, {
-        headers: { 'x-org-id': testOrgId },
-        params: { type: 'xentri.brief.created.v1', limit: '10' },
-      });
+      if (briefId) {
+        // Check that brief.created event exists
+        const eventsResponse = await request.get(`${API_URL}/api/v1/events`, {
+          headers: {
+            'x-org-id': testOrgId as string,
+            ...(authCookie ? { Cookie: `__session=${authCookie}` } : {}),
+          },
+          params: { type: 'xentri.brief.created.v1', limit: '10' },
+        });
 
       if (eventsResponse.ok()) {
         const eventsData = await eventsResponse.json();
@@ -114,11 +162,26 @@ test.describe('Vertical Slice: Brief Creation Flow', () => {
   });
 
   test('Brief view page displays all sections', async ({ page, request }) => {
+    if (!testOrgId) return;
+    if (authCookie) {
+      await page.context().addCookies([
+        {
+          name: '__session',
+          value: authCookie,
+          domain: 'localhost',
+          path: '/',
+          httpOnly: true,
+          secure: false,
+        },
+      ]);
+    }
+
     // First create a brief via API to have consistent test data
     const createResponse = await request.post(`${API_URL}/api/v1/briefs`, {
       headers: {
         'Content-Type': 'application/json',
         'x-org-id': testOrgId,
+        ...(authCookie ? { Cookie: `__session=${authCookie}` } : {}),
       },
       data: {
         sections: {
@@ -167,11 +230,26 @@ test.describe('Vertical Slice: Brief Creation Flow', () => {
   });
 
   test('Strategy landing shows Brief summary after creation', async ({ page, request }) => {
+    if (!testOrgId) return;
+    if (authCookie) {
+      await page.context().addCookies([
+        {
+          name: '__session',
+          value: authCookie,
+          domain: 'localhost',
+          path: '/',
+          httpOnly: true,
+          secure: false,
+        },
+      ]);
+    }
+
     // Ensure a brief exists
     await request.post(`${API_URL}/api/v1/briefs`, {
       headers: {
         'Content-Type': 'application/json',
         'x-org-id': testOrgId,
+        ...(authCookie ? { Cookie: `__session=${authCookie}` } : {}),
       },
       data: {
         sections: {

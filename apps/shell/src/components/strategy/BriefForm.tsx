@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Button } from '@xentri/ui';
 import { ChevronLeft, ChevronRight, Save, Loader2, CheckCircle } from 'lucide-react';
 import type { BriefSections, BriefSectionName } from '@xentri/ts-schema';
 import { getApiUrl, setBrief } from '../../stores/brief.js';
+import { incrementCounter, recordTiming } from '../../utils/metrics';
 
 interface BriefFormProps {
   orgId?: string;
@@ -70,10 +71,29 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copilotAvailable, setCopilotAvailable] = useState<boolean | null>(null);
+  const [toast, setToast] = useState<{ message: string; action?: () => void; actionLabel?: string } | null>(null);
+  const startRef = useRef<number>(performance.now());
 
   const currentSection = SECTIONS[currentStep];
   const isLastStep = currentStep === SECTIONS.length - 1;
   const isFirstStep = currentStep === 0;
+
+  useEffect(() => {
+    async function checkCopilot() {
+      try {
+        const healthUrl =
+          (window as { __XENTRI_COPILOT_HEALTH__?: string }).__XENTRI_COPILOT_HEALTH__ ||
+          import.meta.env.PUBLIC_COPILOT_HEALTH_URL ||
+          '/api/v1/copilot/health';
+        const res = await fetch(healthUrl, { method: 'GET', credentials: 'include' });
+        setCopilotAvailable(res.ok);
+      } catch {
+        setCopilotAvailable(false);
+      }
+    }
+    checkCopilot();
+  }, []);
 
   const updateSection = useCallback(
     <K extends BriefSectionName>(
@@ -122,6 +142,8 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
       const result = await response.json();
       setBrief(result.data);
       setSaved(true);
+      incrementCounter('brief_event_success');
+      recordTiming('brief_completion_ms', performance.now() - startRef.current);
 
       // Redirect to Brief view after short delay
       setTimeout(() => {
@@ -132,6 +154,12 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
       const message = err instanceof Error ? err.message : 'Failed to save. Please retry.';
       setError(message);
       onError?.(message);
+      incrementCounter('brief_event_failure');
+      setToast({
+        message: 'Brief save failed. Retry?',
+        action: handleSaveDraft,
+        actionLabel: 'Retry',
+      });
     } finally {
       setSaving(false);
     }
@@ -318,6 +346,24 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
 
   return (
     <div style={styles.container}>
+      {copilotAvailable === false && (
+        <div style={styles.infoBanner}>
+          Co-pilot unavailable; using guided form fallback.
+        </div>
+      )}
+      {toast && (
+        <div style={styles.toast}>
+          <span>{toast.message}</span>
+          {toast.action && (
+            <button style={styles.toastAction} onClick={toast.action}>
+              {toast.actionLabel || 'Retry'}
+            </button>
+          )}
+          <button style={styles.toastDismiss} onClick={() => setToast(null)} aria-label="Dismiss">
+            ×
+          </button>
+        </div>
+      )}
       {/* Error banner (AC6: Surface event write failures visibly) */}
       {error && (
         <div style={styles.errorBanner}>
@@ -444,6 +490,14 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: '700px',
     margin: '0 auto',
   },
+  infoBanner: {
+    padding: '0.75rem 1rem',
+    borderRadius: '0.5rem',
+    backgroundColor: 'var(--color-surface-plus)',
+    color: 'var(--color-text-secondary)',
+    marginBottom: '1rem',
+    border: '1px solid var(--color-border-subtle, var(--color-surface))',
+  },
   errorBanner: {
     display: 'flex',
     alignItems: 'center',
@@ -464,6 +518,35 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     padding: '0.25rem',
     lineHeight: 1,
+  },
+  toast: {
+    position: 'fixed',
+    bottom: '1rem',
+    right: '1rem',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    padding: '0.75rem 1rem',
+    borderRadius: '0.75rem',
+    backgroundColor: 'var(--color-surface-plus)',
+    color: 'var(--color-text-primary)',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+    zIndex: 1000,
+  },
+  toastAction: {
+    border: 'none',
+    backgroundColor: 'var(--color-primary)',
+    color: 'var(--color-base)',
+    padding: '0.4rem 0.75rem',
+    borderRadius: '0.5rem',
+    cursor: 'pointer',
+  },
+  toastDismiss: {
+    background: 'none',
+    border: 'none',
+    color: 'inherit',
+    fontSize: '1.1rem',
+    cursor: 'pointer',
   },
   progress: {
     display: 'flex',
