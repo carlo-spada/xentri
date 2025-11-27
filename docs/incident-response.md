@@ -8,9 +8,13 @@
 
 | Service | Endpoint | Expected Response |
 |---------|----------|-------------------|
-| Core API | `GET /api/v1/health` | `{ status: 'ok' }` |
-| Core API | `GET /api/v1/health/ready` | `{ status: 'ok', checks: { database: 'ok' } }` |
+| Core API | `GET /health` | `{"status":"ok"}` |
+| Core API | `GET /health/ready` | `{"status":"ok","checks":{"database":"ok"}}` |
 | Shell | `GET /` | HTML with "Xentri" |
+
+**Live URLs:**
+- Core API: https://core-api-production-8016.up.railway.app
+- Health: https://core-api-production-8016.up.railway.app/health
 
 ### Key Environment Variables
 
@@ -153,6 +157,34 @@ railway run --service core-api -- npx prisma migrate resolve --rolled-back <migr
 1. **Incident Report** - Document timeline, root cause, resolution
 2. **Blameless Retrospective** - What happened, how to prevent recurrence
 3. **Action Items** - Create backlog items for improvements
+
+## Docker/pnpm Deployment Issues
+
+### Container Crash: `Cannot find package 'fastify'`
+
+**Root Cause:** pnpm v10 changed `deploy` command behavior. Without `--legacy` flag, pnpm deploy fails for workspaces that don't have `inject-workspace-packages=true`.
+
+**Fix:** Add `--legacy` flag to Dockerfile:
+```dockerfile
+RUN pnpm --filter @xentri/core-api deploy --legacy --prod /app/deployed
+```
+
+### Container Crash: `Cannot find module '.prisma/client/default'`
+
+**Root Cause:** pnpm deploy's postinstall generates Prisma client to workspace root (`/app/node_modules`), not to deployed directory (`/app/deployed/node_modules`).
+
+**Fix:** Copy `.prisma` from workspace root after pnpm deploy:
+```dockerfile
+RUN cp -r /app/node_modules/.pnpm/@prisma+client*/node_modules/.prisma /app/deployed/node_modules/
+```
+
+### Best Practice: Always Build Locally First
+
+Before pushing Docker changes to Railway, test locally:
+```bash
+docker build -f services/core-api/Dockerfile -t core-api-test .
+docker run --rm core-api-test node -e "require('fastify'); require('@prisma/client'); console.log('ok')"
+```
 
 ## Monitoring Dashboard
 
