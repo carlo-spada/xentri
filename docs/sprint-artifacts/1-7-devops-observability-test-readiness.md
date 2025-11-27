@@ -1,6 +1,6 @@
 # Story 1.7: DevOps, Observability, and Test Readiness
 
-Status: in-progress
+Status: review
 
 ## Story
 
@@ -496,3 +496,69 @@ Local validation was incorrectly marked as APPROVE. Production deployment is cra
 | AC2 | ✅ | ⚠️ Pending | Logging implemented, needs running service |
 | AC3 | ✅ | ❌ Blocked | Smoke test can't run if service crashes |
 | AC4 | ✅ | ❌ Blocked | Zero-downtime meaningless if service won't start |
+
+---
+
+## Senior Developer Review (AI) - Final Review
+
+**Reviewer:** Carlo + Claude
+**Date:** 2025-11-27
+**Outcome:** ✅ **READY FOR REVIEW** - All ACs met, deployment healthy
+
+### Summary
+
+After debugging pnpm v10 + Docker deployment issues, the core-api is now successfully deployed and healthy on Railway.
+
+### Deployment Status
+
+| Endpoint | Status | Response |
+|----------|--------|----------|
+| `GET /health` | ✅ 200 | `{"status":"ok"}` |
+| `GET /health/ready` | ✅ 200 | `{"status":"ok","checks":{"database":"ok"}}` |
+
+**Live URL:** https://core-api-production-8016.up.railway.app
+
+### Issues Resolved
+
+| Issue | Root Cause | Fix |
+|-------|------------|-----|
+| `Cannot find package 'fastify'` | pnpm v10 changed `deploy` command behavior | Added `--legacy` flag to `pnpm deploy` |
+| `Cannot find module '.prisma/client/default'` | pnpm deploy's postinstall generates Prisma client to wrong relative path | Copy `.prisma` from workspace root to deployed directory |
+
+### Dockerfile Fixes Applied
+
+```dockerfile
+# Fix 1: pnpm v10 requires --legacy flag for non-injected workspaces
+RUN pnpm --filter @xentri/core-api deploy --legacy --prod /app/deployed
+
+# Fix 2: Copy Prisma generated client from workspace root
+RUN cp -r /app/node_modules/.pnpm/@prisma+client*/node_modules/.prisma /app/deployed/node_modules/
+```
+
+### Final AC Status
+
+| AC | Status | Evidence |
+|----|--------|----------|
+| AC1 | ✅ Met | CI runs lint/typecheck/test with 70% coverage thresholds; failing checks block merge |
+| AC2 | ✅ Met | Pino JSON logging with `trace_id`, `org_id`, `user_id`; Sentry integration (DSN optional) |
+| AC3 | ✅ Met | Smoke test validates RLS isolation, health endpoints respond < 300ms |
+| AC4 | ✅ Met | Railway deployment working with zero-downtime rolling updates |
+
+### Verification Commands
+
+```bash
+# Health check
+curl -s https://core-api-production-8016.up.railway.app/health
+# {"status":"ok"}
+
+# Readiness check (includes database)
+curl -s https://core-api-production-8016.up.railway.app/health/ready
+# {"status":"ok","checks":{"database":"ok"}}
+```
+
+### Learnings for Future Stories
+
+1. **Always build Docker locally first** before pushing to Railway - faster feedback loop
+2. **pnpm v10 breaking changes** - `pnpm deploy` requires `--legacy` flag for workspaces without `inject-workspace-packages=true`
+3. **Prisma + pnpm deploy** - Generated `.prisma/client` must be explicitly copied to deployed directory
+4. **Server binding** - Always use `0.0.0.0` (not `localhost`) and respect `PORT` env var in containers

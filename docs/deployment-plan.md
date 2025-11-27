@@ -385,7 +385,10 @@ CNAME   api     <railway-api-domain>            Proxied
 CNAME   r2      <r2-public-bucket-url>          Proxied (optional)
 ```
 
-Railway domains look like: `xentri-shell-production.up.railway.app`
+Railway domains look like: `core-api-production-8016.up.railway.app`
+
+**Current Live URLs:**
+- Core API: https://core-api-production-8016.up.railway.app
 
 ### 5.2 Railway Custom Domains
 
