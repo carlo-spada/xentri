@@ -2,6 +2,10 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { clerkAuthMiddleware, requireOrgContext, getClerkUser } from '../middleware/clerkAuth.js';
 import { getPrisma } from '../infra/db.js';
 import { problemDetails } from '../middleware/orgContext.js';
+import {
+  UpdateUserPreferencesRequestSchema,
+  type UserPreferences,
+} from '@xentri/ts-schema';
 
 // ===================
 // Types
@@ -19,6 +23,10 @@ interface UserMeResponse {
     name: string;
     slug: string;
     role: string;
+  };
+  preferences?: {
+    theme: string;
+    email_notifications?: Record<string, boolean>;
   };
 }
 
@@ -128,6 +136,24 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
         }
       }
 
+      // Add user preferences if available
+      const preferences = await prisma.userPreferences.findUnique({
+        where: { userId: user.id },
+      });
+
+      if (preferences) {
+        response.preferences = {
+          theme: preferences.theme,
+          email_notifications: preferences.emailNotifications as Record<string, boolean>,
+        };
+      } else {
+        // Return defaults if no preferences exist
+        response.preferences = {
+          theme: 'dark',
+          email_notifications: { lead_created: true, system: true },
+        };
+      }
+
       return reply.status(200).send(response);
     }
   );
@@ -162,6 +188,133 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
       }));
 
       return reply.status(200).send({ organizations });
+    }
+  );
+
+  /**
+   * PATCH /api/v1/users/me/preferences
+   *
+   * Updates the current user's preferences (theme, notifications).
+   * Creates preferences record if it doesn't exist (upsert).
+   * Requires valid Clerk session.
+   *
+   * Request body:
+   * - theme?: 'light' | 'dark' | 'system'
+   * - email_notifications?: { lead_created?: boolean, system?: boolean }
+   *
+   * Response:
+   * - 200: Updated preferences
+   * - 400: Invalid request body
+   * - 401: Not authenticated
+   */
+  fastify.patch(
+    '/api/v1/users/me/preferences',
+    {
+      preHandler: [clerkAuthMiddleware],
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const prisma = getPrisma();
+      const userId = request.clerkUserId;
+
+      if (!userId) {
+        return reply.status(401).send({
+          error: 'Unauthorized',
+          message: 'Valid authentication required',
+        });
+      }
+
+      // Validate request body
+      const parseResult = UpdateUserPreferencesRequestSchema.safeParse(request.body);
+      if (!parseResult.success) {
+        return reply.status(400).send({
+          error: 'Bad Request',
+          message: 'Invalid request body',
+          details: parseResult.error.errors,
+        });
+      }
+
+      const { theme, email_notifications } = parseResult.data;
+
+      // Build update data
+      const updateData: {
+        theme?: string;
+        emailNotifications?: object;
+      } = {};
+
+      if (theme !== undefined) {
+        updateData.theme = theme;
+      }
+
+      if (email_notifications !== undefined) {
+        updateData.emailNotifications = email_notifications;
+      }
+
+      // Upsert preferences
+      const preferences = await prisma.userPreferences.upsert({
+        where: { userId },
+        create: {
+          userId,
+          theme: theme || 'dark',
+          emailNotifications: email_notifications || { lead_created: true, system: true },
+        },
+        update: updateData,
+      });
+
+      return reply.status(200).send({
+        preferences: {
+          theme: preferences.theme,
+          email_notifications: preferences.emailNotifications as Record<string, boolean>,
+        },
+      });
+    }
+  );
+
+  /**
+   * GET /api/v1/users/me/preferences
+   *
+   * Returns the current user's preferences.
+   * Requires valid Clerk session.
+   *
+   * Response:
+   * - 200: User preferences (or defaults if none exist)
+   * - 401: Not authenticated
+   */
+  fastify.get(
+    '/api/v1/users/me/preferences',
+    {
+      preHandler: [clerkAuthMiddleware],
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const prisma = getPrisma();
+      const userId = request.clerkUserId;
+
+      if (!userId) {
+        return reply.status(401).send({
+          error: 'Unauthorized',
+          message: 'Valid authentication required',
+        });
+      }
+
+      const preferences = await prisma.userPreferences.findUnique({
+        where: { userId },
+      });
+
+      if (preferences) {
+        return reply.status(200).send({
+          preferences: {
+            theme: preferences.theme,
+            email_notifications: preferences.emailNotifications as Record<string, boolean>,
+          },
+        });
+      }
+
+      // Return defaults if no preferences exist
+      return reply.status(200).send({
+        preferences: {
+          theme: 'dark',
+          email_notifications: { lead_created: true, system: true },
+        },
+      });
     }
   );
 }

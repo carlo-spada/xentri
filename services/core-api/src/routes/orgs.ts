@@ -111,6 +111,9 @@ async function updateOrgSettings(
     });
   }
 
+  // Extract validated auth values (TypeScript narrowing)
+  const { userId, orgId } = auth;
+
   // Validate request body
   const parseResult = UpdateOrgSettingsSchema.safeParse(request.body);
   if (!parseResult.success) {
@@ -125,12 +128,12 @@ async function updateOrgSettings(
 
   // Verify membership role from DB (owner-only)
   const membership = await prisma.$transaction(async (tx) => {
-    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${auth.orgId}, true)`;
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
     return tx.member.findUnique({
       where: {
         orgId_userId: {
-          orgId: auth.orgId,
-          userId: auth.userId,
+          orgId,
+          userId,
         },
       },
       select: { role: true },

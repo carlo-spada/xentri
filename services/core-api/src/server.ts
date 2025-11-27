@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
-import rawBody from '@fastify/raw-body';
+import rawBody from 'fastify-raw-body';
 import { clerkPlugin } from '@clerk/fastify';
 import healthRoutes from './routes/health.js';
 import eventsRoutes from './routes/events.js';

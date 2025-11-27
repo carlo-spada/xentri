@@ -1,0 +1,24 @@
+---
+import SidebarCategory from './SidebarCategory.tsx';
+import { CATEGORIES } from '../stores/navigation';
+---
+
+<aside class="sidebar" role="navigation" aria-label="Main navigation">
+  <nav class="sidebar-nav">
+    {CATEGORIES.map((category) => (
+      <SidebarCategory
+        category={category}
+        client:only="react"
+      />
+    ))}
+  </nav>
+</aside>
+
+<style>
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
+  }
+</style>

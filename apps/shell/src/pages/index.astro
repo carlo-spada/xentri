@@ -1,11 +1,11 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import AppShell from '../layouts/AppShell.astro';
 import { Hero } from '../components/Hero';
 import { EventTimeline } from '../components/EventTimeline';
 ---
 
-<Layout title="Xentri">
-  <main class="shell-body">
+<AppShell title="Dashboard">
+  <div class="dashboard-content">
     <Hero client:load />
     <!-- EventTimeline: Story 1.2 vertical slice - displays recent system events -->
     <!-- Demo mode: Uses placeholder org ID. In production, org context comes from auth. -->
@@ -15,15 +15,12 @@ import { EventTimeline } from '../components/EventTimeline';
       orgId="org_demo_1"
       limit={10}
     />
-  </main>
-</Layout>
+  </div>
+</AppShell>
 
 <style>
-  @import url('@xentri/ui/styles.css');
-
-  .shell-body {
+  .dashboard-content {
     max-width: 960px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 2rem;

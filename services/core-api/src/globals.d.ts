@@ -1,4 +1,4 @@
-declare module '@fastify/raw-body' {
+declare module 'fastify-raw-body' {
   import type { FastifyPluginCallback } from 'fastify';
 
   interface RawBodyPluginOptions {

@@ -304,7 +304,7 @@ export default async function clerkWebhookRoutes(fastify: FastifyInstance): Prom
 
       try {
         const rawBody =
-          // rawBody is provided by @fastify/raw-body
+          // rawBody is provided by fastify-raw-body
           (request as FastifyRequest & { rawBody?: Buffer }).rawBody?.toString('utf8') ||
           (typeof request.body === 'string'
             ? request.body

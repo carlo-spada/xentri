@@ -29,4 +29,10 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone',
   }),
+  // View Transitions for smooth client-side navigation
+  // See: https://docs.astro.build/en/guides/view-transitions/
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'hover',
+  },
 });

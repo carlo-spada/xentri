@@ -1,0 +1,176 @@
+---
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import MobileDrawer from '../components/MobileDrawer.tsx';
+import OfflineBanner from '../components/OfflineBanner.tsx';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Xentri - Your Business OS" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>{title} | Xentri</title>
+    <ClientRouter />
+
+    <!-- Prevent theme flash by applying theme before page renders -->
+    <script is:inline>
+      (function() {
+        // Check for stored preference or system preference
+        const stored = localStorage.getItem('xentri-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (systemDark ? 'dark' : 'light');
+
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light');
+      })();
+    </script>
+    <script type="module">
+      import { registerServiceWorker } from '../scripts/sw-register';
+      registerServiceWorker();
+    </script>
+  </head>
+  <body class="bg-[var(--color-base)] text-[var(--color-text-primary)] min-h-screen">
+    <div class="app-shell">
+      <Header />
+
+      <!-- Desktop/Tablet Sidebar -->
+      <Sidebar />
+
+      <!-- Mobile Drawer -->
+      <MobileDrawer client:only="react" />
+
+      <!-- Offline Banner -->
+      <OfflineBanner client:only="react" />
+
+      <!-- Main Content Area -->
+      <main
+        class="main-content"
+        transition:animate="fade"
+      >
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  @import '@xentri/ui/styles.css';
+
+  /* App Shell Grid Layout */
+  .app-shell {
+    display: grid;
+    grid-template-areas:
+      "header header"
+      "sidebar main";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+  }
+
+  /* Responsive sidebar widths */
+  .sidebar {
+    grid-area: sidebar;
+    width: 240px;
+    background: var(--color-chrome);
+    border-right: 1px solid var(--color-surface);
+    overflow-y: auto;
+    height: calc(100vh - 56px);
+    position: sticky;
+    top: 56px;
+  }
+
+  /* Tablet: Collapsed sidebar */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .sidebar {
+      width: 64px;
+    }
+
+    .sidebar-label {
+      display: none;
+    }
+  }
+
+  /* Mobile: Hidden sidebar, use drawer */
+  @media (max-width: 767px) {
+    .app-shell {
+      grid-template-areas:
+        "header"
+        "main";
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      display: none;
+    }
+  }
+
+  /* Main content area */
+  .main-content {
+    grid-area: main;
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* Header */
+  .shell-header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-lg);
+    height: 56px;
+    background: var(--color-chrome);
+    border-bottom: 1px solid var(--color-surface);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  /* Touch target minimum size */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Focus visible styles for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Smooth transitions */
+  .transition-theme {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* View transition animations */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  ::view-transition-old(root) {
+    animation: fade-out 0.15s ease-out;
+  }
+
+  ::view-transition-new(root) {
+    animation: fade-in 0.15s ease-in;
+  }
+</style>

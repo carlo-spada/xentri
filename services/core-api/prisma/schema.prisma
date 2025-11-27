@@ -57,8 +57,25 @@ model User {
 
   // Relations
   memberships Member[]
+  preferences UserPreferences?
 
   @@map("users")
+}
+
+/// UserPreferences - per-user settings (theme, notifications)
+/// Separate from OrgSettings because theme is per-user, not per-org
+model UserPreferences {
+  id                 String   @id @default(uuid())
+  userId             String   @unique @map("user_id")
+  theme              String   @default("dark") // light | dark | system
+  emailNotifications Json     @default("{\"lead_created\": true, \"system\": true}") @map("email_notifications")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
 }
 
 /// Member - junction table linking users to organizations with roles
