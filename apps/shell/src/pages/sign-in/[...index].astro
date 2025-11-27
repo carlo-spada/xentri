@@ -1,0 +1,42 @@
+---
+import { SignIn } from '@clerk/astro/components';
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Sign In - Xentri">
+  <div class="auth-container">
+    <SignIn
+      appearance={{
+        elements: {
+          rootBox: 'auth-box',
+          card: 'auth-card',
+          headerTitle: 'auth-title',
+          headerSubtitle: 'auth-subtitle',
+          socialButtonsBlockButton: 'auth-social-button',
+          formButtonPrimary: 'auth-primary-button',
+          footerActionLink: 'auth-link',
+        },
+        variables: {
+          colorPrimary: '#2563eb',
+          colorBackground: '#09090b',
+          colorText: '#fafafa',
+          colorTextSecondary: '#a1a1aa',
+          colorInputBackground: '#18181b',
+          colorInputText: '#fafafa',
+          borderRadius: '0.5rem',
+        },
+      }}
+    />
+  </div>
+</Layout>
+
+<style>
+  .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    background: linear-gradient(to bottom, #09090b, #18181b);
+  }
+</style>

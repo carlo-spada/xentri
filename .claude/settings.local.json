@@ -51,7 +51,10 @@
       "Bash(pnpm --filter @xentri/ts-schema run typecheck)",
       "Bash(pnpm --filter @xentri/core-api run typecheck:*)",
       "Bash(pnpm --filter @xentri/core-api exec vitest run:*)",
-      "Bash(pnpm --filter @xentri/core-api run test)"
+      "Bash(pnpm --filter @xentri/core-api run test)",
+      "Bash(pnpm --filter @xentri/shell run typecheck:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm -w run test:*)"
     ],
     "deny": [],
     "ask": []
