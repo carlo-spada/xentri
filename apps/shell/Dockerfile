@@ -1,6 +1,7 @@
 FROM node:24-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN apk add --no-cache git
 RUN corepack enable
 
 FROM base AS builder
@@ -8,9 +9,10 @@ WORKDIR /app
 COPY . .
 RUN pnpm install --frozen-lockfile
 # Build the specific package
-RUN pnpm --filter @xentri/shell build
+# Build dependencies and the package
+RUN pnpm --filter @xentri/shell... build
 # Deploy the package and its prod dependencies to a separate directory
-RUN pnpm --filter @xentri/shell deploy --prod /prod/shell
+RUN pnpm --filter @xentri/shell deploy --prod --legacy /prod/shell
 
 FROM base AS runner
 WORKDIR /app

@@ -1,4 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import type { PrismaClient as PrismaClientType } from '@prisma/client';
+import pkg from '@prisma/client';
+
+const { PrismaClient } = pkg;
+// Re-export type for usage in this file
+type PrismaClient = PrismaClientType;
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
