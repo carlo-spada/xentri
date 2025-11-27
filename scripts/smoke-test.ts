@@ -55,7 +55,7 @@ async function setupTestOrgs() {
   const orgA = await prisma.$executeRaw`
     INSERT INTO organizations (id, name, slug, updated_at)
     VALUES (
-      'a0000000-0000-0000-0000-000000000001'::uuid,
+      'a0000000-0000-0000-0000-000000000001',
       'Test Org A',
       'test-org-a',
       NOW()
@@ -67,7 +67,7 @@ async function setupTestOrgs() {
   const orgB = await prisma.$executeRaw`
     INSERT INTO organizations (id, name, slug, updated_at)
     VALUES (
-      'b0000000-0000-0000-0000-000000000002'::uuid,
+      'b0000000-0000-0000-0000-000000000002',
       'Test Org B',
       'test-org-b',
       NOW()
@@ -79,7 +79,7 @@ async function setupTestOrgs() {
   await prisma.$executeRaw`
     INSERT INTO users (id, email, updated_at)
     VALUES (
-      'c0000000-0000-0000-0000-000000000001'::uuid,
+      'c0000000-0000-0000-0000-000000000001',
       'user-a@test.xentri.io',
       NOW()
     )
@@ -89,7 +89,7 @@ async function setupTestOrgs() {
   await prisma.$executeRaw`
     INSERT INTO users (id, email, updated_at)
     VALUES (
-      'd0000000-0000-0000-0000-000000000002'::uuid,
+      'd0000000-0000-0000-0000-000000000002',
       'user-b@test.xentri.io',
       NOW()
     )
@@ -100,9 +100,9 @@ async function setupTestOrgs() {
   await prisma.$executeRaw`
     INSERT INTO members (id, org_id, user_id, role, updated_at)
     VALUES (
-      'e0000000-0000-0000-0000-000000000001'::uuid,
-      'a0000000-0000-0000-0000-000000000001'::uuid,
-      'c0000000-0000-0000-0000-000000000001'::uuid,
+      'e0000000-0000-0000-0000-000000000001',
+      'a0000000-0000-0000-0000-000000000001',
+      'c0000000-0000-0000-0000-000000000001',
       'owner',
       NOW()
     )
@@ -112,9 +112,9 @@ async function setupTestOrgs() {
   await prisma.$executeRaw`
     INSERT INTO members (id, org_id, user_id, role, updated_at)
     VALUES (
-      'f0000000-0000-0000-0000-000000000002'::uuid,
-      'b0000000-0000-0000-0000-000000000002'::uuid,
-      'd0000000-0000-0000-0000-000000000002'::uuid,
+      'f0000000-0000-0000-0000-000000000002',
+      'b0000000-0000-0000-0000-000000000002',
+      'd0000000-0000-0000-0000-000000000002',
       'owner',
       NOW()
     )
@@ -128,7 +128,7 @@ async function setupTestOrgs() {
     INSERT INTO system_events (id, org_id, event_type, actor_type, actor_id, payload_schema, payload, source)
     VALUES (
       gen_random_uuid(),
-      'a0000000-0000-0000-0000-000000000001'::uuid,
+      'a0000000-0000-0000-0000-000000000001',
       'xentri.user.signup.v1',
       'system',
       ${SMOKE_ACTOR},
@@ -143,7 +143,7 @@ async function setupTestOrgs() {
     INSERT INTO system_events (id, org_id, event_type, actor_type, actor_id, payload_schema, payload, source)
     VALUES (
       gen_random_uuid(),
-      'b0000000-0000-0000-0000-000000000002'::uuid,
+      'b0000000-0000-0000-0000-000000000002',
       'xentri.user.signup.v1',
       'system',
       ${SMOKE_ACTOR},
@@ -195,7 +195,7 @@ async function testRlsIsolation() {
   // Set context to org_a but try to query org_b's data directly
   const crossOrgQuery = await prisma.$queryRaw<{ count: bigint }[]>`
     SELECT COUNT(*) as count FROM system_events
-    WHERE org_id = 'b0000000-0000-0000-0000-000000000002'::uuid
+    WHERE org_id = 'b0000000-0000-0000-0000-000000000002'
       AND actor_id = ${SMOKE_ACTOR}
   `;
 
@@ -242,7 +242,7 @@ async function testRlsInsertFailClosed() {
       INSERT INTO system_events (id, org_id, event_type, actor_type, actor_id, payload_schema, payload, source)
       VALUES (
         gen_random_uuid(),
-        'a0000000-0000-0000-0000-000000000001'::uuid,
+        'a0000000-0000-0000-0000-000000000001',
         'xentri.user.login.v1',
         'system',
         'fail-closed-test',
@@ -396,13 +396,12 @@ async function testBriefFlow() {
   // Create a test Brief (directly in DB to avoid auth)
   const briefId = crypto.randomUUID();
   await prisma.$executeRaw`
-    INSERT INTO briefs (id, org_id, title, status, answers, updated_at)
+    INSERT INTO briefs (id, org_id, status, answers, updated_at)
     VALUES (
-      ${briefId}::uuid,
-      ${orgId}::uuid,
-      'Smoke Test Brief',
+      ${briefId},
+      ${orgId},
       'draft',
-      '{"company_name": "Test Co"}'::jsonb,
+      '{"company_name": "Test Co", "title": "Smoke Test Brief"}'::jsonb,
       NOW()
     )
   `;
@@ -412,7 +411,7 @@ async function testBriefFlow() {
     INSERT INTO system_events (id, org_id, event_type, actor_type, actor_id, payload_schema, payload, source)
     VALUES (
       gen_random_uuid(),
-      ${orgId}::uuid,
+      ${orgId},
       'xentri.brief.created.v1',
       'system',
       ${SMOKE_ACTOR},
@@ -437,7 +436,7 @@ async function testBriefFlow() {
 
   // Verify Brief exists
   const briefs = await prisma.$queryRaw<{ count: bigint }[]>`
-    SELECT COUNT(*) as count FROM briefs WHERE id = ${briefId}::uuid
+    SELECT COUNT(*) as count FROM briefs WHERE id = ${briefId}
   `;
   const briefCount = Number(briefs[0].count);
 
@@ -448,7 +447,7 @@ async function testBriefFlow() {
   }
 
   // Cleanup: Delete the test brief
-  await prisma.$executeRaw`DELETE FROM briefs WHERE id = ${briefId}::uuid`;
+  await prisma.$executeRaw`DELETE FROM briefs WHERE id = ${briefId}`;
 
   // Clear context
   await prisma.$executeRaw`SELECT set_config('app.current_org_id', NULL, true)`;
@@ -465,8 +464,8 @@ async function cleanup() {
   await prisma.$executeRaw`
     DELETE FROM members
     WHERE org_id IN (
-      'a0000000-0000-0000-0000-000000000001'::uuid,
-      'b0000000-0000-0000-0000-000000000002'::uuid
+      'a0000000-0000-0000-0000-000000000001',
+      'b0000000-0000-0000-0000-000000000002'
     )
   `;
 
