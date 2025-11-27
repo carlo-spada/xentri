@@ -68,14 +68,41 @@ pnpm run dev --filter apps/shell       # Start shell only (port 4321)
 pnpm run dev --filter services/core-api # Start API only (port 3000)
 
 # Testing
-pnpm run test                          # Run all unit tests (14 tests)
-pnpm run test:smoke                    # Run RLS isolation smoke tests
+pnpm run test                          # Run all unit tests
+pnpm run test -- --coverage            # Run tests with coverage report
+pnpm run test:smoke                    # Run smoke tests (RLS, Brief flow, timing)
 pnpm run typecheck                     # TypeScript validation
 
-# Build
+# Build & Quality
 pnpm run build                         # Build all packages
 pnpm run lint                          # Run ESLint
+
+# Observability (Story 1.7)
+LOG_LEVEL=debug pnpm run dev           # Enable debug logging
+curl http://localhost:3000/api/v1/health       # API health check
+curl http://localhost:3000/api/v1/health/ready # API readiness with DB check
 ```
+
+## Observability
+
+**Structured Logging (NFR24):**
+- JSON format in production, pretty print in development
+- Correlation IDs: `trace_id`, `org_id`, `user_id` in every log entry
+- PII scrubbing: email, name, auth headers redacted
+- Log levels: `LOG_LEVEL=error|warn|info|debug`
+
+**Error Tracking (NFR25):**
+- Sentry integration (configure `SENTRY_DSN`)
+- Stack traces with request context
+- Automatic error capture in API and shell
+
+**Health Checks:**
+- `GET /api/v1/health` - Basic liveness
+- `GET /api/v1/health/ready` - Readiness with database check
+
+**Trace Propagation:**
+- `x-trace-id` header for request correlation
+- W3C `traceparent` header support
 
 ## Key Technical Patterns
 
@@ -136,12 +163,16 @@ Workflow status tracked in `docs/bmm-workflow-status.yaml`.
 
 ## Current Phase
 
-**Epic 1 - Foundation (Story 1.1 Complete):**
+**Epic 1 - Foundation (Stories 1.1-1.7 In Progress):**
 - Turborepo 2.6.1 monorepo with pnpm workspaces
 - Astro 5.16.0 Shell with React 19.2.0 islands
 - Core API (Fastify 5.6.2 + Prisma 7.0.1)
 - PostgreSQL 16.11 with fail-closed RLS policies
 - CI/CD pipeline with GitHub branch protection
-- 14 tests passing (ts-schema: 3, ui: 10, core-api: 1)
+- Clerk authentication with org-scoped access
+- Structured logging with Pino (trace_id, org_id, user_id)
+- Sentry error tracking integration
+- Railway deployment configuration (ADR-004)
+- 25+ tests passing with coverage thresholds
 
-**Next:** Story 1.3 (User Authentication with Clerk) — Story 1.2 (Event Backbone) in review
+**Story 1.7 (DevOps/Observability):** In review

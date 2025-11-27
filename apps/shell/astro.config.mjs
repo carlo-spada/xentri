@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import node from '@astrojs/node';
 import clerk from '@clerk/astro';
+import sentry from '@sentry/astro';
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,6 +17,19 @@ export default defineConfig({
       signInUrl: '/sign-in',
       signUpUrl: '/sign-up',
     }),
+    // NFR25: Sentry error tracking for client-side errors
+    // Requires SENTRY_DSN and SENTRY_AUTH_TOKEN env vars
+    ...(process.env.SENTRY_DSN
+      ? [
+          sentry({
+            dsn: process.env.SENTRY_DSN,
+            sourceMapsUploadOptions: {
+              project: process.env.SENTRY_PROJECT || 'xentri-shell',
+              authToken: process.env.SENTRY_AUTH_TOKEN,
+            },
+          }),
+        ]
+      : []),
   ],
   server: {
     port: 4321,
