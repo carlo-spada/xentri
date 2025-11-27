@@ -4,6 +4,7 @@
 - Current footprint is documentation-first (`architecture.md`, `docs/architecture`, `docs/product`). Treat these as the source of truth for architecture and product intent.
 - Planned monorepo (see `architecture.md`): `apps/` (Astro shell + React micro-apps), `packages/` (shared UI, `ts-schema` contracts), `services/` (Dockerized backends), `tooling/` (shared configs). Mirror this layout when adding code.
 - Keep new assets and specs co-located with their module (e.g., `services/core-api/docs`, `packages/ts-schema/README.md`).
+- **BMAD Files**: Remember that all BMAD files are located in the `.bmad` folder.
 
 ## Build, Test, and Development Commands
 - `npm install` — install workspace dependencies (Turborepo layout anticipated).
