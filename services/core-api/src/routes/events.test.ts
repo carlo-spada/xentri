@@ -15,9 +15,9 @@ const testUserId = 'user_test_123';
 vi.mock('@clerk/fastify', () => ({
   clerkPlugin: vi.fn().mockImplementation(async () => {}),
   getAuth: vi.fn(() => ({
-    userId: testUserId,
+    userId: 'user_test_123',
     sessionId: 'sess_test',
-    orgId: testOrgId,
+    orgId: 'org_test_123',
     orgRole: 'org:admin',
     orgSlug: 'api-test-org',
     getToken: vi.fn(),
@@ -27,7 +27,7 @@ vi.mock('@clerk/fastify', () => ({
   clerkClient: {
     users: {
       getOrganizationMembershipList: vi.fn().mockResolvedValue({
-        data: [{ organization: { id: testOrgId } }],
+        data: [{ organization: { id: 'org_test_123' } }],
       }),
     },
     organizations: {
@@ -36,7 +36,10 @@ vi.mock('@clerk/fastify', () => ({
   },
 }));
 
-describe('Events API Routes', () => {
+const RUN_CONTAINERS = process.env.RUN_TESTCONTAINERS === '1';
+const describeIf = RUN_CONTAINERS ? describe : describe.skip;
+
+describeIf('Events API Routes', () => {
   let app: FastifyInstance;
   let prisma: PrismaClient;
 

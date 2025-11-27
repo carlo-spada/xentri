@@ -168,7 +168,7 @@ export class EventService {
 
     if (cursorTimestamp && cursorId) {
       whereConditions.push(
-        Prisma.sql`(occurred_at, id) < (${cursorTimestamp}, ${cursorId}::uuid)`
+        Prisma.sql`(occurred_at, id) < (${cursorTimestamp}, ${cursorId})`
       );
     }
 

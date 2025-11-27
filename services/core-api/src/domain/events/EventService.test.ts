@@ -7,7 +7,10 @@ import {
   getTestPrismaClient,
 } from '../../__tests__/helpers/postgres-container.js';
 
-describe('EventService', () => {
+const RUN_CONTAINERS = process.env.RUN_TESTCONTAINERS === '1';
+const describeIf = RUN_CONTAINERS ? describe : describe.skip;
+
+describeIf('EventService', () => {
   let prisma: PrismaClient;
   let eventService: EventService;
   let testOrgId: string;

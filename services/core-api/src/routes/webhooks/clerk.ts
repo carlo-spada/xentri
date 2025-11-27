@@ -3,6 +3,7 @@ import { Webhook } from 'svix';
 import type { WebhookEvent } from '@clerk/fastify';
 import { getPrisma } from '../../infra/db.js';
 import { eventService } from '../../domain/events/EventService.js';
+import { orgProvisioningService } from '../../domain/orgs/OrgProvisioningService.js';
 import type { UserSignupPayload, UserLoginPayload, OrgCreatedPayload } from '@xentri/ts-schema';
 
 // ===================
@@ -109,14 +110,17 @@ async function handleUserCreated(data: UserCreatedData): Promise<void> {
  *
  * Actions:
  * 1. Sync org to local `organizations` table
- * 2. Create membership record for creator
+ * 2. Full provisioning via OrgProvisioningService (AC1, AC2, AC3, AC5, AC6)
+ *    - Creates org_settings with defaults
+ *    - Creates owner membership (idempotent)
+ *    - Emits `xentri.org.provisioned.v1` event (AC4)
  * 3. Emit `xentri.org.created.v1` event
  * 4. Emit `xentri.user.signup.v1` event (if this is the user's first org)
  */
 async function handleOrganizationCreated(data: OrganizationCreatedData): Promise<void> {
   const prisma = getPrisma();
 
-  // Sync organization to local database
+  // Sync organization to local database first (before provisioning)
   await prisma.organization.upsert({
     where: { id: data.id },
     update: {
@@ -132,32 +136,16 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
     },
   });
 
-  // Create membership for the creator as owner
-  await prisma.member.upsert({
-    where: {
-      orgId_userId: {
-        orgId: data.id,
-        userId: data.created_by,
-      },
-    },
-    update: {
-      role: 'owner',
-      updatedAt: new Date(),
-    },
-    create: {
-      orgId: data.id,
-      userId: data.created_by,
-      role: 'owner',
-    },
+  // Full provisioning: org_settings + membership + provisioned event (AC1-AC7)
+  // This is idempotent - safe for webhook replays
+  const provisionResult = await orgProvisioningService.provisionOrg({
+    clerkOrgId: data.id,
+    clerkUserId: data.created_by,
+    orgName: data.name,
+    orgSlug: data.slug,
   });
 
-  // Fetch user email for event payload
-  const user = await prisma.user.findUnique({
-    where: { id: data.created_by },
-    select: { email: true },
-  });
-
-  // Emit org created event
+  // Emit org created event (separate from provisioned event)
   const orgPayload: OrgCreatedPayload = {
     name: data.name,
     slug: data.slug,
@@ -179,33 +167,43 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
   );
 
   // Check if this is the user's first org (signup completion)
-  const memberCount = await prisma.member.count({
-    where: { userId: data.created_by },
-  });
+  // Only emit signup event if not already provisioned (prevents duplicate on replay)
+  if (!provisionResult.alreadyProvisioned) {
+    const memberCount = await prisma.member.count({
+      where: { userId: data.created_by },
+    });
 
-  if (memberCount === 1 && user) {
-    // First org = signup complete, emit signup event
-    const signupPayload: UserSignupPayload = {
-      email: user.email,
-      auth_provider: 'email',
-    };
+    if (memberCount === 1) {
+      const user = await prisma.user.findUnique({
+        where: { id: data.created_by },
+        select: { email: true },
+      });
 
-    await eventService.createEvent(
-      {
-        type: 'xentri.user.signup.v1',
-        org_id: data.id,
-        user_id: data.created_by,
-        actor: { type: 'user', id: data.created_by },
-        payload_schema: 'user.signup@1.0',
-        payload: signupPayload,
-        source: 'clerk-webhook',
-        envelope_version: '1.0',
-      },
-      data.id
-    );
+      if (user) {
+        // First org = signup complete, emit signup event
+        const signupPayload: UserSignupPayload = {
+          email: user.email,
+          auth_provider: 'email',
+        };
+
+        await eventService.createEvent(
+          {
+            type: 'xentri.user.signup.v1',
+            org_id: data.id,
+            user_id: data.created_by,
+            actor: { type: 'user', id: data.created_by },
+            payload_schema: 'user.signup@1.0',
+            payload: signupPayload,
+            source: 'clerk-webhook',
+            envelope_version: '1.0',
+          },
+          data.id
+        );
+      }
+    }
   }
 
-  console.log(`[Clerk Webhook] Organization created: ${data.id}, slug: ${data.slug}`);
+  console.log(`[Clerk Webhook] Organization created & provisioned: ${data.id}, slug: ${data.slug}, alreadyProvisioned: ${provisionResult.alreadyProvisioned}`);
 }
 
 /**

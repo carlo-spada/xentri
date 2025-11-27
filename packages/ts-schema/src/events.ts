@@ -12,6 +12,7 @@ export const EventTypeSchema = z.enum([
   'xentri.user.signup.v1',
   'xentri.user.login.v1',
   'xentri.org.created.v1',
+  'xentri.org.provisioned.v1',
   'xentri.brief.created.v1',
   'xentri.brief.updated.v1',
   'xentri.website.published.v1',
@@ -72,6 +73,19 @@ export const OrgCreatedPayloadSchema = z.object({
 });
 export type OrgCreatedPayload = z.infer<typeof OrgCreatedPayloadSchema>;
 
+/**
+ * OrgProvisionedPayload - emitted after full org provisioning completes (AC4)
+ * Differs from org.created: this indicates settings + membership are ready
+ */
+export const OrgProvisionedPayloadSchema = z.object({
+  org_id: z.string(),
+  org_name: z.string(),
+  owner_user_id: z.string(),
+  plan: z.enum(['free', 'presencia', 'light_ops', 'business_in_motion']),
+  provisioned_at: z.string().datetime(),
+});
+export type OrgProvisionedPayload = z.infer<typeof OrgProvisionedPayloadSchema>;
+
 // Brief Events
 export const BriefCreatedPayloadSchema = z.object({
   brief_id: z.string(),
@@ -120,6 +134,7 @@ export const EventPayloadSchemas: Record<EventType, z.ZodTypeAny> = {
   'xentri.user.signup.v1': UserSignupPayloadSchema,
   'xentri.user.login.v1': UserLoginPayloadSchema,
   'xentri.org.created.v1': OrgCreatedPayloadSchema,
+  'xentri.org.provisioned.v1': OrgProvisionedPayloadSchema,
   'xentri.brief.created.v1': BriefCreatedPayloadSchema,
   'xentri.brief.updated.v1': BriefUpdatedPayloadSchema,
   'xentri.website.published.v1': WebsitePublishedPayloadSchema,

@@ -26,6 +26,17 @@ vi.mock('../../domain/events/EventService.js', () => ({
   },
 }));
 
+vi.mock('../../domain/orgs/OrgProvisioningService.js', () => ({
+  orgProvisioningService: {
+    provisionOrg: vi.fn().mockResolvedValue({
+      orgId: 'org_123',
+      settingsId: 'settings_123',
+      memberId: 'member_123',
+      alreadyProvisioned: false,
+    }),
+  },
+}));
+
 // Mock svix Webhook verification
 vi.mock('svix', () => ({
   Webhook: vi.fn().mockImplementation(() => ({

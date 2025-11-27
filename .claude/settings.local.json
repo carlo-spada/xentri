@@ -58,7 +58,12 @@
       "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" pnpm exec prisma migrate:*)",
       "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" npx prisma migrate status:*)",
       "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" npx prisma migrate resolve:*)",
-      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" npx prisma migrate deploy:*)"
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" npx prisma migrate deploy:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" pnpm exec prisma migrate deploy:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" npx prisma migrate status:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" pnpm exec prisma migrate resolve:*)",
+      "Bash(DOCKER_HOST=\"unix://$HOME/.colima/default/docker.sock\" docker info:*)",
+      "Bash(DOCKER_HOST=\"unix://$HOME/.colima/default/docker.sock\" TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=\"/var/run/docker.sock\" pnpm:*)"
     ],
     "deny": [],
     "ask": []

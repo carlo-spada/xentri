@@ -6,6 +6,7 @@ import { clerkPlugin } from '@clerk/fastify';
 import healthRoutes from './routes/health.js';
 import eventsRoutes from './routes/events.js';
 import usersRoutes from './routes/users.js';
+import orgsRoutes from './routes/orgs.js';
 import clerkWebhookRoutes from './routes/webhooks/clerk.js';
 import { disconnectDb } from './infra/db.js';
 
@@ -45,6 +46,7 @@ await server.register(rawBody, {
 await server.register(healthRoutes);
 await server.register(eventsRoutes);
 await server.register(usersRoutes);
+await server.register(orgsRoutes);
 await server.register(clerkWebhookRoutes);
 
 // Graceful shutdown

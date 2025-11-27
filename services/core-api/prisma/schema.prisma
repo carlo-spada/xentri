@@ -23,10 +23,28 @@ model Organization {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  members Member[]
-  events  SystemEvent[]
+  members  Member[]
+  events   SystemEvent[]
+  settings OrgSettings?
 
   @@map("organizations")
+}
+
+/// OrgSettings - per-org configuration (1:1 with Organization)
+/// Created during provisioning, stores plan, features, preferences
+model OrgSettings {
+  id          String   @id @default(uuid())
+  orgId       String   @unique @map("org_id")
+  plan        String   @default("free") // free, presencia, light_ops, business_in_motion
+  features    Json     @default("{}")   // JSONB - feature flags
+  preferences Json     @default("{}")   // JSONB - user preferences
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@map("org_settings")
 }
 
 /// User - authentication identity (can belong to multiple orgs)
