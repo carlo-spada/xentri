@@ -6,7 +6,7 @@ RUN corepack enable
 FROM base AS builder
 WORKDIR /app
 COPY . .
-RUN --mount=type=cache,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 # Build the specific package
 RUN pnpm --filter @xentri/core-api build
 # Deploy the package and its prod dependencies to a separate directory
