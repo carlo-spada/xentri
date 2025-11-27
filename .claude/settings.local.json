@@ -54,7 +54,11 @@
       "Bash(pnpm --filter @xentri/core-api run test)",
       "Bash(pnpm --filter @xentri/shell run typecheck:*)",
       "Bash(pnpm add:*)",
-      "Bash(pnpm -w run test:*)"
+      "Bash(pnpm -w run test:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" pnpm exec prisma migrate:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" npx prisma migrate status:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" npx prisma migrate resolve:*)",
+      "Bash(DATABASE_URL=\"postgresql://xentri:xentri_dev@localhost:5432/xentri\" npx prisma migrate deploy:*)"
     ],
     "deny": [],
     "ask": []

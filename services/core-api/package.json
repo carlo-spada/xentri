@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@clerk/fastify": "^2.6.5",
+    "@fastify/raw-body": "^5.0.1",
     "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.0.1",
     "@xentri/ts-schema": "workspace:*",

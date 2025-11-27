@@ -76,11 +76,10 @@ function isValidOrgId(id: string): boolean {
  * Per ADR-003: `app.current_org_id` MUST be set from verified JWT claim,
  * not from untrusted headers.
  */
-export function orgContextMiddleware(
+export async function orgContextMiddleware(
   request: FastifyRequest,
-  reply: FastifyReply,
-  done: HookHandlerDoneFunction
-): void {
+  reply: FastifyReply
+): Promise<void> {
   // Primary source: Clerk session claims (set by clerkAuthMiddleware)
   const clerkOrgId = request.clerkOrgId;
   const clerkUserId = request.clerkUserId;
@@ -94,12 +93,11 @@ export function orgContextMiddleware(
   const headerOrgId = request.headers['x-org-id'];
 
   // Determine which org ID to use
-  let effectiveOrgId: string | undefined;
+  let effectiveOrgId: string | undefined = clerkOrgId;
 
   if (headerOrgId && typeof headerOrgId === 'string') {
-    // Validate header format
     if (!isValidOrgId(headerOrgId)) {
-      reply
+      return reply
         .status(400)
         .header('content-type', 'application/problem+json')
         .send(
@@ -110,26 +108,59 @@ export function orgContextMiddleware(
             request.id
           )
         );
-      return;
     }
 
-    // If header differs from session, verify membership asynchronously
+    // If header differs from session, verify membership via Clerk
     if (headerOrgId !== clerkOrgId) {
-      // For now, trust the header if user is authenticated
-      // Full verification happens in orgContextMiddlewareAsync
-      effectiveOrgId = headerOrgId;
-    } else {
-      effectiveOrgId = clerkOrgId;
+      if (!clerkUserId) {
+        return reply
+          .status(401)
+          .header('content-type', 'application/problem+json')
+          .send(
+            problemDetails(
+              401,
+              'Unauthorized',
+              'Authentication required for org-switching',
+              request.id
+            )
+          );
+      }
+
+      const isMember = await isUserOrgMember(clerkUserId, headerOrgId);
+      if (!isMember) {
+        return reply
+          .status(403)
+          .header('content-type', 'application/problem+json')
+          .send(
+            problemDetails(
+              403,
+              'Forbidden',
+              'You do not have access to the requested organization',
+              request.id
+            )
+          );
+      }
     }
-  } else {
-    // No header, use Clerk session org
-    effectiveOrgId = clerkOrgId;
+
+    effectiveOrgId = headerOrgId;
+  }
+
+  if (!effectiveOrgId) {
+    return reply
+      .status(403)
+      .header('content-type', 'application/problem+json')
+      .send(
+        problemDetails(
+          403,
+          'Forbidden',
+          'No active organization. Please select or create an organization.',
+          request.id
+        )
+      );
   }
 
   // Set org context on request
   request.orgId = effectiveOrgId;
-
-  done();
 }
 
 /**

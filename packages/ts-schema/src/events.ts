@@ -68,19 +68,19 @@ export type UserLoginPayload = z.infer<typeof UserLoginPayloadSchema>;
 export const OrgCreatedPayloadSchema = z.object({
   name: z.string(),
   slug: z.string(),
-  owner_id: z.string().uuid(),
+  owner_id: z.string(),
 });
 export type OrgCreatedPayload = z.infer<typeof OrgCreatedPayloadSchema>;
 
 // Brief Events
 export const BriefCreatedPayloadSchema = z.object({
-  brief_id: z.string().uuid(),
+  brief_id: z.string(),
   title: z.string().optional(),
 });
 export type BriefCreatedPayload = z.infer<typeof BriefCreatedPayloadSchema>;
 
 export const BriefUpdatedPayloadSchema = z.object({
-  brief_id: z.string().uuid(),
+  brief_id: z.string(),
   sections_changed: z.array(z.string()).optional(),
   version: z.number().int().positive().optional(),
 });
@@ -88,30 +88,30 @@ export type BriefUpdatedPayload = z.infer<typeof BriefUpdatedPayloadSchema>;
 
 // Website Events
 export const WebsitePublishedPayloadSchema = z.object({
-  site_id: z.string().uuid(),
+  site_id: z.string(),
   domain: z.string().optional(),
   pages_count: z.number().int().nonnegative().optional(),
 });
 export type WebsitePublishedPayload = z.infer<typeof WebsitePublishedPayloadSchema>;
 
 export const PageUpdatedPayloadSchema = z.object({
-  page_id: z.string().uuid(),
-  site_id: z.string().uuid(),
+  page_id: z.string(),
+  site_id: z.string(),
   slug: z.string().optional(),
 });
 export type PageUpdatedPayload = z.infer<typeof PageUpdatedPayloadSchema>;
 
 export const ContentPublishedPayloadSchema = z.object({
-  content_id: z.string().uuid(),
+  content_id: z.string(),
   content_type: z.string().optional(),
 });
 export type ContentPublishedPayload = z.infer<typeof ContentPublishedPayloadSchema>;
 
 // Lead Events
 export const LeadCreatedPayloadSchema = z.object({
-  lead_id: z.string().uuid(),
+  lead_id: z.string(),
   source: z.string().optional(),
-  form_id: z.string().uuid().optional(),
+  form_id: z.string().optional(),
 });
 export type LeadCreatedPayload = z.infer<typeof LeadCreatedPayloadSchema>;
 
@@ -155,12 +155,12 @@ export function validateEventPayload(type: EventType, payload: unknown): string 
  * Generic over payload type for type-safe event handling
  */
 export const SystemEventSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   type: EventTypeSchema,
   occurred_at: z.string().datetime(), // ISO8601
   created_at: z.string().datetime().optional(),
-  org_id: z.string().uuid(),
-  user_id: z.string().uuid().nullable().optional(),
+  org_id: z.string(),
+  user_id: z.string().nullable().optional(),
   actor: EventActorSchema,
   payload_schema: z.string(), // e.g., "user.signup@1.0"
   payload: z.record(z.unknown()),

@@ -96,12 +96,12 @@ export class EventService {
           source,
           envelope_version
         ) VALUES (
-          ${eventId}::uuid,
+          ${eventId},
           ${validated.type},
           ${occurredAt},
           NOW(),
-          ${validated.org_id}::uuid,
-          ${validated.user_id || null}::uuid,
+          ${validated.org_id},
+          ${validated.user_id || null},
           ${validated.actor.type},
           ${validated.actor.id},
           ${validated.payload_schema},
@@ -202,12 +202,12 @@ export class EventService {
         envelope_version: string;
       }>>`
         SELECT
-          id::text,
+          id,
           event_type,
           occurred_at,
           created_at,
-          org_id::text,
-          user_id::text,
+          org_id,
+          user_id,
           actor_type,
           actor_id,
           payload_schema,

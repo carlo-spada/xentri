@@ -30,7 +30,6 @@ const eventsRoutes: FastifyPluginAsync = async (fastify) => {
   // Apply authentication and org context middleware to all routes
   // Order matters: clerkAuth first (verifies JWT), then orgContext (sets org_id)
   fastify.addHook('preHandler', clerkAuthMiddleware);
-  fastify.addHook('preHandler', requireOrgContext);
   fastify.addHook('preHandler', orgContextMiddleware);
 
   /**

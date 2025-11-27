@@ -1,62 +1,31 @@
 ---
-// Xentri Shell - Entry Point
+import Layout from '../layouts/Layout.astro';
 import { Hero } from '../components/Hero';
 import { EventTimeline } from '../components/EventTimeline';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Xentri - Your Business OS" />
-    <title>Xentri</title>
-    <style>
-      @import url('@xentri/ui/styles.css');
+<Layout title="Xentri">
+  <main class="shell-body">
+    <Hero client:load />
+    <!-- EventTimeline: Story 1.2 vertical slice - displays recent system events -->
+    <!-- Demo mode: Uses placeholder org ID. In production, org context comes from auth. -->
+    <EventTimeline
+      client:only="react"
+      apiUrl="http://localhost:3000"
+      orgId="org_demo_1"
+      limit={10}
+    />
+  </main>
+</Layout>
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        color: #f8fafc;
-      }
-      .shell {
-        text-align: center;
-      }
-      h1 {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(90deg, #38bdf8, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-      p {
-        color: #94a3b8;
-        font-size: 1.125rem;
-      }
-    </style>
-  </head>
-  <body>
-    <main style="padding: 2rem;">
-      <Hero client:load />
-      <!-- EventTimeline: Story 1.2 vertical slice - displays recent system events -->
-      <!-- Demo mode: Uses placeholder org ID. In production, org context comes from auth. -->
-      <EventTimeline
-        client:only="react"
-        apiUrl="http://localhost:3000"
-        orgId="e0000000-0000-0000-0000-000000000001"
-        limit={10}
-      />
-    </main>
-  </body>
-</html>
+<style>
+  @import url('@xentri/ui/styles.css');
+
+  .shell-body {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+</style>

@@ -296,16 +296,17 @@ export default async function clerkWebhookRoutes(fastify: FastifyInstance): Prom
         return reply.status(400).send({ error: 'Missing svix headers' });
       }
 
-      // Verify webhook signature
+      // Verify webhook signature using raw body
       const wh = new Webhook(webhookSecret);
       let event: WebhookEvent;
 
       try {
-        // Use raw body for signature verification
         const rawBody =
-          typeof request.body === 'string'
+          // rawBody is provided by @fastify/raw-body
+          (request as FastifyRequest & { rawBody?: Buffer }).rawBody?.toString('utf8') ||
+          (typeof request.body === 'string'
             ? request.body
-            : JSON.stringify(request.body);
+            : JSON.stringify(request.body));
 
         event = wh.verify(rawBody, {
           'svix-id': svixId,

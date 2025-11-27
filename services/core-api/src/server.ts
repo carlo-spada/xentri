@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
+import rawBody from '@fastify/raw-body';
 import { clerkPlugin } from '@clerk/fastify';
 import healthRoutes from './routes/health.js';
 import eventsRoutes from './routes/events.js';
@@ -31,6 +32,14 @@ await server.register(cors, {
 // Clerk authentication plugin
 // This enables getAuth() in routes and middleware
 await server.register(clerkPlugin);
+
+// Raw body for webhook verification (only for routes that need it)
+await server.register(rawBody, {
+  field: 'rawBody',
+  runFirst: true,
+  global: false,
+  routes: ['/api/v1/webhooks/clerk'],
+});
 
 // Routes
 await server.register(healthRoutes);

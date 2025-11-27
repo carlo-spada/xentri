@@ -16,7 +16,7 @@ datasource db {
 
 /// Organization - the tenant boundary
 model Organization {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id
   name      String
   slug      String   @unique
   createdAt DateTime @default(now()) @map("created_at")
@@ -31,7 +31,7 @@ model Organization {
 
 /// User - authentication identity (can belong to multiple orgs)
 model User {
-  id            String   @id @default(uuid()) @db.Uuid
+  id            String   @id
   email         String   @unique
   emailVerified Boolean  @default(false) @map("email_verified")
   createdAt     DateTime @default(now()) @map("created_at")
@@ -45,10 +45,10 @@ model User {
 
 /// Member - junction table linking users to organizations with roles
 model Member {
-  id     String     @id @default(uuid()) @db.Uuid
+  id     String     @id @default(uuid())
   role   MemberRole @default(member)
-  orgId  String     @map("org_id") @db.Uuid
-  userId String     @map("user_id") @db.Uuid
+  orgId  String     @map("org_id")
+  userId String     @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -76,12 +76,12 @@ enum MemberRole {
 /// SystemEvent - append-only event log (the "nervous system")
 /// IMMUTABLE: No UPDATE or DELETE allowed per AC3
 model SystemEvent {
-  id              String   @id @default(uuid()) @db.Uuid
+  id              String   @id @default(uuid())
   eventType       String   @map("event_type") // e.g., xentri.brief.updated.v1
   occurredAt      DateTime @default(now()) @map("occurred_at")
   createdAt       DateTime @default(now()) @map("created_at")
-  orgId           String   @map("org_id") @db.Uuid
-  userId          String?  @map("user_id") @db.Uuid // Nullable for system events
+  orgId           String   @map("org_id")
+  userId          String?  @map("user_id") // Nullable for system events
   actorType       String   @map("actor_type") // user | system | job
   actorId         String   @map("actor_id")
   payloadSchema   String   @map("payload_schema") // e.g., brief.updated@1.0
