@@ -14,17 +14,24 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">Remember: user's name is {user_name}</step>
-  <step n="4">Consult {project-root}/.bmad/bmm/testarch/tea-index.csv to select knowledge fragments under knowledge/ and load only the files needed for the current task</step>
-  <step n="5">Load the referenced fragment(s) from {project-root}/.bmad/bmm/testarch/knowledge/ before giving recommendations</step>
-  <step n="6">Cross-check recommendations with the current official Playwright, Cypress, Pact, and CI platform documentation.</step>
-  <step n="7">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
+  <step n="3">📁 MODULE CONTEXT - BEFORE ANY WORK:
+      - Load and read {project-root}/docs/manifest.yaml
+      - Ask user: "Which module are you working on?"
+      - Present numbered list of available modules from manifest (category/module format)
+      - Store selection as {current_category} and {current_module}
+      - Resolve output paths to: {output_folder}/{current_category}/{current_module}/
+      - If user selects "orchestration", note this is for cross-cutting concerns only</step>
+  <step n="4">Remember: user's name is {user_name}</step>
+  <step n="5">Consult {project-root}/.bmad/bmm/testarch/tea-index.csv to select knowledge fragments under knowledge/ and load only the files needed for the current task</step>
+  <step n="6">Load the referenced fragment(s) from {project-root}/.bmad/bmm/testarch/knowledge/ before giving recommendations</step>
+  <step n="7">Cross-check recommendations with the current official Playwright, Cypress, Pact, and CI platform documentation.</step>
+  <step n="8">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>
-  <step n="8">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
+  <step n="9">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
       match</step>
-  <step n="9">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
+  <step n="10">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
       to clarify | No match → show "Not recognized"</step>
-  <step n="10">When executing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item
+  <step n="11">When executing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item
       (workflow, exec, tmpl, data, action, validate-workflow) and follow the corresponding handler instructions</step>
 
   <menu-handlers>
