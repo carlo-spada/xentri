@@ -7,23 +7,19 @@ RUN corepack enable
 FROM base AS builder
 WORKDIR /app
 COPY . .
+# Install all deps (lockfile at repo root)
 RUN pnpm install --frozen-lockfile
-# Build the specific package
-# Generate Prisma Client (explicit to ensure .prisma/client exists in image)
+# Generate Prisma client explicitly
 RUN pnpm --filter @xentri/core-api db:generate
-
-# Build dependencies (ts-schema) and the package
+# Build packages (ts-schema, etc.) and core-api
 RUN pnpm --filter @xentri/core-api... build
-# Deploy the package and its prod dependencies to a separate directory
-RUN pnpm --filter @xentri/core-api deploy --prod --legacy /prod/core-api
 
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-# Copy the deployed application
-COPY --from=builder /prod/core-api /app
+# Copy built service files and node_modules (includes .prisma client)
+COPY --from=builder /app/services/core-api /app
+COPY --from=builder /app/node_modules /app/node_modules
 
-# Expose port (default 3000)
 EXPOSE 3000
-
 CMD ["node", "dist/server.js"]
