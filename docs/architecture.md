@@ -169,6 +169,31 @@ USING (
 );
 ```
 
+### ADR-004: Railway Bootstrap Deployment Strategy
+
+**Context:** The architecture specifies Kubernetes as the deployment target, but K8s setup requires 40-80 hours of work before shipping any product value. We need a strategy that balances immediate velocity with long-term scalability.
+
+**Decision:** We adopt a **Bridge Strategy**: deploy to Railway (PaaS) for bootstrapping, migrate to Kubernetes when triggered by spend ($500/mo) or compliance requirements.
+
+**Key Constraints:**
+1. **Docker-first:** All services deployed via standard `Dockerfile`, explicitly rejecting Nixpacks. Containers are cloud-portable from day one.
+2. **Redis with Volume:** Railway Redis requires attached volume for Streams persistence. Pin version ≥5.0 for Streams invariants.
+3. **n8n Queue Mode:** Deploy with separate main + worker services; `N8N_ENCRYPTION_KEY` is a "crown jewel" requiring secure backup.
+4. **Config as Code:** All settings in `railway.toml` files—no clickops drift.
+
+**Migration Triggers:**
+- Monthly spend > $500
+- Compliance requirement (SOC2, GDPR DPA)
+- First paying customer (Redis HA becomes critical)
+- Any written SLA commitment
+
+**Artifacts:**
+- Full decision record: `docs/architecture/adr-004-railway-bootstrap.md`
+- Deployment guide: `docs/deployment-plan.md`
+- K8s migration runbook: `docs/k8s-migration-runbook.md`
+
+**Implication:** Story 1.7 (DevOps) references these artifacts. K8s migration is a bounded project with IaC (Terraform + Helm), not ongoing hero work.
+
 ---
 
 ## 4. Project Structure & FR/Epic Coverage

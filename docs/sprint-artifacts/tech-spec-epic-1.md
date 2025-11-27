@@ -52,6 +52,7 @@ This epic implements the foundational layers defined in `architecture.md`:
 **ADR Alignment:**
 - ADR-002 (Event Envelope): Implement `SystemEvent<T>` interface in `packages/ts-schema`
 - ADR-003 (Multi-Tenant Security): Implement fail-closed RLS with `set_config('app.current_org_id', ...)` pattern
+- ADR-004 (Railway Bootstrap Strategy): Deploy via Railway for bootstrapping; K8s when triggers fire. See `docs/architecture/adr-004-railway-bootstrap.md`
 
 ---
 
@@ -410,6 +411,14 @@ CREATE TABLE user_preferences (
 2. Logging uses structured JSON with correlation IDs; error tracking hooked
 3. Minimal load test or smoke test script for shell/Brief slice
 4. Deployment pipeline supports zero-downtime deploys
+
+**Deployment Artifacts (ADR-004):**
+- `docs/architecture/adr-004-railway-bootstrap.md` — Bridge Strategy decision record
+- `docs/deployment-plan.md` — Step-by-step Railway deployment guide
+- `docs/k8s-migration-runbook.md` — K8s migration when triggers fire
+- `services/core-api/railway.toml` — Config as Code for core-api
+- `apps/shell/railway.toml` — Config as Code for shell
+- `.github/workflows/ci.yml` — Staging gate and production-ready jobs
 
 ## Post-Review Follow-ups
 

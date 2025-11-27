@@ -303,6 +303,12 @@ FRs: FR1, FR6, FR10, FR11, FR12, FR13, FR14, FR15, FR16, FR17, FR33, FR34, FR35,
 - Edge cases: Log PII scrubbing; ensure secrets not logged in CI.
 FRs/NFRs: NFR24, NFR25, NFR26, NFR27, NFR28, NFR29, NFR30, NFR31, NFR32, NFR33
 
+**Deployment Strategy (ADR-004):**
+- Bridge Strategy: Railway for bootstrapping → K8s when spend >$500/mo or compliance required
+- Artifacts: `docs/architecture/adr-004-railway-bootstrap.md`, `docs/deployment-plan.md`, `docs/k8s-migration-runbook.md`
+- Config as Code: `railway.toml` files for core-api and shell services
+- CI/CD: Staging gate and production-ready jobs in `.github/workflows/ci.yml`
+
 ---
 
 ## Epic 2: Strategy & Clarity Engine (MVP)
