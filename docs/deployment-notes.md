@@ -38,3 +38,6 @@
 - Update core-api Dockerfile to scoped install/build and redeploy.
 - Verify deploy by tailing logs and curling health from Railway shell.
 - Apply same pattern to other services as they are added; keep docs updated.
+
+## Status Updates
+- 2025-11-27: core-api Dockerfile simplified to single workspace install + ts-schema build + Prisma generate + sanity check for fastify/@prisma/client. Railway deploy still unstable (missing deps previously); keep Story 1.7 at ready-for-dev while deployment stabilizes.

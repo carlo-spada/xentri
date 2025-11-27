@@ -1,6 +1,6 @@
 # Story 1.7: DevOps, Observability, and Test Readiness
 
-Status: review
+Status: ready-for-dev
 
 ## Story
 
