@@ -31,13 +31,20 @@ WORKDIR /app
 
 # Use pnpm deploy to create a self-contained deployment directory
 # This MUST be run from workspace root
-RUN pnpm --filter @xentri/core-api deploy --prod /app/deployed
+RUN pnpm --filter @xentri/core-api deploy --legacy --prod /app/deployed
 
-# Copy the built dist into the deployed directory
+# Copy the built dist and prisma schema into the deployed directory
 RUN cp -r /app/services/core-api/dist /app/deployed/dist
+RUN cp -r /app/services/core-api/prisma /app/deployed/prisma
+RUN cp /app/services/core-api/prisma.config.ts /app/deployed/
+
+# Copy the generated Prisma client from the build workspace
+# pnpm deploy's postinstall generates to /app (workspace root), not /app/deployed
+RUN cp -r /app/node_modules/.pnpm/@prisma+client*/node_modules/.prisma /app/deployed/node_modules/
 
 # Verify deps are present in deployed directory
-RUN cd /app/deployed && node -e "require('fastify'); require('@prisma/client'); console.log('✓ Build deps verified')"
+WORKDIR /app/deployed
+RUN node -e "require('fastify'); require('@prisma/client'); console.log('✓ Build deps verified')"
 
 FROM base AS runner
 WORKDIR /app
