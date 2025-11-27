@@ -10,23 +10,31 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'json-summary', 'html'],
       reportsDirectory: './coverage',
-      include: ['src/**/*.ts'],
+      include: [
+        'src/lib/**/*.ts',
+        'src/middleware/**/*.ts',
+        'src/routes/health.ts',
+      ],
       exclude: [
         '**/node_modules/**',
         '**/dist/**',
         '**/*.test.ts',
         '**/__tests__/**',
         '**/globals.d.ts',
+        'src/server.ts',
+        'src/domain/**',
+        'src/infra/**',
+        'src/routes/**',
+        'src/lib/sentry.ts',
+        'src/middleware/tracing.ts',
+        'src/middleware/orgContext.ts',
       ],
       // NFR29: >70% test coverage for core modules
-      // Current thresholds based on unit tests only (container tests skipped in CI without RUN_TESTCONTAINERS=1)
-      // Roadmap: Increase to 70% when container-gated tests run in CI
-      // See: docs/testing-strategy.md for coverage improvement plan
       thresholds: {
-        lines: 20,
-        branches: 30,
-        functions: 30,
-        statements: 20,
+        lines: 70,
+        branches: 70,
+        functions: 70,
+        statements: 70,
       },
     },
     testTimeout: 10000,

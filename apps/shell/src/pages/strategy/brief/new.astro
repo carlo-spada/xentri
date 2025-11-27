@@ -1,9 +1,9 @@
 ---
-import { auth } from '@clerk/astro/server';
+import { getAuth } from '@clerk/astro/server';
 import AppShell from '../../../layouts/AppShell.astro';
 import { BriefForm } from '../../../components/strategy/BriefForm';
 
-const { orgId } = await auth();
+const { orgId } = await getAuth(Astro);
 if (!orgId) {
   return Astro.redirect('/sign-in');
 }

@@ -358,3 +358,63 @@ CLAUDE.md                                  (add deployment and observability com
 |------|--------|--------|
 | 2025-11-27 | SM Agent (Bob) | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, ADR-004, and Story 1.6 learnings |
 | 2025-11-27 | SM Agent (Bob) | Updated task checkboxes based on validation; added validation summary with blocking items |
+| 2025-11-27 | Dev Agent (Amelia) | Added Senior Developer Review (AI) with findings and action items |
+
+## Senior Developer Review (AI)
+
+**Reviewer:** Carlo  
+**Date:** 2025-11-27  
+**Outcome:** Blocked (high-severity gaps)  
+**Summary:** AC1/AC2/AC3 not satisfied. Core API will fail to start, coverage gates below 70%, and smoke test skips required shell/Brief path in CI.
+
+### Key Findings
+- [High] Core API fails to compile: `crypto` used for `genReqId` without import, preventing server start and logging/Sentry activation (services/core-api/src/server.ts:1-25).
+- [High] Coverage gate below NFR29/AC1: Vitest thresholds set to 20–30% and documented as such; CI will not block sub-70% coverage (services/core-api/vitest.config.ts:21-30, docs/testing-strategy.md:95-105).
+- [High] Smoke test does not exercise shell/Brief flow in CI: script inserts DB rows directly and skips shell/API checks when services aren’t running in CI (scripts/smoke-test.ts:304-341, 377-420).
+- [Med] Coverage artifacts checked into workspace (packages/ts-schema/coverage, services/core-api/coverage) should be git-ignored/cleaned to avoid drift.
+
+### Acceptance Criteria Coverage
+
+| AC | Status | Evidence |
+|----|--------|----------|
+| AC1 | Missing | Coverage thresholds at 20/30% instead of 70% (services/core-api/vitest.config.ts:21-30; docs/testing-strategy.md:95-105). |
+| AC2 | Missing | Core API logging pipeline fails to start due to missing `crypto` import for `genReqId`, so structured logging/Sentry cannot run (services/core-api/src/server.ts:1-25). |
+| AC3 | Missing | Smoke test bypasses real signup→Brief flow and skips shell/API checks in CI when services unavailable (scripts/smoke-test.ts:304-341, 377-420). |
+| AC4 | Met | Railway config as code present for zero-downtime deploy path (services/core-api/railway.toml). |
+
+### Task Validation
+
+| Task | Marked As | Verified As | Evidence |
+|------|-----------|-------------|----------|
+| 1.5 Add test coverage threshold check | Done | Not Done | Thresholds set to 20–30%, not 70% (services/core-api/vitest.config.ts:21-30). |
+| 2.1-2.5 Structured logging with correlation IDs | Done | Blocked | Server fails to start (missing `crypto` import) so logger/tracing never run (services/core-api/src/server.ts:1-25). |
+| 3.1-3.5 Error tracking with Sentry | Done | Partial | SDK wired but blocked by server start failure; no runtime verification (services/core-api/src/server.ts:1-25). |
+| 4.1-4.5 Smoke test extensions | Done | Partial | Script inserts DB records instead of exercising shell/Brief; CI skips when services absent (scripts/smoke-test.ts:304-341, 377-420). |
+| 7.2 Coverage thresholds in vitest.config.ts | Done | Not Done | Thresholds below NFR29 target (services/core-api/vitest.config.ts:21-30). |
+
+### Test Coverage and Gaps
+- Coverage gates set to 20–30%; AC/NFR requires ≥70% (services/core-api/vitest.config.ts:21-30).
+- Smoke test skips shell/API timing in CI and doesn’t drive signup→Brief via HTTP (scripts/smoke-test.ts:304-341, 377-420).
+- Coverage artifacts committed locally (packages/ts-schema/coverage, services/core-api/coverage) should be removed/ignored.
+
+### Architectural Alignment
+- Railway config as code remains aligned with ADR-004 (services/core-api/railway.toml).
+- Logging/observability not operational until server start issue is fixed.
+
+### Security Notes
+- Sentry DSN optional; current server start failure prevents error capture.
+- PII redaction paths present in logger config but unverified due to startup failure.
+
+### Best-Practices and References
+- Pino structured logging with request-scoped IDs per NFR24 once server starts (services/core-api/src/lib/logger.ts).
+- Sentry Astro integration gated on env vars (apps/shell/astro.config.mjs).
+
+### Action Items
+
+**Code Changes Required**
+- [ ] [High] Import `crypto` for `genReqId` so Fastify can start and logging/Sentry operate (services/core-api/src/server.ts:1-25).
+- [ ] [High] Raise coverage thresholds to ≥70% and ensure CI fails below target (services/core-api/vitest.config.ts:21-30; docs/testing-strategy.md:95-105).
+- [ ] [High] Make smoke test drive shell/API signup→Brief path (no DB shortcuts) and fail in CI when flow/timing budgets regress (scripts/smoke-test.ts:304-341, 377-420).
+
+**Advisory Notes**
+- Note: Clean or git-ignore generated coverage outputs (packages/ts-schema/coverage, services/core-api/coverage) to prevent drift.

@@ -331,13 +331,8 @@ async function testShellLoads() {
       fail('Shell: HTTP Response', `Shell returned HTTP ${response.status}`);
     }
   } catch (error) {
-    // In CI without shell running, this is expected
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    if (process.env.CI) {
-      log(`⚠️ Shell: Skipped in CI (${errorMessage})`);
-    } else {
-      fail('Shell: Connection', `Failed to connect to shell: ${errorMessage}`);
-    }
+    fail('Shell: Connection', `Failed to connect to shell at ${shellUrl}: ${errorMessage}`);
   }
 }
 
@@ -366,11 +361,7 @@ async function testApiHealth() {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    if (process.env.CI) {
-      log(`⚠️ API: Skipped in CI (${errorMessage})`);
-    } else {
-      fail('API: Connection', `Failed to connect to API: ${errorMessage}`);
-    }
+    fail('API: Connection', `Failed to connect to API at ${apiUrl}: ${errorMessage}`);
   }
 }
 

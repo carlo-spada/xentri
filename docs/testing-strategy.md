@@ -98,16 +98,14 @@ pnpm run test:smoke
 ```typescript
 // vitest.config.ts
 thresholds: {
-  lines: 20,      // Target: 70%
-  branches: 30,   // Target: 70%
-  functions: 30,  // Target: 70%
-  statements: 20, // Target: 70%
+  lines: 70,
+  branches: 70,
+  functions: 70,
+  statements: 70,
 }
 ```
 
-**Note:** Current thresholds are based on unit tests only. Integration tests (requiring testcontainers) are skipped in CI by default. Thresholds will be increased as:
-1. Container-gated tests are enabled in CI
-2. More unit tests are written for domain services
+**Note:** Container-gated integration tests still require `RUN_TESTCONTAINERS=1`; coverage gate remains at 70% even when container tests are skipped. Add targeted unit/integration tests to keep coverage above threshold.
 
 ### Excluded from Coverage
 

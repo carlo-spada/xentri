@@ -24,6 +24,9 @@ Thumbs.db
 *.log
 logs/
 
+# Coverage artifacts
+coverage/
+
 # Codex (OpenAI CLI)
 .codex/log/
 .codex/sessions/
