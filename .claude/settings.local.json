@@ -46,7 +46,12 @@
       "Bash(pnpm exec vitest:*)",
       "Bash(npx vitest:*)",
       "Bash(DATABASE_URL=\"postgresql://xentri:xentri_local@localhost:5432/xentri\" npx prisma migrate deploy:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(pnpm view:*)",
+      "Bash(pnpm --filter @xentri/ts-schema run typecheck)",
+      "Bash(pnpm --filter @xentri/core-api run typecheck:*)",
+      "Bash(pnpm --filter @xentri/core-api exec vitest run:*)",
+      "Bash(pnpm --filter @xentri/core-api run test)"
     ],
     "deny": [],
     "ask": []

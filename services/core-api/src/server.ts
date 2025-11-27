@@ -1,8 +1,11 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
+import { clerkPlugin } from '@clerk/fastify';
 import healthRoutes from './routes/health.js';
 import eventsRoutes from './routes/events.js';
+import usersRoutes from './routes/users.js';
+import clerkWebhookRoutes from './routes/webhooks/clerk.js';
 import { disconnectDb } from './infra/db.js';
 
 const server = Fastify({
@@ -25,9 +28,15 @@ await server.register(cors, {
   credentials: true,
 });
 
+// Clerk authentication plugin
+// This enables getAuth() in routes and middleware
+await server.register(clerkPlugin);
+
 // Routes
 await server.register(healthRoutes);
 await server.register(eventsRoutes);
+await server.register(usersRoutes);
+await server.register(clerkWebhookRoutes);
 
 // Graceful shutdown
 server.addHook('onClose', async () => {

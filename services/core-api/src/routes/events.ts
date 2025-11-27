@@ -2,6 +2,10 @@ import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
 import { EventService } from '../domain/events/EventService.js';
 import {
+  clerkAuthMiddleware,
+  requireOrgContext,
+} from '../middleware/clerkAuth.js';
+import {
   orgContextMiddleware,
   problemDetails,
 } from '../middleware/orgContext.js';
@@ -10,53 +14,6 @@ import {
   EventTypeSchema,
   type EventType,
 } from '@xentri/ts-schema';
-import { getPrisma } from '../infra/db.js';
-
-async function ensureOrgMembership(
-  request: FastifyRequest,
-  reply: FastifyReply
-): Promise<boolean> {
-  const orgId = request.orgId;
-  const userIdHeader = request.userId || request.headers['x-user-id'];
-
-  if (!orgId) {
-    reply.status(403).send(
-      problemDetails(403, 'Forbidden', 'Missing x-org-id header', request.id)
-    );
-    return false;
-  }
-
-  if (!userIdHeader || typeof userIdHeader !== 'string') {
-    reply.status(401).send(
-      problemDetails(401, 'Unauthorized', 'Missing x-user-id header', request.id)
-    );
-    return false;
-  }
-
-  const prisma = getPrisma();
-
-  // Set org context for RLS before membership lookup
-  await prisma.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
-
-  const member = await prisma.member.findFirst({
-    where: { orgId, userId: userIdHeader },
-  });
-
-  if (!member) {
-    reply.status(403).send(
-      problemDetails(
-        403,
-        'Forbidden',
-        'User is not a member of this organization',
-        request.id
-      )
-    );
-    return false;
-  }
-
-  request.userId = userIdHeader;
-  return true;
-}
 
 /**
  * Events API Routes
@@ -70,7 +27,10 @@ async function ensureOrgMembership(
 const eventsRoutes: FastifyPluginAsync = async (fastify) => {
   const eventService = new EventService();
 
-  // Apply org context middleware to all routes in this plugin
+  // Apply authentication and org context middleware to all routes
+  // Order matters: clerkAuth first (verifies JWT), then orgContext (sets org_id)
+  fastify.addHook('preHandler', clerkAuthMiddleware);
+  fastify.addHook('preHandler', requireOrgContext);
   fastify.addHook('preHandler', orgContextMiddleware);
 
   /**
@@ -89,9 +49,7 @@ const eventsRoutes: FastifyPluginAsync = async (fastify) => {
    */
   fastify.post('/api/v1/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const membershipOk = await ensureOrgMembership(request, reply);
-      if (!membershipOk) return;
-
+      // Auth and org context already verified by preHandler hooks
       const orgId = request.orgId!;
       const body = request.body as Record<string, unknown>;
 
@@ -170,9 +128,7 @@ const eventsRoutes: FastifyPluginAsync = async (fastify) => {
    */
   fastify.get('/api/v1/events', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const membershipOk = await ensureOrgMembership(request, reply);
-      if (!membershipOk) return;
-
+      // Auth and org context already verified by preHandler hooks
       const orgId = request.orgId!;
       const query = request.query as Record<string, string | undefined>;
 

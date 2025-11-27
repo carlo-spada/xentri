@@ -11,11 +11,10 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "@clerk/astro": "^1.6.10",
+    "@astrojs/react": "^4.3.1",
     "@xentri/ts-schema": "workspace:*",
     "@xentri/ui": "workspace:*",
     "astro": "^5.16.0",
-    "@astrojs/react": "^4.3.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

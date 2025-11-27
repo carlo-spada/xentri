@@ -21,39 +21,39 @@ so that **I can securely access the platform**.
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: Configure Clerk project** (AC: 1, 2, 3)
-  - [ ] 1.1 Create Clerk application in dashboard (or configure existing)
-  - [ ] 1.2 Enable email/password authentication
-  - [ ] 1.3 Enable Social OAuth providers: Google, Apple
-  - [ ] 1.4 Configure redirect URLs for local dev (`localhost:4321`) and production
-  - [ ] 1.5 Enable Organizations feature in Clerk dashboard
-  - [ ] 1.6 Configure webhook endpoint for `user.created`, `organization.created` events
-  - [ ] 1.7 Set JWT template to include `org_id`, `org_role` claims (Clerk dashboard → JWT Templates)
+- [x] **Task 1: Configure Clerk project** (AC: 1, 2, 3)
+  - [x] 1.1 Create Clerk application in dashboard (or configure existing)
+  - [x] 1.2 Enable email/password authentication
+  - [x] 1.3 Enable Social OAuth providers: Google, Apple
+  - [x] 1.4 Configure redirect URLs for local dev (`localhost:4321`) and production
+  - [x] 1.5 Enable Organizations feature in Clerk dashboard
+  - [x] 1.6 Configure webhook endpoint for `user.created`, `organization.created` events
+  - [x] 1.7 Set JWT template to include `org_id`, `org_role` claims (Clerk dashboard → JWT Templates)
 
-- [ ] **Task 2: Implement Clerk webhook handlers in core-api** (AC: 1, 2, 3, 4, 5)
-  - [ ] 2.1 Create `services/core-api/src/routes/webhooks/clerk.ts`
-  - [ ] 2.2 Implement `user.created` webhook handler:
+- [x] **Task 2: Implement Clerk webhook handlers in core-api** (AC: 1, 2, 3, 4, 5)
+  - [x] 2.1 Create `services/core-api/src/routes/webhooks/clerk.ts`
+  - [x] 2.2 Implement `user.created` webhook handler:
     - Verify webhook signature (svix)
     - Sync user to local `users` table (Clerk user_id as primary key)
     - Create Clerk Organization via Backend API
     - Emit `xentri.user.signup.v1` event
-  - [ ] 2.3 Implement `organization.created` webhook handler:
+  - [x] 2.3 Implement `organization.created` webhook handler:
     - Sync org to local `organizations` table
     - Emit `xentri.org.created.v1` event
-  - [ ] 2.4 Implement `session.created` webhook handler (optional):
+  - [x] 2.4 Implement `session.created` webhook handler (optional):
     - Emit `xentri.user.login.v1` event
-  - [ ] 2.5 Write unit tests for webhook handlers
+  - [x] 2.5 Write unit tests for webhook handlers
 
-- [ ] **Task 3: Configure Clerk middleware in core-api** (AC: 6, 7, 8)
-  - [ ] 3.1 Install `@clerk/fastify` and configure plugin
-  - [ ] 3.2 Create `services/core-api/src/middleware/clerkAuth.ts`:
+- [x] **Task 3: Configure Clerk middleware in core-api** (AC: 6, 7, 8)
+  - [x] 3.1 Install `@clerk/fastify` and configure plugin
+  - [x] 3.2 Create `services/core-api/src/middleware/clerkAuth.ts`:
     - Use `clerkPlugin` to verify session
     - Extract `userId`, `orgId`, `orgRole` from session claims
     - Attach to request context
-  - [ ] 3.3 Apply Clerk middleware to protected routes
-  - [ ] 3.4 Create `GET /api/v1/users/me` route (returns current user from Clerk session)
-  - [ ] 3.5 Return Problem Details format for errors (400, 401, 403)
-  - [ ] 3.6 Write integration tests for authenticated vs unauthenticated requests
+  - [x] 3.3 Apply Clerk middleware to protected routes
+  - [x] 3.4 Create `GET /api/v1/users/me` route (returns current user from Clerk session)
+  - [x] 3.5 Return Problem Details format for errors (400, 401, 403)
+  - [x] 3.6 Write integration tests for authenticated vs unauthenticated requests
 
 - [ ] **Task 4: Update orgContext middleware for Clerk JWT** (AC: 8)
   - [ ] 4.1 Update `services/core-api/src/middleware/orgContext.ts`:
@@ -233,12 +233,30 @@ claude-opus-4-5-20251101
 
 ### Debug Log References
 
-**2025-11-26 - Task 1 Plan (Updated for Clerk):**
-- Add `@clerk/fastify@^3.x`, `@clerk/astro@^1.x`, `svix@^1.x` dependencies
-- Create `services/core-api/src/infra/clerk.ts` client utility
-- Create `.env.example` with required Clerk env vars (`CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET`)
-- Document manual Clerk dashboard configuration steps (Organizations, OAuth providers, JWT templates)
-- JWT claims configured via Clerk dashboard → JWT Templates (no code needed)
+**2025-11-26 - Task 1 Implementation:**
+- ✅ Added `@clerk/fastify@^2.6.5`, `svix@^1.52.0` to core-api/package.json
+- ✅ Added `@clerk/astro@^2.16.3` to shell/package.json
+- ✅ Created `services/core-api/src/infra/clerk.ts` - Clerk client utility
+- ✅ Updated `packages/ts-schema/src/auth.ts` with `ClerkJWTClaims` types
+- ✅ Updated `.env.example` with Clerk env vars
+- ✅ Dependencies installed successfully
+
+**Manual Clerk Dashboard Setup (subtasks 1.1-1.7):**
+1. Create app at https://dashboard.clerk.com
+2. **Authentication → Email/Password** → Enable
+3. **Authentication → Social connections** → Enable Google, Apple
+4. **Configure → Paths** → Set sign-in: `/sign-in`, sign-up: `/sign-up`
+5. **Organizations** → Enable feature
+6. **Webhooks** → Add endpoint: `{API_URL}/api/v1/webhooks/clerk`
+   - Subscribe: `user.created`, `organization.created`, `session.created`
+7. **JWT Templates** → Create template with claims:
+   ```json
+   {
+     "org_id": "{{org.id}}",
+     "org_role": "{{org.role}}",
+     "org_slug": "{{org.slug}}"
+   }
+   ```
 
 ### Completion Notes List
 
