@@ -6,20 +6,33 @@ RUN corepack enable
 
 FROM base AS builder
 WORKDIR /app
-COPY . .
-# Install all deps (lockfile at repo root)
-RUN pnpm install --frozen-lockfile
-# Generate Prisma client explicitly
-RUN pnpm --filter @xentri/core-api db:generate
-# Build packages (ts-schema, etc.) and core-api
-RUN pnpm --filter @xentri/core-api... build
 
+# Copy workspace manifests (only those that exist)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+# Copy shared package needed for core-api build
+COPY packages/ts-schema packages/ts-schema
+# Copy core-api source
+COPY services/core-api services/core-api
+
+# Install all workspace deps (simplest for reliability)
+RUN pnpm install --frozen-lockfile
+# Build shared package and core-api
+RUN pnpm --filter @xentri/ts-schema build
+
+WORKDIR /app/services/core-api
+# Install service prod deps explicitly (ensure runtime deps like fastify present)
+RUN pnpm install --prod --frozen-lockfile
+# Generate Prisma client
+RUN pnpm db:generate
+# Build core-api
+RUN pnpm build
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-# Copy built service files and node_modules (includes .prisma client)
-COPY --from=builder /app/services/core-api /app
-COPY --from=builder /app/node_modules /app/node_modules
+# Copy built artifacts and deps
+COPY --from=builder /app/services/core-api/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/services/core-api/package.json ./package.json
 
 EXPOSE 3000
 CMD ["node", "dist/server.js"]
