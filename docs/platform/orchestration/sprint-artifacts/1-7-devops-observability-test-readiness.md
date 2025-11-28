@@ -1,6 +1,6 @@
 # Story 1.7: DevOps, Observability, and Test Readiness
 
-Status: review
+Status: in-progress
 
 ## Story
 
@@ -360,6 +360,7 @@ CLAUDE.md                                  (add deployment and observability com
 | 2025-11-27 | SM Agent (Bob) | Updated task checkboxes based on validation; added validation summary with blocking items |
 | 2025-11-27 | Dev Agent (Amelia) | Added Senior Developer Review (AI) with findings and action items |
 | 2025-11-27 | Dev Agent (Amelia) | Re-review CORRECTED: Deployment crashing. Fixed Dockerfile (pnpm deploy), documented PUBLIC_CLERK_PUBLISHABLE_KEY. Status → in-progress. |
+| 2025-11-28 | Dev Agent (Amelia) | Senior Developer Review (AI) - Changes requested on smoke test coverage |
 
 ## Senior Developer Review (AI)
 
@@ -562,3 +563,48 @@ curl -s https://core-api-production-8016.up.railway.app/health/ready
 2. **pnpm v10 breaking changes** - `pnpm deploy` requires `--legacy` flag for workspaces without `inject-workspace-packages=true`
 3. **Prisma + pnpm deploy** - Generated `.prisma/client` must be explicitly copied to deployed directory
 4. **Server binding** - Always use `0.0.0.0` (not `localhost`) and respect `PORT` env var in containers
+
+---
+
+## Senior Developer Review (AI) - Changes Requested
+
+**Reviewer:** Carlo  
+**Date:** 2025-11-28  
+**Outcome:** Changes Requested  
+**Summary:** Smoke test never starts core-api/shell in CI and seeds Brief/events directly, so AC3 is unvalidated. Coverage gate skips core runtime code. Story context file not found; proceeded without it.
+
+### Key Findings
+- [High] Smoke test hits localhost without starting services; CI job builds only, so shell/API checks will fail or be skipped—AC3 not validated (.github/workflows/ci.yml:121-173; scripts/smoke-test.ts:314-375).
+- [High] Brief flow “validation” writes directly to DB/events instead of exercising signup→Brief over HTTP, leaving AC3 untested (scripts/smoke-test.ts:378-435).
+- [Medium] Coverage thresholds exclude routes/domain, weakening the CI quality gate for AC1 (services/core-api/vitest.config.ts:13-37).
+
+### Acceptance Criteria Coverage
+
+| AC | Status | Evidence |
+|----|--------|----------|
+| AC1 | Implemented | CI runs lint/typecheck/test on PRs; vitest thresholds set to 70% ( .github/workflows/ci.yml:64-120; services/core-api/vitest.config.ts:33-38). |
+| AC2 | Implemented | Pino logger + tracing + Sentry hooks add trace/org/user context (services/core-api/src/lib/logger.ts:1-117; services/core-api/src/middleware/tracing.ts:28-83; services/core-api/src/lib/sentry.ts:22-194). |
+| AC3 | Missing | Smoke test does not start services and seeds DB/events directly, so shell/API path is never exercised ( .github/workflows/ci.yml:121-173; scripts/smoke-test.ts:314-435). |
+| AC4 | Implemented | Railway config-as-code and Dockerfile use pnpm deploy with health checks for rolling deploy path (services/core-api/railway.toml; services/core-api/Dockerfile). |
+
+### Task Validation
+
+| Task | Marked As | Verified As | Evidence |
+|------|-----------|-------------|----------|
+| Task 1: CI quality gates | Done | Partial (no service startup in smoke; coverage scope narrow) | .github/workflows/ci.yml:64-173; services/core-api/vitest.config.ts:13-37 |
+| Task 2: Structured logging | Done | Verified | services/core-api/src/lib/logger.ts:1-117; services/core-api/src/middleware/tracing.ts:28-83 |
+| Task 3: Error tracking | Done | Verified (conditional on DSN) | services/core-api/src/lib/sentry.ts:22-194; apps/shell/astro.config.mjs:1-36 |
+| Task 4: Smoke test scope | Done | Not Done (no HTTP flow, relies on DB inserts) | scripts/smoke-test.ts:314-435; .github/workflows/ci.yml:121-173 |
+| Task 5: Railway deployment config | Done | Verified | services/core-api/railway.toml:1-29; services/core-api/Dockerfile:1-76 |
+
+### Test Coverage and Gaps
+
+- Coverage gate skips routes/domain/infra, so CI may pass without exercising API logic (services/core-api/vitest.config.ts:13-37).
+- Smoke test does not start or hit core-api/shell; no end-to-end validation of signup→Brief flow.
+
+### Action Items
+
+- [ ] [High] Start core-api and shell (or point to staging) in CI smoke job and drive signup→Brief flow over HTTP; remove DB seeding/localhost assumptions so AC3 fails when flow breaks (.github/workflows/ci.yml:121-173; scripts/smoke-test.ts:314-435).
+- [ ] [Medium] Expand vitest coverage scope to include routes/domain (or package-level thresholds) so the quality gate exercises runtime code (services/core-api/vitest.config.ts:13-37).
+
+---

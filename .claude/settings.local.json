@@ -128,7 +128,11 @@
       "Bash(docs/platform/orchestration/interfaces/ )",
       "Bash(docs/platform/shell/interfaces/ )",
       "Bash(docs/platform/ts-schema/interfaces/ )",
-      "Bash(docs/platform/ui/interfaces/)"
+      "Bash(docs/platform/ui/interfaces/)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(chmod:*)",
+      "Bash(gh --version:*)"
     ],
     "deny": [],
     "ask": []

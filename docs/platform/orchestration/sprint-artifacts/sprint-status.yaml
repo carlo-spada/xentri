@@ -40,7 +40,7 @@ epic_status:
 # Cross-cutting stories (infrastructure, DevOps, platform-wide)
 development_status:
   1-1-project-initialization-infrastructure: done
-  1-7-devops-observability-test-readiness: review
+  1-7-devops-observability-test-readiness: in-progress
 
 # Epic 1 completion summary (stories distributed across modules):
 # - orchestration: 1-1 (done), 1-7 (review)

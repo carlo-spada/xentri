@@ -60,6 +60,31 @@ docs/
 | Deployment Guide | `docs/platform/orchestration/deployment-plan.md` |
 | Incident Response | `docs/platform/orchestration/incident-response.md` |
 
+### Module Management (IMPORTANT)
+
+**NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
+
+Use the provided scripts to manage modules and categories:
+
+```bash
+# Add a new module
+./scripts/add-module.sh <category> <module-name>
+./scripts/add-module.sh strategy copilot
+
+# Remove a module
+./scripts/remove-module.sh <category> <module-name>
+./scripts/remove-module.sh strategy copilot
+
+# Add a new category (rare)
+./scripts/add-category.sh <category> "<purpose>"
+./scripts/add-category.sh analytics "Business Intelligence"
+
+# Remove an empty category
+./scripts/remove-category.sh <category>
+```
+
+These scripts update `docs/manifest.yaml` (the single source of truth), create/delete folder structures, and manage GitHub labels. All BMM agents read from the manifest dynamically.
+
 ## Architecture Philosophy: "Decoupled Unity"
 
 The user sees one calm workspace; under the hood, each capability is an isolated module:

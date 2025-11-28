@@ -30,7 +30,7 @@ All paths resolve to: `docs/{category}/{module}/`
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Module registry
+├── manifest.yaml               # Module registry (SINGLE SOURCE OF TRUTH)
 ├── platform/
 │   ├── orchestration/          # System-wide architecture (big picture)
 │   ├── shell/                  # apps/shell docs
@@ -39,6 +39,21 @@ docs/
 │   └── ui/                     # packages/ui docs
 └── {other-categories}/         # Future modules
 ```
+
+### Module Management (IMPORTANT)
+
+**NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
+
+Use the provided scripts:
+
+```bash
+./scripts/add-module.sh <category> <module>      # Add module
+./scripts/remove-module.sh <category> <module>   # Remove module
+./scripts/add-category.sh <category> "<purpose>" # Add category
+./scripts/remove-category.sh <category>          # Remove empty category
+```
+
+These scripts maintain `docs/manifest.yaml` as the single source of truth.
 
 ## Build & Development Commands
 

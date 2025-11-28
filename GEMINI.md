@@ -54,6 +54,24 @@ Each module is a **full BMAD project** with its own:
 - README.md, prd.md, architecture.md, epics.md
 - sprint-artifacts/ folder with stories and status
 
+### Module Management (IMPORTANT)
+
+**NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
+
+Use the provided scripts to manage modules and categories:
+
+```bash
+# Add/remove modules
+./scripts/add-module.sh <category> <module>      # e.g., strategy copilot
+./scripts/remove-module.sh <category> <module>
+
+# Add/remove categories (rare)
+./scripts/add-category.sh <category> "<purpose>"
+./scripts/remove-category.sh <category>          # Must be empty first
+```
+
+These scripts maintain `docs/manifest.yaml` (single source of truth), manage folder structures, and handle GitHub labels automatically.
+
 ## 3. Architecture & Tech Stack
 
 Monorepo managed by **Turborepo 2.6**, following "Decoupled Unity" philosophy.
