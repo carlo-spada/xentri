@@ -1,0 +1,118 @@
+# Cross-Module Request SLA Monitoring
+# Part of Module Isolation infrastructure (Phase 3)
+# See: docs/platform/orchestration/module-isolation-plan.md
+#
+# Monitors cross-module requests and notifies when SLAs are at risk:
+# - Warning at 12 hours: Adds comment reminder
+# - Escalation at 24 hours: Adds urgent label and comment
+
+name: Cross-Module SLA Monitor
+
+on:
+  schedule:
+    # Run every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-sla:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check stale cross-module requests
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+            const now = Date.now();
+
+            // Find all open cross-module issues
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'cross-module',
+              state: 'open'
+            });
+
+            for (const issue of issues.data) {
+              const createdAt = new Date(issue.created_at).getTime();
+              const age = now - createdAt;
+              const ageHours = Math.floor(age / (60 * 60 * 1000));
+
+              // Check if already has SLA labels
+              const labels = issue.labels.map(l => l.name);
+              const hasWarning = labels.includes('sla:warning');
+              const hasUrgent = labels.includes('sla:urgent');
+
+              // Get existing comments to avoid duplicates
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number
+              });
+
+              const hasSlaComment = comments.data.some(c =>
+                c.body.includes('SLA Alert') && c.user.type === 'Bot'
+              );
+
+              // 24+ hours: Urgent escalation
+              if (age >= TWENTY_FOUR_HOURS && !hasUrgent) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: ['sla:urgent']
+                });
+
+                if (!hasSlaComment || !comments.data.some(c => c.body.includes('URGENT'))) {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    body: `## 🚨 SLA Alert: URGENT
+
+            This cross-module request has been open for **${ageHours} hours**.
+
+            Per the Module Isolation SLA policy, requests open >24 hours require immediate attention:
+            - The requesting module may be blocked
+            - Please review and respond with approval, rejection, or alternative proposal
+
+            ---
+            *Automated SLA monitoring - see docs/platform/orchestration/module-isolation-plan.md*`
+                  });
+                }
+
+                console.log(`URGENT: Issue #${issue.number} is ${ageHours}h old`);
+              }
+              // 12-24 hours: Warning
+              else if (age >= TWELVE_HOURS && !hasWarning && !hasUrgent) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: ['sla:warning']
+                });
+
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `## ⚠️ SLA Alert: Approaching Deadline
+
+            This cross-module request has been open for **${ageHours} hours**.
+
+            Per the Module Isolation SLA policy:
+            - Requests should be reviewed within 12 hours
+            - Requests open >24 hours will be escalated
+
+            Please review and respond when possible.
+
+            ---
+            *Automated SLA monitoring - see docs/platform/orchestration/module-isolation-plan.md*`
+                });
+
+                console.log(`WARNING: Issue #${issue.number} is ${ageHours}h old`);
+              }
+            }
+
+            console.log(`Checked ${issues.data.length} cross-module issues`);

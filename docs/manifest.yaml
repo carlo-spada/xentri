@@ -96,6 +96,7 @@ modules:
     package: "packages/ts-schema"
     team_label: "team:ts-schema"
     dependencies: []
+    consumers: [core-api, shell]  # Modules that import from ts-schema
     status: active
 
   ui:
@@ -104,6 +105,7 @@ modules:
     package: "packages/ui"
     team_label: "team:ui"
     dependencies: []
+    consumers: [shell]  # Modules that import from ui
     status: active
 
 # =============================================================================
