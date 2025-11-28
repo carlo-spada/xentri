@@ -16,7 +16,7 @@ if (!orgId) {
     <!-- EventTimeline: Story 1.2 vertical slice - displays recent system events -->
     <EventTimeline
       client:only="react"
-      apiUrl="http://localhost:3000"
+      apiUrl={import.meta.env.PUBLIC_API_URL || "http://localhost:3000"}
       orgId={orgId}
       limit={10}
     />
