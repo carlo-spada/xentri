@@ -1,0 +1,107 @@
+name: Cross-Module Request
+description: Request changes to another module's code or contracts
+labels: ["cross-module", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Cross-Module Request
+        Use this template when your work in one module requires changes to another module.
+
+  # NOTE: Update these options when adding new modules.
+  # See docs/manifest.yaml for the authoritative module list.
+  - type: dropdown
+    id: source_module
+    attributes:
+      label: Requesting Module
+      description: Which module is making this request?
+      options:
+        # Platform (infrastructure)
+        - platform/orchestration
+        - platform/core-api
+        - platform/shell
+        - platform/ts-schema
+        - platform/ui
+        # Category co-pilots (one per category, expand as needed)
+        - strategy/copilot
+        - brand/copilot
+        - sales/copilot
+        - finance/copilot
+        - operations/copilot
+        - team/copilot
+        - legal/copilot
+    validations:
+      required: true
+
+  # NOTE: Update these options when adding new modules.
+  # See docs/manifest.yaml for the authoritative module list.
+  - type: dropdown
+    id: target_module
+    attributes:
+      label: Target Module
+      description: Which module needs to make changes?
+      options:
+        # Platform (infrastructure)
+        - platform/orchestration
+        - platform/core-api
+        - platform/shell
+        - platform/ts-schema
+        - platform/ui
+        # Category co-pilots (one per category, expand as needed)
+        - strategy/copilot
+        - brand/copilot
+        - sales/copilot
+        - finance/copilot
+        - operations/copilot
+        - team/copilot
+        - legal/copilot
+    validations:
+      required: true
+
+  - type: input
+    id: related_story
+    attributes:
+      label: Related Story/Issue
+      description: Link to the story or issue driving this request
+      placeholder: "#123 or story-2-1-event-backbone"
+    validations:
+      required: true
+
+  - type: textarea
+    id: request
+    attributes:
+      label: What do you need?
+      description: Describe the specific change needed in the target module
+      placeholder: |
+        Example: Add `OrgCreatedEvent` type to `packages/ts-schema/src/events.ts`
+
+        ```typescript
+        export interface OrgCreatedEvent {
+          type: 'org.created';
+          orgId: string;
+          timestamp: Date;
+        }
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Why is this needed?
+      description: Explain why this change is necessary and how it fits the architecture
+      placeholder: |
+        The core-api needs to emit typed events when organizations are created.
+        This enables downstream consumers (shell, future modules) to react to org creation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact Assessment
+      description: What other modules might be affected by this change?
+      placeholder: |
+        - shell: Will need to handle new event type (future story)
+        - ui: No impact
+        - core-api: Consumer of this change

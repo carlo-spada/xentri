@@ -1,0 +1,54 @@
+# Contract Validation Workflow for ts-schema
+# Part of Module Isolation infrastructure (Phase 1)
+# See: docs/platform/orchestration/module-isolation-plan.md
+#
+# This workflow ensures changes to the shared type contract (ts-schema)
+# don't break any consuming modules.
+
+name: Contract Validation
+
+on:
+  pull_request:
+    paths:
+      - 'packages/ts-schema/**'
+
+jobs:
+  validate-consumer:
+    name: Validate ${{ matrix.consumer }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # NOTE: Update this list when adding new modules that consume ts-schema
+        # Current consumers as of 2025-11-27:
+        # - core-api (services/core-api) - uses ts-schema for API types
+        # - shell (apps/shell) - uses ts-schema for shared types
+        # - ui (packages/ui) - uses ts-schema for component prop types
+        consumer: [core-api, shell, ui]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ts-schema
+        run: pnpm --filter @xentri/ts-schema build
+
+      - name: Typecheck ${{ matrix.consumer }}
+        run: pnpm --filter @xentri/${{ matrix.consumer }} typecheck
+
+      - name: Test ${{ matrix.consumer }}
+        run: pnpm --filter @xentri/${{ matrix.consumer }} test
+        continue-on-error: false

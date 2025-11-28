@@ -1,6 +1,16 @@
-# Story {{epic_num}}.{{story_num}}: {{story_title}}
+---
+module: {{module}}
+story_id: {{story_key}}
+status: drafted
+dependencies: []
+# dependencies:
+#   - module: platform/ts-schema
+#     request: "Description of what you need"
+#     issue: "#123"
+#     status: pending  # pending | approved | rejected | implemented
+---
 
-Status: drafted
+# Story {{epic_num}}.{{story_num}}: {{story_title}}
 
 ## Story
 

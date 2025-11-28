@@ -65,6 +65,7 @@ modules:
     purpose: "System-wide architecture, cross-cutting concerns, platform infrastructure"
     scope: "Big picture ONLY - no module-specific implementation details"
     package: null  # Not a code package - pure documentation
+    team_label: "team:orchestration"
     status: active
     key_files:
       - architecture.md
@@ -77,6 +78,7 @@ modules:
     category: platform
     purpose: "Astro application shell - routing, layout, React island host"
     package: "apps/shell"
+    team_label: "team:shell"
     dependencies: [ui, ts-schema]
     status: active
 
@@ -84,6 +86,7 @@ modules:
     category: platform
     purpose: "Core API service - authentication, events, organizations, webhooks"
     package: "services/core-api"
+    team_label: "team:core-api"
     dependencies: [ts-schema]
     status: active
 
@@ -91,6 +94,7 @@ modules:
     category: platform
     purpose: "Shared TypeScript types and Zod schemas - the contract layer"
     package: "packages/ts-schema"
+    team_label: "team:ts-schema"
     dependencies: []
     status: active
 
@@ -98,6 +102,7 @@ modules:
     category: platform
     purpose: "Design system - shared components, Tailwind config, shadcn/ui"
     package: "packages/ui"
+    team_label: "team:ui"
     dependencies: []
     status: active
 

@@ -1,6 +1,16 @@
-# Story {{N}}.{{M}}: {{story_title}}
+---
+module: {{module}}
+story_id: {{N}}-{{M}}-{{story_slug}}
+status: draft
+dependencies: []
+# dependencies:
+#   - module: platform/ts-schema
+#     request: "Description of what you need"
+#     issue: "#123"
+#     status: pending  # pending | approved | rejected | implemented
+---
 
-**Status:** Draft
+# Story {{N}}.{{M}}: {{story_title}}
 
 ---
 

@@ -8,7 +8,16 @@ output_folder: "{config_source}:output_folder"
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 date: system-generated
-sprint_artifacts: "{config_source}:sprint_artifacts"
+
+# Module isolation variables (Phase 1)
+# These enable module-scoped story creation and cross-module dependency tracking
+manifest_file: "{project-root}/docs/manifest.yaml"
+module: "" # Will be elicited from user or inherited from agent session (format: category/module-name)
+module_code_path: "" # Resolved from manifest.yaml based on module (e.g., "services/core-api")
+
+# Module-scoped sprint artifacts (federated per-module)
+# Format: docs/{category}/{module}/sprint-artifacts/
+sprint_artifacts: "{output_folder}/{{current_category}}/{{current_module}}/sprint-artifacts"
 story_dir: "{sprint_artifacts}"
 
 # Workflow components

@@ -9,6 +9,61 @@
 
 <workflow>
 
+  <step n="0.5" goal="Establish module context">
+    <critical>MODULE ISOLATION: Stories must be scoped to a specific module for clean ownership and traceability</critical>
+
+    <action>Check if {{module}} is already set (inherited from agent session context):
+      - If set: Use inherited value (format: category/module-name, e.g., "platform/core-api")
+      - If empty: Proceed to elicit from user
+    </action>
+
+    <check if="module is empty">
+      <action>Load {{manifest_file}} ({project-root}/docs/manifest.yaml) to get available modules</action>
+      <action>Parse the 'modules:' section to build a list of valid module choices</action>
+      <action>Present numbered list of modules to user:
+        ```
+        📦 Which module does this story belong to?
+
+        Platform:
+        1. platform/orchestration - System-wide architecture, cross-cutting concerns
+        2. platform/core-api - Core API service (authentication, events, orgs)
+        3. platform/shell - Astro application shell (routing, layout)
+        4. platform/ts-schema - Shared TypeScript types and Zod schemas
+        5. platform/ui - Design system (shared components, Tailwind)
+
+        [Future categories will appear here as modules are added]
+
+        Enter number or module path (e.g., "platform/core-api"):
+        ```
+      </action>
+      <action>Wait for user input and validate against manifest modules</action>
+      <action>Set {{module}} = selected module path (e.g., "platform/core-api")</action>
+    </check>
+
+    <action>Parse {{module}} to extract:
+      - {{current_category}} = first segment before "/" (e.g., "platform")
+      - {{current_module}} = second segment after "/" (e.g., "core-api")
+    </action>
+
+    <action>Resolve {{module_code_path}} from manifest:
+      - Load {{manifest_file}} if not already loaded
+      - Find modules[{{current_module}}].package value
+      - Set {{module_code_path}} = package value (e.g., "services/core-api")
+      - If package is null (e.g., orchestration): set {{module_code_path}} = "cross-cutting"
+    </action>
+
+    <action>Update path variables to module scope:
+      - {{sprint_artifacts}} = "{output_folder}/{{current_category}}/{{current_module}}/sprint-artifacts"
+      - {{story_dir}} = {{sprint_artifacts}}
+      - Verify directory exists, create if needed
+    </action>
+
+    <output>✅ Module context established: **{{module}}**
+    - Code path: {{module_code_path}}
+    - Stories directory: {{story_dir}}
+    </output>
+  </step>
+
   <step n="1" goal="Load config and initialize">
     <action>Resolve variables from config_source: story_dir (sprint_artifacts), output_folder, user_name, communication_language. If story_dir missing → ASK user to provide a stories directory and update variable.</action>
     <action>Create {{story_dir}} if it does not exist</action>

@@ -1,0 +1,95 @@
+# Cross-Module Detection Workflow
+# Part of Module Isolation infrastructure (Phase 1)
+# See: docs/platform/orchestration/module-isolation-plan.md
+
+name: Cross-Module Warning
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-cross-module:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect modules touched
+        id: modules
+        run: |
+          # Get changed files
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+
+          # Map paths to module names (handles both code and docs)
+          # services/core-api/* -> core-api
+          # apps/shell/* -> shell
+          # packages/ts-schema/* -> ts-schema
+          # packages/ui/* -> ui
+          # docs/platform/orchestration/* -> orchestration
+          # docs/platform/core-api/* -> core-api
+          MODULES=$(echo "$CHANGED" | \
+            sed -E 's|^docs/platform/([^/]+)/.*|\1|; s|^(services|apps|packages)/([^/]+)/.*|\2|' | \
+            grep -v '^\.' | sort -u | tr '\n' ',' | sed 's/,$//')
+
+          MODULE_COUNT=$(echo "$MODULES" | tr ',' '\n' | grep -c . || echo "0")
+
+          echo "modules=$MODULES" >> $GITHUB_OUTPUT
+          echo "count=$MODULE_COUNT" >> $GITHUB_OUTPUT
+          echo "Detected modules: $MODULES (count: $MODULE_COUNT)"
+
+      - name: Check for existing warning
+        if: steps.modules.outputs.count > 1
+        id: existing
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const existingWarning = comments.data.find(c =>
+              c.body.includes('Cross-Module Change Detected') &&
+              c.user.type === 'Bot'
+            );
+
+            core.setOutput('exists', !!existingWarning);
+
+      - name: Add cross-module warning
+        if: steps.modules.outputs.count > 1 && steps.existing.outputs.exists != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const modules = '${{ steps.modules.outputs.modules }}'.split(',').filter(Boolean);
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['cross-module']
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## Cross-Module Change Detected
+
+            This PR touches multiple modules: **${modules.join(', ')}**
+
+            ### Before merging, please acknowledge:
+            - [ ] I have considered the impact on each module
+            - [ ] Cross-module dependencies are documented (GitHub Issue linked if needed)
+            - [ ] Contract tests pass (if applicable)
+            - [ ] I have mentally "context-switched" to review from each module's perspective
+
+            ### Why this matters
+            Module isolation ensures clean ownership and prevents coupling issues at scale.
+            This acknowledgment creates an audit trail for future team members.
+
+            ---
+            *To acknowledge: Edit this comment and check the boxes above.*`
+            });
