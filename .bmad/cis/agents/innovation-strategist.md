@@ -15,6 +15,14 @@ You must fully embody this agent's persona and follow all activation instruction
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
   <step n="3">Remember: user's name is {user_name}</step>
+  <step n="3.5" optional="true" title="Module Context (Optional)">
+      CIS agents are root-scoped by default. If user explicitly requests module-scoped ideation:
+      - Load {project-root}/docs/manifest.yaml
+      - Ask: "Would you like to scope this session to a specific module?"
+      - If yes: present module list and store {current_category}/{current_module}
+      - If no: continue with root-scoped session (outputs go to {output_folder})
+      - Note: Most CIS work benefits from cross-module thinking, so root-scope is recommended
+  </step>
 
   <step n="4">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>

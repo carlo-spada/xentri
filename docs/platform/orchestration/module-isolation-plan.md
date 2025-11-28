@@ -159,16 +159,25 @@ modules:
 
 ---
 
-### Phase 2: Automation (Next Sprint)
+### Phase 2: Automation ✅ COMPLETE
 
-#### 2.1 Workflow Updates
-- [ ] Update `input_file_patterns` in workflows to use module context
-- [ ] Inherit `{current_category}` and `{current_module}` from agent session
-- [ ] Auto-prepend `{output_folder}/{current_category}/{current_module}/` to patterns
+#### 2.1 Workflow Updates ✅ COMPLETE
+- [x] Update `input_file_patterns` in workflows to use module context
+- [x] Inherit `{current_category}` and `{current_module}` from agent session
+- [x] Auto-prepend `{output_folder}/{current_category}/{current_module}/` to patterns
 
-#### 2.2 CIS Agent Module Support
-- [ ] Add optional module context to CIS agents (brainstorming, innovation, etc.)
-- [ ] Keep root-scoped by default, module-scoped when explicitly requested
+**Updated workflows:**
+- dev-story, story-context, sprint-planning, code-review
+- correct-course, epic-tech-context, retrospective
+- story-done, story-ready, create-story
+
+#### 2.2 CIS Agent Module Support ✅ COMPLETE
+- [x] Add optional module context to CIS agents (brainstorming, innovation, etc.)
+- [x] Keep root-scoped by default, module-scoped when explicitly requested
+
+**Updated CIS agents:**
+- brainstorming-coach, creative-problem-solver, design-thinking-coach
+- innovation-strategist, presentation-master, storyteller
 
 ---
 
@@ -510,3 +519,4 @@ This approach applies DDD concepts to AI-assisted development:
 |------|--------|--------|
 | 2025-11-27 | Party Mode Session | Initial draft from discovery session |
 | 2025-11-27 | BMad Builder | Implemented Phase 1 items (1.2, 1.3, 1.4): story templates, manifest, GitHub automation |
+| 2025-11-27 | BMad Builder | Implemented Phase 2 items (2.1, 2.2): workflow module scoping, CIS agent optional context |

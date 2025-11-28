@@ -5,14 +5,24 @@ author: "BMad"
 
 # Critical variables
 config_source: "{project-root}/.bmad/bmm/config.yaml"
-output_folder: "{config_source}:output_folder"
+base_output_folder: "{config_source}:output_folder"
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 document_output_language: "{config_source}:document_output_language"
-story_path: "{config_source}:sprint_artifacts"
 date: system-generated
-sprint_artifacts: "{config_source}:sprint_artifacts"
-sprint_status: "{sprint_artifacts}/sprint-status.yaml || {output_folder}/sprint-status.yaml"
+
+# Module isolation variables (Phase 2)
+# Inherited from agent session - agents prompt for module selection at startup
+manifest_file: "{project-root}/docs/manifest.yaml"
+current_category: "" # Inherited from agent session (e.g., "platform")
+current_module: "" # Inherited from agent session (e.g., "core-api")
+module_code_path: "" # Resolved from manifest.yaml (e.g., "services/core-api")
+
+# Module-scoped output paths
+output_folder: "{base_output_folder}/{{current_category}}/{{current_module}}"
+sprint_artifacts: "{output_folder}/sprint-artifacts"
+story_path: "{sprint_artifacts}"
+sprint_status: "{sprint_artifacts}/sprint-status.yaml"
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/4-implementation/story-context"
