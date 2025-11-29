@@ -44,7 +44,7 @@ if [ -z "$CATEGORY" ] || [ -z "$PURPOSE" ]; then
     echo "  $0 integrations \"Third-party Integrations - Zapier, webhooks, APIs\""
     echo ""
     echo -e "${YELLOW}Note: Categories are high-level business domains.${NC}"
-    echo "The 8 default categories (platform, strategy, brand, sales, finance, operations, team, legal)"
+    echo "The 8 default categories (platform, strategy, marketing, sales, finance, operations, team, legal)"
     echo "cover most SMB needs. Add new categories sparingly."
     exit 1
 fi

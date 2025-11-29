@@ -2,142 +2,180 @@
 # This file is the source of truth for navigating the documentation hierarchy.
 # AI agents should read this file first to understand the documentation structure.
 #
-# Structure: docs/{category}/{module}/
-# Each module follows full BMAD project structure.
+# Structure: docs/{category}/{subcategory}/{module}/
+# Each subcategory follows full BMAD project structure with optional modules.
 
-version: "1.0"
-last_updated: "2025-11-27"
+version: "2.0"
+last_updated: "2025-11-29"
 project: Xentri
+
+# =============================================================================
+# HIERARCHY DEFINITIONS
+# =============================================================================
+#
+# Category: Major domain of business value (e.g., platform, strategy, sales)
+# Sub-category: Capability area with its own product strategy (has PRD, architecture)
+# Module: Smallest unit of implementation and billing within a sub-category
+#
+# Meta designation: Internal infrastructure, not user-facing
+# - All of Platform is meta
+# - User-facing categories (strategy, marketing, etc.) are NOT meta
 
 # =============================================================================
 # CATEGORIES
 # =============================================================================
-# Categories organize modules by business domain.
-# Each category has its own folder with a README.md explaining its purpose.
 
 categories:
+  # ---------------------------------------------------------------------------
+  # META CATEGORY: Platform (Internal Infrastructure)
+  # ---------------------------------------------------------------------------
   platform:
-    purpose: "Core infrastructure - always present, powers all other categories"
-    modules: [orchestration, shell, core-api, ts-schema, ui]
+    purpose: "Core infrastructure for all categories"
+    meta: true
+    subcategories:
+      orchestration:
+        purpose: "Cross-cutting concerns, big picture, system coherence"
+        meta: true
+        type: meta  # Not an SPA
+        modules: []  # No implementation modules, just docs
+        key_files:
+          - architecture.md
+          - prd.md
+          - product-brief.md
+          - deployment-plan.md
+          - incident-response.md
 
+      infrastructure:
+        purpose: "Events, authentication, billing, brief system"
+        meta: true
+        type: meta
+        modules:
+          - name: events
+            purpose: "Event Spine and Operational Pulse"
+            status: planned
+          - name: auth
+            purpose: "Authentication and permissions"
+            status: planned
+          - name: billing
+            purpose: "Subscription and payment processing"
+            status: planned
+          - name: brief
+            purpose: "Brief system storage and synthesis"
+            status: planned
+
+      frontend:
+        purpose: "User interface layer"
+        meta: true
+        type: meta
+        modules:
+          - name: shell
+            purpose: "Astro container application"
+            package: "apps/shell"
+            team_label: "team:shell"
+            dependencies: [ui, ts-schema]
+            status: active
+          - name: ui
+            purpose: "Shared component library"
+            package: "packages/ui"
+            team_label: "team:ui"
+            dependencies: []
+            consumers: [shell]
+            status: active
+
+      backend:
+        purpose: "API and services layer"
+        meta: true
+        type: meta
+        modules:
+          - name: core-api
+            purpose: "Primary Fastify API service"
+            package: "services/core-api"
+            team_label: "team:core-api"
+            dependencies: [ts-schema]
+            status: active
+
+      shared:
+        purpose: "Cross-module contracts and types"
+        meta: true
+        type: meta
+        modules:
+          - name: ts-schema
+            purpose: "TypeScript types and Zod schemas"
+            package: "packages/ts-schema"
+            team_label: "team:ts-schema"
+            dependencies: []
+            consumers: [core-api, shell]
+            status: active
+
+  # ---------------------------------------------------------------------------
+  # USER-FACING CATEGORIES
+  # ---------------------------------------------------------------------------
   strategy:
-    purpose: "Strategy & Clarity Engine - Universal Brief, AI strategy conversations"
-    modules: []  # Future: universal-brief, strategy-copilot, war-room
+    purpose: "Business strategy and clarity"
+    meta: false
+    subcategories: {}  # To be defined when building Strategy category
 
-  brand:
-    purpose: "Brand & Marketing - digital presence, website, content, leads"
-    modules: []  # Future: website-builder, cms, lead-capture
+  marketing:  # RENAMED from "brand"
+    purpose: "Brand, website, and market presence"
+    meta: false
+    subcategories: {}  # To be defined when building Marketing category
 
   sales:
-    purpose: "Sales & Pipeline - CRM, quotes, deal management"
-    modules: []  # Future: crm, quotes, pipeline
+    purpose: "Pipeline and revenue generation"
+    meta: false
+    subcategories: {}  # To be defined when building Sales category
 
   finance:
-    purpose: "Finance & Accounting - invoicing, payments, bookkeeping"
-    modules: []  # Future: invoicing, payments, accounting
+    purpose: "Money management and compliance"
+    meta: false
+    subcategories: {}  # To be defined when building Finance category
 
   operations:
-    purpose: "Operations & Projects - project management, tasks, scheduling"
-    modules: []  # Future: projects, tasks, calendar
+    purpose: "Day-to-day business operations"
+    meta: false
+    subcategories: {}  # To be defined when building Operations category
 
   team:
-    purpose: "Team & HR - human resources, payroll, roles"
-    modules: []  # Future: hr, payroll, roles
+    purpose: "People and organizational management"
+    meta: false
+    subcategories: {}  # To be defined when building Team category
 
   legal:
-    purpose: "Legal & Compliance - contracts, compliance, documents"
-    modules: []  # Future: contracts, compliance, documents
+    purpose: "Contracts, compliance, and entity management"
+    meta: false
+    subcategories: {}  # To be defined when building Legal category
 
 # =============================================================================
-# MODULES
+# NAVIGATION GUIDE
 # =============================================================================
-# Each module is a full BMAD project with its own:
-# - README.md, prd.md, architecture.md, epics.md
-# - sprint-artifacts/ folder with stories and sprint-status.yaml
-# - research/ folder (if applicable)
-
-modules:
-  # ---------------------------------------------------------------------------
-  # PLATFORM CATEGORY
-  # ---------------------------------------------------------------------------
-  orchestration:
-    category: platform
-    purpose: "System-wide architecture, cross-cutting concerns, platform infrastructure"
-    scope: "Big picture ONLY - no module-specific implementation details"
-    package: null  # Not a code package - pure documentation
-    team_label: "team:orchestration"
-    status: active
-    key_files:
-      - architecture.md
-      - prd.md
-      - product-brief.md
-      - deployment-plan.md
-      - incident-response.md
-
-  shell:
-    category: platform
-    purpose: "Astro application shell - routing, layout, React island host"
-    package: "apps/shell"
-    team_label: "team:shell"
-    dependencies: [ui, ts-schema]
-    status: active
-
-  core-api:
-    category: platform
-    purpose: "Core API service - authentication, events, organizations, webhooks"
-    package: "services/core-api"
-    team_label: "team:core-api"
-    dependencies: [ts-schema]
-    status: active
-
-  ts-schema:
-    category: platform
-    purpose: "Shared TypeScript types and Zod schemas - the contract layer"
-    package: "packages/ts-schema"
-    team_label: "team:ts-schema"
-    dependencies: []
-    consumers: [core-api, shell]  # Modules that import from ts-schema
-    status: active
-
-  ui:
-    category: platform
-    purpose: "Design system - shared components, Tailwind config, shadcn/ui"
-    package: "packages/ui"
-    team_label: "team:ui"
-    dependencies: []
-    consumers: [shell]  # Modules that import from ui
-    status: active
-
-# =============================================================================
-# MODULE CONTEXT SELECTION
-# =============================================================================
-# When starting a session, agents should ask the user which module they're
-# working on. This sets {current_category} and {current_module} for the session.
 #
-# All documentation paths then resolve to:
-#   docs/{current_category}/{current_module}/
+# When starting a session, agents should:
+# 1. Read this manifest to understand the structure
+# 2. Ask: "Which category and sub-category are you working on?"
+# 3. Navigate to docs/{category}/{subcategory}/
+# 4. If working on a specific module, navigate to docs/{category}/{subcategory}/{module}/
 #
 # Example session start:
-#   Agent: "Which module are you working on?"
+#   Agent: "Which area are you working on?"
 #   User: "core-api"
-#   Agent: "Working in platform/core-api for this session."
+#   Agent: "Working in platform/backend/core-api for this session."
 
 # =============================================================================
-# STANDARD MODULE STRUCTURE
+# STANDARD FOLDER STRUCTURE
 # =============================================================================
-# Every module folder should contain (as applicable):
 #
-# docs/{category}/{module}/
-# ├── README.md              # Module overview, ownership, quick start
-# ├── product-brief.md       # Module vision (optional for utility packages)
-# ├── prd.md                 # Module requirements
-# ├── architecture.md        # Technical decisions, ADRs
-# ├── epics.md               # Module implementation roadmap
-# ├── ux-design.md           # UI/UX specs (if applicable)
-# ├── testing-strategy.md    # Module test approach
-# ├── research/              # Module-specific research
+# Sub-category level (has its own product strategy):
+# docs/{category}/{subcategory}/
+# ├── README.md              # Sub-category overview
+# ├── prd.md                 # Sub-category requirements
+# ├── architecture.md        # Technical decisions
+# ├── epics.md               # Implementation roadmap (optional)
+# └── {module}/              # Individual modules (if any)
+#
+# Module level (implementation unit):
+# docs/{category}/{subcategory}/{module}/
+# ├── README.md              # Module overview
 # ├── sprint-artifacts/      # Implementation tracking
-# │   ├── sprint-status.yaml # Module sprint state
-# │   ├── tech-spec-*.md     # Per-epic tech specs
-# │   └── {story-files}.md   # Individual stories
-# └── changelog.md           # Version history (optional)
+# │   ├── sprint-status.yaml
+# │   └── {story-files}.md
+# └── interfaces/            # Public contracts

@@ -3,7 +3,7 @@
 > Astro application shell - routing, layout, and React island host.
 
 **Package:** `apps/shell`
-**Category:** Platform
+**Category:** Platform → Frontend
 **Status:** Active
 
 ## Overview
@@ -42,9 +42,9 @@ The Shell is the container application that provides:
 
 | Module | Relationship |
 |--------|--------------|
-| `platform/ui` | Design system components |
-| `platform/ts-schema` | Shared type definitions |
-| `platform/core-api` | API calls via TanStack Query |
+| `platform/frontend/ui` | Design system components |
+| `platform/shared/ts-schema` | Shared type definitions |
+| `platform/backend/core-api` | API calls via TanStack Query |
 
 ## Development
 
@@ -58,7 +58,7 @@ pnpm run dev --filter apps/shell
 ## Documentation Structure
 
 ```
-docs/platform/shell/
+docs/platform/frontend/shell/
 ├── README.md           # This file
 ├── architecture.md     # Shell-specific decisions (TODO)
 ├── routing.md          # Navigation patterns (TODO)

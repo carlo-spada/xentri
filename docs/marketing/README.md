@@ -1,8 +1,8 @@
-# Brand
+# Marketing
 
-> Brand & Marketing - digital presence, website, content, and lead generation.
+> Brand, website, and market presence - digital identity, content, and lead generation.
 
-The Brand category contains modules for establishing and managing a business's online presence. These modules consume the Universal Brief to auto-populate content and maintain brand consistency.
+The Marketing category contains modules for establishing and managing a business's online presence. These modules consume the Universal Brief to auto-populate content and maintain brand consistency.
 
 ## Modules
 

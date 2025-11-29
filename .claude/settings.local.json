@@ -155,7 +155,10 @@
       "Bash(/Users/carlo/Desktop/Projects/xentri/docs/platform/orchestration/architecture/event-model-v0.1.md )",
       "Bash(/Users/carlo/Desktop/Projects/xentri/docs/platform/orchestration/research/incident-response.md )",
       "Bash(/Users/carlo/Desktop/Projects/xentri/docs/platform/orchestration/research/testing-strategy.md )",
-      "Bash(/Users/carlo/Desktop/Projects/xentri/docs/platform/orchestration/research/observability.md )"
+      "Bash(/Users/carlo/Desktop/Projects/xentri/docs/platform/orchestration/research/observability.md )",
+      "Bash(pandoc:*)",
+      "Bash(npx md-to-pdf:*)",
+      "Bash(git -C /Users/carlo/Desktop/Projects/xentri add:*)"
     ],
     "deny": [],
     "ask": []

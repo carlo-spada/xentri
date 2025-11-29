@@ -3,7 +3,7 @@
 > Design system - shared components, Tailwind config, and shadcn/ui.
 
 **Package:** `packages/ui`
-**Category:** Platform
+**Category:** Platform → Frontend
 **Status:** Active
 
 ## Overview
@@ -41,7 +41,7 @@ None - this is a foundational package.
 
 | Module | Usage |
 |--------|-------|
-| `platform/shell` | All UI rendering |
+| `platform/frontend/shell` | All UI rendering |
 | Future micro-apps | Consistent styling |
 
 ## Development
@@ -69,7 +69,7 @@ The UI package supports theming via CSS variables:
 ## Documentation Structure
 
 ```
-docs/platform/ui/
+docs/platform/frontend/ui/
 ├── README.md              # This file
 ├── components.md          # Component catalog (TODO)
 ├── theming.md             # Theme customization (TODO)

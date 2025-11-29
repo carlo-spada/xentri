@@ -16,13 +16,18 @@ Documentation follows a **hierarchical structure** organized by category and mod
 
 ### First: Determine Your Module Context
 
-When starting a session, ask the user which module they're working on:
+When starting a session, ask the user which area they're working on:
 
 ```
-Categories:
-1. platform (orchestration, shell, core-api, ts-schema, ui)
+Categories → Sub-categories:
+1. platform (meta)
+   - orchestration (cross-cutting, big picture)
+   - infrastructure (events, auth, billing, brief)
+   - frontend (shell, ui)
+   - backend (core-api)
+   - shared (ts-schema)
 2. strategy (future)
-3. brand (future)
+3. marketing (future) — formerly "brand"
 4. sales (future)
 5. finance (future)
 6. operations (future)
@@ -30,22 +35,26 @@ Categories:
 8. legal (future)
 ```
 
-Store the selection as `{current_category}/{current_module}` and resolve all doc paths accordingly.
+Store the selection as `{category}/{subcategory}/{module}` and resolve all doc paths accordingly.
 
 ### Documentation Structure
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Machine-readable module registry
-├── platform/                   # Core infrastructure
-│   ├── orchestration/          # System-wide "big picture"
-│   ├── shell/                  # apps/shell
-│   ├── core-api/               # services/core-api
-│   ├── ts-schema/              # packages/ts-schema
-│   └── ui/                     # packages/ui
+├── manifest.yaml               # Machine-readable module registry (v2.0)
+├── platform/                   # META CATEGORY: Core infrastructure
+│   ├── orchestration/          # Sub-category: Cross-cutting, big picture
+│   ├── infrastructure/         # Sub-category: Events, auth, billing, brief
+│   ├── frontend/               # Sub-category: User interface layer
+│   │   ├── shell/              # Module: Astro container (apps/shell)
+│   │   └── ui/                 # Module: Component library (packages/ui)
+│   ├── backend/                # Sub-category: API and services
+│   │   └── core-api/           # Module: Primary API (services/core-api)
+│   └── shared/                 # Sub-category: Cross-module contracts
+│       └── ts-schema/          # Module: Types & schemas (packages/ts-schema)
 ├── strategy/                   # Strategy & Clarity Engine (planned)
-├── brand/                      # Brand & Marketing (planned)
+├── marketing/                  # Brand & Marketing (planned) — renamed from "brand"
 └── ...                         # Other categories
 ```
 
@@ -64,22 +73,24 @@ docs/
 
 **NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
 
-Use the provided scripts to manage modules and categories:
+Use the provided scripts to manage the hierarchy:
 
 ```bash
-# Add a new module
-./scripts/add-module.sh <category> <module-name>
-./scripts/add-module.sh strategy copilot
+# Add a new module (within a sub-category)
+./scripts/add-module.sh <category> <subcategory> <module-name>
+./scripts/add-module.sh platform infrastructure events
 
-# Remove a module
-./scripts/remove-module.sh <category> <module-name>
-./scripts/remove-module.sh strategy copilot
+# Add a new sub-category
+./scripts/add-subcategory.sh <category> <subcategory> "<purpose>"
+./scripts/add-subcategory.sh strategy copilot "AI strategy conversations"
 
 # Add a new category (rare)
 ./scripts/add-category.sh <category> "<purpose>"
 ./scripts/add-category.sh analytics "Business Intelligence"
 
-# Remove an empty category
+# Remove operations (use corresponding remove scripts)
+./scripts/remove-module.sh <category> <subcategory> <module-name>
+./scripts/remove-subcategory.sh <category> <subcategory>
 ./scripts/remove-category.sh <category>
 ```
 
@@ -94,7 +105,7 @@ The user sees one calm workspace; under the hood, each capability is an isolated
 | **Shell** | Astro | Stable container (header + sidebar), handles routing and auth |
 | **Micro-Apps** | React Islands | Interactive SPAs lazy-loaded into the Shell |
 | **Backend** | Node.js (Docker) | Microservices per domain (core-api, sales-engine, finance-engine) |
-| **AI Service** | Python | Co-pilot Swarm host (Strategy, Brand, Sales, Finance agents) |
+| **AI Service** | Python | Co-pilot Swarm host (Strategy, Marketing, Sales, Finance agents) |
 | **Data** | Postgres | Single cluster, schema-per-service, RLS for multi-tenancy |
 | **Events** | Redis Streams → n8n | "Nervous System" for async event transport and workflow orchestration |
 

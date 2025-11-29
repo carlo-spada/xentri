@@ -23,14 +23,18 @@ jobs:
           CHANGED=$(git diff --name-only origin/main...HEAD)
 
           # Map paths to module names (handles both code and docs)
+          # New structure: docs/platform/{subcategory}/{module}/*
           # services/core-api/* -> core-api
           # apps/shell/* -> shell
           # packages/ts-schema/* -> ts-schema
           # packages/ui/* -> ui
+          # docs/platform/backend/core-api/* -> core-api
+          # docs/platform/frontend/shell/* -> shell
+          # docs/platform/frontend/ui/* -> ui
+          # docs/platform/shared/ts-schema/* -> ts-schema
           # docs/platform/orchestration/* -> orchestration
-          # docs/platform/core-api/* -> core-api
           MODULES=$(echo "$CHANGED" | \
-            sed -E 's|^docs/platform/([^/]+)/.*|\1|; s|^(services|apps|packages)/([^/]+)/.*|\2|' | \
+            sed -E 's|^docs/platform/[^/]+/([^/]+)/.*|\1|; s|^docs/platform/([^/]+)/.*|\1|; s|^(services|apps|packages)/([^/]+)/.*|\2|' | \
             grep -v '^\.' | sort -u | tr '\n' ',' | sed 's/,$//')
 
           MODULE_COUNT=$(echo "$MODULES" | tr ',' '\n' | grep -c . || echo "0")

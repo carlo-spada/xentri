@@ -17,28 +17,29 @@ Documentation is organized by **category** and **module**. Each module is a full
 
 ## Categories
 
-| Category | Purpose | Status |
-|----------|---------|--------|
-| [platform/](./platform/) | Core infrastructure - always present | Active |
-| [strategy/](./strategy/) | Strategy & Clarity Engine | Planned |
-| [brand/](./brand/) | Brand & Marketing | Planned |
-| [sales/](./sales/) | Sales & Pipeline | Planned |
-| [finance/](./finance/) | Finance & Accounting | Planned |
-| [operations/](./operations/) | Operations & Projects | Planned |
-| [team/](./team/) | Team & HR | Planned |
-| [legal/](./legal/) | Legal & Compliance | Planned |
+| Category | Purpose | Status | Meta |
+|----------|---------|--------|------|
+| [platform/](./platform/) | Core infrastructure - always present | Active | ✓ |
+| [strategy/](./strategy/) | Strategy & Clarity Engine | Planned | |
+| [marketing/](./marketing/) | Brand, website, and market presence | Planned | |
+| [sales/](./sales/) | Sales & Pipeline | Planned | |
+| [finance/](./finance/) | Finance & Accounting | Planned | |
+| [operations/](./operations/) | Operations & Projects | Planned | |
+| [team/](./team/) | Team & HR | Planned | |
+| [legal/](./legal/) | Legal & Compliance | Planned | |
 
 ---
 
-## Platform Modules (Active)
+## Platform Sub-categories & Modules (Active)
 
-| Module | Purpose | Package |
-|--------|---------|---------|
-| [orchestration](./platform/orchestration/) | System-wide architecture, cross-cutting concerns | - |
-| [shell](./platform/shell/) | Astro app shell, routing, React islands | `apps/shell` |
-| [core-api](./platform/core-api/) | Authentication, events, organizations | `services/core-api` |
-| [ts-schema](./platform/ts-schema/) | Shared TypeScript types and Zod schemas | `packages/ts-schema` |
-| [ui](./platform/ui/) | Design system, shared components | `packages/ui` |
+| Sub-category | Module | Purpose | Package |
+|--------------|--------|---------|---------|
+| [orchestration](./platform/orchestration/) | - | Cross-cutting concerns, big picture | - |
+| [frontend](./platform/frontend/) | [shell](./platform/frontend/shell/) | Astro app shell, routing, React islands | `apps/shell` |
+| | [ui](./platform/frontend/ui/) | Design system, shared components | `packages/ui` |
+| [backend](./platform/backend/) | [core-api](./platform/backend/core-api/) | Authentication, events, organizations | `services/core-api` |
+| [shared](./platform/shared/) | [ts-schema](./platform/shared/ts-schema/) | TypeScript types and Zod schemas | `packages/ts-schema` |
+| [infrastructure](./platform/infrastructure/) | - | Events, auth, billing, brief (planned) | - |
 
 ---
 
@@ -60,8 +61,8 @@ All operations documentation is consolidated in [Architecture § Deployment & Op
 ### Sprint Status
 - [Pulse](./pulse.md) — Cross-team coordination and system-wide progress
 - [Epic Status](./platform/orchestration/sprint-artifacts/sprint-status.yaml) — Overall progress
-- [Core API Stories](./platform/core-api/sprint-artifacts/) — API implementation
-- [Shell Stories](./platform/shell/sprint-artifacts/) — Frontend implementation
+- [Core API Stories](./platform/backend/core-api/sprint-artifacts/) — API implementation
+- [Shell Stories](./platform/frontend/shell/sprint-artifacts/) — Frontend implementation
 
 ---
 

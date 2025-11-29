@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-# remove-module.sh - Remove a module from the Xentri documentation structure
+# remove-module.sh - Remove a module from a sub-category in Xentri
 #
-# Usage: ./scripts/remove-module.sh <category> <module-name> [--force]
+# Usage: ./scripts/remove-module.sh <category> <subcategory> <module-name> [--force]
 #
 # Examples:
-#   ./scripts/remove-module.sh strategy copilot
-#   ./scripts/remove-module.sh platform old-service --force
+#   ./scripts/remove-module.sh platform infrastructure events
+#   ./scripts/remove-module.sh platform backend old-service --force
 #
 # What this script does:
 #   1. Removes the module from docs/manifest.yaml
-#   2. Optionally deletes the docs/{category}/{module}/ folder
+#   2. Optionally deletes the docs/{category}/{subcategory}/{module}/ folder
 #   3. Optionally deletes the GitHub team label
 #
 # Use --force to skip confirmation prompts
@@ -31,6 +31,7 @@ MANIFEST_FILE="$PROJECT_ROOT/docs/manifest.yaml"
 
 # Parse arguments
 CATEGORY=""
+SUBCATEGORY=""
 MODULE=""
 FORCE=false
 
@@ -43,6 +44,8 @@ while [[ $# -gt 0 ]]; do
         *)
             if [ -z "$CATEGORY" ]; then
                 CATEGORY="$1"
+            elif [ -z "$SUBCATEGORY" ]; then
+                SUBCATEGORY="$1"
             elif [ -z "$MODULE" ]; then
                 MODULE="$1"
             fi
@@ -52,47 +55,39 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate arguments
-if [ -z "$CATEGORY" ] || [ -z "$MODULE" ]; then
+if [ -z "$CATEGORY" ] || [ -z "$SUBCATEGORY" ] || [ -z "$MODULE" ]; then
     echo -e "${RED}Error: Missing required arguments${NC}"
     echo ""
-    echo "Usage: $0 <category> <module-name> [--force]"
+    echo "Usage: $0 <category> <subcategory> <module-name> [--force]"
     echo ""
     echo "Options:"
     echo "  --force, -f    Skip confirmation prompts"
     echo ""
     echo "Examples:"
-    echo "  $0 strategy copilot"
-    echo "  $0 platform old-service --force"
+    echo "  $0 platform infrastructure events"
+    echo "  $0 platform backend old-service --force"
     exit 1
 fi
 
-# Check if module exists in manifest
-if ! grep -q "^  $MODULE:" "$MANIFEST_FILE"; then
-    echo -e "${RED}Error: Module '$MODULE' not found in manifest${NC}"
+DOC_PATH="$PROJECT_ROOT/docs/$CATEGORY/$SUBCATEGORY/$MODULE"
+
+# Check if module folder exists
+if [ ! -d "$DOC_PATH" ]; then
+    echo -e "${RED}Error: Module folder '$DOC_PATH' not found${NC}"
     exit 1
 fi
 
-# Verify module belongs to specified category
-MODULE_CATEGORY=$(grep -A1 "^  $MODULE:" "$MANIFEST_FILE" | grep "category:" | awk '{print $2}')
-if [ "$MODULE_CATEGORY" != "$CATEGORY" ]; then
-    echo -e "${RED}Error: Module '$MODULE' belongs to category '$MODULE_CATEGORY', not '$CATEGORY'${NC}"
-    exit 1
-fi
-
-DOC_PATH="$PROJECT_ROOT/docs/$CATEGORY/$MODULE"
-
-echo -e "${RED}WARNING: You are about to remove module: ${YELLOW}$CATEGORY/$MODULE${NC}"
+echo -e "${RED}WARNING: You are about to remove module: ${YELLOW}$CATEGORY/$SUBCATEGORY/$MODULE${NC}"
 echo ""
 
 # Show what will be affected
 echo -e "${BLUE}This will:${NC}"
-echo "  1. Remove '$MODULE' from manifest.yaml categories.$CATEGORY.modules array"
-echo "  2. Remove '$MODULE' definition from manifest.yaml modules section"
+echo "  1. Remove '$MODULE' from manifest.yaml subcategory modules list"
 if [ -d "$DOC_PATH" ]; then
     FILE_COUNT=$(find "$DOC_PATH" -type f | wc -l | tr -d ' ')
-    echo "  3. Delete docs/$CATEGORY/$MODULE/ ($FILE_COUNT files)"
+    echo "  2. Delete docs/$CATEGORY/$SUBCATEGORY/$MODULE/ ($FILE_COUNT files)"
 fi
-echo "  4. Delete GitHub label 'team:$MODULE' (if exists)"
+echo "  3. Delete GitHub label 'team:$MODULE' (if exists)"
 echo ""
 
 # Confirmation
@@ -106,87 +101,62 @@ if [ "$FORCE" != true ]; then
 fi
 
 echo ""
-echo -e "${YELLOW}Removing module '$CATEGORY/$MODULE'...${NC}"
+echo -e "${YELLOW}Removing module '$CATEGORY/$SUBCATEGORY/$MODULE'...${NC}"
 echo ""
 
-# Step 1: Remove from categories.{category}.modules array
-echo -e "${YELLOW}1. Updating manifest.yaml (categories section)...${NC}"
+# Step 1: Update manifest.yaml
+echo -e "${YELLOW}1. Updating manifest.yaml...${NC}"
 
-TEMP_FILE=$(mktemp)
+python3 << PYTHON
+import yaml
 
-# Remove module from the category's modules array
-awk -v category="$CATEGORY" -v module="$MODULE" '
-    /^  '"$CATEGORY"':/ { in_category = 1 }
-    in_category && /modules:/ {
-        # Handle different array formats
-        if (/modules: \['"$MODULE"'\]/) {
-            # Only module in array
-            sub(/modules: \['"$MODULE"'\]/, "modules: []")
-        } else if (/modules: \['"$MODULE"', /) {
-            # First in array
-            sub(/'"$MODULE"', /, "")
-        } else if (/, '"$MODULE"'\]/) {
-            # Last in array
-            sub(/, '"$MODULE"'\]/, "]")
-        } else if (/, '"$MODULE"',/) {
-            # Middle of array
-            sub(/, '"$MODULE"'/, "")
-        }
-        in_category = 0
-    }
-    { print }
-' "$MANIFEST_FILE" > "$TEMP_FILE"
+manifest_file = "$MANIFEST_FILE"
+category = "$CATEGORY"
+subcategory = "$SUBCATEGORY"
+module = "$MODULE"
 
-mv "$TEMP_FILE" "$MANIFEST_FILE"
+with open(manifest_file, 'r') as f:
+    data = yaml.safe_load(f)
 
-# Step 2: Remove module definition from modules section
-echo -e "${YELLOW}2. Updating manifest.yaml (modules section)...${NC}"
+# Remove module from subcategory's modules list
+modules = data['categories'][category]['subcategories'][subcategory].get('modules', [])
+data['categories'][category]['subcategories'][subcategory]['modules'] = [
+    m for m in modules if m.get('name') != module
+]
 
-TEMP_FILE=$(mktemp)
+# Write back
+with open(manifest_file, 'w') as f:
+    yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=120)
 
-# Remove the entire module block (from "  module:" to next "  other-module:" or section)
-awk -v module="$MODULE" '
-    /^  '"$MODULE"':$/ {
-        skip = 1
-        next
-    }
-    skip && /^  [a-z]/ { skip = 0 }
-    skip && /^# =/ { skip = 0 }
-    skip && /^$/ { next }  # Skip empty lines within block
-    !skip { print }
-' "$MANIFEST_FILE" > "$TEMP_FILE"
-
-# Clean up any double blank lines
-awk 'NF || !blank++ {print; if (NF) blank=0}' "$TEMP_FILE" > "${TEMP_FILE}.clean"
-mv "${TEMP_FILE}.clean" "$MANIFEST_FILE"
-rm -f "$TEMP_FILE"
+print("Manifest updated successfully")
+PYTHON
 
 echo -e "   ${GREEN}Updated: docs/manifest.yaml${NC}"
 
-# Step 3: Delete documentation folder
+# Step 2: Delete documentation folder
 if [ -d "$DOC_PATH" ]; then
-    echo -e "${YELLOW}3. Deleting documentation folder...${NC}"
+    echo -e "${YELLOW}2. Deleting documentation folder...${NC}"
 
     if [ "$FORCE" != true ]; then
-        read -p "   Delete docs/$CATEGORY/$MODULE/? (y/N) " -n 1 -r
+        read -p "   Delete docs/$CATEGORY/$SUBCATEGORY/$MODULE/? (y/N) " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             rm -rf "$DOC_PATH"
-            echo -e "   ${GREEN}Deleted: docs/$CATEGORY/$MODULE/${NC}"
+            echo -e "   ${GREEN}Deleted: docs/$CATEGORY/$SUBCATEGORY/$MODULE/${NC}"
         else
-            echo -e "   ${YELLOW}Skipped: docs/$CATEGORY/$MODULE/ preserved${NC}"
+            echo -e "   ${YELLOW}Skipped: folder preserved${NC}"
         fi
     else
         rm -rf "$DOC_PATH"
-        echo -e "   ${GREEN}Deleted: docs/$CATEGORY/$MODULE/${NC}"
+        echo -e "   ${GREEN}Deleted: docs/$CATEGORY/$SUBCATEGORY/$MODULE/${NC}"
     fi
 else
-    echo -e "${YELLOW}3. Documentation folder...${NC}"
-    echo -e "   ${YELLOW}Skipped: docs/$CATEGORY/$MODULE/ does not exist${NC}"
+    echo -e "${YELLOW}2. Documentation folder...${NC}"
+    echo -e "   ${YELLOW}Skipped: folder does not exist${NC}"
 fi
 
-# Step 4: Delete GitHub label
-echo -e "${YELLOW}4. Removing GitHub label...${NC}"
+# Step 3: Delete GitHub label
+echo -e "${YELLOW}3. Removing GitHub label...${NC}"
 
 if command -v gh &> /dev/null; then
     if gh auth status &> /dev/null; then
@@ -218,11 +188,10 @@ fi
 
 # Summary
 echo ""
-echo -e "${GREEN}Module '$CATEGORY/$MODULE' removed successfully!${NC}"
+echo -e "${GREEN}Module '$CATEGORY/$SUBCATEGORY/$MODULE' removed successfully!${NC}"
 echo ""
 echo -e "${BLUE}What was removed:${NC}"
-echo "  - Module from manifest.yaml categories.$CATEGORY.modules"
-echo "  - Module definition from manifest.yaml modules section"
-[ ! -d "$DOC_PATH" ] && echo "  - docs/$CATEGORY/$MODULE/ folder"
+echo "  - Module from manifest.yaml"
+[ ! -d "$DOC_PATH" ] && echo "  - docs/$CATEGORY/$SUBCATEGORY/$MODULE/ folder"
 echo ""
 echo -e "${YELLOW}Note: BMM agents will no longer show '$MODULE' as an option.${NC}"

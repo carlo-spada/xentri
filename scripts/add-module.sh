@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-# add-module.sh - Add a new module to the Xentri documentation structure
+# add-module.sh - Add a new module to a sub-category in Xentri
 #
-# Usage: ./scripts/add-module.sh <category> <module-name> [--package <path>]
+# Usage: ./scripts/add-module.sh <category> <subcategory> <module-name> [--package <path>]
 #
 # Examples:
-#   ./scripts/add-module.sh strategy copilot
-#   ./scripts/add-module.sh platform events-service --package services/events
+#   ./scripts/add-module.sh platform infrastructure events
+#   ./scripts/add-module.sh platform backend billing-api --package services/billing
 #
 # What this script does:
-#   1. Updates docs/manifest.yaml to add the module
-#   2. Creates the docs/{category}/{module}/ folder structure
+#   1. Updates docs/manifest.yaml to add the module under the sub-category
+#   2. Creates the docs/{category}/{subcategory}/{module}/ folder structure
 #   3. Creates standard module files (README.md, sprint-artifacts/)
 #   4. Creates GitHub team label (if gh CLI available)
 #
@@ -33,6 +33,7 @@ MANIFEST_FILE="$PROJECT_ROOT/docs/manifest.yaml"
 
 # Parse arguments
 CATEGORY=""
+SUBCATEGORY=""
 MODULE=""
 PACKAGE_PATH=""
 
@@ -45,6 +46,8 @@ while [[ $# -gt 0 ]]; do
         *)
             if [ -z "$CATEGORY" ]; then
                 CATEGORY="$1"
+            elif [ -z "$SUBCATEGORY" ]; then
+                SUBCATEGORY="$1"
             elif [ -z "$MODULE" ]; then
                 MODULE="$1"
             fi
@@ -54,16 +57,22 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate arguments
-if [ -z "$CATEGORY" ] || [ -z "$MODULE" ]; then
+if [ -z "$CATEGORY" ] || [ -z "$SUBCATEGORY" ] || [ -z "$MODULE" ]; then
     echo -e "${RED}Error: Missing required arguments${NC}"
     echo ""
-    echo "Usage: $0 <category> <module-name> [--package <path>]"
+    echo "Usage: $0 <category> <subcategory> <module-name> [--package <path>]"
     echo ""
-    echo "Categories: platform, strategy, brand, sales, finance, operations, team, legal"
+    echo "Categories: platform, strategy, marketing, sales, finance, operations, team, legal"
     echo ""
     echo "Examples:"
-    echo "  $0 strategy copilot"
-    echo "  $0 platform events-service --package services/events"
+    echo "  $0 platform infrastructure events"
+    echo "  $0 platform backend billing-api --package services/billing"
+    exit 1
+fi
+
+# Validate module name (lowercase, alphanumeric, hyphens only)
+if [[ ! "$MODULE" =~ ^[a-z][a-z0-9-]*$ ]]; then
+    echo -e "${RED}Error: Module name must be lowercase, start with a letter, and contain only letters, numbers, and hyphens${NC}"
     exit 1
 fi
 
@@ -72,32 +81,38 @@ if ! grep -q "^  $CATEGORY:" "$MANIFEST_FILE"; then
     echo -e "${RED}Error: Category '$CATEGORY' not found in manifest${NC}"
     echo ""
     echo "Valid categories:"
-    grep -E "^  [a-z]+:" "$MANIFEST_FILE" | head -8 | sed 's/://g' | sed 's/^  /  - /'
+    grep -E "^  [a-z]+:" "$MANIFEST_FILE" | grep -v "subcategories:" | head -8 | sed 's/://g' | sed 's/^  /  - /'
     exit 1
 fi
 
-# Check if module already exists
-if grep -q "^  $MODULE:" "$MANIFEST_FILE"; then
-    echo -e "${RED}Error: Module '$MODULE' already exists in manifest${NC}"
+# Validate subcategory exists under category
+if ! grep -q "^      $SUBCATEGORY:" "$MANIFEST_FILE"; then
+    echo -e "${RED}Error: Sub-category '$SUBCATEGORY' not found under category '$CATEGORY'${NC}"
+    echo ""
+    echo "Available sub-categories in $CATEGORY:"
+    # Try to list subcategories (simplified check)
+    echo "  Check docs/manifest.yaml for available sub-categories"
+    echo ""
+    echo "To create a new sub-category:"
+    echo "  ./scripts/add-subcategory.sh $CATEGORY $SUBCATEGORY \"<purpose>\""
     exit 1
 fi
 
-echo -e "${BLUE}Adding module: ${GREEN}$CATEGORY/$MODULE${NC}"
+echo -e "${BLUE}Adding module: ${GREEN}$CATEGORY/$SUBCATEGORY/$MODULE${NC}"
 echo ""
 
 # Step 1: Create documentation folder structure
-DOC_PATH="$PROJECT_ROOT/docs/$CATEGORY/$MODULE"
+DOC_PATH="$PROJECT_ROOT/docs/$CATEGORY/$SUBCATEGORY/$MODULE"
 echo -e "${YELLOW}1. Creating documentation structure...${NC}"
 
 mkdir -p "$DOC_PATH/sprint-artifacts"
 mkdir -p "$DOC_PATH/interfaces"
-mkdir -p "$DOC_PATH/research"
 
 # Create README.md
 cat > "$DOC_PATH/README.md" << EOF
 # $MODULE
 
-> **Category:** $CATEGORY
+> **Category:** $CATEGORY → ${SUBCATEGORY^}
 > **Status:** Draft
 > **Package:** ${PACKAGE_PATH:-"N/A (documentation only)"}
 
@@ -107,14 +122,12 @@ cat > "$DOC_PATH/README.md" << EOF
 
 ## Quick Links
 
-- [PRD](./prd.md) - Product Requirements
-- [Architecture](./architecture.md) - Technical Design
 - [Sprint Status](./sprint-artifacts/sprint-status.yaml) - Current Progress
 
 ## Ownership
 
 - **Team Label:** team:$MODULE
-- **Documentation:** docs/$CATEGORY/$MODULE/
+- **Documentation:** docs/$CATEGORY/$SUBCATEGORY/$MODULE/
 
 ## Getting Started
 
@@ -123,10 +136,10 @@ EOF
 
 # Create sprint-status.yaml
 cat > "$DOC_PATH/sprint-artifacts/sprint-status.yaml" << EOF
-# Sprint Status for $CATEGORY/$MODULE
+# Sprint Status for $CATEGORY/$SUBCATEGORY/$MODULE
 # This file tracks story progress for this module
 
-module: $CATEGORY/$MODULE
+module: $CATEGORY/$SUBCATEGORY/$MODULE
 last_updated: $(date +%Y-%m-%d)
 
 current_sprint:
@@ -156,74 +169,47 @@ This folder documents the public interfaces that $MODULE exposes to other module
 [Document exported types, APIs, events, etc.]
 EOF
 
-echo -e "   ${GREEN}Created: docs/$CATEGORY/$MODULE/${NC}"
+echo -e "   ${GREEN}Created: docs/$CATEGORY/$SUBCATEGORY/$MODULE/${NC}"
 
-# Step 2: Update manifest.yaml - add to categories.{category}.modules array
+# Step 2: Update manifest.yaml
 echo -e "${YELLOW}2. Updating manifest.yaml...${NC}"
 
-# Use a temp file for safe editing
-TEMP_FILE=$(mktemp)
+# Use Python for reliable YAML manipulation
+python3 << PYTHON
+import yaml
 
-# Add module to the category's modules array
-awk -v category="$CATEGORY" -v module="$MODULE" '
-    /^  '"$CATEGORY"':/ { in_category = 1 }
-    in_category && /modules:/ {
-        # Check if modules array is empty []
-        if (/modules: \[\]/) {
-            sub(/modules: \[\]/, "modules: [" module "]")
-            in_category = 0
-        } else if (/modules: \[/) {
-            # Add to existing array
-            sub(/\]/, ", " module "]")
-            in_category = 0
-        }
-    }
-    { print }
-' "$MANIFEST_FILE" > "$TEMP_FILE"
+manifest_file = "$MANIFEST_FILE"
+category = "$CATEGORY"
+subcategory = "$SUBCATEGORY"
+module = "$MODULE"
+package = "$PACKAGE_PATH" if "$PACKAGE_PATH" else None
 
-mv "$TEMP_FILE" "$MANIFEST_FILE"
+with open(manifest_file, 'r') as f:
+    data = yaml.safe_load(f)
 
-# Add module definition to modules section
-PACKAGE_LINE=""
-if [ -n "$PACKAGE_PATH" ]; then
-    PACKAGE_LINE="    package: \"$PACKAGE_PATH\""
-else
-    PACKAGE_LINE="    package: null  # Documentation only, no code package"
-fi
+# Create module entry
+module_entry = {
+    'name': module,
+    'purpose': '[TODO: Add module purpose]',
+    'status': 'draft'
+}
+if package:
+    module_entry['package'] = package
+    module_entry['team_label'] = f'team:{module}'
+    module_entry['dependencies'] = []
 
-# Find the last module definition and add after it
-awk -v category="$CATEGORY" -v module="$MODULE" -v package_line="$PACKAGE_LINE" '
-    /^  [a-z-]+:$/ && !in_modules { last_module_line = NR }
-    /^# =/ && in_modules {
-        # Print new module before section divider
-        print ""
-        print "  " module ":"
-        print "    category: " category
-        print "    purpose: \"[TODO: Add module purpose]\""
-        print package_line
-        print "    team_label: \"team:" module "\""
-        print "    dependencies: []"
-        print "    status: draft"
-        in_modules = 0
-    }
-    /^modules:/ { in_modules = 1 }
-    { print }
-    END {
-        if (in_modules) {
-            # If we reached end while still in modules section
-            print ""
-            print "  " module ":"
-            print "    category: " category
-            print "    purpose: \"[TODO: Add module purpose]\""
-            print package_line
-            print "    team_label: \"team:" module "\""
-            print "    dependencies: []"
-            print "    status: draft"
-        }
-    }
-' "$MANIFEST_FILE" > "$TEMP_FILE"
+# Add to subcategory's modules list
+if 'modules' not in data['categories'][category]['subcategories'][subcategory]:
+    data['categories'][category]['subcategories'][subcategory]['modules'] = []
 
-mv "$TEMP_FILE" "$MANIFEST_FILE"
+data['categories'][category]['subcategories'][subcategory]['modules'].append(module_entry)
+
+# Write back
+with open(manifest_file, 'w') as f:
+    yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=120)
+
+print("Manifest updated successfully")
+PYTHON
 
 echo -e "   ${GREEN}Updated: docs/manifest.yaml${NC}"
 
@@ -238,7 +224,7 @@ if command -v gh &> /dev/null; then
         if gh label list | grep -q "$LABEL_NAME"; then
             echo -e "   ${YELLOW}Label '$LABEL_NAME' already exists${NC}"
         else
-            gh label create "$LABEL_NAME" --description "Module: $CATEGORY/$MODULE" --color "0366d6" 2>/dev/null || true
+            gh label create "$LABEL_NAME" --description "Module: $CATEGORY/$SUBCATEGORY/$MODULE" --color "0366d6" 2>/dev/null || true
             echo -e "   ${GREEN}Created label: $LABEL_NAME${NC}"
         fi
     else
@@ -250,19 +236,17 @@ fi
 
 # Step 4: Summary
 echo ""
-echo -e "${GREEN}Module '$CATEGORY/$MODULE' added successfully!${NC}"
+echo -e "${GREEN}Module '$CATEGORY/$SUBCATEGORY/$MODULE' added successfully!${NC}"
 echo ""
 echo -e "${BLUE}What was created:${NC}"
-echo "  - docs/$CATEGORY/$MODULE/README.md"
-echo "  - docs/$CATEGORY/$MODULE/sprint-artifacts/sprint-status.yaml"
-echo "  - docs/$CATEGORY/$MODULE/interfaces/README.md"
-echo "  - docs/$CATEGORY/$MODULE/research/ (empty folder)"
+echo "  - docs/$CATEGORY/$SUBCATEGORY/$MODULE/README.md"
+echo "  - docs/$CATEGORY/$SUBCATEGORY/$MODULE/sprint-artifacts/sprint-status.yaml"
+echo "  - docs/$CATEGORY/$SUBCATEGORY/$MODULE/interfaces/README.md"
 echo "  - Updated docs/manifest.yaml"
 echo ""
 echo -e "${BLUE}Next steps:${NC}"
-echo "  1. Edit docs/$CATEGORY/$MODULE/README.md to add description"
+echo "  1. Edit docs/$CATEGORY/$SUBCATEGORY/$MODULE/README.md to add description"
 echo "  2. Update the module's 'purpose' in docs/manifest.yaml"
-echo "  3. Create PRD: Run /bmad:bmm:agents:pm and select *create-prd"
-echo "  4. BMM agents will now show '$MODULE' when you select '$CATEGORY'"
+echo "  3. BMM agents will now show '$MODULE' when you select '$CATEGORY/$SUBCATEGORY'"
 echo ""
 echo -e "${YELLOW}Tip: No agent files need updating - they read from manifest.yaml dynamically!${NC}"

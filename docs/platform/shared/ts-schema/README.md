@@ -3,7 +3,7 @@
 > Shared TypeScript types and Zod schemas - the contract layer.
 
 **Package:** `packages/ts-schema`
-**Category:** Platform
+**Category:** Platform → Shared
 **Status:** Active
 
 ## Overview
@@ -41,8 +41,8 @@ None - this is the foundational package that others depend on.
 
 | Module | Usage |
 |--------|-------|
-| `platform/core-api` | Request validation, response typing |
-| `platform/shell` | API response typing |
+| `platform/backend/core-api` | Request validation, response typing |
+| `platform/frontend/shell` | API response typing |
 | All future services | Shared contracts |
 
 ## Development
@@ -61,7 +61,7 @@ pnpm --filter @xentri/ts-schema run test
 ## Documentation Structure
 
 ```
-docs/platform/ts-schema/
+docs/platform/shared/ts-schema/
 ├── README.md              # This file
 ├── contracts.md           # Schema documentation (TODO)
 └── sprint-artifacts/

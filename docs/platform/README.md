@@ -2,17 +2,18 @@
 
 > Core infrastructure that powers all Xentri capabilities.
 
-The Platform category contains foundational modules that are always present and required for Xentri to function. These modules handle authentication, data persistence, event processing, UI components, and system-wide orchestration.
+The Platform category (meta) contains foundational sub-categories that are always present and required for Xentri to function. These handle authentication, data persistence, event processing, UI components, and system-wide orchestration.
 
-## Modules
+## Sub-categories & Modules
 
-| Module | Purpose | Package | Status |
-|--------|---------|---------|--------|
-| [orchestration](./orchestration/) | System-wide architecture, cross-cutting concerns | - | Active |
-| [shell](./shell/) | Astro application shell, routing, React islands | `apps/shell` | Active |
-| [core-api](./core-api/) | Authentication, events, organizations | `services/core-api` | Active |
-| [ts-schema](./ts-schema/) | Shared TypeScript types and Zod schemas | `packages/ts-schema` | Active |
-| [ui](./ui/) | Design system, shared components | `packages/ui` | Active |
+| Sub-category | Module | Purpose | Package | Status |
+|--------------|--------|---------|---------|--------|
+| [orchestration](./orchestration/) | - | Cross-cutting concerns, big picture | - | Active |
+| [frontend](./frontend/) | [shell](./frontend/shell/) | Astro app shell, routing, islands | `apps/shell` | Active |
+| | [ui](./frontend/ui/) | Design system, shared components | `packages/ui` | Active |
+| [backend](./backend/) | [core-api](./backend/core-api/) | Auth, events, organizations | `services/core-api` | Active |
+| [shared](./shared/) | [ts-schema](./shared/ts-schema/) | TypeScript types and Zod schemas | `packages/ts-schema` | Active |
+| [infrastructure](./infrastructure/) | - | Events, auth, billing, brief (planned) | - | Planned |
 
 ## Architecture Overview
 
