@@ -17,36 +17,45 @@
 
 ### Module Context Selection
 
-At session start, determine which module you're working on:
+At session start, determine which area you're working on:
 
 ```
-Categories:
-1. platform (orchestration, shell, core-api, ts-schema, ui)
+Categories → Sub-categories:
+1. platform (meta)
+   - orchestration (cross-cutting, big picture)
+   - infrastructure (events, auth, billing, brief) - planned
+   - frontend (shell, ui)
+   - backend (core-api)
+   - shared (ts-schema)
 2. strategy (future)
-3. brand (future)
+3. marketing (future) — formerly "brand"
 4. sales, finance, operations, team, legal (future)
 ```
 
-Store selection and resolve paths to: `docs/{category}/{module}/`
+Store selection and resolve paths to: `docs/{category}/{subcategory}/{module}/`
 
 ### Documentation Structure
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Machine-readable module registry
-├── platform/                   # Core infrastructure (active)
-│   ├── orchestration/          # System-wide "big picture"
+├── manifest.yaml               # Machine-readable module registry (v2.0)
+├── platform/                   # META CATEGORY: Core infrastructure
+│   ├── orchestration/          # Sub-category: Cross-cutting, big picture
 │   │   ├── architecture.md
 │   │   ├── prd.md
 │   │   ├── epics.md
 │   │   └── sprint-artifacts/
-│   ├── shell/                  # apps/shell
-│   ├── core-api/               # services/core-api
-│   ├── ts-schema/              # packages/ts-schema
-│   └── ui/                     # packages/ui
+│   ├── infrastructure/         # Sub-category: Events, auth, billing (planned)
+│   ├── frontend/               # Sub-category: User interface layer
+│   │   ├── shell/              # Module: Astro container (apps/shell)
+│   │   └── ui/                 # Module: Component library (packages/ui)
+│   ├── backend/                # Sub-category: API and services
+│   │   └── core-api/           # Module: Primary API (services/core-api)
+│   └── shared/                 # Sub-category: Cross-module contracts
+│       └── ts-schema/          # Module: Types & schemas (packages/ts-schema)
 ├── strategy/                   # Future
-├── brand/                      # Future
+├── marketing/                  # Future (renamed from "brand")
 └── ...                         # Other categories
 ```
 
@@ -58,12 +67,17 @@ Each module is a **full BMAD project** with its own:
 
 **NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
 
-Use the provided scripts to manage modules and categories:
+Use the provided scripts to manage the hierarchy:
 
 ```bash
-# Add/remove modules
-./scripts/add-module.sh <category> <module>      # e.g., strategy copilot
-./scripts/remove-module.sh <category> <module>
+# Add/remove modules (within a sub-category)
+./scripts/add-module.sh <category> <subcategory> <module>
+./scripts/add-module.sh platform infrastructure events
+./scripts/remove-module.sh <category> <subcategory> <module>
+
+# Add/remove sub-categories
+./scripts/add-subcategory.sh <category> <subcategory> "<purpose>" [--meta]
+./scripts/remove-subcategory.sh <category> <subcategory>
 
 # Add/remove categories (rare)
 ./scripts/add-category.sh <category> "<purpose>"

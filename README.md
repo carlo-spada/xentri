@@ -67,10 +67,10 @@ pnpm run dev
 This project is architected to scale from 1 to 1,000,000 users without a rewrite.
 
 - **[Documentation Index](./docs/index.md)** - Complete documentation navigation
-- **[Technical Architecture](./docs/architecture.md)** - System design, data governance, service boundaries
-- **[Deployment Guide](./docs/deployment-plan.md)** - Railway deployment instructions
-- **[Incident Response](./docs/incident-response.md)** - Troubleshooting and runbooks
-- **[Product Brief](./docs/product-brief-Xentri-2025-11-24.md)** - Vision, personas, MVP scope
+- **[Technical Architecture](./docs/platform/orchestration/architecture.md)** - System design, data governance, service boundaries
+- **[Deployment Guide](./docs/platform/orchestration/deployment-plan.md)** - Railway deployment instructions
+- **[Incident Response](./docs/platform/orchestration/incident-response.md)** - Troubleshooting and runbooks
+- **[Product Brief](./docs/platform/orchestration/product-brief.md)** - Vision, personas, MVP scope
 
 ---
 
@@ -79,7 +79,7 @@ This project is architected to scale from 1 to 1,000,000 users without a rewrite
 | Phase | Tier | Focus |
 |-------|------|-------|
 | **v0.1** | Free | **Strategy Co-pilot + Universal Brief**. The entry point that generates business clarity. |
-| **v0.2** | Presencia ($10) | **Brand & Marketing**. Website Builder, CMS, and Lead Capture auto-configured from the Brief. |
+| **v0.2** | Presencia ($10) | **Marketing**. Website Builder, CMS, and Lead Capture auto-configured from the Brief. |
 | **v0.3** | Light Ops ($30) | **Sales & Pipeline**. CRM, Quotes, and Follow-ups. |
 | **v0.4** | Business in Motion ($90) | **Finance & Accounting**. Invoicing, Payments, and the "Open Loops" view. |
 

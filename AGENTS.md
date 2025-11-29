@@ -15,29 +15,41 @@ Documentation is organized by **category** and **module**. Always determine whic
 
 ### Module Context Prompt
 
-At session start, ask: "Which module are you working on?"
+At session start, ask: "Which area are you working on?"
 
 ```
-Categories:
-1. platform (orchestration, shell, core-api, ts-schema, ui)
-2. strategy, brand, sales, finance, operations, team, legal (future)
+Categories → Sub-categories:
+1. platform (meta)
+   - orchestration (cross-cutting, big picture)
+   - infrastructure (events, auth, billing, brief) - planned
+   - frontend (shell, ui)
+   - backend (core-api)
+   - shared (ts-schema)
+2. strategy (future)
+3. marketing (future) — formerly "brand"
+4. sales, finance, operations, team, legal (future)
 ```
 
-All paths resolve to: `docs/{category}/{module}/`
+All paths resolve to: `docs/{category}/{subcategory}/{module}/`
 
 ### Structure
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Module registry (SINGLE SOURCE OF TRUTH)
-├── platform/
-│   ├── orchestration/          # System-wide architecture (big picture)
-│   ├── shell/                  # apps/shell docs
-│   ├── core-api/               # services/core-api docs
-│   ├── ts-schema/              # packages/ts-schema docs
-│   └── ui/                     # packages/ui docs
-└── {other-categories}/         # Future modules
+├── manifest.yaml               # Module registry v2.0 (SINGLE SOURCE OF TRUTH)
+├── platform/                   # META CATEGORY: Core infrastructure
+│   ├── orchestration/          # Sub-category: Cross-cutting, big picture
+│   ├── infrastructure/         # Sub-category: Events, auth, billing (planned)
+│   ├── frontend/               # Sub-category: User interface layer
+│   │   ├── shell/              # Module: apps/shell
+│   │   └── ui/                 # Module: packages/ui
+│   ├── backend/                # Sub-category: API and services
+│   │   └── core-api/           # Module: services/core-api
+│   └── shared/                 # Sub-category: Cross-module contracts
+│       └── ts-schema/          # Module: packages/ts-schema
+├── marketing/                  # Future (renamed from "brand")
+└── {other-categories}/         # Future
 ```
 
 ### Module Management (IMPORTANT)
@@ -47,10 +59,17 @@ docs/
 Use the provided scripts:
 
 ```bash
-./scripts/add-module.sh <category> <module>      # Add module
-./scripts/remove-module.sh <category> <module>   # Remove module
-./scripts/add-category.sh <category> "<purpose>" # Add category
-./scripts/remove-category.sh <category>          # Remove empty category
+# Modules (within sub-categories)
+./scripts/add-module.sh <category> <subcategory> <module>
+./scripts/remove-module.sh <category> <subcategory> <module>
+
+# Sub-categories
+./scripts/add-subcategory.sh <category> <subcategory> "<purpose>" [--meta]
+./scripts/remove-subcategory.sh <category> <subcategory>
+
+# Categories (rare)
+./scripts/add-category.sh <category> "<purpose>"
+./scripts/remove-category.sh <category>
 ```
 
 These scripts maintain `docs/manifest.yaml` as the single source of truth.
