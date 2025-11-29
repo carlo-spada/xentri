@@ -238,7 +238,9 @@ Open Today → Scan "Needs You" (exceptions) → Handle/Approve/Skip → Check "
 
 **Wireframes:** [ux-daily-loop-wireframes-v2.html](./ux-daily-loop-wireframes-v2.html)
 
-### 4.3 Journey 3: Lead Capture (Planned)
+### 4.3 Journey 3: Lead Capture (Deferred)
+
+> **Status:** Deferred pending Epic 2+ definition. Will be detailed after PRD and Architecture revision.
 
 Entry points: Website form → WhatsApp → Email → Manual
 
@@ -603,11 +605,10 @@ Extend the default theme in `components.json`:
 
 ### Related Documents
 
-- Product Requirements: `docs/prd.md`
-- Product Brief: `docs/product-brief-Xentri-2025-11-24.md`
-- Brainstorming: `docs/brainstorming-session-results-2025-11-24.md`
-- Epics: `docs/epics.md`
-- Architecture: `architecture.md`
+- Product Requirements: [prd.md](./prd.md)
+- Product Brief: [product-brief.md](./product-brief.md)
+- Epics: [epics.md](./epics.md)
+- Architecture: [architecture.md](./architecture.md)
 
 ### Interactive Deliverables
 
@@ -638,6 +639,7 @@ Extend the default theme in `components.json`:
 | 2025-11-25 | 1.0 | Initial UX Design Specification | UX Designer + PM |
 | 2025-11-25 | 1.1 | Tightened specs to prevent Notification Hell: §1.5 philosophy hard rule, §5.7-5.11 operational constraints | UX Designer + PM |
 | 2025-11-26 | 1.2 | Changed default preset from Conservative to Balanced; confirmed shadcn/ui colors-only approach | Carlo + Winston |
+| 2025-11-28 | 1.3 | Marked Journey 3 as deferred; fixed document paths; aligned with revised Product Brief | Carlo |
 
 ---
 

@@ -185,3 +185,30 @@ Key workflows:
 - 🔄 Story 1.7: DevOps, observability, test readiness (orchestration)
 
 **Next:** Epic 2 - Strategy & Clarity Engine (Universal Brief, Strategy Co-pilot)
+
+## Governance Rules
+
+### Orchestration Document Changes
+
+**Any change to orchestration-level documents requires explicit flagging and rationale.**
+
+Protected documents (in `docs/platform/orchestration/`):
+- `prd.md` — Product Requirements
+- `architecture.md` — System Architecture (includes Module Roadmap)
+- `epics.md` — Implementation Roadmap
+- `product-brief.md` — Product Vision
+
+When modifying these files:
+1. **Flag the change** in your response to the user
+2. **Provide rationale** explaining why the change is necessary
+3. **Include rationale in commit message** when committing
+
+Example commit message:
+```
+docs(orchestration): Update architecture with caching strategy
+
+Rationale: New caching layer needed for performance targets.
+See ADR-006 for full decision record.
+```
+
+This governance ensures architectural decisions are traceable and intentional.

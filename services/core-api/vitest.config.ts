@@ -10,24 +10,13 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'json-summary', 'html'],
       reportsDirectory: './coverage',
-      include: [
-        'src/lib/**/*.ts',
-        'src/middleware/**/*.ts',
-        'src/routes/health.ts',
-      ],
+      include: ['src/**/*.ts'],
       exclude: [
         '**/node_modules/**',
         '**/dist/**',
         '**/*.test.ts',
         '**/__tests__/**',
         '**/globals.d.ts',
-        'src/server.ts',
-        'src/domain/**',
-        'src/infra/**',
-        'src/routes/**',
-        'src/lib/sentry.ts',
-        'src/middleware/tracing.ts',
-        'src/middleware/orgContext.ts',
       ],
       // NFR29: >70% test coverage for core modules
       thresholds: {

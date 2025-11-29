@@ -47,15 +47,18 @@ Documentation is organized by **category** and **module**. Each module is a full
 ### Getting Started
 1. [Product Brief](./platform/orchestration/product-brief.md) — Vision and personas
 2. [PRD](./platform/orchestration/prd.md) — Product requirements
-3. [Architecture](./platform/orchestration/architecture.md) — Technical decisions
+3. [Architecture](./platform/orchestration/architecture.md) — Technical decisions + Module Roadmap
 4. [Epics](./platform/orchestration/epics.md) — Implementation roadmap
 
+### Strategic Decisions
+- [ADR-005: SPA + Copilot First](./platform/orchestration/architecture/adr-005-spa-copilot-first.md) — Category build strategy
+- [Module Roadmap](./platform/orchestration/architecture.md#11-module-composition-strategy--roadmap) — 16 foundational modules
+
 ### Operations
-1. [Deployment Plan](./platform/orchestration/deployment-plan.md) — Railway deployment
-2. [Incident Response](./platform/orchestration/incident-response.md) — Troubleshooting
-3. [Testing Strategy](./platform/orchestration/testing-strategy.md) — Test philosophy
+All operations documentation is consolidated in [Architecture § Deployment & Operations](./platform/orchestration/architecture.md#8-deployment--operations).
 
 ### Sprint Status
+- [Pulse](./pulse.md) — Cross-team coordination and system-wide progress
 - [Epic Status](./platform/orchestration/sprint-artifacts/sprint-status.yaml) — Overall progress
 - [Core API Stories](./platform/core-api/sprint-artifacts/) — API implementation
 - [Shell Stories](./platform/shell/sprint-artifacts/) — Frontend implementation
@@ -84,4 +87,4 @@ When starting a session, first determine which module you're working on:
 
 ---
 
-*Last updated: 2025-11-27*
+*Last updated: 2025-11-28*

@@ -132,3 +132,17 @@ pnpm run build                         # Build all packages
 - **VALIDATION ONLY:** When asked to validate, check existing files only
 - **MODULE CONTEXT:** Always determine which module before starting work
 - **DOCUMENTATION:** See `docs/index.md` for complete navigation
+
+## 8. Governance Rules
+
+### Orchestration Document Changes
+
+**Any change to orchestration-level documents requires explicit flagging and rationale.**
+
+Protected documents (in `docs/platform/orchestration/`):
+- `prd.md`, `architecture.md` (includes Module Roadmap), `epics.md`, `product-brief.md`
+
+When modifying these files:
+1. Flag the change in your response
+2. Provide rationale explaining why
+3. Include rationale in commit message

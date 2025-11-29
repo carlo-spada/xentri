@@ -33,6 +33,8 @@ interface TestResult {
 
 const results: TestResult[] = [];
 const SMOKE_ACTOR = `smoke-test-${crypto.randomUUID()}`;
+const MAX_RETRIES = 15;
+const RETRY_DELAY_MS = 2000;
 
 function log(message: string) {
   console.log(`[smoke] ${message}`);
@@ -46,6 +48,22 @@ function pass(name: string, message: string) {
 function fail(name: string, message: string) {
   results.push({ name, passed: false, message });
   log(`❌ ${name}: ${message}`);
+}
+
+async function waitForEndpoint(url: string, label: string) {
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res;
+    } catch (error) {
+      if (attempt === MAX_RETRIES) {
+        throw error;
+      }
+    }
+    log(`Waiting for ${label} (${attempt}/${MAX_RETRIES})...`);
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+  }
+  throw new Error(`Timeout waiting for ${label} at ${url}`);
 }
 
 async function setupTestOrgs() {
@@ -318,7 +336,7 @@ async function testShellLoads() {
 
   try {
     const startTime = performance.now();
-    const response = await fetch(shellUrl);
+    const response = await waitForEndpoint(shellUrl, 'shell');
     const responseTime = performance.now() - startTime;
 
     if (response.ok) {
@@ -353,7 +371,7 @@ async function testApiHealth() {
 
   try {
     const startTime = performance.now();
-    const response = await fetch(`${apiUrl}/api/v1/health`);
+    const response = await waitForEndpoint(`${apiUrl}/api/v1/health`, 'api health');
     const responseTime = performance.now() - startTime;
 
     if (response.ok) {

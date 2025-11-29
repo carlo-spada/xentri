@@ -166,10 +166,38 @@ jobs:
       - name: Build packages
         run: pnpm run build
 
+      - name: Start core-api (background)
+        run: |
+          export DATABASE_URL="postgresql://xentri:xentri_dev@localhost:5432/xentri"
+          PORT=3000 HOST=0.0.0.0 \
+          CLERK_SECRET_KEY=test CLERK_PUBLISHABLE_KEY=test \
+          pnpm --filter @xentri/core-api start &
+          echo $! > core_api_pid
+
+      - name: Start shell (background)
+        run: |
+          PUBLIC_CLERK_PUBLISHABLE_KEY=test pnpm --filter @xentri/shell preview --host --port 4321 &
+          echo $! > shell_pid
+
+      - name: Wait for services
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:3000/api/v1/health && curl -sf http://localhost:4321 > /dev/null; then
+              echo "Services are up"
+              exit 0
+            fi
+            echo "Waiting for services... ($i/30)"
+            sleep 3
+          done
+          echo "Services did not start in time"
+          exit 1
+
       - name: Run smoke tests
         run: pnpm run test:smoke
         env:
           DATABASE_URL: postgresql://xentri:xentri_dev@localhost:5432/xentri
+          API_URL: http://localhost:3000
+          SHELL_URL: http://localhost:4321
           REDIS_URL: redis://localhost:6379
 
   # =============================================================================

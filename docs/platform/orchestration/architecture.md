@@ -196,67 +196,28 @@ USING (
 
 ---
 
-## 4. Project Structure & FR/Epic Coverage
-
-The repository follows a standard Turborepo monorepo structure:
+## 4. Project Structure
 
 ```text
-/xentri-monorepo
-├── /apps
-│   └── /shell                # Astro: The main container
+/xentri
+├── /apps/shell              # Astro Shell with React islands
 ├── /packages
-│   ├── /ui                   # Shared Design System
-│   ├── /ts-schema            # Shared Types, Zod Schemas, Event Definitions
-│   ├── /cms-client           # React Micro-App: CMS
-│   ├── /crm-client           # React Micro-App: CRM
-│   └── /...                  # Other Micro-Apps
-├── /services
-│   ├── /core-api             # Node.js: Auth, Billing, Org Management
-│   ├── /brand-engine         # Node.js: Website, CMS Backend
-│   ├── /sales-engine         # Node.js: CRM, Quotes Backend
-│   ├── /ai-service           # Python: Co-pilot Swarm
-│   └── /n8n-host             # Workflow Engine
-└── /tooling                  # Shared Configs (ESLint, TSConfig)
+│   ├── /ui                  # Shared Design System
+│   └── /ts-schema           # Shared Types, Zod Schemas, Events
+├── /services/core-api       # Fastify: Auth, Events, Orgs
+└── /docs                    # Hierarchical documentation
 ```
 
-### Mapping to PRD Functional Requirements (FR) and Epics
-- **apps/shell** → FR26-33 (shell UX, navigation, responsive), FR75-78 (notifications UI). Epic 1 (Foundation & Access).
-- **packages/ts-schema** → FR33-36 (events), FR16 (Brief schemas), all cross-service contracts. Epic 1 and 2.
-- **services/core-api** → FR1-6, FR37 (auth/signup/login events), FR82 (RLS enforcement), FR75-78 (notifications sending), FR5 (account deletion). Epic 1, 6.
-- **services/brand-engine** → FR40-59 (website/CMS), FR58 (content_published event). Epic 3.
-- **services/sales-engine** → FR60-67 (leads), FR63 (lead_created event). Epic 4.
-- **services/ai-service** → FR10-25, FR69-74 (Strategy/Brand co-pilots). Epic 2 and 5.
-- **services/n8n-host** → FR33-36 (event-driven flows), FR148 (orchestration readiness). Cross-epic automation.
-- **packages/ui** → Shared components for shell/micro-apps (supports FR40-47 UX).
-- **packages/cms-client, packages/crm-client** → Frontend micro-apps for brand/sales capabilities (FR40-67).
-
-### Service Interface Summaries (MVP scope)
-- **core-api**
-  - Endpoints: `POST /api/v1/auth/signup`, `POST /api/v1/auth/login`, `POST /api/v1/orgs` (auto-create), `DELETE /api/v1/account` (FR5).
-  - Emits: `xentri.user.signup.v1`, `xentri.user.login.v1`, `xentri.org.created.v1`.
-  - Contracts: User, Org, Notification schemas in `packages/ts-schema`.
-- **brand-engine**
-  - Endpoints: `GET/PUT /api/v1/sites/:id`, `POST /api/v1/sites/:id/publish`, `GET/PUT /api/v1/pages/:id`, `POST /api/v1/media/presign`.
-  - Emits: `xentri.website.published.v1`, `xentri.page.updated.v1`, `xentri.content.published.v1`.
-  - Contracts: Site, Page, Content, MediaAsset schemas in `packages/ts-schema`.
-- **sales-engine**
-  - Endpoints: `GET/POST /api/v1/leads`, `GET/PUT /api/v1/leads/:id`, `POST /api/v1/leads/:id/status`.
-  - Emits: `xentri.lead.created.v1`, `xentri.lead.updated.v1`, `xentri.followup.scheduled.v1`.
-  - Contracts: Lead, FollowUp schemas in `packages/ts-schema`.
-- **ai-service**
-  - Endpoints: `POST /api/v1/brief/generate` (Strategy Co-pilot), `POST /api/v1/brief/sections/:sectionId/propose`, `POST /api/v1/brand/copy/suggest`.
-  - Emits: `xentri.brief.created.v1`, `xentri.brief.updated.v1`, `xentri.ai.proposal.generated.v1`.
-  - Contracts: Brief, BriefSectionProposal, BrandCopySuggestion schemas in `packages/ts-schema`.
-- **n8n-host**
-  - Subscribes: Redis Streams for all `xentri.*` events; runs idempotent flows with org context.
-  - Responsibilities: Notifications fan-out, cache invalidation messages, cross-service orchestrations (e.g., `brief.updated` triggers website refresh prompt).
+Future services (brand-engine, sales-engine, ai-service, n8n-host) follow the same pattern.
 
 ### Contract Source of Truth
-- `packages/ts-schema/src/api.ts` — API envelope and Problem Details types.
-- `packages/ts-schema/src/auth.ts` — User and service JWT claims.
-- `packages/ts-schema/src/events.ts` — Event envelope and actor/meta.
-- `packages/ts-schema/src/cache.ts` — Cache keys and invalidation events (brief, site, leads).
-- CI: `.github/workflows/schema-check.yml` runs `tsc` against these definitions to prevent drift.
+
+All shared types live in `packages/ts-schema`:
+- `api.ts` — API envelope and Problem Details
+- `auth.ts` — User and service JWT claims
+- `events.ts` — Event envelope and actor/meta
+
+CI runs `tsc` against these definitions to prevent drift.
 
 ---
 
@@ -367,7 +328,93 @@ We use Astro's Island Architecture to lazy-load React apps.
 
 ---
 
-## 8. Operational Model: Solo Visionary + AI Agent Army
+## 8. Deployment & Operations
+
+> **Current Stack:** Railway (PaaS) — See [ADR-004](./architecture/adr-004-railway-bootstrap.md) for rationale
+> **Live API:** https://core-api-production-8016.up.railway.app
+
+### Deployment Architecture
+
+```
+┌─────────────────── RAILWAY PROJECT ───────────────────┐
+│  Shell (Astro)  │  Core API (Fastify)  │  n8n (Queue) │
+│     :4321       │       :3000          │    :5678     │
+├───────────────────────────────────────────────────────┤
+│        PostgreSQL 16.x      │      Redis 7.x         │
+└───────────────────────────────────────────────────────┘
+         ↓                              ↓
+   Cloudflare R2              Clerk (Auth)
+   (File Storage)             (OAuth + Sessions)
+```
+
+### Key Constraints
+
+| Constraint | Rationale |
+|------------|-----------|
+| **Docker-first** | All services via Dockerfile—no Nixpacks. Ensures K8s portability. |
+| **Redis with Volume** | Streams require persistence. Pin version ≥7.x. |
+| **n8n Queue Mode** | Separate main + worker services. `N8N_ENCRYPTION_KEY` is crown jewel. |
+
+### Migration Triggers (Railway → K8s)
+
+- Monthly spend > $500
+- Compliance requirement (SOC2, GDPR DPA)
+- First paying customer (Redis HA becomes critical)
+- Any written SLA commitment
+
+### Testing Strategy
+
+| Category | Framework | Scope | Threshold |
+|----------|-----------|-------|-----------|
+| **Unit** | Vitest | Pure functions, schemas, utils | 70% coverage |
+| **Integration** | Vitest + Testcontainers | DB operations, RLS, API routes | Per-module |
+| **Smoke** | Custom (`scripts/smoke-test.ts`) | RLS isolation, event immutability, health | CI gate |
+| **E2E** | Playwright (planned) | Full user flows | Future |
+
+**Coverage scope:** `src/lib/**`, `src/middleware/**`, `src/routes/health.ts`. Domain/infra excluded until integration tests mature.
+
+### Observability
+
+| Capability | Implementation |
+|------------|----------------|
+| **Logging** | Pino JSON with `trace_id`, `org_id`, `user_id`; PII scrubbed |
+| **Tracing** | OpenTelemetry auto-instrumentation; `traceparent` header propagation |
+| **Errors** | Sentry when `SENTRY_DSN` set; scrubbed headers |
+| **Metrics** | `GET /api/v1/metrics` — process uptime, memory, load (CI-only) |
+
+### Health Endpoints
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /health` | Liveness — returns `{"status":"ok"}` |
+| `GET /health/ready` | Readiness — includes DB ping |
+| `GET /api/v1/metrics` | Process metrics (no auth) |
+
+### Incident Severity
+
+| Level | Response Time | Example |
+|-------|---------------|---------|
+| **P1** | < 15 min | Service down, data loss |
+| **P2** | < 1 hour | Degraded performance |
+| **P3** | < 4 hours | Feature broken, workaround exists |
+| **P4** | < 24 hours | Minor bug, cosmetic |
+
+### Quick Troubleshooting
+
+```bash
+# Check API logs
+railway logs --service core-api
+
+# Test DB connection
+railway run --service core-api -- npx prisma db pull
+
+# Rollback deployment
+railway rollback --deployment <id>
+```
+
+---
+
+## 9. Operational Model: Solo Visionary + AI Agent Army
 
 ### Development Philosophy
 
@@ -428,7 +475,7 @@ Bring in a human specialist (contractor) when:
 
 ---
 
-## 9. State Machines for Complex Flows
+## 10. State Machines for Complex Flows
 
 ### Brief Generation Flow
 
@@ -501,34 +548,185 @@ stateDiagram-v2
 
 ---
 
-## 10. Validation Summary
+## 11. Module Composition Strategy & Roadmap
 
-| Dimension | Score |
-|-----------|-------|
-| **Architecture Completeness** | Complete |
-| **Version Specificity** | All Verified |
-| **Pattern Clarity** | Crystal Clear |
-| **AI Agent Readiness** | Ready |
+> **Decision:** [ADR-005 (SPA + Copilot First)](./architecture/adr-005-spa-copilot-first.md)
+> **Date:** 2025-11-28
 
-**Validation Date:** 2025-11-26
+This section is the **single source of truth** for understanding how Xentri's modules are organized, sequenced, and built. Any team member from any module can reference this to understand the high-level platform vision.
 
-### Addressed in v1.1.0
-- Executive summary condensed to 2 sentences; principles moved to table format
-- Version compatibility notes added with upgrade protocol
-- Operational model documented for Solo Visionary + AI Agent Army
-- State machine diagrams added for Brief, Lead, and Website flows
-- Scaling triggers documented with specific thresholds
+### The SPA + Copilot First Strategy
 
-### Remaining Actions (Implementation Phase)
-1. ~~**`packages/ts-schema`** — Formalize Zod schemas from TypeScript examples during Epic 1 implementation~~ ✓ Done (Story 1.1)
-2. **Cache invalidation** — Implement cache/invalidation config per bounded context when building services
-3. ~~**CI enforcement** — Add schema-check workflow when setting up GitHub Actions~~ ✓ Done (Story 1.1)
+Before building any secondary modules, each category MUST have:
 
-**Epic 1 Story 1.1 Complete:** Foundation infrastructure established with 14 tests passing, RLS verified via smoke tests, GitHub branch protection configured.
+1. **Category SPA** — The primary React micro-app for that domain
+2. **Category Copilot** — The AI agent specialized for that domain
+
+### The Foundational Modules
+
+| # | Category | Module | Type | Status | Package/Target |
+|---|----------|--------|------|--------|----------------|
+| 1 | Platform | **shell** | SPA | **Done** | `apps/shell` |
+| 2 | Platform | **core-api** | Backend | **Done** | `services/core-api` |
+| 3 | Platform | **ts-schema** | Contracts | **Done** | `packages/ts-schema` |
+| 4 | Platform | **ui** | Components | **Done** | `packages/ui` |
+| 5 | Strategy | **strategy-app** | SPA | Planned | Epic 2 |
+| 6 | Strategy | **strategy-copilot** | Copilot | Planned | Epic 2 |
+| 7 | Finance | **finance-app** | SPA | Planned | Epic 3 |
+| 8 | Finance | **finance-copilot** | Copilot | Planned | Epic 3 |
+| 9 | Brand | **brand-app** | SPA | Planned | Epic 4 |
+| 10 | Brand | **brand-copilot** | Copilot | Planned | Epic 4 |
+| 11 | Sales | **sales-app** | SPA | Future | TBD |
+| 12 | Sales | **sales-copilot** | Copilot | Future | TBD |
+| 13 | Operations | **operations-app** | SPA | Future | TBD |
+| 14 | Operations | **operations-copilot** | Copilot | Future | TBD |
+| 15 | Team | **team-app** | SPA | Future | TBD |
+| 16 | Team | **team-copilot** | Copilot | Future | TBD |
+| 17 | Legal | **legal-app** | SPA | Future | TBD |
+| 18 | Legal | **legal-copilot** | Copilot | Future | TBD |
+
+### Build Sequence
+
+```
+Phase 1: Platform (COMPLETE)
+├── shell ✅
+├── core-api ✅
+├── ts-schema ✅
+└── ui ✅
+
+Phase 2: Strategy (NEXT)
+├── strategy-app
+└── strategy-copilot
+
+Phase 3: Finance
+├── finance-app
+└── finance-copilot
+
+Phase 4: Brand
+├── brand-app
+└── brand-copilot
+
+Phase 5+: Sales → Operations → Team → Legal
+```
+
+### Category Dependency Graph
+
+```mermaid
+graph LR
+    subgraph "Foundation"
+        P[Platform]
+    end
+
+    subgraph "Core Value"
+        S[Strategy]
+        F[Finance]
+        B[Brand]
+    end
+
+    subgraph "Growth"
+        Sa[Sales]
+        O[Operations]
+    end
+
+    subgraph "Scale"
+        T[Team]
+        L[Legal]
+    end
+
+    P --> S
+    S --> F
+    S --> B
+    F --> Sa
+    B --> Sa
+    Sa --> O
+    O --> T
+    T --> L
+```
+
+### Why This Sequence?
+
+| Category | Rationale |
+|----------|-----------|
+| **Strategy** | Universal Brief is the DNA—all other categories read from it |
+| **Finance** | Revenue capture (invoicing) proves immediate value and validates event backbone |
+| **Brand** | Visible output (website) users can show to others |
+| **Sales** | Connects leads → quotes → invoices (depends on Finance + Brand) |
+| **Operations** | Job/project management builds on Sales + Finance data |
+| **Team** | HR and roles require established org structure |
+| **Legal** | Contracts and compliance—lowest urgency for beachhead segments |
+
+### Module Capabilities Summary
+
+| Category | SPA Features | Copilot Capabilities |
+|----------|--------------|---------------------|
+| **Strategy** | Universal Brief editor, Goals/OKRs, War Room, Decision log | Brief generation, Goal recommendations, Strategic analysis |
+| **Finance** | Invoicing, Payment tracking, Expenses, Reports | Revenue analysis, Overdue flagging, Pricing suggestions |
+| **Brand** | Website builder, CMS, Lead capture, SEO | Copy generation, Content suggestions, Brand voice |
+| **Sales** | CRM, Quote builder, Pipeline, Follow-ups | Lead qualification, Follow-up drafting, Deal recommendations |
+| **Operations** | Jobs/Projects, Scheduling, Resources, Delivery | Workflow optimization, Scheduling, Bottleneck detection |
+| **Team** | Roles, Permissions, SOPs, Onboarding | Role recommendations, SOP generation, Training suggestions |
+| **Legal** | Contracts, Compliance, Licenses, Policies | Contract review, Compliance checks, Risk flagging |
+
+### Secondary Modules
+
+Once a category's SPA + Copilot are complete, secondary modules can be built:
+
+| Category | Example Secondary Modules |
+|----------|--------------------------|
+| Strategy | North Star tracker, Idea inbox, Decision journal |
+| Finance | Tax pack export, Recurring invoices, Multi-currency |
+| Brand | Email campaigns, Social scheduler, Reputation manager |
+| Sales | WhatsApp bridge, Quote templates, Win/loss analysis |
+| Operations | Calendar sync, Dispatch view, Quality checklists |
+| Team | Payroll integration, Time tracking, Performance reviews |
+| Legal | E-signatures, Compliance calendar, Document templates |
+
+**Rule:** No secondary module can be built until its category's SPA + Copilot pass the [Definition of Done](./architecture/adr-005-spa-copilot-first.md#definition-of-done).
+
+### Integration Patterns
+
+**SPA Integration** — Each Category SPA integrates with the shell via island hydration:
+
+```typescript
+// apps/shell/src/pages/strategy/index.astro
+---
+import StrategyApp from '@xentri/strategy-app';
+---
+<StrategyApp client:load orgId={orgId} />
+```
+
+**Copilot Registration** — Each Category Copilot is registered in the AI service:
+
+```json
+{
+  "strategy_copilot": {
+    "system_prompt": "You are the Strategy Co-pilot...",
+    "tools": ["read_brief", "update_brief", "recommend_modules"],
+    "model": "gpt-4o",
+    "context_scope": ["universal_brief", "strategy_context"]
+  }
+}
+```
+
+### Progress Tracking
+
+- **[Pulse](../../pulse.md)** — Cross-team coordination and system-wide status
+- **[Sprint Status](./sprint-artifacts/sprint-status.yaml)** — Epic-level tracking
+- **GitHub Issues** — Story-level tracking with `cross-module` label
+
+### How to Propose New Modules
+
+1. **Check category readiness** — Is the SPA + Copilot complete?
+2. **Create GitHub Issue** — Use the cross-module request template
+3. **Link to Brief/PRD** — How does this serve the product vision?
+4. **Estimate dependencies** — What other modules does it need?
+5. **Get approval** — ADR required for new foundational modules
+
+See [ADR-005](./architecture/adr-005-spa-copilot-first.md) for full rationale and Definition of Done criteria.
 
 ---
 
-## 11. Future Considerations
+## 12. Future Considerations
 
 *   **Secondary Geo Expansion:** Architecture supports adding region-specific compliance modules (e.g., `finance-engine-mx` for CFDI) without altering the core `finance-engine`.
 *   **Mobile App:** The API-first design allows a future React Native app to consume the same microservices.
