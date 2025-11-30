@@ -1,12 +1,12 @@
 # Xentri Architecture
 
 > **Status:** Draft
-> **Version:** 1.1.0
-> **Last Updated:** 2025-11-26
+> **Version:** 2.0.0
+> **Last Updated:** 2025-11-30
 
 ## 1. Executive Summary
 
-Xentri is a Modular Business OS that starts with a Strategy Co-pilot conversation generating a Universal Brief—the DNA of the business—which then orchestrates downstream modules (Website, CRM, Invoicing). The architecture employs a Turborepo monorepo with an Astro Shell hosting React micro-apps, Node.js microservices communicating via an event-driven "Nervous System" (Redis/n8n), and a multi-tenant Postgres database with Row-Level Security.
+Xentri is a **Fractal Business Operating System** orchestrated by a hierarchical network of autonomous AI agents. It starts with a Strategy Co-pilot conversation generating a Strategy Brief (the DNA of the business), which then guides downstream agents (Marketing, Sales, Finance) who manage their own specialized categories, sub-categories and individual modules/tools. The architecture employs a Turborepo monorepo with an Astro Shell at the core,hosting React SPAs, Node.js microservices communicating via an event-driven "Nervous System" (Redis/n8n), and a multi-tenant Postgres database with Row-Level Security.
 
 ### Core Architectural Principles
 
