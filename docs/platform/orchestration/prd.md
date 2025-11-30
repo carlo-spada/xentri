@@ -115,7 +115,7 @@ Xentri processes business information through three layers, applied fractally at
 | **Operational Pulse** | User-scheduled | "What needs attention now?" | Synthesized, actionable — the calm daily view |
 | **Strategic Brief** | Nightly | "Who are we becoming?" | Distilled patterns — the business DNA |
 
-**User experience:** These layers are invisible infrastructure. The user experiences one calm system that knows when to interrupt, when to summarize, when to act,and when to wait.
+**User experience:** These layers are invisible infrastructure. The user experiences one calm system that knows when to interrupt, when to summarize, when to act, and when to wait.
 
 ### The Attention System
 
@@ -132,6 +132,15 @@ The Operational Pulse delivers information through three modes:
 ### The Fractal Agency Architecture
 
 **Decision:** Every node in the hierarchy (Category, Sub-Category, Module) is an **autonomous agent** with its own LLM "brain".
+
+**Crucial Distinction: Agent vs. Tool**
+*   **The Tool:** The deterministic code/API (e.g., `create_invoice()`, `database_table`).
+*   **The Agent:** The LLM reasoning layer that *uses* the tool.
+*   **The Rule:** A Manager Agent (e.g., Finance) **cannot** access the Child's Tools (e.g., Invoicing API) directly. It must ask the Child Agent (Invoicing) to do it.
+
+**Hierarchy of Influence (The "Nudge"):**
+*   **Managers do not override; they "nudge".** A Manager sets **Objectives** and **Permissions** for its children, treating them like users.
+*   **Children have agency.** They receive the objective, check their "Soul" and "Local Context", and decide *how* to execute.
 
 *   **Level 1: Strategy (The Orchestrator):** The "Strategy" agent.
 *   **Level 2: Category (The Executive):** The "Marketing" agent.
@@ -232,7 +241,7 @@ Before external customers, Xentri must prove the architecture works on a real bu
 | Operational Pulse surfaces action items | Team receives and acts on system-generated insights |
 | All categories have active modules | At least one module per category (beyond copilots) in regular use |
 
-**Why Client Zero:** If an agent-orchestrated Business OS can't run a software business with strategy, brand, sales, finance, operations, team, and legal needs — the architecture is theater.
+**Why Client Zero:** If an agent-orchestrated Business OS can't run a software business with strategy, marketing, sales, finance, operations, team, and legal needs — the architecture is theater.
 
 ### Growth Success (v1.0+): User-Driven Growth
 
@@ -355,9 +364,21 @@ Shell (Astro)
 
 ### The Core Innovation
 
-**In one line:** *Fractal Copilots that read AND write to shared business memory.*
+**In one line:** *Fractal Agents that triangulate User Reality, Superior Intent, and Immutable Soul.*
 
 Everything else — Event Spine, nightly synthesis, War Room — is implementation of that core idea.
+
+### The Innovation: Triangulation
+Most agents optimize for one thing: User Intent ("Do what the user asked").
+Xentri agents optimize for **Alignment**: "Do what the user asked, *unless* it violates the Strategy or the Soul."
+
+**Defining "The Soul" (Immutable Context):**
+This is the "Constitution" of the agent, provided by Xentri developers. It is technically implemented via:
+1.  **System Prompts:** The unchangeable core instructions (e.g., "You are a CFO. You prioritize solvency over growth.").
+2.  **Hard-Coded Guardrails:** Logic the LLM cannot override (e.g., "Cannot transfer funds >$5k without 2FA").
+3.  **Fine-Tuning (Future):** Specialized models baked with domain expertise (e.g., a "Legal" model trained on contract law).
+
+This "Soul" ensures the agent remains a professional employee, not just a compliant chatbot.
 
 **Why this matters:**
 
@@ -535,7 +556,7 @@ Even solo operators get the architecture that supports growth. When they're read
 ```
 User completes Brief
     → Copilot analyzes business needs
-    → "Based on your Brief, you need Marketing and Finance modules. That's Light Ops at $30/mo."
+    → "Based on your Brief, you need Marketing and Finance modules. That's Light Ops at $60/mo."
     → User accepts, adjusts, or explores à la carte
 ```
 
@@ -544,11 +565,13 @@ User completes Brief
 | Tier | Price | Nature |
 |------|-------|--------|
 | **Free** | $0/mo | Strategy Copilot + Brief — prove value before asking for money |
-| **Presencia** | $10/mo | Personalized ~3 module bundle |
-| **Light Ops** | $30/mo | Personalized ~8 module bundle |
-| **Business in Motion** | $90/mo | Personalized ~24 module bundle |
-| **Professional** | $270/mo | Personalized ~72 module bundle |
-| **À la carte** | $5/module | Any module individually |
+| **Presencia** | $20/mo | Personalized ~3 module bundle |
+| **Light Ops** | $60/mo | Personalized ~8 module bundle |
+| **Professional** | $180/mo | Personalized ~24 module bundle |
+| **Business in Motion** | $540/mo | Personalized ~72 module bundle |
+| **Enterprise** | $1200+/mo | ~156+ | Enterprise-grade features |
+
+| **À la carte** | $5/module/mo | Any module individually |
 
 **Key principle:** The tier recommendation comes from the Brief, not a comparison table. Users see "here's what you need" not "here are your options."
 
@@ -658,6 +681,38 @@ The "magic" depends on memory and continuously improving context engineering.
 
 **The honest truth:** This is state-of-the-art context engineering. It's the hardest part of the product. It's also the part that makes everything else possible.
 
+### The "Real Memory" Architecture
+To support "Narrative Continuity" without clogging context windows, Xentri employs a **Tri-State Memory System** with **Temporal Compression**:
+
+1.  **Semantic Memory (The Brief):**
+    *   *What it is:* Structured business facts.
+    *   *Example:* "Client X is a VIP." "Strategy is Growth."
+    *   *Storage:* Relational DB (The Universal Brief).
+    *   *Usage:* Cached and loaded on every interaction.
+
+2.  **Episodic Memory (The Journal):**
+    *   *What it is:* Raw, time-based narrative of past experiences.
+    *   *Example:* "User clicked 'Create Invoice' at 10:00 AM."
+    *   *Storage:* Vector Database (RAG).
+    *   *Usage:* On-demand retrieval only ("What did I do last Tuesday?").
+
+3.  **Synthetic Memory (The Persona):**
+    *   *What it is:* Compressed, high-level synthesis of tone, preferences, and recurring patterns.
+    *   *Example:* "User prefers direct communication and usually works late on Tuesdays."
+    *   *Storage:* System Prompt / Cached Context.
+    *   *Usage:* Always present in context window.
+
+**Temporal Compression Strategy (The "Folding" Algorithm):**
+To prevent context bloat, Episodic Memory is recursively summarized ("folded") into Synthetic/Semantic memory:
+
+*   **Hourly:** Raw events → **Day Summary** (24h retention).
+*   **Daily:** Day Summaries → **Week Summary** (7d retention).
+*   **Weekly:** Week Summaries → **Month Summary** (4w retention).
+*   **Monthly:** Month Summaries → **Quarter Summary** (4q retention).
+*   **Quarterly:** Quarter Summaries → **Year Summary** (Permanent).
+
+**Result:** The agent can answer "What did we achieve in 2025?" (Year Summary) just as easily as "What did I just do?" (Raw Events), without carrying gigabytes of text.
+
 ---
 
 ## Platform Integration Requirements
@@ -673,6 +728,13 @@ The "magic" depends on memory and continuously improving context engineering.
 | `platform/frontend/prd.md` | Shell implementation, UI component specs |
 | `platform/backend/prd.md` | Core API endpoints, service architecture |
 | `platform/shared/prd.md` | Type definitions, validation schemas |
+
+### The "Federated Soul" Registry
+**Requirement:** The Platform must provide a mechanism to compose "Souls" (System Prompts) from two sources:
+1.  **Global DNA (Centralized):** Company values, tone, and core rules (managed by Strategy/User).
+2.  **Local Expertise (Decentralized):** Domain-specific instructions (managed by the Module Developer).
+
+**Runtime:** The Agent boots with `Soul = Global_DNA + Local_Expertise`.
 
 Each sub-category PRD inherits from this constitution and adds specific implementation requirements.
 
@@ -1200,7 +1262,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Initiative | Priority | Risk Addressed |
 |------------|----------|----------------|
 | **First 5 Minutes Design Sprint** | Critical | Onboarding Cliff |
-| **Brief Creation UX Prototype** | High | "How does a user go from 'I have a business' to 'I have a Brief'?" — must feel organic |
+| **Brief Creation UX Prototype** | High | "How does a user go from 'I have a business' to 'I have a Brief'?" — must feel organic - never an 'aha' moment|
 | **Navigation Pattern Specs** | Medium | Hierarchy Complexity — improve on previous version |
 
 ---

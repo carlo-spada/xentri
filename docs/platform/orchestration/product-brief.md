@@ -28,9 +28,15 @@ Xentri is that solution.
 
 ## The Solution
 
-Xentri organizes everything a business needs into seven categories: **Strategy, Marketing, Sales, Finance, Operations, Team, and Legal.** Each category has its own AI co-pilot that understands your context.
+Xentri organizes everything a business needs into seven categories: **Strategy, Marketing, Sales, Finance, Operations, Team, and Legal.**
 
-You start with a free conversation. The Strategy co-pilot learns your business, generates your Brief (the living DNA of your company), and recommends exactly which categories you should tackle next — never a catalog of 100 features, but only the few tools that will solve your pain right now.
+**The Fractal Difference:**
+Every category, sub-category, and module is an **autonomous agent** (not just a tool). They operate using **Triangulation Logic**:
+1.  **Immutable Soul:** The unchangeable professional standards (from Xentri).
+2.  **Superior Intent:** The context from their parent agent (from You).
+3.  **User Reality:** Your direct feedback and commands.
+
+You start with a free conversation. The Strategy co-pilot learns your business, generates your Brief (the living DNA of your company), and recommends exactly which categories you should tackle next.
 
 Every automated action is logged and explainable. One daily view surfaces what needs your attention today. No notification flood, no 40-tab cockpit.
 
@@ -41,10 +47,11 @@ Every automated action is logged and explainable. One daily view surfaces what n
 | Tier | Price | Modules | Focus |
 |------|-------|---------|-------|
 | **Free** | $0 | 1 | Strategy co-pilot + Brief |
-| **Presencia** | $10/mo | ~3 | Get visible (website, leads) |
-| **Light Ops** | $30/mo | ~8 | Run daily ops (CRM, quotes) |
-| **Business in Motion** | $90/mo | ~24 | Full flow (invoicing, payments) |
-| **Professional** | $270/mo | ~72 | Scale team (roles, permissions) |
+| **Presencia** | $20/mo | ~3 | Get visible (website, leads) |
+| **Light Ops** | $60/mo | ~8 | Run daily ops (CRM, quotes) |
+| **Proffessional** | $180/mo | ~24 | Full flow (invoicing, payments) |
+| **Business in Motion** | $540/mo | ~72 | Scale team (roles, permissions) |
+| **Enterprise** | $1200+/mo | ~156+ | Enterprise-grade features |
 
 Plus $5/module à la carte.
 
@@ -53,6 +60,8 @@ Plus $5/module à la carte.
 ## Key Differentiators
 
 - **Free co-pilot from day zero** — Clarity before tools, no credit card required
+- **Fractal Agency** — Every module is an employee that *thinks* and *acts*, not just a tool that *runs*
+- **Real Memory** — Remembers what you said last week (Episodic) and who you are (Semantic)
 - **Clarity-first, not tool-first** — Brief informs everything else (and is informed by everything else: single source of truth)
 - **Calm, not noisy** — 7 categories, clean hierarchy, never more than you need on screen
 - **Visible, not magical** — Every automation logged and explainable
@@ -86,7 +95,7 @@ If money is flowing through Xentri, users are getting real value.
 
 | Risk | Mitigation |
 |------|------------|
-| Co-pilot quality / hallucination | Outstanding context engineering. Graceful fallback to guided forms. Fine-tuning? |
+| Co-pilot quality / hallucination | **Triangulation Architecture** (Soul + Strategy + User) ensures alignment. Graceful fallback to guided forms. |
 | Low free → paid conversion | Brief completion triggers personalized upgrade prompts |
 | Multi-tenant data leaks | RLS enforced, every query includes `org_id`, paranoid testing |
 
