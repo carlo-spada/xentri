@@ -16,9 +16,9 @@ The result is chronic, low-grade anxiety: *"Something is probably dropping right
 
 ### The Solution
 
-Xentri is an **agent-orchestrated Business Operating System** that eliminates the human router role entirely.
+Xentri is an **agent-orchestrated Fractal Business Operating System** that eliminates the human router role entirely.
 
-Seven AI copilots — **Strategy, Brand, Sales, Finance, Operations, Team, and Legal** — form a hierarchical agent network that reasons across domains with shared context:
+Seven AI copilots — **Strategy, Brand, Sales, Finance, Operations, Team, and Legal** — form a **fractal agent network** that reasons across domains with shared context:
 
 - **Strategy Copilot (Orchestrator):** Reads all category briefs, writes only to the Universal Brief. Synthesizes cross-domain patterns into strategic insight.
 - **Category Copilots (7):** Each owns its domain brief. Reads the Universal Brief for alignment. Manages specialized knowledge and tools.
@@ -51,15 +51,15 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 
 **Technical Type:** SaaS B2B Platform (Agent-Orchestrated)
 **Domain:** General (SMB Business Operations)
-**Complexity Level:** Medium
+**Complexity Level:** Very High
 
 ### Classification Rationale
 
 | Dimension | Assessment | Notes |
 |-----------|------------|-------|
 | **Regulatory** | Low | No heavy compliance at platform level; domain-specific (CFDI, HIPAA) handled per module |
-| **Architectural** | High | Agent orchestration, event-driven backbone, multi-tenant RLS, hierarchical brief system |
-| **Feature** | Medium | Standard SaaS patterns built on sophisticated agent infrastructure |
+| **Architectural** | Very High | Agent orchestration, event-driven backbone, multi-tenant RLS, hierarchical brief system. Requires solving novel problems in stateful agent memory and cross-domain reasoning. |
+| **Feature** | High | Standard SaaS patterns built on sophisticated agent infrastructure with deep interconnectivity. |
 
 **Project Type Signals:**
 - Multi-tenant SaaS with organization hierarchy
@@ -105,9 +105,9 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 
 *Note: Technical implementation details belong in `architecture.md`. This section defines the product concepts that drive the architecture.*
 
-### The Three-Layer Information Architecture
+### The Three-Layer Fractal Architecture
 
-Xentri processes business information through three layers, each answering a different question:
+Xentri processes business information through three layers, applied fractally at every level of the system:
 
 | Layer | Cadence | Question It Answers | Nature |
 |-------|---------|---------------------|--------|
@@ -129,9 +129,45 @@ The Operational Pulse delivers information through three modes:
 
 **Design principle:** The intelligence is in the *timing*, not in hiding information. Calm comes from trusting the system to surface what matters when it matters.
 
+### The Fractal Architecture
+
+**Decision:** The Three-Layer Architecture (Event Spine, Operational Pulse, Brief) is **fractal**, not just global.
+
+*   **Level 1: Strategy (The Orchestrator):** The "Strategy" category owns the Universal Brief, the Strategy Pulse, and the Strategy Event Spine. It orchestrates the entire system.
+*   **Level 2: Category (The Executive):** "Marketing" maintains a Marketing Brief (derived from Universal), a Marketing Pulse, and aggregates Marketing events.
+*   **Level 3: Sub-Category (The Manager):** "Social Media" maintains a Social Media Brief (derived from Marketing), a Social Media Pulse, and aggregates Social Media events.
+*   **Level 4: Module (The Specialist):** "Content Creation" maintains a Content Creation Brief (derived from Social Media), a Content Creation Pulse, and emits raw Content Creation events.
+
+This allows infinite scalability. A module doesn't need to know about global strategy; it only needs to align with its parent. The "Intelligence" is distributed, not centralized.
+
+### The Pulse Mechanics (Hierarchical Filtering)
+
+How do we prevent noise? **Hierarchical Filtering.**
+
+1.  **Module Level (Local Context):**
+    *   The Module (e.g., Invoicing) detects an event (e.g., "Invoice Overdue").
+    *   It classifies importance (1-5) based on *local* context (e.g., "Is this a VIP client?").
+    *   It pushes relevant items to the **Sub-Category Pulse**.
+
+2.  **Sub-Category Level (Operational Context):**
+    *   The Sub-Category Copilot (e.g., Finance) reviews its Pulse.
+    *   It aggregates and re-classifies (1-5) based on *sub-category* context (e.g., "We have 10 overdue invoices, let's group them").
+    *   It pushes high-impact items to the **Category Pulse**.
+
+3.  **Category Level (Tactical Context):**
+    *   The Category Copilot reviews its Pulse.
+    *   It aggregates and re-classifies (1-5) them based on *category* goals (e.g., "Cash flow is stable, but this client is critical").
+    *   It pushes strategic items to the **Strategy Pulse**.
+
+4.  **Strategy Level (Strategic Context):**
+    *   The Strategy Copilot reviews the Strategy Pulse.
+    *   It makes the final decision based on the *Universal Brief* (e.g., "Ignore the invoice, call the client to save the relationship").
+
+**Result:** The Owner sees only what survives four layers of intelligent filtering (unless they choose to dig deeper, because the rest of the information is still there, it just might have a lower priority and wasn't able to surface to a higher level filter).
+
 ### The War Room
 
-A dedicated collaboration space where all copilots are "present" — reading all briefs, contributing in real-time to cross-domain decisions.
+A dedicated collaboration space where all category copilots are "present" — reading all briefs, contributing in real-time to cross-domain decisions.
 
 **Use cases:**
 - Quarterly planning — "What should we focus on next quarter?"
@@ -207,7 +243,7 @@ Before external customers, Xentri must prove the architecture works on a real bu
 
 ### Structural Model
 
-Xentri follows a hierarchical structure:
+Xentri follows a hierarchical fractal architecture:
 
 ```
 Shell (Astro)
@@ -301,7 +337,7 @@ Shell (Astro)
 
 ### The Core Innovation
 
-**In one line:** *Copilots that read AND write to shared business memory.*
+**In one line:** *Fractal Copilots that read AND write to shared business memory.*
 
 Everything else — Event Spine, nightly synthesis, War Room — is implementation of that core idea.
 
@@ -411,7 +447,7 @@ If it's wrong, they adjust. But the default is *intelligent*, not generic.
 
 > *"The CRM that already knows your business."*
 
-Every other tool makes you configure it. Xentri's tools configure themselves because they read your Brief. This requires the entire Brief architecture to work — it's not a feature you can bolt on.
+Every other tool makes you configure it. Xentri's tools configure themselves because they read your Brief. This requires the entire **Fractal Brief Architecture** to work — it's not a feature you can bolt on.
 
 ### Design Mandate
 
