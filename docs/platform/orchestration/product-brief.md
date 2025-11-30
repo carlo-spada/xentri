@@ -28,7 +28,7 @@ Xentri is that solution.
 
 ## The Solution
 
-Xentri organizes everything a business needs into seven categories: **Strategy, Brand, Sales, Finance, Operations, Team, and Legal.** Each category has its own AI co-pilot that understands your context.
+Xentri organizes everything a business needs into seven categories: **Strategy, Marketing, Sales, Finance, Operations, Team, and Legal.** Each category has its own AI co-pilot that understands your context.
 
 You start with a free conversation. The Strategy co-pilot learns your business, generates your Brief (the living DNA of your company), and recommends exactly which categories you should tackle next — never a catalog of 100 features, but only the few tools that will solve your pain right now.
 

@@ -18,7 +18,7 @@ The result is chronic, low-grade anxiety: *"Something is probably dropping right
 
 Xentri is an **agent-orchestrated Fractal Business Operating System** that eliminates the human router role entirely.
 
-Seven AI copilots — **Strategy, Brand, Sales, Finance, Operations, Team, and Legal** — form a **fractal agent network** that reasons across domains with shared context:
+Seven AI copilots — **Strategy, Marketing, Sales, Finance, Operations, Team, and Legal** — form a **fractal agent network** that reasons across domains with shared context:
 
 - **Strategy Copilot (Orchestrator):** Reads all category briefs, writes only to the Universal Brief. Synthesizes cross-domain patterns into strategic insight.
 - **Category Copilots (7):** Each owns its domain brief. Reads the Universal Brief for alignment. Manages specialized knowledge and tools.
@@ -115,7 +115,7 @@ Xentri processes business information through three layers, applied fractally at
 | **Operational Pulse** | User-scheduled | "What needs attention now?" | Synthesized, actionable — the calm daily view |
 | **Strategic Brief** | Nightly | "Who are we becoming?" | Distilled patterns — the business DNA |
 
-**User experience:** These layers are invisible infrastructure. The user experiences one calm system that knows when to interrupt, when to summarize, and when to wait.
+**User experience:** These layers are invisible infrastructure. The user experiences one calm system that knows when to interrupt, when to summarize, when to act,and when to wait.
 
 ### The Attention System
 
@@ -129,16 +129,37 @@ The Operational Pulse delivers information through three modes:
 
 **Design principle:** The intelligence is in the *timing*, not in hiding information. Calm comes from trusting the system to surface what matters when it matters.
 
-### The Fractal Architecture
+### The Fractal Agency Architecture
 
-**Decision:** The Three-Layer Architecture (Event Spine, Operational Pulse, Brief) is **fractal**, not just global.
+**Decision:** Every node in the hierarchy (Category, Sub-Category, Module) is an **autonomous agent** with its own LLM "brain".
 
-*   **Level 1: Strategy (The Orchestrator):** The "Strategy" category owns the Universal Brief, the Strategy Pulse, and the Strategy Event Spine. It orchestrates the entire system.
-*   **Level 2: Category (The Executive):** "Marketing" maintains a Marketing Brief (derived from Universal), a Marketing Pulse, and aggregates Marketing events.
-*   **Level 3: Sub-Category (The Manager):** "Social Media" maintains a Social Media Brief (derived from Marketing), a Social Media Pulse, and aggregates Social Media events.
-*   **Level 4: Module (The Specialist):** "Content Creation" maintains a Content Creation Brief (derived from Social Media), a Content Creation Pulse, and emits raw Content Creation events.
+*   **Level 1: Strategy (The Orchestrator):** The "Strategy" agent.
+*   **Level 2: Category (The Executive):** The "Marketing" agent.
+*   **Level 3: Sub-Category (The Manager):** The "Social Media" agent.
+*   **Level 4: Module (The Specialist):** The "Content Creation" agent.
 
-This allows infinite scalability. A module doesn't need to know about global strategy; it only needs to align with its parent. The "Intelligence" is distributed, not centralized.
+**The Triangulation Logic:**
+At any given level, the Agent must balance three distinct inputs to decide how to **ACT**:
+
+1.  **Immutable System Context (The Soul):**
+    *   *Source:* Xentri Developers (me).
+    *   *Content:* The "Constitution" of the module. What it *is*, what it *can do*, and its unshakeable rules.
+    *   *Editable by:* **Xentri Devs ONLY.** (User cannot change this).
+
+2.  **Superior Intent (The Strategy):**
+    *   *Source:* The Parent (Agent) (e.g., Owner → Orchestrator → Executive → Manager → Specialist).
+    *   *Content:* The relevant section of the Brief and Pulse. "We are focusing on growth this quarter."
+    *   *Editable by:* **Parent Agent.**
+
+3.  **User Reality (The Supervision):**
+    *   *Source:* The Human User (different users might have different permissions here).
+    *   *Content:* Direct commands, feedback asks, or corrections. "Don't post that today."
+    *   *Editable by:* **Users.**
+
+**The Agentic Loop:**
+The Agent reads (Soul + Superior Intent + User Reality) → **Synthesizes** → **ACTS** (Configures itself, executes task, emits events, etc.).
+
+The User functions mainly as a **Supervisor** and **Feedback Provider**, NOT a direct **Operator**. The Module functions as an **Employee**, NOT a **Tool**.
 
 ### The Pulse Mechanics (Hierarchical Filtering)
 
@@ -276,26 +297,23 @@ Shell (Astro)
 
 **Philosophy:** Build the modules Xentri needs to operate as a business. Client Zero defines the scope organically — not a predetermined roadmap.
 
-**Architectural requirements:**
+**Architectural requirements (Fractal Validation):**
 - Full Shell → SPA → Module flow working end-to-end
-- At least one active sub-category per category (validates shell completeness)
-- Agent hierarchy operational (Strategy Copilot + at least 3 Category Copilots)
-- Three-layer architecture functional (Event Spine → Operational Pulse → Strategic Brief)
+- Full 4-Level Hierarchy operational (Strategy → Category → Sub-Category → Module)
+- **Deep Validation:** One vertical fully implemented to Level 4 (Marketing → Website → Builder)
+- **Wide Validation:** A second category active to Level 2/4 (Sales → CRM) to prove cross-category orchestration.
+- Three-layer architecture functional (Event Spine → Operational Pulse → Strategic Brief) in all four levels
 - War Room operational for cross-domain collaboration
 
-**Example module needs by category (illustrative, not commitments):**
+**Example MVP Modules (The "Fractal Spike"):**
 
-| Category | Xentri's Own Needs | Example Modules |
-|----------|-------------------|-----------------|
-| **Strategy** | Planning, coordination, Brief management | War Room, Brief Editor, OKR Tracking |
-| **Brand** | Market presence, content, awareness | Website Builder, Blog/CMS, Social Management |
-| **Sales** | Prospect tracking, pipeline | CRM, Lead Capture, Pipeline View |
-| **Finance** | Revenue, expenses, compliance | Invoicing, Expense Tracking, Tax Preparation |
-| **Operations** | Building Xentri itself | Project Management, Task Tracking |
-| **Legal** | Entity, contracts, compliance | Entity Formation, Contract Templates |
-| **Team** | Minimal for solo + AI | Deferred or minimal (Role Definitions) |
+| Category | Sub-Category | Module | Purpose |
+|----------|--------------|--------|---------|
+| **Strategy** | *Orchestration* | **War Room** | Cross-domain reasoning |
+| **Marketing** | **Website** | **Builder** | **Wide Check:** Proves Strategy can orchestrate multiple categories |
+| **Sales** | **CRM** | **Lead Management** | **Deep Spike:** Proves Level 4 fractal logic (Local → Sub → Cat → Strat) |
 
-**Estimated timeline:** ~1 week per module → MVP achievable in <6 months
+**Estimated timeline:** <6 months (Focusing on depth over breadth allows this timeline despite fractal complexity).
 
 **MVP is complete when:** Xentri runs entirely on Xentri (Client Zero validation checklist passes).
 
@@ -517,7 +535,7 @@ Even solo operators get the architecture that supports growth. When they're read
 ```
 User completes Brief
     → Copilot analyzes business needs
-    → "Based on your Brief, you need Brand and Finance modules. That's Light Ops at $30/mo."
+    → "Based on your Brief, you need Marketing and Finance modules. That's Light Ops at $30/mo."
     → User accepts, adjusts, or explores à la carte
 ```
 
@@ -1218,7 +1236,7 @@ This PRD was created through multi-agent collaboration using the BMAD method:
 | Term | Definition |
 |------|------------|
 | **Universal Brief** | The living document describing a business's identity, strategy, and current state — the "DNA" that all copilots read |
-| **Category Copilot** | AI agent specialized in one of the seven business categories (Strategy, Brand, Sales, Finance, Operations, Team, Legal) |
+| **Category Copilot** | AI agent specialized in one of the seven business categories (Strategy, Marketing, Sales, Finance, Operations, Team, Legal) |
 | **Event Spine** | Real-time log of all business events — the raw truth of what happened |
 | **Operational Pulse** | Synthesized view of what needs attention — delivered on user's schedule |
 | **Strategic Brief** | Nightly synthesis of patterns into business DNA — the "who are we becoming" layer |
