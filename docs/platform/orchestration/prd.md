@@ -41,6 +41,7 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 **Agent-orchestrated, not AI-augmented.** The copilots aren't features — they're the foundation. The Universal Brief isn't a document — it's the business's living memory. The automation isn't magical — it's explainable.
 
 **The positioning:**
+
 - *"Stop being your business's human router."*
 - *"Business confidence, not business anxiety."*
 - *"The business that runs itself — and explains why."*
@@ -62,6 +63,7 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 | **Feature** | High | Standard SaaS patterns built on sophisticated agent infrastructure with deep interconnectivity. |
 
 **Project Type Signals:**
+
 - Multi-tenant SaaS with organization hierarchy
 - Subscription tiers with modular add-ons
 - Dashboard-driven UI with calm, focused UX
@@ -131,39 +133,43 @@ The Operational Pulse delivers information through three modes:
 
 ### The Fractal Agency Architecture
 
-**Decision:** Every node in the hierarchy (Category, Sub-Category, Module) is an **autonomous agent** with its own LLM "brain".
+**Decision:** Every node in the hierarchy (Category, Sub-Category, Module) is an **autonomous agent** (Logically).
+
+- *Physical Implementation:* Agents are grouped into **Category Swarms** (Python services) to optimize resources (see `architecture.md`).
 
 **Crucial Distinction: Agent vs. Tool**
-*   **The Tool:** The deterministic code/API (e.g., `create_invoice()`, `database_table`).
-*   **The Agent:** The LLM reasoning layer that *uses* the tool.
-*   **The Rule:** A Manager Agent (e.g., Finance) **cannot** access the Child's Tools (e.g., Invoicing API) directly. It must ask the Child Agent (Invoicing) to do it.
+
+- **The Tool:** The deterministic code/API (e.g., `create_invoice()`, `database_table`).
+- **The Agent:** The LLM reasoning layer that *uses* the tool.
+- **The Rule:** A Manager Agent (e.g., Finance) **cannot** access the Child's Tools (e.g., Invoicing API) directly. It must ask the Child Agent (Invoicing) to do it.
 
 **Hierarchy of Influence (The "Nudge"):**
-*   **Managers do not override; they "nudge".** A Manager sets **Objectives** and **Permissions** for its children, treating them like users.
-*   **Children have agency.** They receive the objective, check their "Soul" and "Local Context", and decide *how* to execute.
 
-*   **Level 1: Strategy (The Orchestrator):** The "Strategy" agent.
-*   **Level 2: Category (The Executive):** The "Marketing" agent.
-*   **Level 3: Sub-Category (The Manager):** The "Social Media" agent.
-*   **Level 4: Module (The Specialist):** The "Content Creation" agent.
+- **Managers do not override; they "nudge".** A Manager sets **Objectives** and **Permissions** for its children, treating them like users.
+- **Children have agency.** They receive the objective, check their "Soul" and "Local Context", and decide *how* to execute.
+
+- **Level 1: Strategy (The Orchestrator):** The "Strategy" agent.
+- **Level 2: Category (The Executive):** The "Marketing" agent.
+- **Level 3: Sub-Category (The Manager):** The "Social Media" agent.
+- **Level 4: Module (The Specialist):** The "Content Creation" agent.
 
 **The Triangulation Logic:**
 At any given level, the Agent must balance three distinct inputs to decide how to **ACT**:
 
-1.  **Immutable System Context (The Soul):**
-    *   *Source:* Xentri Developers (me).
-    *   *Content:* The "Constitution" of the module. What it *is*, what it *can do*, and its unshakeable rules.
-    *   *Editable by:* **Xentri Devs ONLY.** (User cannot change this).
+1. **Immutable System Context (The Soul):**
+    - *Source:* Xentri Developers (me).
+    - *Content:* The "Constitution" of the module. What it *is*, what it *can do*, and its unshakeable rules.
+    - *Editable by:* **Xentri Devs ONLY.** (User cannot change this).
 
-2.  **Superior Intent (The Strategy):**
-    *   *Source:* The Parent (Agent) (e.g., Owner → Orchestrator → Executive → Manager → Specialist).
-    *   *Content:* The relevant section of the Brief and Pulse. "We are focusing on growth this quarter."
-    *   *Editable by:* **Parent Agent.**
+2. **Superior Intent (The Strategy):**
+    - *Source:* The Parent (Agent) (e.g., Owner → Orchestrator → Executive → Manager → Specialist).
+    - *Content:* The relevant section of the Brief and Pulse. "We are focusing on growth this quarter."
+    - *Editable by:* **Parent Agent.**
 
-3.  **User Reality (The Supervision):**
-    *   *Source:* The Human User (different users might have different permissions here).
-    *   *Content:* Direct commands, feedback asks, or corrections. "Don't post that today."
-    *   *Editable by:* **Users.**
+3. **User Reality (The Supervision):**
+    - *Source:* The Human User (different users might have different permissions here).
+    - *Content:* Direct commands, feedback asks, or corrections. "Don't post that today."
+    - *Editable by:* **Users.**
 
 **The Agentic Loop:**
 The Agent reads (Soul + Superior Intent + User Reality) → **Synthesizes** → **ACTS** (Configures itself, executes task, emits events, etc.).
@@ -174,24 +180,24 @@ The User functions mainly as a **Supervisor** and **Feedback Provider**, NOT a d
 
 How do we prevent noise? **Hierarchical Filtering.**
 
-1.  **Module Level (Local Context):**
-    *   The Module (e.g., Invoicing) detects an event (e.g., "Invoice Overdue").
-    *   It classifies importance (1-5) based on *local* context (e.g., "Is this a VIP client?").
-    *   It pushes relevant items to the **Sub-Category Pulse**.
+1. **Module Level (Local Context):**
+    - The Module (e.g., Invoicing) detects an event (e.g., "Invoice Overdue").
+    - It classifies importance (1-5) based on *local* context (e.g., "Is this a VIP client?").
+    - It pushes relevant items to the **Sub-Category Pulse**.
 
-2.  **Sub-Category Level (Operational Context):**
-    *   The Sub-Category Copilot (e.g., Finance) reviews its Pulse.
-    *   It aggregates and re-classifies (1-5) based on *sub-category* context (e.g., "We have 10 overdue invoices, let's group them").
-    *   It pushes high-impact items to the **Category Pulse**.
+2. **Sub-Category Level (Operational Context):**
+    - The Sub-Category Copilot (e.g., Finance) reviews its Pulse.
+    - It aggregates and re-classifies (1-5) based on *sub-category* context (e.g., "We have 10 overdue invoices, let's group them").
+    - It pushes high-impact items to the **Category Pulse**.
 
-3.  **Category Level (Tactical Context):**
-    *   The Category Copilot reviews its Pulse.
-    *   It aggregates and re-classifies (1-5) them based on *category* goals (e.g., "Cash flow is stable, but this client is critical").
-    *   It pushes strategic items to the **Strategy Pulse**.
+3. **Category Level (Tactical Context):**
+    - The Category Copilot reviews its Pulse.
+    - It aggregates and re-classifies (1-5) them based on *category* goals (e.g., "Cash flow is stable, but this client is critical").
+    - It pushes strategic items to the **Strategy Pulse**.
 
-4.  **Strategy Level (Strategic Context):**
-    *   The Strategy Copilot reviews the Strategy Pulse.
-    *   It makes the final decision based on the *Universal Brief* (e.g., "Ignore the invoice, call the client to save the relationship").
+4. **Strategy Level (Strategic Context):**
+    - The Strategy Copilot reviews the Strategy Pulse.
+    - It makes the final decision based on the *Universal Brief* (e.g., "Ignore the invoice, call the client to save the relationship").
 
 **Result:** The Owner sees only what survives four layers of intelligent filtering (unless they choose to dig deeper, because the rest of the information is still there, it just might have a lower priority and wasn't able to surface to a higher level filter).
 
@@ -200,6 +206,7 @@ How do we prevent noise? **Hierarchical Filtering.**
 A dedicated collaboration space where all category copilots are "present" — reading all briefs, contributing in real-time to cross-domain decisions.
 
 **Use cases:**
+
 - Quarterly planning — "What should we focus on next quarter?"
 - Crisis response — "We just lost our biggest client. What do we do?"
 - Opportunity evaluation — "Should we expand into this market?"
@@ -218,6 +225,7 @@ The Universal Brief contains two types of sections:
 **Recommendation flow:** Category copilots cannot write to the Universal Brief. They emit recommendation events that Strategy evaluates during nightly synthesis. High-impact or low-confidence recommendations are flagged for human decision.
 
 **Safeguards identified via pre-mortem analysis:**
+
 - **Against Silent Drift:** Brief is versioned; users can diff any two versions to see evolution
 - **Against Recommendation Flood:** Confidence thresholds, decay on flagged items, backpressure signals
 - **Tracking:** Brief Stability Index measures change velocity to detect over-reactivity
@@ -275,7 +283,7 @@ Before external customers, Xentri must prove the architecture works on a real bu
 
 Xentri follows a hierarchical fractal architecture:
 
-```
+```text
 Shell (Astro)
 └── Category (7 total)
     └── Sub-category (up to 10 per category) → SPA (React)
@@ -296,8 +304,8 @@ Shell (Astro)
 | Core API | ✅ Scaffolded | `services/core-api` — Fastify + Prisma |
 | Shared Contracts | ✅ Scaffolded | `packages/ts-schema` — types and schemas |
 | UI Components | ✅ Started | `packages/ui` — needs expansion |
-| Deployment | ⚠️ Needs work | Railway setup exists, not production-ready |
-| Stack Validation | ⚠️ Needs review | Confirm current tech aligns with revised vision |
+| Deployment | ⚠️ Planned | **GCP Native (K8s)** — See `architecture.md` ADR-004 |
+| Stack Validation | ✅ Complete | Hybrid Node/Python + K8s Topology confirmed |
 | Event Spine | ⚠️ Partial | Needs review against three-layer architecture |
 
 **Before new module development:** Epic 1 requires revision, recalibration, and validation. The foundation must be solid before building on it.
@@ -307,6 +315,7 @@ Shell (Astro)
 **Philosophy:** Build the modules Xentri needs to operate as a business. Client Zero defines the scope organically — not a predetermined roadmap.
 
 **Architectural requirements (Fractal Validation):**
+
 - Full Shell → SPA → Module flow working end-to-end
 - Full 4-Level Hierarchy operational (Strategy → Category → Sub-Category → Module)
 - **Deep Validation:** One vertical fully implemented to Level 4 (Marketing → Website → Builder)
@@ -331,6 +340,7 @@ Shell (Astro)
 **Trigger:** Client Zero validation complete; ready for external users.
 
 **Focus:**
+
 - Expand modules based on user demand, not predetermined roadmap
 - Deepen each category with additional sub-categories
 - Refine based on retention and expansion signals
@@ -341,6 +351,7 @@ Shell (Astro)
 ### Vision Scope (v2.0+)
 
 **The full Business OS:**
+
 - All seven categories richly populated
 - Sub-categories covering major business functions
 - Modules for specialized needs within each sub-category
@@ -369,14 +380,16 @@ Shell (Astro)
 Everything else — Event Spine, nightly synthesis, War Room — is implementation of that core idea.
 
 ### The Innovation: Triangulation
+
 Most agents optimize for one thing: User Intent ("Do what the user asked").
 Xentri agents optimize for **Alignment**: "Do what the user asked, *unless* it violates the Strategy or the Soul."
 
 **Defining "The Soul" (Immutable Context):**
 This is the "Constitution" of the agent, provided by Xentri developers. It is technically implemented via:
-1.  **System Prompts:** The unchangeable core instructions (e.g., "You are a CFO. You prioritize solvency over growth.").
-2.  **Hard-Coded Guardrails:** Logic the LLM cannot override (e.g., "Cannot transfer funds >$5k without 2FA").
-3.  **Fine-Tuning (Future):** Specialized models baked with domain expertise (e.g., a "Legal" model trained on contract law).
+
+1. **System Prompts:** The unchangeable core instructions (e.g., "You are a CFO. You prioritize solvency over growth. etc.").
+2. **Hard-Coded Guardrails:** Logic the LLM cannot override (e.g., "Cannot transfer funds >$5k without 2FA").
+3. **Fine-Tuning (Future):** Specialized models baked with domain expertise (e.g., a "Legal" model trained on contract law).
 
 This "Soul" ensures the agent remains a professional employee, not just a compliant chatbot.
 
@@ -396,6 +409,7 @@ The Brief isn't a database. It's a shared consciousness that agents both consume
 Xentri is being built using BMAD. Xentri's copilots are inspired by BMAD's agent architecture. This is not coincidence — this is the innovation testing itself.
 
 **The proof:**
+
 - BMAD agents orchestrate the *building* of Xentri (code, PRDs, architecture)
 - Xentri copilots will orchestrate the *running* of businesses (strategy, sales, finance)
 - Same pattern, different domain
@@ -422,7 +436,7 @@ The innovation is in how these tools *connect and reason together* — not in th
 
 The architecture enables a compounding advantage:
 
-```
+```text
 More usage → Richer Brief → Better copilot performance → More usage
 ```
 
@@ -452,7 +466,7 @@ They share one thing: they all need intelligent orchestration to run their busin
 
 **Modules configure themselves based on business context.**
 
-```
+```text
 User completes Brief → Copilot reads Brief → Copilot configures module → User confirms or adjusts
 ```
 
@@ -475,6 +489,7 @@ If it's wrong, they adjust. But the default is *intelligent*, not generic.
 | **Customization** | User builds from scratch | User confirms or adjusts intelligent defaults |
 
 **Technical approach:**
+
 - Flexible entity schemas (JSON columns, configurable fields)
 - Template system for module configurations
 - Brief → Module Config mapping driven by copilots
@@ -493,6 +508,7 @@ Every other tool makes you configure it. Xentri's tools configure themselves bec
 **Every module must be Brief-aware.**
 
 When designing any module, ask:
+
 1. What does the Brief tell us about how this business works?
 2. How can the copilot configure intelligent defaults?
 3. What's the one question we ask instead of fifty?
@@ -553,7 +569,7 @@ Even solo operators get the architecture that supports growth. When they're read
 
 **The flow:**
 
-```
+```text
 User completes Brief
     → Copilot analyzes business needs
     → "Based on your Brief, you need Marketing and Finance modules. That's Light Ops at $60/mo."
@@ -646,6 +662,7 @@ The copilot's vocabulary adapts to the user's world. This isn't just field label
 Each session is a chapter, not a transaction.
 
 **What this requires:**
+
 - The copilot knows what happened since last session
 - The copilot knows what's pending and why
 - The copilot knows patterns ("they typically respond in 3 days")
@@ -681,34 +698,35 @@ The "magic" depends on memory and continuously improving context engineering.
 **The honest truth:** This is state-of-the-art context engineering. It's the hardest part of the product. It's also the part that makes everything else possible.
 
 ### The "Real Memory" Architecture
+
 To support "Narrative Continuity" without clogging context windows, Xentri employs a **Tri-State Memory System** with **Temporal Compression**:
 
-1.  **Semantic Memory (The Brief):**
-    *   *What it is:* Structured business facts.
-    *   *Example:* "Client X is a VIP." "Strategy is Growth."
-    *   *Storage:* Relational DB (The Universal Brief).
-    *   *Usage:* Cached and loaded on every interaction.
+1. **Semantic Memory (The Brief):**
+    - *What it is:* Structured business facts.
+    - *Example:* "Client X is a VIP." "Strategy is Growth."
+    - *Storage:* Relational DB (The Universal Brief).
+    - *Usage:* Cached and loaded on every interaction.
 
-2.  **Episodic Memory (The Journal):**
-    *   *What it is:* Raw, time-based narrative of past experiences.
-    *   *Example:* "User clicked 'Create Invoice' at 10:00 AM."
-    *   *Storage:* Vector Database (RAG).
-    *   *Usage:* On-demand retrieval only ("What did I do last Tuesday?").
+2. **Episodic Memory (The Journal):**
+    - *What it is:* Raw, time-based narrative of past experiences.
+    - *Example:* "User clicked 'Create Invoice' at 10:00 AM."
+    - *Storage:* Vector Database (RAG).
+    - *Usage:* On-demand retrieval only ("What did I do last Tuesday?").
 
-3.  **Synthetic Memory (The Persona):**
-    *   *What it is:* Compressed, high-level synthesis of tone, preferences, and recurring patterns.
-    *   *Example:* "User prefers direct communication and usually works late on Tuesdays."
-    *   *Storage:* System Prompt / Cached Context.
-    *   *Usage:* Always present in context window.
+3. **Synthetic Memory (The Persona):**
+    - *What it is:* Compressed, high-level synthesis of tone, preferences, and recurring patterns.
+    - *Example:* "User prefers direct communication and usually works late on Tuesdays."
+    - *Storage:* System Prompt / Cached Context.
+    - *Usage:* Always present in context window.
 
 **Temporal Compression Strategy (The "Folding" Algorithm):**
 To prevent context bloat, Episodic Memory is recursively summarized ("folded") into Synthetic/Semantic memory:
 
-*   **Hourly:** Raw events → **Day Summary** (24h retention).
-*   **Daily:** Day Summaries → **Week Summary** (7d retention).
-*   **Weekly:** Week Summaries → **Month Summary** (4w retention).
-*   **Monthly:** Month Summaries → **Quarter Summary** (4q retention).
-*   **Quarterly:** Quarter Summaries → **Year Summary** (Permanent).
+- **Hourly:** Raw events → **Day Summary** (24h retention).
+- **Daily:** Day Summaries → **Week Summary** (7d retention).
+- **Weekly:** Week Summaries → **Month Summary** (4w retention).
+- **Monthly:** Month Summaries → **Quarter Summary** (4q retention).
+- **Quarterly:** Quarter Summaries → **Year Summary** (Permanent).
 
 **Result:** The agent can answer "What did we achieve in 2025?" (Year Summary) just as easily as "What did I just do?" (Raw Events), without carrying gigabytes of text.
 
@@ -729,9 +747,11 @@ To prevent context bloat, Episodic Memory is recursively summarized ("folded") i
 | `platform/shared/prd.md` | Type definitions, validation schemas |
 
 ### The "Federated Soul" Registry
+
 **Requirement:** The Platform must provide a mechanism to compose "Souls" (System Prompts) from two sources:
-1.  **Global DNA (Centralized):** Company values, tone, and core rules (managed by Strategy/User).
-2.  **Local Expertise (Decentralized):** Domain-specific instructions (managed by the Module Developer).
+
+1. **Global DNA (Centralized):** Company values, tone, and core rules (managed by Strategy/User).
+2. **Local Expertise (Decentralized):** Domain-specific instructions (managed by the Module Developer).
 
 **Runtime:** The Agent boots with `Soul = Global_DNA + Local_Expertise`.
 
@@ -815,6 +835,7 @@ brief_fields_read:
 **Search indexing:**
 
 Sub-categories that produce searchable content must:
+
 - Emit events with `searchable: true` flag
 - Include `search_text` field with indexable content
 - Update search index on create/update/delete
@@ -835,6 +856,7 @@ Sub-categories that produce searchable content must:
 **Copilot interaction contract:**
 
 All copilots must:
+
 - Greet contextually (acknowledge continuity)
 - Offer conversational path first
 - Provide form/structured fallback on request
@@ -885,6 +907,7 @@ interface SystemEvent<TPayload = unknown> {
 **Event naming convention:** `xentri.{category}.{entity}.{action}.{version}`
 
 Examples:
+
 - `xentri.sales.deal.created.v1`
 - `xentri.finance.invoice.paid.v1`
 - `xentri.brief.recommendation.submitted.v1`
@@ -942,6 +965,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Brief context loading | Instant (cached) | < 200ms from cache |
 
 **Hard limits (defects):**
+
 - Any operation > 3s without visual feedback = defect
 - Any operation > 10s total = defect (must be backgrounded)
 - Copilot response without streaming indication = defect
@@ -1002,6 +1026,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Concurrent copilot sessions | 500 | At 250 |
 
 **Scaling triggers (revisit architecture when):**
+
 - Monthly infrastructure cost > $500
 - p95 latency degrading trend over 2 weeks
 - Database connection pool > 80% utilization
@@ -1039,6 +1064,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Third-party integration down | Cache last known state; retry with backoff |
 
 **Hard limits:**
+
 - Brief data loss = critical incident
 - Auth failure allowing unauthorized access = critical incident
 - Cross-tenant data leak = critical incident + immediate disclosure
@@ -1142,7 +1168,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 ## Risks & Mitigations
 
-*Format: Risk → Impact → Likelihood → Mitigation → Phase*
+**Format:** Risk → Impact → Likelihood → Mitigation → Phase
 
 ### Technical Risks
 
@@ -1233,16 +1259,19 @@ Sub-categories **never write directly** to the Brief. Instead:
 ### Short-term (Next 2-4 Weeks)
 
 **Infrastructure track:**
+
 - Create infrastructure sub-category PRD (events, auth, billing, brief)
 - Validate tech stack against revised vision
 - Begin Brief system design
 
 **Frontend track:**
+
 - Create frontend sub-category PRD (shell, ui)
 - Navigation pattern finalization
 - First 5 Minutes Design Sprint — onboarding flow
 
 **Strategy track:**
+
 - Create Strategy sub-category PRD
 - Define MVP modules for Strategy Copilot
 - Brief Creation UX Prototype

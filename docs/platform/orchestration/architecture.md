@@ -450,21 +450,29 @@ We use Astro's Island Architecture to lazy-load React apps.
 
 We prioritize **Indirect Communication** (Stigmergy/Events) to decouple the 175+ modules, but allow **Direct Communication** (RPC or similar) for specific query needs.
 
-**1. Indirect (The Default — "Fire and Forget")**
+#### 1. Indirect (The Default — "Fire and Forget")
 
 * **Pattern:** Event-Driven Choreography.
 * **Transport:** Redis Streams.
 * **Use Case:** State changes, Workflow triggers, Cross-module actions.
 * **Example:** `Finance` emits `invoice.paid` -> `Inventory` subscribes and decrements stock. `Finance` does not know `Inventory` exists but `Website` does.
 
-**2. Direct (The Exception — "Ask and Wait")**
+#### 2. Direct (The Exception — "Ask and Wait")
 
 * **Pattern:** Synchronous RPC (REST, gRPC, websockets, etc.).
 * **Transport:** Preferibly HTTP/2 when possible.
 * **Use Case:** Real-time data queries, strict dependencies where eventual consistency is unacceptable.
+* **Use Case:** Real-time data queries, strict dependencies where eventual consistency is unacceptable.
 * **Example:** `Sales` calls `Inventory.check_stock(item_id)` to validate a quote *before* sending it.
 
-**3. Agent-to-Agent (Stigmergy)**
+#### 3. Real-Time Collaboration (WebSockets)
+
+* **Pattern:** Stateful WebSocket Connection.
+* **Transport:** `socket.io` or similar (hosted in Node.js Tool Layer).
+* **Use Case:** The **War Room** (Multi-Agent + User Chat).
+* **Example:** User enters War Room -> Connects to `svc-tool-strategy` -> Service bridges messages to Python Agents via Redis.
+
+#### 4. Agent-to-Agent (Stigmergy)
 
 * **Pattern:** Communication via State.
 * **Transport:** Database + Events.
