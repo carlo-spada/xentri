@@ -228,6 +228,9 @@ USING (
 **Topology: The "Category Consolidation" Pattern**
 Instead of 175 microservices, we group workloads by **Category** to balance isolation with management overhead.
 
+> **Why not 42 separate Pods on Autopilot?**
+> GKE Autopilot charges for a minimum of 250m vCPU and 512MiB Memory per Pod. Deploying 42 separate agents would result in ~10.5 vCPU of *minimum* idle cost. Consolidating into 7 Category Services allows us to share resources efficiently and avoid this "Pod Tax".
+
 1. **Agent Plane (Python):** **7 Deployments** (1 per Category).
     * Each Pod hosts the **Category Co-pilot** + its **5 Sub-Category Agents**.
     * *Example:* `svc-agent-strategy` runs `StrategyCoPilot`, `SoulAgent`, `PulseAgent`, etc.
@@ -325,10 +328,10 @@ graph TD
 
 We standardize on **Google Cloud Platform (GCP)** for the "Client Zero" implementation.
 
-* **Compute:** **GKE (Google Kubernetes Engine)** Standard or Autopilot.
-  * *Why:* Best-in-class K8s management, auto-upgrades, deep integration.
+* **Compute:** **GKE Autopilot** (Recommended).
+  * *Why:* **Serverless K8s.** Google manages nodes, security, and scaling. We pay only for the CPU/RAM our Agents use, not for idle servers. Perfect for a "Solo Visionary" team (Zero Ops).
 * **Database:** **Cloud SQL for PostgreSQL** (Private IP).
-  * *Why:* Managed backups, HA, automatic patches. **Crucial:** Low latency to GKE via VPC Peering.
+* *Why:* Managed backups, HA, automatic patches. **Crucial:** Low latency to GKE via VPC Peering.
 * **Events/Cache:** **Cloud Memorystore for Redis** (Private IP).
   * *Why:* Managed high availability for the "Nervous System".
 * **Storage:** **Google Cloud Storage (GCS)**.
