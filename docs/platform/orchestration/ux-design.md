@@ -211,7 +211,7 @@ Until user has explicit opt-in moment, autopilot can **prepare** but never **sen
 - "You approved 8/8 lead replies. Auto-send these?"
 - Max 1 nudge per week per domain
 
-**Wireframes:** [ux-journey-1-ftu.html](./ux-journey-1-ftu.html)
+**Wireframes:** [ux-journey-1-ftu.html](./ux/ux-journey-1-ftu.html)
 
 ### 4.2 Journey 2: The Daily Loop
 
@@ -236,7 +236,7 @@ Open Today → Scan "Needs You" (exceptions) → Handle/Approve/Skip → Check "
 - **Policy Change Preview** — See §5.8 for diff + blast radius format
 - **Quick Feedback** — See §5.11 for passive-only rules
 
-**Wireframes:** [ux-daily-loop-wireframes-v2.html](./ux-daily-loop-wireframes-v2.html)
+**Wireframes:** [ux-daily-loop-wireframes-v2.html](./ux/ux-daily-loop-wireframes-v2.html)
 
 ### 4.3 Journey 3: Lead Capture (Deferred)
 
@@ -614,11 +614,9 @@ Extend the default theme in `components.json`:
 
 | Artifact | Path | Contents |
 |----------|------|----------|
-| Color Themes v1 | [ux-color-themes.html](./ux-color-themes.html) | Initial 4 theme exploration |
-| Color Themes v2 | [ux-color-themes-v2.html](./ux-color-themes-v2.html) | Blue options on Dusk base |
-| Daily Loop v1 | [ux-daily-loop-wireframes.html](./ux-daily-loop-wireframes.html) | Initial 7 states |
-| Daily Loop v2 | [ux-daily-loop-wireframes-v2.html](./ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |
-| Journey 1: FTU | [ux-journey-1-ftu.html](./ux-journey-1-ftu.html) | Complete FTU flow |
+| Color Themes | [ux-color-themes-v2.html](./ux/ux-color-themes-v2.html) | Blue options on Dusk base |
+| Daily Loop Wireframes | [ux-daily-loop-wireframes-v2.html](./ux/ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |
+| First-Time User Journey | [ux-journey-1-ftu.html](./ux/ux-journey-1-ftu.html) | Complete FTU flow |
 
 ### Design Decisions Log
 
