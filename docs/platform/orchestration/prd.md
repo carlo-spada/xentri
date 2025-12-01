@@ -569,7 +569,6 @@ User completes Brief
 | **Light Ops** | $60/mo | Personalized ~8 module bundle |
 | **Professional** | $180/mo | Personalized ~24 module bundle |
 | **Business in Motion** | $540/mo | Personalized ~72 module bundle |
-| **Enterprise** | $1200+/mo | ~156+ | Enterprise-grade features |
 
 | **À la carte** | $5/module/mo | Any module individually |
 
