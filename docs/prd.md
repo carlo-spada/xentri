@@ -1,6 +1,6 @@
 ---
 level: system
-document_type: prd
+doc_type: constitution
 title: "Xentri System PRD (Constitution)"
 description: "System-wide product requirements, platform requirements (PR-xxx), and integration contracts (IC-xxx) that all categories must follow."
 ---
@@ -903,7 +903,7 @@ Each sub-category PRD inherits from this constitution and adds specific implemen
 | **Respect permissions** | Check user permissions before every action; fail closed if unclear |
 | **Authenticate users** | Use platform auth; never implement custom auth flows |
 
-**Module registration manifest:**
+**IC-003: Module registration manifest:**
 
 ```yaml
 # Example: What a sub-category provides to the shell
@@ -951,13 +951,13 @@ brief_fields_read:
 
 | Capability | Requirement |
 |------------|-------------|
-| **Event emission** | All mutations emit events with standard envelope (see Event Schema below) |
-| **Permission checks** | Verify primitives (`view`, `edit`, `approve`, `configure`) before actions |
-| **Audit logging** | Log who did what when; include `trace_id` for correlation |
+| **PR-002: Event emission** | All mutations emit events with standard envelope (see Event Schema below) |
+| **PR-005: Permission checks** | Verify primitives (`view`, `edit`, `approve`, `configure`) before actions |
+| **PR-006: Audit logging** | Log who did what when; include `trace_id` for correlation |
 | **Brief awareness** | Read Brief on init; reconfigure on `xentri.brief.updated` events |
-| **Error boundaries** | Fail gracefully; never crash the shell; show meaningful error states |
+| **PR-007: Error boundaries** | Fail gracefully; never crash the shell; show meaningful error states |
 
-**Notification delivery contract:**
+**IC-006: Notification delivery contract:**
 
 | Mode | Sub-category Responsibility | Infrastructure Responsibility |
 |------|----------------------------|-------------------------------|
@@ -994,13 +994,14 @@ All copilots must:
 - Offer conversational path first
 - Provide form/structured fallback on request
 - Explain every automated action
-- Adapt vocabulary to Brief-indicated business type
+- PR-008: Adapt vocabulary to Brief-indicated business type
 
 ### Event Schema Requirements
 
 **Standard event envelope:**
 
 ```typescript
+// IC-001: Event Envelope Schema
 interface SystemEvent<TPayload = unknown> {
   // Identity
   id: string;                              // UUID, immutable
@@ -1037,7 +1038,7 @@ interface SystemEvent<TPayload = unknown> {
 }
 ```
 
-**Event naming convention:** `xentri.{category}.{entity}.{action}.{version}`
+**IC-002: Event naming convention:** `xentri.{category}.{entity}.{action}.{version}`
 
 Examples:
 
@@ -1047,7 +1048,7 @@ Examples:
 
 ### Brief Access Patterns
 
-**Reading the Brief:**
+**IC-004: Reading the Brief:**
 
 | Access Type | Method | Use Case |
 |-------------|--------|----------|
@@ -1057,6 +1058,7 @@ Examples:
 
 **Writing to the Brief:**
 
+**IC-005: Recommendation Protocol**
 Sub-categories **never write directly** to the Brief. Instead:
 
 1. Emit `xentri.brief.recommendation.submitted` event
@@ -1111,7 +1113,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 | Requirement | Implementation |
 |-------------|----------------|
-| Data isolation | RLS on all tables; `org_id` required |
+| **PR-001**: Data isolation | RLS on all tables; `org_id` required |
 | Fail closed | Missing org context = empty result, not error leak |
 | No cross-tenant queries | Impossible by design, not by convention |
 | Audit trail | All data access logged with `org_id`, `user_id`, `trace_id` |
@@ -1120,7 +1122,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 | Requirement | Implementation |
 |-------------|----------------|
-| Auth required | All API endpoints require authentication except health checks |
+| **PR-003**: Auth required | All API endpoints require authentication except health checks |
 | Permission checks | Every action validates permission primitives |
 | Session management | Secure, HTTP-only cookies; short-lived access tokens |
 | No custom auth | Use platform auth only; no module-level auth implementations |

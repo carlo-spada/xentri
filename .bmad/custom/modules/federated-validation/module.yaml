@@ -1,0 +1,12 @@
+name: federated-validation
+description: Workflows and checklists for validating the Federated Requirements Model
+version: 1.0.0
+author: BMad Builder
+components:
+  workflows:
+    - workflows/validate-constitution.md
+    - workflows/validate-domain-prd.md
+  checklists:
+    - checklists/constitution-checklist.md
+    - checklists/domain-prd-checklist.md
+    - checklists/epic-checklist.md
