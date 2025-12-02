@@ -140,42 +140,765 @@ categories:
             status: active
 
   # ---------------------------------------------------------------------------
-  # USER-FACING CATEGORIES
+  # USER-FACING CATEGORIES (The 7 Core Categories)
+  # See docs/module_matrix.md for full module descriptions
   # ---------------------------------------------------------------------------
+
+  # ===========================================================================
+  # 1. STRATEGY (Codename: Bridge)
+  # ===========================================================================
   strategy:
-    purpose: "Business strategy and clarity"
+    purpose: "The Command Center. Connection between vision and reality."
+    codename: "Bridge"
     meta: false
-    subcategories: {}  # To be defined when building Strategy category
+    subcategories:
+      soul:
+        purpose: "Identity - The immutable DNA"
+        status: planned
+        modules:
+          - name: mission-control
+            purpose: "Editor for Mission, Vision, Purpose, and Origin Story"
+            status: planned
+          - name: brand-dna
+            purpose: "Voice, Tone, and Personality settings for all Agents"
+            status: planned
+          - name: values-guard
+            purpose: "Agent that checks decisions against Core Values"
+            status: planned
+          - name: meeting-copilot
+            purpose: "Listens to strategy meetings, notes, and action items"
+            status: planned
+          - name: culture-code
+            purpose: "Internal behavioral guidelines and principles"
+            status: planned
 
-  marketing:  # RENAMED from "brand"
-    purpose: "Brand, website, and market presence"
+      pulse:
+        purpose: "Monitoring - The vital signs"
+        status: planned
+        modules:
+          - name: god-view
+            purpose: "Executive dashboard aggregating all Category signals"
+            status: planned
+          - name: kpi-center
+            purpose: "Definition and tracking of North Star and Core Metrics"
+            status: planned
+          - name: risk-radar
+            purpose: "Anomaly detection agent (Cash runway, Churn spikes)"
+            status: planned
+          - name: sentiment-tracker
+            purpose: "Analysis of Team and Customer mood"
+            status: planned
+          - name: daily-brief
+            purpose: "Automated morning digest for the CEO"
+            status: planned
+
+      horizon:
+        purpose: "Intelligence - The external view"
+        status: planned
+        modules:
+          - name: market-watch
+            purpose: "Competitor tracking and news analysis agent"
+            status: planned
+          - name: trend-spotter
+            purpose: "Industry trend identification and relevance scoring"
+            status: planned
+          - name: swot-live
+            purpose: "Dynamic Strength/Weakness/Opp/Threat analysis"
+            status: planned
+          - name: customer-voice
+            purpose: "Aggregated insights from support/sales conversations"
+            status: planned
+          - name: scenario-simulator
+            purpose: "What if modeling (e.g., What if market crashes?)"
+            status: planned
+
+      map:
+        purpose: "Planning - The path forward"
+        status: planned
+        modules:
+          - name: north-star
+            purpose: "Long-term vision and 10-year target tracker"
+            status: planned
+          - name: okr-builder
+            purpose: "Objectives & Key Results cascading tool"
+            status: planned
+          - name: roadmap
+            purpose: "Visual timeline of major initiatives and milestones"
+            status: planned
+          - name: war-room
+            purpose: "Collaborative decision-making space with Agent facilitation"
+            status: planned
+          - name: decision-log
+            purpose: "Immutable record of key strategic decisions and rationale"
+            status: planned
+
+      constitution:
+        purpose: "Governance - The rules of the road"
+        status: planned
+        modules:
+          - name: policy-manager
+            purpose: "The central rulebook (Remote work, Expenses, etc.)"
+            status: planned
+          - name: ethics-committee
+            purpose: "AI agent checking for ethical/reputational risks"
+            status: planned
+          - name: board-deck
+            purpose: "Automated generator for board meeting materials"
+            status: planned
+          - name: compliance-log
+            purpose: "Audit trail of key strategic decisions"
+            status: planned
+          - name: access-control
+            purpose: "Governance of who can see/do what (Role definitions)"
+            status: planned
+
+  # ===========================================================================
+  # 2. MARKETING (Codename: Stage)
+  # ===========================================================================
+  marketing:
+    purpose: "The Platform. Amplifying the voice."
+    codename: "Stage"
     meta: false
-    subcategories: {}  # To be defined when building Marketing category
+    subcategories:
+      marquee:
+        purpose: "Presence - Being seen"
+        status: planned
+        modules:
+          - name: site-builder
+            purpose: "Drag-and-drop website creator (React-based)"
+            status: planned
+          - name: funnel-builder
+            purpose: "High-conversion landing page and A/B test engine"
+            status: planned
+          - name: seo-agent
+            purpose: "Auto-optimizes meta tags, sitemaps, and keywords"
+            status: planned
+          - name: local-presence
+            purpose: "Syncs Google Maps, Yelp, and manages local citations"
+            status: planned
+          - name: domain-guard
+            purpose: "Manages URLs, SSL, and DNS settings"
+            status: planned
 
+      studio:
+        purpose: "Content - Creating the story"
+        status: planned
+        modules:
+          - name: copywriter
+            purpose: "AI agent that writes blogs, captions, and emails"
+            status: planned
+          - name: asset-vault
+            purpose: "Central library for images, logos, and videos"
+            status: planned
+          - name: video-maker
+            purpose: "Simple tool to splice clips and add captions"
+            status: planned
+          - name: image-gen
+            purpose: "AI art generator for blog posts and ads"
+            status: planned
+          - name: remix-engine
+            purpose: "Turns 1 blog post into 10 tweets and 1 LinkedIn post"
+            status: planned
+
+      broadcast:
+        purpose: "Distribution - Reaching the audience"
+        status: planned
+        modules:
+          - name: social-scheduler
+            purpose: "Multi-channel poster (Twitter, LinkedIn, IG)"
+            status: planned
+          - name: ad-manager
+            purpose: "Simple interface for FB/Google Ads"
+            status: planned
+          - name: email-blaster
+            purpose: "Newsletter and broadcast email tool"
+            status: planned
+          - name: campaign-orch
+            purpose: "Ties ads, emails, and social into one Push"
+            status: planned
+          - name: sms-ping
+            purpose: "Text message marketing tool"
+            status: planned
+
+      applause:
+        purpose: "Reputation - Social proof"
+        status: planned
+        modules:
+          - name: review-catcher
+            purpose: "Automates requests for Google Reviews after service"
+            status: planned
+          - name: trust-kit
+            purpose: "Testimonial widgets and verified Secure badges"
+            status: planned
+          - name: pr-agent
+            purpose: "Monitors web mentions and suggests responses"
+            status: planned
+          - name: case-study-builder
+            purpose: "Templates to turn client wins into PDFs"
+            status: planned
+          - name: influencer-scout
+            purpose: "Finds and vets potential brand ambassadors"
+            status: planned
+
+      tribe:
+        purpose: "Community - Deep engagement"
+        status: planned
+        modules:
+          - name: event-host
+            purpose: "RSVP and ticket management for webinars/meetups"
+            status: planned
+          - name: newsletter-pro
+            purpose: "Subscription management and recurring digests"
+            status: planned
+          - name: member-gate
+            purpose: "Protects content for paying members"
+            status: planned
+          - name: forum
+            purpose: "Simple discussion board for customers"
+            status: planned
+          - name: swag-store
+            purpose: "E-commerce lite for branded merch"
+            status: planned
+
+  # ===========================================================================
+  # 3. SALES (Codename: Exchange)
+  # ===========================================================================
   sales:
-    purpose: "Pipeline and revenue generation"
+    purpose: "The Marketplace. Value for value."
+    codename: "Exchange"
     meta: false
-    subcategories: {}  # To be defined when building Sales category
+    subcategories:
+      magnet:
+        purpose: "Inbound - Capturing interest"
+        status: planned
+        modules:
+          - name: capture-kit
+            purpose: "Form builder, surveys, and lead magnets"
+            status: planned
+          - name: scheduler
+            purpose: "Book a time link (Calendly replacement)"
+            status: planned
+          - name: chatbot
+            purpose: "24/7 site agent to answer FAQs and capture leads"
+            status: planned
+          - name: visitor-id
+            purpose: "Identifies companies visiting your site (IP lookup)"
+            status: planned
+          - name: lead-scorer
+            purpose: "AI that ranks leads (Hot/Warm/Cold)"
+            status: planned
 
+      hunt:
+        purpose: "Outbound - Finding opportunities"
+        status: planned
+        modules:
+          - name: prospector
+            purpose: "Search tool to find leads by industry/role"
+            status: planned
+          - name: cold-reach
+            purpose: "Automated email sequences for outreach"
+            status: planned
+          - name: linkedin-agent
+            purpose: "Helper for connection requests and DMs"
+            status: planned
+          - name: data-enricher
+            purpose: "Adds phone/email/company size to raw leads"
+            status: planned
+          - name: list-cleaner
+            purpose: "Verifies email addresses to prevent bounce"
+            status: planned
+
+      flow:
+        purpose: "Pipeline - Managing the deal stream"
+        status: planned
+        modules:
+          - name: deal-board
+            purpose: "Kanban view of the sales pipeline"
+            status: planned
+          - name: activity-logger
+            purpose: "Tracks calls, emails, and meetings automatically"
+            status: planned
+          - name: forecaster
+            purpose: "Predicts revenue based on deal stage and probability"
+            status: planned
+          - name: territory-map
+            purpose: "Assigns leads to sales reps by region"
+            status: planned
+          - name: call-coach
+            purpose: "AI analysis of sales calls for coaching insights"
+            status: planned
+
+      handshake:
+        purpose: "Closing - Sealing the deal"
+        status: planned
+        modules:
+          - name: quote-builder
+            purpose: "Generates price estimates (PDF/Web)"
+            status: planned
+          - name: proposal-gen
+            purpose: "AI that writes the Why Us section of proposals"
+            status: planned
+          - name: contract-sign
+            purpose: "E-signature tool"
+            status: planned
+          - name: negotiator
+            purpose: "Agent that suggests discount strategies"
+            status: planned
+          - name: demo-room
+            purpose: "Interactive presentation environment for clients"
+            status: planned
+
+      register:
+        purpose: "Transaction - Taking payment"
+        status: planned
+        modules:
+          - name: pos-terminal
+            purpose: "Interface for in-person card payments"
+            status: planned
+          - name: checkout-page
+            purpose: "Secure hosted payment page for links"
+            status: planned
+          - name: subscription-manager
+            purpose: "Handles recurring billing and dunning"
+            status: planned
+          - name: payment-gateway
+            purpose: "The connection to Stripe/PayPal"
+            status: planned
+          - name: refund-agent
+            purpose: "Handles dispute resolution and refunds"
+            status: planned
+
+  # ===========================================================================
+  # 4. FINANCE (Codename: Vault)
+  # ===========================================================================
   finance:
-    purpose: "Money management and compliance"
+    purpose: "The Storehouse. Managing resources."
+    codename: "Vault"
     meta: false
-    subcategories: {}  # To be defined when building Finance category
+    subcategories:
+      inflow:
+        purpose: "Receivables - Money coming in"
+        status: planned
+        modules:
+          - name: invoice-gen
+            purpose: "Smart invoice builder with Pay Now buttons"
+            status: planned
+          - name: recurring-bill
+            purpose: "Engine for subscriptions and retainers"
+            status: planned
+          - name: dunning-agent
+            purpose: "Polite automated chasers for late payments"
+            status: planned
+          - name: credit-check
+            purpose: "Risk score for new clients before work starts"
+            status: planned
+          - name: payment-link
+            purpose: "Quick URL generator for ad-hoc charges"
+            status: planned
 
+      outflow:
+        purpose: "Payables - Money going out"
+        status: planned
+        modules:
+          - name: expense-scan
+            purpose: "OCR tool for receipts and employee reimbursement"
+            status: planned
+          - name: bill-pay
+            purpose: "Schedule and approve vendor payments (ACH/Wire)"
+            status: planned
+          - name: vendor-portal
+            purpose: "Self-serve area for suppliers to upload invoices"
+            status: planned
+          - name: approval-flow
+            purpose: "Logic for If > $500, ask Manager"
+            status: planned
+          - name: sub-tracker
+            purpose: "Identifies and cancels unused SaaS subscriptions"
+            status: planned
+
+      treasury:
+        purpose: "Cash - Liquidity management"
+        status: planned
+        modules:
+          - name: bank-sync
+            purpose: "Real-time feed from bank accounts (Plaid/Teller)"
+            status: planned
+          - name: cash-flow
+            purpose: "Visual River of money in/out with 30-day forecast"
+            status: planned
+          - name: capital-agent
+            purpose: "Suggests when to draw on credit lines or invest"
+            status: planned
+          - name: fx-manager
+            purpose: "Multi-currency exchange rate tracker"
+            status: planned
+          - name: card-control
+            purpose: "Virtual card issuance and limit setting"
+            status: planned
+
+      ledger:
+        purpose: "Accounting - The record"
+        status: planned
+        modules:
+          - name: general-ledger
+            purpose: "Chart of accounts and journal entry interface"
+            status: planned
+          - name: fixed-assets
+            purpose: "Depreciation tracker for equipment"
+            status: planned
+          - name: tax-jar
+            purpose: "Automated sales tax calculation and set aside"
+            status: planned
+          - name: reconciler
+            purpose: "Tinder-style Match interface for bank vs. books"
+            status: planned
+          - name: audit-trail
+            purpose: "Immutable log of every financial change"
+            status: planned
+
+      forecast:
+        purpose: "Planning - The future model"
+        status: planned
+        modules:
+          - name: budget-builder
+            purpose: "Department-level budget setting"
+            status: planned
+          - name: unit-economics
+            purpose: "Calculator for CAC, LTV, and Gross Margin"
+            status: planned
+          - name: burn-rate
+            purpose: "Runway calculator for startups"
+            status: planned
+          - name: scenario-model
+            purpose: "Best Case / Worst Case financial toggle"
+            status: planned
+          - name: investor-rep
+            purpose: "Automated PDF generator for monthly updates"
+            status: planned
+
+  # ===========================================================================
+  # 5. OPERATIONS (Codename: Engine)
+  # ===========================================================================
   operations:
-    purpose: "Day-to-day business operations"
+    purpose: "The Machine. Execution and delivery."
+    codename: "Engine"
     meta: false
-    subcategories: {}  # To be defined when building Operations category
+    subcategories:
+      workshop:
+        purpose: "Service Delivery - Doing the work"
+        status: planned
+        modules:
+          - name: project-board
+            purpose: "Kanban/List view for client deliverables"
+            status: planned
+          - name: task-master
+            purpose: "Personal to-do list for every employee"
+            status: planned
+          - name: time-keeper
+            purpose: "Stopwatch and timesheet logger"
+            status: planned
+          - name: resource-plan
+            purpose: "Who is free next week? visualizer"
+            status: planned
+          - name: sop-builder
+            purpose: "AI that watches Loom videos and writes Step-by-Step docs"
+            status: planned
 
+      supply:
+        purpose: "Logistics - Moving the atoms"
+        status: planned
+        modules:
+          - name: inventory-count
+            purpose: "Real-time stock levels and low-stock alerts"
+            status: planned
+          - name: po-gen
+            purpose: "Purchase Order creator for suppliers"
+            status: planned
+          - name: supplier-db
+            purpose: "CRM for vendors (contacts, terms, rating)"
+            status: planned
+          - name: ship-label
+            purpose: "Integration with FedEx/UPS for printing labels"
+            status: planned
+          - name: barcode-scan
+            purpose: "Mobile app interface for warehouse picking"
+            status: planned
+
+      habitat:
+        purpose: "Facilities - The space"
+        status: planned
+        modules:
+          - name: front-desk
+            purpose: "Visitor log and room booking system"
+            status: planned
+          - name: fleet-track
+            purpose: "GPS and maintenance tracking for company vehicles"
+            status: planned
+          - name: asset-tag
+            purpose: "Database of laptops, chairs, and equipment"
+            status: planned
+          - name: fix-it
+            purpose: "Maintenance request ticketing system"
+            status: planned
+          - name: virtual-hq
+            purpose: "Gather.town style link for remote teams"
+            status: planned
+
+      concierge:
+        purpose: "Support - Helping the customer"
+        status: planned
+        modules:
+          - name: ticket-inbox
+            purpose: "Shared email inbox for support@company.com"
+            status: planned
+          - name: knowledge-base
+            purpose: "Public help center builder"
+            status: planned
+          - name: sla-tracker
+            purpose: "Countdown timer for Time to Reply"
+            status: planned
+          - name: csat-poll
+            purpose: "How was our service? survey sender"
+            status: planned
+          - name: issue-triage
+            purpose: "AI agent that tags and routes tickets"
+            status: planned
+
+      grid:
+        purpose: "Technology - The infrastructure"
+        status: planned
+        modules:
+          - name: device-mgmt
+            purpose: "MDM-lite for company laptops"
+            status: planned
+          - name: software-lic
+            purpose: "Tracker for who has a seat on what tool"
+            status: planned
+          - name: pass-vault
+            purpose: "Shared password manager for teams"
+            status: planned
+          - name: access-log
+            purpose: "Who logged into Xentri and when"
+            status: planned
+          - name: security-scan
+            purpose: "Automated check for weak settings/policies"
+            status: planned
+
+  # ===========================================================================
+  # 6. TEAM (Codename: Guild)
+  # ===========================================================================
   team:
-    purpose: "People and organizational management"
+    purpose: "The People. Culture and growth."
+    codename: "Guild"
     meta: false
-    subcategories: {}  # To be defined when building Team category
+    subcategories:
+      draft:
+        purpose: "Recruiting - Finding talent"
+        status: planned
+        modules:
+          - name: job-board
+            purpose: "Hosted careers page with Apply Now"
+            status: planned
+          - name: ats-lite
+            purpose: "Kanban board for applicants (Applied -> Interview -> Offer)"
+            status: planned
+          - name: offer-gen
+            purpose: "Automated offer letter builder with e-sign"
+            status: planned
+          - name: scorecard
+            purpose: "Interview feedback form for hiring managers"
+            status: planned
+          - name: headhunter
+            purpose: "Agent that scrapes LinkedIn for candidates"
+            status: planned
 
+      welcome:
+        purpose: "Onboarding - Starting right"
+        status: planned
+        modules:
+          - name: handbook
+            purpose: "Digital employee manual with I agree tracking"
+            status: planned
+          - name: day1-bot
+            purpose: "Automated Slack/Email welcome sequence"
+            status: planned
+          - name: equip-request
+            purpose: "Form to order laptop/monitor/swag"
+            status: planned
+          - name: training-track
+            purpose: "Checklist of videos/docs to read in Week 1"
+            status: planned
+          - name: buddy-match
+            purpose: "Assigns a mentor to new hires"
+            status: planned
+
+      admin:
+        purpose: "Administration - The basics"
+        status: planned
+        modules:
+          - name: payroll-sync
+            purpose: "Connector to Gusto/ADP (or simple internal calculator)"
+            status: planned
+          - name: time-off
+            purpose: "PTO request and approval workflow"
+            status: planned
+          - name: org-chart
+            purpose: "Visual tree of who reports to whom"
+            status: planned
+          - name: doc-vault
+            purpose: "Secure storage for employment contracts/W2s"
+            status: planned
+          - name: benefits-hub
+            purpose: "Links to health/401k portals"
+            status: planned
+
+      growth:
+        purpose: "Performance - Leveling up"
+        status: planned
+        modules:
+          - name: one-on-one-tracker
+            purpose: "Shared agenda for manager/report meetings"
+            status: planned
+          - name: goal-setter
+            purpose: "Individual goals linked to Company OKRs"
+            status: planned
+          - name: 360-review
+            purpose: "Peer feedback collection tool"
+            status: planned
+          - name: skill-matrix
+            purpose: "Visual map of team capabilities"
+            status: planned
+          - name: praise-wall
+            purpose: "Public feed for High Fives and recognition"
+            status: planned
+
+      spirit:
+        purpose: "Culture - Staying connected"
+        status: planned
+        modules:
+          - name: culture-pulse
+            purpose: "Aggregated sentiment, birthdays, and suggestions"
+            status: planned
+          - name: event-cal
+            purpose: "RSVP for happy hours and offsites"
+            status: planned
+          - name: alumni-net
+            purpose: "Directory and newsletter for former employees"
+            status: planned
+          - name: wellness-coach
+            purpose: "AI agent monitoring for burnout signals"
+            status: planned
+          - name: kudos-bank
+            purpose: "Store for redeeming points/praise for rewards"
+            status: planned
+
+  # ===========================================================================
+  # 7. LEGAL (Codename: Shield)
+  # ===========================================================================
   legal:
-    purpose: "Contracts, compliance, and entity management"
+    purpose: "The Protection. Risk and compliance."
+    codename: "Shield"
     meta: false
-    subcategories: {}  # To be defined when building Legal category
+    subcategories:
+      entity:
+        purpose: "Corporate - The structure"
+        status: planned
+        modules:
+          - name: cap-table
+            purpose: "Simple ledger of who owns what % (Equity)"
+            status: planned
+          - name: board-mins
+            purpose: "Tool to record and sign board meeting minutes"
+            status: planned
+          - name: incorp-docs
+            purpose: "Vault for Articles of Incorporation/Bylaws"
+            status: planned
+          - name: stock-cert
+            purpose: "Digital generator for share certificates"
+            status: planned
+          - name: reg-agent
+            purpose: "Reminder system for state filings"
+            status: planned
+
+      pacts:
+        purpose: "Commercial - The agreements"
+        status: planned
+        modules:
+          - name: msa-gen
+            purpose: "Master Services Agreement builder"
+            status: planned
+          - name: nda-sender
+            purpose: "Quick Sign this NDA link"
+            status: planned
+          - name: vendor-log
+            purpose: "Database of all active supplier contracts"
+            status: planned
+          - name: sow-builder
+            purpose: "Statement of Work generator for projects"
+            status: planned
+          - name: renewal-alert
+            purpose: "Nudge 30 days before a contract expires"
+            status: planned
+
+      moat:
+        purpose: "IP - The assets"
+        status: planned
+        modules:
+          - name: tm-watch
+            purpose: "Agent that checks if others are using your brand"
+            status: planned
+          - name: patent-log
+            purpose: "Tracker for invention disclosures"
+            status: planned
+          - name: copyright
+            purpose: "Registry for creative assets"
+            status: planned
+          - name: domain-portfolio
+            purpose: "List of all owned web domains"
+            status: planned
+          - name: brand-protect
+            purpose: "Takedown request generator for copycats"
+            status: planned
+
+      code:
+        purpose: "Compliance - The laws"
+        status: planned
+        modules:
+          - name: privacy-shield
+            purpose: "GDPR/CCPA requests and Cookie consent manager"
+            status: planned
+          - name: license-track
+            purpose: "Database of professional licenses (e.g., CPA, MD)"
+            status: planned
+          - name: permit-vault
+            purpose: "Storage for city/state business permits"
+            status: planned
+          - name: access-check
+            purpose: "ADA compliance scanner for the website"
+            status: planned
+          - name: data-map
+            purpose: "Visualizer of where customer data lives"
+            status: planned
+
+      guard:
+        purpose: "Risk - The safety net"
+        status: planned
+        modules:
+          - name: insure-policy
+            purpose: "Vault for Liability/E&O policy docs"
+            status: planned
+          - name: coi-request
+            purpose: "Generator for Certificate of Insurance"
+            status: planned
+          - name: dispute-log
+            purpose: "Tracker for threatened lawsuits"
+            status: planned
+          - name: incident-rep
+            purpose: "Form to log workplace accidents/security breaches"
+            status: planned
+          - name: waiver-gen
+            purpose: "Liability waiver builder for events/services"
+            status: planned
 
 # =============================================================================
 # NAVIGATION GUIDE
