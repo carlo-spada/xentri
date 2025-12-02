@@ -9,51 +9,57 @@
 
 ## Navigation
 
-Documentation follows a **4-level hierarchy**. Each level inherits from above and can only add requirements.
+Documentation follows a **Five Entity Types** model. Each entity inherits from its parent and can only add requirements.
 
-**Manifest:** [manifest.yaml](./manifest.yaml) — Machine-readable navigation for AI agents (v3.0)
+**Manifest:** [manifest.yaml](./manifest.yaml) — Machine-readable navigation for AI agents (v4.0)
 
 ---
 
-## Level 0: System Constitution
+## Constitution
 
-These documents define system-wide rules that ALL categories must follow.
+These documents define system-wide rules that ALL entities must follow. Located in `docs/platform/`.
 
 | Document | Purpose |
 |----------|---------|
-| [Product Brief](./product-brief.md) | Foundational vision — all work traces here |
-| [PRD (Constitution)](./prd.md) | Platform Requirements (PR-xxx), Integration Contracts (IC-xxx) |
-| [Architecture](./architecture.md) | System-wide technology decisions and patterns |
-| [UX Design](./ux-design.md) | System-wide UX principles and design system |
-| [Epics](./epics.md) | Cross-cutting initiatives and system-level roadmap |
+| [Product Brief](./platform/product-brief.md) | Foundational vision — all work traces here |
+| [PRD](./platform/prd.md) | Platform Requirements (PR-xxx), Integration Contracts (IC-xxx) |
+| [Architecture](./platform/architecture.md) | System-wide technology decisions and patterns |
+| [UX Design](./platform/ux-design.md) | System-wide UX principles and design system |
+| [Epics](./platform/epics.md) | Cross-cutting initiatives and system-level roadmap |
 
 ---
 
-## Level 1: Categories
+## Infrastructure Modules (Platform)
 
-| Category | Purpose | Status | Meta |
-|----------|---------|--------|------|
-| [platform/](./platform/) | Core infrastructure - always present | Active | ✓ |
-| [strategy/](./strategy/) | Strategy & Clarity Engine | Planned | |
-| [marketing/](./marketing/) | Brand, website, and market presence | Planned | |
-| [sales/](./sales/) | Sales & Pipeline | Planned | |
-| [finance/](./finance/) | Finance & Accounting | Planned | |
-| [operations/](./operations/) | Operations & Projects | Planned | |
-| [team/](./team/) | Team & HR | Planned | |
-| [legal/](./legal/) | Legal & Compliance | Planned | |
+Platform modules are flat (no subcategories) — terminal nodes with implementation only.
+
+| Module | Purpose | Package | Status |
+|--------|---------|---------|--------|
+| [shell](./platform/shell/) | Astro app container, routing, React islands | `apps/shell` | Active |
+| [ui](./platform/ui/) | Design system, shared components | `packages/ui` | Active |
+| [core-api](./platform/core-api/) | Authentication, events, organizations | `services/core-api` | Active |
+| [ts-schema](./platform/ts-schema/) | TypeScript types and Zod schemas | `packages/ts-schema` | Active |
+| [orchestration](./platform/orchestration/) | Platform coordination, deployment | — | Active |
+| events | Event Spine and Operational Pulse | — | Planned |
+| auth | Authentication and permissions | — | Planned |
+| billing | Subscription and payment processing | — | Planned |
+| brief | Brief system storage and synthesis | — | Planned |
 
 ---
 
-## Level 2-3: Platform Sub-categories & Modules (Active)
+## Strategic Containers (Categories)
 
-| Sub-category | Module | Purpose | Package |
-|--------------|--------|---------|---------|
-| [orchestration](./platform/orchestration/) | - | Platform coordination, deployment | - |
-| [frontend](./platform/frontend/) | [shell](./platform/frontend/shell/) | Astro app shell, routing, React islands | `apps/shell` |
-| | [ui](./platform/frontend/ui/) | Design system, shared components | `packages/ui` |
-| [backend](./platform/backend/) | [core-api](./platform/backend/core-api/) | Authentication, events, organizations | `services/core-api` |
-| [shared](./platform/shared/) | [ts-schema](./platform/shared/ts-schema/) | TypeScript types and Zod schemas | `packages/ts-schema` |
-| [infrastructure](./platform/infrastructure/) | - | Events, auth, billing, brief (planned) | - |
+User-facing business categories with coordination units and business modules.
+
+| Category | Codename | Purpose | Status |
+|----------|----------|---------|--------|
+| [strategy/](./strategy/) | Bridge | The Command Center — connection between vision and reality | Planned |
+| [marketing/](./marketing/) | Stage | The Platform — amplifying the voice | Planned |
+| [sales/](./sales/) | Exchange | The Marketplace — value for value | Planned |
+| [finance/](./finance/) | Vault | The Storehouse — managing resources | Planned |
+| [operations/](./operations/) | Engine | The Machine — execution and delivery | Planned |
+| [team/](./team/) | Guild | The People — culture and growth | Planned |
+| [legal/](./legal/) | Shield | The Protection — risk and compliance | Planned |
 
 ---
 
@@ -61,17 +67,17 @@ These documents define system-wide rules that ALL categories must follow.
 
 ### Strategic Decisions
 - [ADR-005: SPA + Copilot First](./platform/orchestration/architecture/adr-005-spa-copilot-first.md) — Category build strategy
-- [Module Roadmap](./architecture.md#11-module-composition-strategy--roadmap) — 16 foundational modules
+- [Module Roadmap](./platform/architecture.md#11-module-composition-strategy--roadmap) — 16 foundational modules
 
 ### Operations
 - [Deployment Plan](./platform/orchestration/deployment-plan.md) — Platform deployment strategy
 - [Incident Response](./platform/orchestration/incident-response.md) — Platform incident handling
 
 ### Sprint Status
-- [Pulse](./pulse.md) — Cross-team coordination and system-wide progress
+- [Pulse](./platform/orchestration/pulse.md) — Cross-team coordination and system-wide progress
 - [Epic Status](./platform/orchestration/sprint-artifacts/sprint-status.yaml) — Overall progress
-- [Core API Stories](./platform/backend/core-api/sprint-artifacts/) — API implementation
-- [Shell Stories](./platform/frontend/shell/sprint-artifacts/) — Frontend implementation
+- [Core API Stories](./platform/core-api/sprint-artifacts/) — API implementation
+- [Shell Stories](./platform/shell/sprint-artifacts/) — Frontend implementation
 
 ---
 
@@ -88,16 +94,18 @@ These documents define system-wide rules that ALL categories must follow.
 
 ## For AI Agents
 
-When starting a session, first determine which level and area you're working on:
+When starting a session, first determine which entity type you're working on:
 
-1. Read [manifest.yaml](./manifest.yaml) to understand the 4-level hierarchy
-2. Ask: "Which level are you working on?"
-   - Level 0 (System): `docs/`
-   - Level 1 (Category): `docs/{category}/`
-   - Level 2 (Sub-category): `docs/{category}/{subcategory}/`
-   - Level 3 (Module): `docs/{category}/{subcategory}/{module}/`
-3. Remember: lower levels INHERIT from higher levels
+1. Read [manifest.yaml](./manifest.yaml) to understand the Five Entity Types
+2. Ask: "Which entity are you working on?"
+3. Detect entity type from path:
+   - `docs/platform/*.md` → Constitution
+   - `docs/platform/{module}/` → Infrastructure Module
+   - `docs/{category}/` → Strategic Container
+   - `docs/{category}/{subcat}/` → Coordination Unit
+   - `docs/{cat}/{subcat}/{mod}/` → Business Module
+4. Remember: entities inherit from their **direct parent only** (Zero-Trust)
 
 ---
 
-*Last updated: 2025-12-01*
+*Last updated: 2025-12-02*

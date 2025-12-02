@@ -1,12 +1,12 @@
 # Constitution PRD Validation Checklist
 
-> For validating System-level PRDs (Level 0) at `docs/prd.md`
+> For validating the Constitution PRD at `docs/platform/prd.md`
 
 ## 1. Document Structure
 
 ### Frontmatter
-- [ ] `level: system` present in frontmatter
-- [ ] `doc_type: constitution` present in frontmatter
+- [ ] `entity_type: constitution` present in frontmatter
+- [ ] `doc_type: prd` present in frontmatter
 - [ ] Title includes "Constitution" or "System PRD"
 
 ### Required Sections
@@ -65,8 +65,8 @@
 ## 6. Cross-References
 
 - [ ] References `docs/manifest.yaml` for module registry
-- [ ] Links to `docs/architecture.md` for technical details
-- [ ] Links to `docs/product-brief.md` for vision
+- [ ] Links to `docs/platform/architecture.md` for technical details
+- [ ] Links to `docs/platform/product-brief.md` for vision
 
 ---
 

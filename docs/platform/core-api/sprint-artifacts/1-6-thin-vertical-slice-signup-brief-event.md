@@ -81,10 +81,10 @@ so that **I see the product delivering value, not just infrastructure**.
 
 ### Architecture Constraints
 
-- **Event Backbone:** Brief creation MUST emit `xentri.brief.created.v1` event to `system_events` table [Source: docs/architecture.md#ADR-002]
-- **RLS Enforcement:** All Brief queries must use fail-closed RLS pattern with `set_config('app.current_org_id', ...)` [Source: docs/architecture.md#ADR-003]
-- **Astro + React Islands:** Strategy pages are Astro SSG with React islands for interactive Brief components [Source: docs/architecture.md#Implementation-Patterns-B]
-- **ts-schema Contracts:** Brief schema defined in `packages/ts-schema` and consumed by both shell and core-api [Source: docs/architecture.md#Implementation-Patterns-A]
+- **Event Backbone:** Brief creation MUST emit `xentri.brief.created.v1` event to `system_events` table [Source: docs/platform/architecture.md#ADR-002]
+- **RLS Enforcement:** All Brief queries must use fail-closed RLS pattern with `set_config('app.current_org_id', ...)` [Source: docs/platform/architecture.md#ADR-003]
+- **Astro + React Islands:** Strategy pages are Astro SSG with React islands for interactive Brief components [Source: docs/platform/architecture.md#Implementation-Patterns-B]
+- **ts-schema Contracts:** Brief schema defined in `packages/ts-schema` and consumed by both shell and core-api [Source: docs/platform/architecture.md#Implementation-Patterns-A]
 
 ### Technical Specifications
 
@@ -288,8 +288,8 @@ apps/shell/src/stores/navigation.ts        (mark Strategy as active)
 
 ### References
 
-- [Source: docs/architecture.md#ADR-002] - Event Envelope Schema
-- [Source: docs/architecture.md#ADR-003] - Multi-Tenant RLS Pattern
+- [Source: docs/platform/architecture.md#ADR-002] - Event Envelope Schema
+- [Source: docs/platform/architecture.md#ADR-003] - Multi-Tenant RLS Pattern
 - [Source: docs/sprint-artifacts/tech-spec-epic-1.md#Story-1.6] - Acceptance Criteria
 - [Source: docs/prd.md#FR10-FR17] - Universal Brief FRs
 - [Source: docs/prd.md#FR33-FR37] - Event Backbone FRs

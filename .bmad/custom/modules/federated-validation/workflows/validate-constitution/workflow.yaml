@@ -21,7 +21,7 @@ instructions: "{installed_path}/instructions.md"
 validation: "{project-root}/.bmad/custom/modules/federated-validation/checklists/constitution-checklist.md"
 
 # Target file (the Constitution PRD)
-target_file: "{project-root}/docs/prd.md"
+target_file: "{project-root}/docs/platform/prd.md"
 
 # Output
 report_template: "{project-root}/.bmad/custom/modules/federated-validation/templates/validation-report.md"
@@ -31,8 +31,8 @@ default_output_file: "{project-root}/docs/proposals/validation-reports/constitut
 validation_rules:
   frontmatter:
     required_fields:
-      - level: "system"
-      - doc_type: "constitution"
+      - entity_type: "constitution"
+      - doc_type: "prd"
 
   content:
     must_contain:

@@ -3,7 +3,7 @@
 > Core API service - authentication, events, organizations, and webhooks.
 
 **Package:** `services/core-api`
-**Category:** Platform → Backend
+**Entity Type:** Infrastructure Module
 **Status:** Active
 **Live URL:** https://core-api-production-8016.up.railway.app
 
@@ -50,7 +50,7 @@ The Core API is the central backend service that provides:
 
 | Module | Relationship |
 |--------|--------------|
-| `platform/shared/ts-schema` | Shared Zod schemas and types |
+| `platform/ts-schema` | Shared Zod schemas and types |
 
 ## Development
 
@@ -77,7 +77,7 @@ curl http://localhost:3000/health/ready
 ## Documentation Structure
 
 ```
-docs/platform/backend/core-api/
+docs/platform/core-api/
 ├── README.md              # This file
 ├── architecture.md        # Service-specific decisions (TODO)
 ├── api-reference.md       # Detailed API docs (TODO)

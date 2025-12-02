@@ -873,11 +873,12 @@ To prevent context bloat, Episodic Memory is recursively summarized ("folded") i
 
 | PRD Location | What It Contains |
 |--------------|------------------|
-| `platform/orchestration/prd.md` | Cross-cutting rules, interfaces, integration contracts (this document) |
-| `platform/infrastructure/prd.md` | Brief system, Event Spine/Pulse, Auth, Billing implementation |
-| `platform/frontend/prd.md` | Shell implementation, UI component specs |
-| `platform/backend/prd.md` | Core API endpoints, service architecture |
-| `platform/shared/prd.md` | Type definitions, validation schemas |
+| `platform/prd.md` | Constitution - system-wide rules, interfaces, integration contracts (this document) |
+| `platform/orchestration/prd.md` | Cross-cutting coordination, deployment, DevOps |
+| `platform/core-api/prd.md` | Core API endpoints, service architecture |
+| `platform/shell/prd.md` | Shell implementation, routing, islands |
+| `platform/ui/prd.md` | UI component specs, design system |
+| `platform/ts-schema/prd.md` | Type definitions, validation schemas |
 
 ### The "Federated Soul" Registry
 

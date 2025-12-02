@@ -13,8 +13,8 @@ Validate an Epic breakdown to ensure complete traceability between requirements 
 ### Step 1: Identify Scope
 
 Determine if this is:
-- **System Epics** (`docs/epics.md`) - traces to PR-xxx and IC-xxx
-- **Domain Epics** (`docs/{category}/{subcategory}/epics.md`) - traces to FR-{SCOPE}-xxx
+- **System Epics** (`docs/platform/epics.md`) - traces to PR-xxx and IC-xxx
+- **Entity Epics** (`docs/{category}/{subcategory}/epics.md`) - traces to FR-{SCOPE}-xxx
 
 ### Step 2: Find the Traceability Matrix
 
@@ -36,12 +36,12 @@ Look for a section titled "Traceability Matrix" with format:
 ### Step 3: Validate Coverage
 
 **For System Epics:**
-1. Extract all PR-xxx from `docs/prd.md`
-2. Extract all IC-xxx from `docs/prd.md`
+1. Extract all PR-xxx from `docs/platform/prd.md`
+2. Extract all IC-xxx from `docs/platform/prd.md`
 3. Check each appears in the traceability matrix
 
-**For Domain Epics:**
-1. Extract all FR-{SCOPE}-xxx from the domain's prd.md
+**For Entity Epics:**
+1. Extract all FR-{SCOPE}-xxx from the entity's prd.md
 2. Check each appears in the traceability matrix
 
 ### Step 4: Validate Stories
@@ -72,7 +72,7 @@ Go through `epic-checklist.md` and mark each item.
 # Epic Validation Report
 
 **Date:** {date}
-**Target:** docs/epics.md
+**Target:** docs/platform/epics.md
 **Status:** PASS | FAIL | PARTIAL
 
 ## Coverage Summary

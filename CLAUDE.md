@@ -12,81 +12,78 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Documentation Navigation
 
-Documentation follows a **4-level hierarchical structure**:
+Documentation follows a **Five Entity Types** model (not levels):
 
-| Level | Location | Contains | Example |
-|-------|----------|----------|---------|
-| **System (Constitution)** | `docs/` | PR-xxx, IC-xxx, system-wide rules | `docs/prd.md` |
-| **Category** | `docs/{category}/` | Category requirements (FR-{CAT}-xxx) | `docs/platform/prd.md` |
-| **Sub-category** | `docs/{category}/{subcategory}/` | Sub-category requirements | `docs/platform/frontend/prd.md` |
-| **Module** | `docs/{category}/{subcategory}/{module}/` | Module requirements | `docs/platform/frontend/shell/prd.md` |
+| Entity Type | Location | Contains | Example |
+|-------------|----------|----------|---------|
+| **Constitution** | `docs/platform/` | PR-xxx, IC-xxx, system-wide rules | `docs/platform/prd.md` |
+| **Infrastructure Module** | `docs/platform/{module}/` | Exposed/consumed interfaces | `docs/platform/core-api/prd.md` |
+| **Strategic Container** | `docs/{category}/` | Strategic alignment, child coordination | `docs/strategy/prd.md` |
+| **Coordination Unit** | `docs/{category}/{subcat}/` | Subcategory scope, module orchestration | `docs/strategy/pulse/prd.md` |
+| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | Feature FRs, implementation | `docs/strategy/pulse/god-view/prd.md` |
 
-### First: Determine Your Context Level
+### First: Determine Your Entity Type
 
 When starting a session, ask the user which area they're working on:
 
 ```
-Level 0 - System: Working on constitutional docs (prd.md, architecture.md at docs/ root)
+Entity Type Detection (by path pattern):
+  docs/platform/*.md              → Constitution
+  docs/platform/{module}/         → Infrastructure Module
+  docs/{category}/                → Strategic Container
+  docs/{category}/{subcat}/       → Coordination Unit
+  docs/{cat}/{subcat}/{module}/   → Business Module
 
-Level 1-3 - Categories → Sub-categories → Modules:
-1. platform (meta)
-   - orchestration (platform coordination)
-   - infrastructure (events, auth, billing, brief)
-   - frontend (shell, ui)
-   - backend (core-api)
-   - shared (ts-schema)
-2. strategy (future)
-3. marketing (future)
-4. sales (future)
-5. finance (future)
-6. operations (future)
-7. team (future)
-8. legal (future)
+Infrastructure Modules (platform):
+  - shell, ui, core-api, ts-schema, orchestration (active)
+  - events, auth, billing, brief (planned)
+
+Strategic Containers (user-facing categories):
+  - strategy, marketing, sales, finance, operations, team, legal
 ```
 
-Store the selection as `{level}/{category}/{subcategory}/{module}` and resolve all doc paths accordingly.
+Store the selection as `{entity_type}/{path}` and resolve all doc paths accordingly.
 
 ### Documentation Structure
 
 ```
 docs/
-├── prd.md                      # LEVEL 0: System PRD (Constitution)
-├── architecture.md             # LEVEL 0: System Architecture
-├── ux-design.md                # LEVEL 0: System UX Principles
-├── epics.md                    # LEVEL 0: Cross-cutting Epics
-├── product-brief.md            # LEVEL 0: Foundational Vision
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Machine-readable registry (v3.0)
+├── manifest.yaml               # Machine-readable registry (v4.0)
 │
-├── platform/                   # LEVEL 1: META CATEGORY
-│   ├── orchestration/          # LEVEL 2: Platform coordination
-│   ├── infrastructure/         # LEVEL 2: Events, auth, billing, brief
-│   ├── frontend/               # LEVEL 2: User interface layer
-│   │   ├── shell/              # LEVEL 3: Astro container (apps/shell)
-│   │   └── ui/                 # LEVEL 3: Component library (packages/ui)
-│   ├── backend/                # LEVEL 2: API and services
-│   │   └── core-api/           # LEVEL 3: Primary API (services/core-api)
-│   └── shared/                 # LEVEL 2: Cross-module contracts
-│       └── ts-schema/          # LEVEL 3: Types & schemas (packages/ts-schema)
+├── platform/                   # META CONTAINER (Constitution + Infrastructure)
+│   ├── prd.md                  # CONSTITUTION: System PRD (PR-xxx, IC-xxx)
+│   ├── architecture.md         # CONSTITUTION: System Architecture
+│   ├── ux-design.md            # CONSTITUTION: System UX Principles
+│   ├── epics.md                # CONSTITUTION: Cross-cutting Epics
+│   ├── product-brief.md        # CONSTITUTION: Foundational Vision
+│   │
+│   ├── shell/                  # INFRASTRUCTURE MODULE (apps/shell)
+│   ├── ui/                     # INFRASTRUCTURE MODULE (packages/ui)
+│   ├── core-api/               # INFRASTRUCTURE MODULE (services/core-api)
+│   ├── ts-schema/              # INFRASTRUCTURE MODULE (packages/ts-schema)
+│   └── orchestration/          # INFRASTRUCTURE MODULE (cross-cutting)
 │
-├── strategy/                   # LEVEL 1: Strategy category (planned)
-├── marketing/                  # LEVEL 1: Marketing category (planned)
-└── ...                         # Other categories
+├── strategy/                   # STRATEGIC CONTAINER (planned)
+│   └── pulse/                  # COORDINATION UNIT
+│       └── god-view/           # BUSINESS MODULE
+├── marketing/                  # STRATEGIC CONTAINER (planned)
+└── ...                         # Other categories (sales, finance, operations, team, legal)
 ```
 
 ### Key Documentation
 
-| Document | Location | Level |
-|----------|----------|-------|
+| Document | Location | Entity Type |
+|----------|----------|-------------|
 | Documentation Hub | `docs/index.md` | — |
 | Module Manifest | `docs/manifest.yaml` | — |
-| **System PRD (Constitution)** | `docs/prd.md` | 0 |
-| **System Architecture** | `docs/architecture.md` | 0 |
-| **System UX Design** | `docs/ux-design.md` | 0 |
-| **System Epics** | `docs/epics.md` | 0 |
-| **Product Brief** | `docs/product-brief.md` | 0 |
-| Platform Deployment | `docs/platform/orchestration/deployment-plan.md` | 2 |
-| Incident Response | `docs/platform/orchestration/incident-response.md` | 2 |
+| **System PRD** | `docs/platform/prd.md` | Constitution |
+| **System Architecture** | `docs/platform/architecture.md` | Constitution |
+| **System UX Design** | `docs/platform/ux-design.md` | Constitution |
+| **System Epics** | `docs/platform/epics.md` | Constitution |
+| **Product Brief** | `docs/platform/product-brief.md` | Constitution |
+| Platform Deployment | `docs/platform/orchestration/deployment-plan.md` | Infrastructure |
+| Incident Response | `docs/platform/orchestration/incident-response.md` | Infrastructure |
 
 ### Module Management (IMPORTANT)
 
@@ -95,22 +92,21 @@ docs/
 Use the provided scripts to manage the hierarchy:
 
 ```bash
-# Add a new module (within a sub-category)
-./scripts/add-module.sh <category> <subcategory> <module-name>
-./scripts/add-module.sh platform infrastructure events
+# Platform Infrastructure Modules (flat structure - no subcategories)
+./scripts/add-module.sh platform events        # Adds docs/platform/events/
+./scripts/remove-module.sh platform events
 
-# Add a new sub-category
-./scripts/add-subcategory.sh <category> <subcategory> "<purpose>"
-./scripts/add-subcategory.sh strategy copilot "AI strategy conversations"
-
-# Add a new category (rare)
-./scripts/add-category.sh <category> "<purpose>"
+# Strategic Containers (categories)
 ./scripts/add-category.sh analytics "Business Intelligence"
+./scripts/remove-category.sh analytics
 
-# Remove operations (use corresponding remove scripts)
-./scripts/remove-module.sh <category> <subcategory> <module-name>
-./scripts/remove-subcategory.sh <category> <subcategory>
-./scripts/remove-category.sh <category>
+# Coordination Units (subcategories within strategic containers)
+./scripts/add-subcategory.sh strategy copilot "AI strategy conversations"
+./scripts/remove-subcategory.sh strategy copilot
+
+# Business Modules (within coordination units)
+./scripts/add-module.sh strategy copilot advisor  # Adds docs/strategy/copilot/advisor/
+./scripts/remove-module.sh strategy copilot advisor
 ```
 
 These scripts update `docs/manifest.yaml` (the single source of truth), create/delete folder structures, and manage GitHub labels. All BMM agents read from the manifest dynamically.
@@ -218,11 +214,11 @@ Key workflows:
 
 ## Governance Rules
 
-### System Constitution Changes
+### Constitution Changes
 
-**Any change to system-level (Level 0) documents requires explicit flagging and rationale.**
+**Any change to Constitution documents requires explicit flagging and rationale.**
 
-Protected documents (in `docs/` root):
+Protected documents (in `docs/platform/`):
 - `prd.md` — System PRD (PR-xxx, IC-xxx)
 - `architecture.md` — System Architecture
 - `ux-design.md` — System UX Principles
@@ -236,7 +232,7 @@ When modifying these files:
 
 Example commit message:
 ```
-docs(system): Update architecture with caching strategy
+docs(constitution): Update architecture with caching strategy
 
 Rationale: New caching layer needed for performance targets.
 See ADR-006 for full decision record.
@@ -244,6 +240,13 @@ See ADR-006 for full decision record.
 
 This governance ensures system-wide decisions are traceable and intentional.
 
-### Inheritance Rule
+### Zero-Trust Inheritance
 
-Lower-level documents (category, sub-category, module) INHERIT all constraints from system-level documents. They can ADD requirements but never CONTRADICT system-level rules.
+All entities inherit from their **direct parent only** (no skip-level):
+- Children expose work upward, parents curate what's shared
+- Business Module → Coordination Unit PRD
+- Coordination Unit → Strategic Container PRD
+- Strategic Container → Constitution
+- Infrastructure Module → Constitution
+
+Each level can ADD requirements but NEVER CONTRADICT parent.

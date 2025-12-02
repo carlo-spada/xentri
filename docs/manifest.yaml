@@ -2,26 +2,28 @@
 # This file is the source of truth for navigating the documentation hierarchy.
 # AI agents should read this file first to understand the documentation structure.
 #
-# FOUR-LEVEL HIERARCHY:
-#   Level 0: System (Constitution) - docs/*.md
-#   Level 1: Category - docs/{category}/
-#   Level 2: Sub-category - docs/{category}/{subcategory}/
-#   Level 3: Module - docs/{category}/{subcategory}/{module}/
+# FIVE ENTITY TYPES (Not Four Levels):
+#   Constitution:          docs/platform/*.md          - PR/IC, system constraints
+#   Infrastructure Module: docs/platform/{module}/     - Exposed/consumed interfaces
+#   Strategic Container:   docs/{category}/            - Strategic alignment, child coordination
+#   Coordination Unit:     docs/{category}/{subcat}/   - Subcategory scope, module orchestration
+#   Business Module:       docs/{cat}/{subcat}/{mod}/  - Feature FRs, implementation
 
-version: "3.0"
-last_updated: "2025-12-01"
+version: "4.0"
+last_updated: "2025-12-02"
 project: Xentri
 
 # =============================================================================
-# LEVEL 0: SYSTEM CONSTITUTION
+# CONSTITUTION (L0 Meta Container)
 # =============================================================================
-# These documents define system-wide rules that ALL categories must follow.
-# Location: docs/ (root level)
+# These documents define system-wide rules that ALL entities must follow.
+# Location: docs/platform/ (root level files)
 # Changes require explicit governance review.
 
-system:
-  description: "Constitutional documents - system-wide rules for all categories"
-  location: "docs/"
+constitution:
+  description: "Constitutional documents - system-wide rules for all entities"
+  location: "docs/platform/"
+  entity_type: constitution
   documents:
     - file: prd.md
       type: prd
@@ -43,213 +45,262 @@ system:
     protected: true
 
 # =============================================================================
-# HIERARCHY DEFINITIONS (Levels 1-3)
+# ZERO-TRUST HIERARCHY MODEL
 # =============================================================================
 #
-# Level 1 - Category: Major domain of business value (platform, strategy, sales)
-# Level 2 - Sub-category: Capability area with its own PRD and architecture
-# Level 3 - Module: Smallest unit of implementation and billing
+# Communication Rules:
+# - Children DO work and EXPOSE upward to parent
+# - Parent CURATES what's shared between siblings
+# - Children NEVER see siblings directly
+# - No direct sibling negotiation
+# - No skip-level visibility
 #
-# Meta designation: Internal infrastructure, not user-facing
-# - All of Platform is meta
-# - User-facing categories (strategy, marketing, etc.) are NOT meta
+# Amendment Flow:
+# - Children don't propose amendments (they don't know siblings exist)
+# - Parents author amendments when they decide to expose/share/integrate
 
 # =============================================================================
-# CATEGORIES
+# INFRASTRUCTURE MODULES (Platform)
 # =============================================================================
+# These are terminal nodes under platform - no children, just implementation.
+# Entity type: infrastructure_module
+
+platform:
+  purpose: "Core infrastructure for all categories"
+  meta: true
+  entity_type: meta_container
+  modules:
+    # Active Infrastructure Modules
+    - name: shell
+      purpose: "Astro container application"
+      entity_type: infrastructure_module
+      location: "docs/platform/shell/"
+      package: "apps/shell"
+      team_label: "team:shell"
+      dependencies: [ui, ts-schema]
+      status: active
+
+    - name: ui
+      purpose: "Shared component library"
+      entity_type: infrastructure_module
+      location: "docs/platform/ui/"
+      package: "packages/ui"
+      team_label: "team:ui"
+      dependencies: []
+      consumers: [shell]
+      status: active
+
+    - name: core-api
+      purpose: "Primary Fastify API service"
+      entity_type: infrastructure_module
+      location: "docs/platform/core-api/"
+      package: "services/core-api"
+      team_label: "team:core-api"
+      dependencies: [ts-schema]
+      status: active
+
+    - name: ts-schema
+      purpose: "TypeScript types and Zod schemas"
+      entity_type: infrastructure_module
+      location: "docs/platform/ts-schema/"
+      package: "packages/ts-schema"
+      team_label: "team:ts-schema"
+      dependencies: []
+      consumers: [core-api, shell]
+      status: active
+
+    - name: orchestration
+      purpose: "Platform coordination and cross-cutting concerns"
+      entity_type: infrastructure_module
+      location: "docs/platform/orchestration/"
+      package: null  # No code package, just docs
+      team_label: "team:orchestration"
+      status: active
+      key_files:
+        - deployment-plan.md
+        - incident-response.md
+        - module_matrix.md
+        - pulse.md
+
+    # Planned Infrastructure Modules
+    - name: events
+      purpose: "Event Spine and Operational Pulse"
+      entity_type: infrastructure_module
+      location: "docs/platform/events/"
+      status: planned
+
+    - name: auth
+      purpose: "Authentication and permissions"
+      entity_type: infrastructure_module
+      location: "docs/platform/auth/"
+      status: planned
+
+    - name: billing
+      purpose: "Subscription and payment processing"
+      entity_type: infrastructure_module
+      location: "docs/platform/billing/"
+      status: planned
+
+    - name: brief
+      purpose: "Brief system storage and synthesis"
+      entity_type: infrastructure_module
+      location: "docs/platform/brief/"
+      status: planned
+
+# =============================================================================
+# STRATEGIC CONTAINERS (User-Facing Categories)
+# =============================================================================
+# These are the 7 core business categories. Each contains:
+# - Strategic direction (category PRD)
+# - Coordination Units (subcategories)
+# - Business Modules (implementation units)
+#
+# Entity type: strategic_container
 
 categories:
-  # ---------------------------------------------------------------------------
-  # META CATEGORY: Platform (Internal Infrastructure)
-  # ---------------------------------------------------------------------------
-  platform:
-    purpose: "Core infrastructure for all categories"
-    meta: true
-    subcategories:
-      orchestration:
-        purpose: "Platform-specific cross-cutting concerns and coordination (NOT system constitution - that's at docs/ root)"
-        meta: true
-        type: meta  # Not an SPA
-        modules: []  # No implementation modules, just docs
-        key_files:
-          - deployment-plan.md      # Platform deployment strategy
-          - incident-response.md    # Platform incident handling
-          - module_matrix.md        # Platform module overview
-        notes: "System-wide constitutional docs (prd.md, architecture.md, etc.) are now at docs/ root level"
-
-      infrastructure:
-        purpose: "Events, authentication, billing, brief system"
-        meta: true
-        type: meta
-        modules:
-          - name: events
-            purpose: "Event Spine and Operational Pulse"
-            status: planned
-          - name: auth
-            purpose: "Authentication and permissions"
-            status: planned
-          - name: billing
-            purpose: "Subscription and payment processing"
-            status: planned
-          - name: brief
-            purpose: "Brief system storage and synthesis"
-            status: planned
-
-      frontend:
-        purpose: "User interface layer"
-        meta: true
-        type: meta
-        modules:
-          - name: shell
-            purpose: "Astro container application"
-            package: "apps/shell"
-            team_label: "team:shell"
-            dependencies: [ui, ts-schema]
-            status: active
-          - name: ui
-            purpose: "Shared component library"
-            package: "packages/ui"
-            team_label: "team:ui"
-            dependencies: []
-            consumers: [shell]
-            status: active
-
-      backend:
-        purpose: "API and services layer"
-        meta: true
-        type: meta
-        modules:
-          - name: core-api
-            purpose: "Primary Fastify API service"
-            package: "services/core-api"
-            team_label: "team:core-api"
-            dependencies: [ts-schema]
-            status: active
-
-      shared:
-        purpose: "Cross-module contracts and types"
-        meta: true
-        type: meta
-        modules:
-          - name: ts-schema
-            purpose: "TypeScript types and Zod schemas"
-            package: "packages/ts-schema"
-            team_label: "team:ts-schema"
-            dependencies: []
-            consumers: [core-api, shell]
-            status: active
-
-  # ---------------------------------------------------------------------------
-  # USER-FACING CATEGORIES (The 7 Core Categories)
-  # See docs/module_matrix.md for full module descriptions
-  # ---------------------------------------------------------------------------
-
   # ===========================================================================
   # 1. STRATEGY (Codename: Bridge)
   # ===========================================================================
   strategy:
     purpose: "The Command Center. Connection between vision and reality."
     codename: "Bridge"
+    entity_type: strategic_container
+    location: "docs/strategy/"
     meta: false
     subcategories:
       soul:
         purpose: "Identity - The immutable DNA"
+        entity_type: coordination_unit
+        location: "docs/strategy/soul/"
         status: planned
         modules:
           - name: mission-control
             purpose: "Editor for Mission, Vision, Purpose, and Origin Story"
+            entity_type: business_module
             status: planned
           - name: brand-dna
             purpose: "Voice, Tone, and Personality settings for all Agents"
+            entity_type: business_module
             status: planned
           - name: values-guard
             purpose: "Agent that checks decisions against Core Values"
+            entity_type: business_module
             status: planned
           - name: meeting-copilot
             purpose: "Listens to strategy meetings, notes, and action items"
+            entity_type: business_module
             status: planned
           - name: culture-code
             purpose: "Internal behavioral guidelines and principles"
+            entity_type: business_module
             status: planned
 
       pulse:
         purpose: "Monitoring - The vital signs"
+        entity_type: coordination_unit
+        location: "docs/strategy/pulse/"
         status: planned
         modules:
           - name: god-view
             purpose: "Executive dashboard aggregating all Category signals"
+            entity_type: business_module
             status: planned
           - name: kpi-center
             purpose: "Definition and tracking of North Star and Core Metrics"
+            entity_type: business_module
             status: planned
           - name: risk-radar
             purpose: "Anomaly detection agent (Cash runway, Churn spikes)"
+            entity_type: business_module
             status: planned
           - name: sentiment-tracker
             purpose: "Analysis of Team and Customer mood"
+            entity_type: business_module
             status: planned
           - name: daily-brief
             purpose: "Automated morning digest for the CEO"
+            entity_type: business_module
             status: planned
 
       horizon:
         purpose: "Intelligence - The external view"
+        entity_type: coordination_unit
+        location: "docs/strategy/horizon/"
         status: planned
         modules:
           - name: market-watch
             purpose: "Competitor tracking and news analysis agent"
+            entity_type: business_module
             status: planned
           - name: trend-spotter
             purpose: "Industry trend identification and relevance scoring"
+            entity_type: business_module
             status: planned
           - name: swot-live
             purpose: "Dynamic Strength/Weakness/Opp/Threat analysis"
+            entity_type: business_module
             status: planned
           - name: customer-voice
             purpose: "Aggregated insights from support/sales conversations"
+            entity_type: business_module
             status: planned
           - name: scenario-simulator
             purpose: "What if modeling (e.g., What if market crashes?)"
+            entity_type: business_module
             status: planned
 
       map:
         purpose: "Planning - The path forward"
+        entity_type: coordination_unit
+        location: "docs/strategy/map/"
         status: planned
         modules:
           - name: north-star
             purpose: "Long-term vision and 10-year target tracker"
+            entity_type: business_module
             status: planned
           - name: okr-builder
             purpose: "Objectives & Key Results cascading tool"
+            entity_type: business_module
             status: planned
           - name: roadmap
             purpose: "Visual timeline of major initiatives and milestones"
+            entity_type: business_module
             status: planned
           - name: war-room
             purpose: "Collaborative decision-making space with Agent facilitation"
+            entity_type: business_module
             status: planned
           - name: decision-log
             purpose: "Immutable record of key strategic decisions and rationale"
+            entity_type: business_module
             status: planned
 
       constitution:
         purpose: "Governance - The rules of the road"
+        entity_type: coordination_unit
+        location: "docs/strategy/constitution/"
         status: planned
         modules:
           - name: policy-manager
             purpose: "The central rulebook (Remote work, Expenses, etc.)"
+            entity_type: business_module
             status: planned
           - name: ethics-committee
             purpose: "AI agent checking for ethical/reputational risks"
+            entity_type: business_module
             status: planned
           - name: board-deck
             purpose: "Automated generator for board meeting materials"
+            entity_type: business_module
             status: planned
           - name: compliance-log
             purpose: "Audit trail of key strategic decisions"
+            entity_type: business_module
             status: planned
           - name: access-control
             purpose: "Governance of who can see/do what (Role definitions)"
+            entity_type: business_module
             status: planned
 
   # ===========================================================================
@@ -258,107 +309,64 @@ categories:
   marketing:
     purpose: "The Platform. Amplifying the voice."
     codename: "Stage"
+    entity_type: strategic_container
+    location: "docs/marketing/"
     meta: false
     subcategories:
       marquee:
         purpose: "Presence - Being seen"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: site-builder
-            purpose: "Drag-and-drop website creator (React-based)"
-            status: planned
-          - name: funnel-builder
-            purpose: "High-conversion landing page and A/B test engine"
-            status: planned
-          - name: seo-agent
-            purpose: "Auto-optimizes meta tags, sitemaps, and keywords"
-            status: planned
-          - name: local-presence
-            purpose: "Syncs Google Maps, Yelp, and manages local citations"
-            status: planned
-          - name: domain-guard
-            purpose: "Manages URLs, SSL, and DNS settings"
-            status: planned
+          - { name: site-builder, purpose: "Drag-and-drop website creator", status: planned }
+          - { name: funnel-builder, purpose: "High-conversion landing pages", status: planned }
+          - { name: seo-agent, purpose: "Auto-optimizes meta tags and keywords", status: planned }
+          - { name: local-presence, purpose: "Google Maps/Yelp sync", status: planned }
+          - { name: domain-guard, purpose: "URL/SSL/DNS management", status: planned }
 
       studio:
         purpose: "Content - Creating the story"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: copywriter
-            purpose: "AI agent that writes blogs, captions, and emails"
-            status: planned
-          - name: asset-vault
-            purpose: "Central library for images, logos, and videos"
-            status: planned
-          - name: video-maker
-            purpose: "Simple tool to splice clips and add captions"
-            status: planned
-          - name: image-gen
-            purpose: "AI art generator for blog posts and ads"
-            status: planned
-          - name: remix-engine
-            purpose: "Turns 1 blog post into 10 tweets and 1 LinkedIn post"
-            status: planned
+          - { name: copywriter, purpose: "AI writing for blogs/emails", status: planned }
+          - { name: asset-vault, purpose: "Central media library", status: planned }
+          - { name: video-maker, purpose: "Simple video editing", status: planned }
+          - { name: image-gen, purpose: "AI art generation", status: planned }
+          - { name: remix-engine, purpose: "Content repurposing", status: planned }
 
       broadcast:
         purpose: "Distribution - Reaching the audience"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: social-scheduler
-            purpose: "Multi-channel poster (Twitter, LinkedIn, IG)"
-            status: planned
-          - name: ad-manager
-            purpose: "Simple interface for FB/Google Ads"
-            status: planned
-          - name: email-blaster
-            purpose: "Newsletter and broadcast email tool"
-            status: planned
-          - name: campaign-orch
-            purpose: "Ties ads, emails, and social into one Push"
-            status: planned
-          - name: sms-ping
-            purpose: "Text message marketing tool"
-            status: planned
+          - { name: social-scheduler, purpose: "Multi-channel posting", status: planned }
+          - { name: ad-manager, purpose: "FB/Google ads interface", status: planned }
+          - { name: email-blaster, purpose: "Newsletter tool", status: planned }
+          - { name: campaign-orch, purpose: "Campaign coordination", status: planned }
+          - { name: sms-ping, purpose: "Text marketing", status: planned }
 
       applause:
         purpose: "Reputation - Social proof"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: review-catcher
-            purpose: "Automates requests for Google Reviews after service"
-            status: planned
-          - name: trust-kit
-            purpose: "Testimonial widgets and verified Secure badges"
-            status: planned
-          - name: pr-agent
-            purpose: "Monitors web mentions and suggests responses"
-            status: planned
-          - name: case-study-builder
-            purpose: "Templates to turn client wins into PDFs"
-            status: planned
-          - name: influencer-scout
-            purpose: "Finds and vets potential brand ambassadors"
-            status: planned
+          - { name: review-catcher, purpose: "Review request automation", status: planned }
+          - { name: trust-kit, purpose: "Testimonial widgets", status: planned }
+          - { name: pr-agent, purpose: "Web mention monitoring", status: planned }
+          - { name: case-study-builder, purpose: "Success story templates", status: planned }
+          - { name: influencer-scout, purpose: "Ambassador finding", status: planned }
 
       tribe:
         purpose: "Community - Deep engagement"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: event-host
-            purpose: "RSVP and ticket management for webinars/meetups"
-            status: planned
-          - name: newsletter-pro
-            purpose: "Subscription management and recurring digests"
-            status: planned
-          - name: member-gate
-            purpose: "Protects content for paying members"
-            status: planned
-          - name: forum
-            purpose: "Simple discussion board for customers"
-            status: planned
-          - name: swag-store
-            purpose: "E-commerce lite for branded merch"
-            status: planned
+          - { name: event-host, purpose: "Webinar/meetup management", status: planned }
+          - { name: newsletter-pro, purpose: "Subscription management", status: planned }
+          - { name: member-gate, purpose: "Content protection", status: planned }
+          - { name: forum, purpose: "Discussion board", status: planned }
+          - { name: swag-store, purpose: "Branded merch e-commerce", status: planned }
 
   # ===========================================================================
   # 3. SALES (Codename: Exchange)
@@ -366,107 +374,64 @@ categories:
   sales:
     purpose: "The Marketplace. Value for value."
     codename: "Exchange"
+    entity_type: strategic_container
+    location: "docs/sales/"
     meta: false
     subcategories:
       magnet:
         purpose: "Inbound - Capturing interest"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: capture-kit
-            purpose: "Form builder, surveys, and lead magnets"
-            status: planned
-          - name: scheduler
-            purpose: "Book a time link (Calendly replacement)"
-            status: planned
-          - name: chatbot
-            purpose: "24/7 site agent to answer FAQs and capture leads"
-            status: planned
-          - name: visitor-id
-            purpose: "Identifies companies visiting your site (IP lookup)"
-            status: planned
-          - name: lead-scorer
-            purpose: "AI that ranks leads (Hot/Warm/Cold)"
-            status: planned
+          - { name: capture-kit, purpose: "Form/survey builder", status: planned }
+          - { name: scheduler, purpose: "Booking links", status: planned }
+          - { name: chatbot, purpose: "24/7 site agent", status: planned }
+          - { name: visitor-id, purpose: "IP company lookup", status: planned }
+          - { name: lead-scorer, purpose: "AI lead ranking", status: planned }
 
       hunt:
         purpose: "Outbound - Finding opportunities"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: prospector
-            purpose: "Search tool to find leads by industry/role"
-            status: planned
-          - name: cold-reach
-            purpose: "Automated email sequences for outreach"
-            status: planned
-          - name: linkedin-agent
-            purpose: "Helper for connection requests and DMs"
-            status: planned
-          - name: data-enricher
-            purpose: "Adds phone/email/company size to raw leads"
-            status: planned
-          - name: list-cleaner
-            purpose: "Verifies email addresses to prevent bounce"
-            status: planned
+          - { name: prospector, purpose: "Lead search tool", status: planned }
+          - { name: cold-reach, purpose: "Email sequences", status: planned }
+          - { name: linkedin-agent, purpose: "LinkedIn helper", status: planned }
+          - { name: data-enricher, purpose: "Contact enrichment", status: planned }
+          - { name: list-cleaner, purpose: "Email verification", status: planned }
 
       flow:
-        purpose: "Pipeline - Managing the deal stream"
+        purpose: "Pipeline - Managing deals"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: deal-board
-            purpose: "Kanban view of the sales pipeline"
-            status: planned
-          - name: activity-logger
-            purpose: "Tracks calls, emails, and meetings automatically"
-            status: planned
-          - name: forecaster
-            purpose: "Predicts revenue based on deal stage and probability"
-            status: planned
-          - name: territory-map
-            purpose: "Assigns leads to sales reps by region"
-            status: planned
-          - name: call-coach
-            purpose: "AI analysis of sales calls for coaching insights"
-            status: planned
+          - { name: deal-board, purpose: "Pipeline kanban", status: planned }
+          - { name: activity-logger, purpose: "Auto activity tracking", status: planned }
+          - { name: forecaster, purpose: "Revenue prediction", status: planned }
+          - { name: territory-map, purpose: "Lead assignment", status: planned }
+          - { name: call-coach, purpose: "Call analysis", status: planned }
 
       handshake:
-        purpose: "Closing - Sealing the deal"
+        purpose: "Closing - Sealing deals"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: quote-builder
-            purpose: "Generates price estimates (PDF/Web)"
-            status: planned
-          - name: proposal-gen
-            purpose: "AI that writes the Why Us section of proposals"
-            status: planned
-          - name: contract-sign
-            purpose: "E-signature tool"
-            status: planned
-          - name: negotiator
-            purpose: "Agent that suggests discount strategies"
-            status: planned
-          - name: demo-room
-            purpose: "Interactive presentation environment for clients"
-            status: planned
+          - { name: quote-builder, purpose: "Price estimates", status: planned }
+          - { name: proposal-gen, purpose: "AI proposal writer", status: planned }
+          - { name: contract-sign, purpose: "E-signatures", status: planned }
+          - { name: negotiator, purpose: "Discount strategies", status: planned }
+          - { name: demo-room, purpose: "Client presentations", status: planned }
 
       register:
         purpose: "Transaction - Taking payment"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: pos-terminal
-            purpose: "Interface for in-person card payments"
-            status: planned
-          - name: checkout-page
-            purpose: "Secure hosted payment page for links"
-            status: planned
-          - name: subscription-manager
-            purpose: "Handles recurring billing and dunning"
-            status: planned
-          - name: payment-gateway
-            purpose: "The connection to Stripe/PayPal"
-            status: planned
-          - name: refund-agent
-            purpose: "Handles dispute resolution and refunds"
-            status: planned
+          - { name: pos-terminal, purpose: "In-person payments", status: planned }
+          - { name: checkout-page, purpose: "Hosted payment page", status: planned }
+          - { name: subscription-manager, purpose: "Recurring billing", status: planned }
+          - { name: payment-gateway, purpose: "Stripe/PayPal connector", status: planned }
+          - { name: refund-agent, purpose: "Dispute resolution", status: planned }
 
   # ===========================================================================
   # 4. FINANCE (Codename: Vault)
@@ -474,107 +439,64 @@ categories:
   finance:
     purpose: "The Storehouse. Managing resources."
     codename: "Vault"
+    entity_type: strategic_container
+    location: "docs/finance/"
     meta: false
     subcategories:
       inflow:
-        purpose: "Receivables - Money coming in"
+        purpose: "Receivables - Money in"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: invoice-gen
-            purpose: "Smart invoice builder with Pay Now buttons"
-            status: planned
-          - name: recurring-bill
-            purpose: "Engine for subscriptions and retainers"
-            status: planned
-          - name: dunning-agent
-            purpose: "Polite automated chasers for late payments"
-            status: planned
-          - name: credit-check
-            purpose: "Risk score for new clients before work starts"
-            status: planned
-          - name: payment-link
-            purpose: "Quick URL generator for ad-hoc charges"
-            status: planned
+          - { name: invoice-gen, purpose: "Smart invoicing", status: planned }
+          - { name: recurring-bill, purpose: "Subscription engine", status: planned }
+          - { name: dunning-agent, purpose: "Payment chasers", status: planned }
+          - { name: credit-check, purpose: "Client risk scoring", status: planned }
+          - { name: payment-link, purpose: "Quick charge URLs", status: planned }
 
       outflow:
-        purpose: "Payables - Money going out"
+        purpose: "Payables - Money out"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: expense-scan
-            purpose: "OCR tool for receipts and employee reimbursement"
-            status: planned
-          - name: bill-pay
-            purpose: "Schedule and approve vendor payments (ACH/Wire)"
-            status: planned
-          - name: vendor-portal
-            purpose: "Self-serve area for suppliers to upload invoices"
-            status: planned
-          - name: approval-flow
-            purpose: "Logic for If > $500, ask Manager"
-            status: planned
-          - name: sub-tracker
-            purpose: "Identifies and cancels unused SaaS subscriptions"
-            status: planned
+          - { name: expense-scan, purpose: "Receipt OCR", status: planned }
+          - { name: bill-pay, purpose: "Vendor payments", status: planned }
+          - { name: vendor-portal, purpose: "Supplier self-serve", status: planned }
+          - { name: approval-flow, purpose: "Spending approval", status: planned }
+          - { name: sub-tracker, purpose: "SaaS subscription audit", status: planned }
 
       treasury:
-        purpose: "Cash - Liquidity management"
+        purpose: "Cash - Liquidity"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: bank-sync
-            purpose: "Real-time feed from bank accounts (Plaid/Teller)"
-            status: planned
-          - name: cash-flow
-            purpose: "Visual River of money in/out with 30-day forecast"
-            status: planned
-          - name: capital-agent
-            purpose: "Suggests when to draw on credit lines or invest"
-            status: planned
-          - name: fx-manager
-            purpose: "Multi-currency exchange rate tracker"
-            status: planned
-          - name: card-control
-            purpose: "Virtual card issuance and limit setting"
-            status: planned
+          - { name: bank-sync, purpose: "Real-time bank feed", status: planned }
+          - { name: cash-flow, purpose: "Cash visualization", status: planned }
+          - { name: capital-agent, purpose: "Credit line advisor", status: planned }
+          - { name: fx-manager, purpose: "Currency tracker", status: planned }
+          - { name: card-control, purpose: "Virtual card issuance", status: planned }
 
       ledger:
         purpose: "Accounting - The record"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: general-ledger
-            purpose: "Chart of accounts and journal entry interface"
-            status: planned
-          - name: fixed-assets
-            purpose: "Depreciation tracker for equipment"
-            status: planned
-          - name: tax-jar
-            purpose: "Automated sales tax calculation and set aside"
-            status: planned
-          - name: reconciler
-            purpose: "Tinder-style Match interface for bank vs. books"
-            status: planned
-          - name: audit-trail
-            purpose: "Immutable log of every financial change"
-            status: planned
+          - { name: general-ledger, purpose: "Chart of accounts", status: planned }
+          - { name: fixed-assets, purpose: "Depreciation tracker", status: planned }
+          - { name: tax-jar, purpose: "Sales tax automation", status: planned }
+          - { name: reconciler, purpose: "Bank reconciliation", status: planned }
+          - { name: audit-trail, purpose: "Financial change log", status: planned }
 
       forecast:
-        purpose: "Planning - The future model"
+        purpose: "Planning - The model"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: budget-builder
-            purpose: "Department-level budget setting"
-            status: planned
-          - name: unit-economics
-            purpose: "Calculator for CAC, LTV, and Gross Margin"
-            status: planned
-          - name: burn-rate
-            purpose: "Runway calculator for startups"
-            status: planned
-          - name: scenario-model
-            purpose: "Best Case / Worst Case financial toggle"
-            status: planned
-          - name: investor-rep
-            purpose: "Automated PDF generator for monthly updates"
-            status: planned
+          - { name: budget-builder, purpose: "Department budgets", status: planned }
+          - { name: unit-economics, purpose: "CAC/LTV calculator", status: planned }
+          - { name: burn-rate, purpose: "Runway calculator", status: planned }
+          - { name: scenario-model, purpose: "Financial scenarios", status: planned }
+          - { name: investor-rep, purpose: "Update generator", status: planned }
 
   # ===========================================================================
   # 5. OPERATIONS (Codename: Engine)
@@ -582,107 +504,64 @@ categories:
   operations:
     purpose: "The Machine. Execution and delivery."
     codename: "Engine"
+    entity_type: strategic_container
+    location: "docs/operations/"
     meta: false
     subcategories:
       workshop:
-        purpose: "Service Delivery - Doing the work"
+        purpose: "Service Delivery"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: project-board
-            purpose: "Kanban/List view for client deliverables"
-            status: planned
-          - name: task-master
-            purpose: "Personal to-do list for every employee"
-            status: planned
-          - name: time-keeper
-            purpose: "Stopwatch and timesheet logger"
-            status: planned
-          - name: resource-plan
-            purpose: "Who is free next week? visualizer"
-            status: planned
-          - name: sop-builder
-            purpose: "AI that watches Loom videos and writes Step-by-Step docs"
-            status: planned
+          - { name: project-board, purpose: "Deliverable kanban", status: planned }
+          - { name: task-master, purpose: "Personal to-dos", status: planned }
+          - { name: time-keeper, purpose: "Time tracking", status: planned }
+          - { name: resource-plan, purpose: "Availability view", status: planned }
+          - { name: sop-builder, purpose: "Process documentation", status: planned }
 
       supply:
-        purpose: "Logistics - Moving the atoms"
+        purpose: "Logistics"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: inventory-count
-            purpose: "Real-time stock levels and low-stock alerts"
-            status: planned
-          - name: po-gen
-            purpose: "Purchase Order creator for suppliers"
-            status: planned
-          - name: supplier-db
-            purpose: "CRM for vendors (contacts, terms, rating)"
-            status: planned
-          - name: ship-label
-            purpose: "Integration with FedEx/UPS for printing labels"
-            status: planned
-          - name: barcode-scan
-            purpose: "Mobile app interface for warehouse picking"
-            status: planned
+          - { name: inventory-count, purpose: "Stock tracking", status: planned }
+          - { name: po-gen, purpose: "Purchase orders", status: planned }
+          - { name: supplier-db, purpose: "Vendor CRM", status: planned }
+          - { name: ship-label, purpose: "Shipping integration", status: planned }
+          - { name: barcode-scan, purpose: "Warehouse picking", status: planned }
 
       habitat:
-        purpose: "Facilities - The space"
+        purpose: "Facilities"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: front-desk
-            purpose: "Visitor log and room booking system"
-            status: planned
-          - name: fleet-track
-            purpose: "GPS and maintenance tracking for company vehicles"
-            status: planned
-          - name: asset-tag
-            purpose: "Database of laptops, chairs, and equipment"
-            status: planned
-          - name: fix-it
-            purpose: "Maintenance request ticketing system"
-            status: planned
-          - name: virtual-hq
-            purpose: "Gather.town style link for remote teams"
-            status: planned
+          - { name: front-desk, purpose: "Visitor/room booking", status: planned }
+          - { name: fleet-track, purpose: "Vehicle tracking", status: planned }
+          - { name: asset-tag, purpose: "Equipment database", status: planned }
+          - { name: fix-it, purpose: "Maintenance tickets", status: planned }
+          - { name: virtual-hq, purpose: "Remote office space", status: planned }
 
       concierge:
-        purpose: "Support - Helping the customer"
+        purpose: "Support"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: ticket-inbox
-            purpose: "Shared email inbox for support@company.com"
-            status: planned
-          - name: knowledge-base
-            purpose: "Public help center builder"
-            status: planned
-          - name: sla-tracker
-            purpose: "Countdown timer for Time to Reply"
-            status: planned
-          - name: csat-poll
-            purpose: "How was our service? survey sender"
-            status: planned
-          - name: issue-triage
-            purpose: "AI agent that tags and routes tickets"
-            status: planned
+          - { name: ticket-inbox, purpose: "Support inbox", status: planned }
+          - { name: knowledge-base, purpose: "Help center", status: planned }
+          - { name: sla-tracker, purpose: "Response timers", status: planned }
+          - { name: csat-poll, purpose: "Service surveys", status: planned }
+          - { name: issue-triage, purpose: "Ticket routing", status: planned }
 
       grid:
-        purpose: "Technology - The infrastructure"
+        purpose: "Technology"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: device-mgmt
-            purpose: "MDM-lite for company laptops"
-            status: planned
-          - name: software-lic
-            purpose: "Tracker for who has a seat on what tool"
-            status: planned
-          - name: pass-vault
-            purpose: "Shared password manager for teams"
-            status: planned
-          - name: access-log
-            purpose: "Who logged into Xentri and when"
-            status: planned
-          - name: security-scan
-            purpose: "Automated check for weak settings/policies"
-            status: planned
+          - { name: device-mgmt, purpose: "Laptop management", status: planned }
+          - { name: software-lic, purpose: "License tracking", status: planned }
+          - { name: pass-vault, purpose: "Password manager", status: planned }
+          - { name: access-log, purpose: "Login audit", status: planned }
+          - { name: security-scan, purpose: "Security checker", status: planned }
 
   # ===========================================================================
   # 6. TEAM (Codename: Guild)
@@ -690,107 +569,64 @@ categories:
   team:
     purpose: "The People. Culture and growth."
     codename: "Guild"
+    entity_type: strategic_container
+    location: "docs/team/"
     meta: false
     subcategories:
       draft:
-        purpose: "Recruiting - Finding talent"
+        purpose: "Recruiting"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: job-board
-            purpose: "Hosted careers page with Apply Now"
-            status: planned
-          - name: ats-lite
-            purpose: "Kanban board for applicants (Applied -> Interview -> Offer)"
-            status: planned
-          - name: offer-gen
-            purpose: "Automated offer letter builder with e-sign"
-            status: planned
-          - name: scorecard
-            purpose: "Interview feedback form for hiring managers"
-            status: planned
-          - name: headhunter
-            purpose: "Agent that scrapes LinkedIn for candidates"
-            status: planned
+          - { name: job-board, purpose: "Careers page", status: planned }
+          - { name: ats-lite, purpose: "Applicant tracking", status: planned }
+          - { name: offer-gen, purpose: "Offer letters", status: planned }
+          - { name: scorecard, purpose: "Interview feedback", status: planned }
+          - { name: headhunter, purpose: "Candidate sourcing", status: planned }
 
       welcome:
-        purpose: "Onboarding - Starting right"
+        purpose: "Onboarding"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: handbook
-            purpose: "Digital employee manual with I agree tracking"
-            status: planned
-          - name: day1-bot
-            purpose: "Automated Slack/Email welcome sequence"
-            status: planned
-          - name: equip-request
-            purpose: "Form to order laptop/monitor/swag"
-            status: planned
-          - name: training-track
-            purpose: "Checklist of videos/docs to read in Week 1"
-            status: planned
-          - name: buddy-match
-            purpose: "Assigns a mentor to new hires"
-            status: planned
+          - { name: handbook, purpose: "Employee manual", status: planned }
+          - { name: day1-bot, purpose: "Welcome automation", status: planned }
+          - { name: equip-request, purpose: "Equipment ordering", status: planned }
+          - { name: training-track, purpose: "Learning checklist", status: planned }
+          - { name: buddy-match, purpose: "Mentor assignment", status: planned }
 
       admin:
-        purpose: "Administration - The basics"
+        purpose: "Administration"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: payroll-sync
-            purpose: "Connector to Gusto/ADP (or simple internal calculator)"
-            status: planned
-          - name: time-off
-            purpose: "PTO request and approval workflow"
-            status: planned
-          - name: org-chart
-            purpose: "Visual tree of who reports to whom"
-            status: planned
-          - name: doc-vault
-            purpose: "Secure storage for employment contracts/W2s"
-            status: planned
-          - name: benefits-hub
-            purpose: "Links to health/401k portals"
-            status: planned
+          - { name: payroll-sync, purpose: "Payroll connector", status: planned }
+          - { name: time-off, purpose: "PTO management", status: planned }
+          - { name: org-chart, purpose: "Reporting structure", status: planned }
+          - { name: doc-vault, purpose: "HR document storage", status: planned }
+          - { name: benefits-hub, purpose: "Benefits portal links", status: planned }
 
       growth:
-        purpose: "Performance - Leveling up"
+        purpose: "Performance"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: one-on-one-tracker
-            purpose: "Shared agenda for manager/report meetings"
-            status: planned
-          - name: goal-setter
-            purpose: "Individual goals linked to Company OKRs"
-            status: planned
-          - name: 360-review
-            purpose: "Peer feedback collection tool"
-            status: planned
-          - name: skill-matrix
-            purpose: "Visual map of team capabilities"
-            status: planned
-          - name: praise-wall
-            purpose: "Public feed for High Fives and recognition"
-            status: planned
+          - { name: one-on-one-tracker, purpose: "Meeting agendas", status: planned }
+          - { name: goal-setter, purpose: "Individual goals", status: planned }
+          - { name: 360-review, purpose: "Peer feedback", status: planned }
+          - { name: skill-matrix, purpose: "Capability mapping", status: planned }
+          - { name: praise-wall, purpose: "Recognition feed", status: planned }
 
       spirit:
-        purpose: "Culture - Staying connected"
+        purpose: "Culture"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: culture-pulse
-            purpose: "Aggregated sentiment, birthdays, and suggestions"
-            status: planned
-          - name: event-cal
-            purpose: "RSVP for happy hours and offsites"
-            status: planned
-          - name: alumni-net
-            purpose: "Directory and newsletter for former employees"
-            status: planned
-          - name: wellness-coach
-            purpose: "AI agent monitoring for burnout signals"
-            status: planned
-          - name: kudos-bank
-            purpose: "Store for redeeming points/praise for rewards"
-            status: planned
+          - { name: culture-pulse, purpose: "Team sentiment", status: planned }
+          - { name: event-cal, purpose: "Social events", status: planned }
+          - { name: alumni-net, purpose: "Alumni directory", status: planned }
+          - { name: wellness-coach, purpose: "Burnout monitoring", status: planned }
+          - { name: kudos-bank, purpose: "Rewards store", status: planned }
 
   # ===========================================================================
   # 7. LEGAL (Codename: Shield)
@@ -798,107 +634,64 @@ categories:
   legal:
     purpose: "The Protection. Risk and compliance."
     codename: "Shield"
+    entity_type: strategic_container
+    location: "docs/legal/"
     meta: false
     subcategories:
       entity:
-        purpose: "Corporate - The structure"
+        purpose: "Corporate"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: cap-table
-            purpose: "Simple ledger of who owns what % (Equity)"
-            status: planned
-          - name: board-mins
-            purpose: "Tool to record and sign board meeting minutes"
-            status: planned
-          - name: incorp-docs
-            purpose: "Vault for Articles of Incorporation/Bylaws"
-            status: planned
-          - name: stock-cert
-            purpose: "Digital generator for share certificates"
-            status: planned
-          - name: reg-agent
-            purpose: "Reminder system for state filings"
-            status: planned
+          - { name: cap-table, purpose: "Equity ledger", status: planned }
+          - { name: board-mins, purpose: "Meeting minutes", status: planned }
+          - { name: incorp-docs, purpose: "Formation documents", status: planned }
+          - { name: stock-cert, purpose: "Share certificates", status: planned }
+          - { name: reg-agent, purpose: "State filings", status: planned }
 
       pacts:
-        purpose: "Commercial - The agreements"
+        purpose: "Commercial"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: msa-gen
-            purpose: "Master Services Agreement builder"
-            status: planned
-          - name: nda-sender
-            purpose: "Quick Sign this NDA link"
-            status: planned
-          - name: vendor-log
-            purpose: "Database of all active supplier contracts"
-            status: planned
-          - name: sow-builder
-            purpose: "Statement of Work generator for projects"
-            status: planned
-          - name: renewal-alert
-            purpose: "Nudge 30 days before a contract expires"
-            status: planned
+          - { name: msa-gen, purpose: "Service agreements", status: planned }
+          - { name: nda-sender, purpose: "NDA tool", status: planned }
+          - { name: vendor-log, purpose: "Contract database", status: planned }
+          - { name: sow-builder, purpose: "Statement of work", status: planned }
+          - { name: renewal-alert, purpose: "Expiry reminders", status: planned }
 
       moat:
-        purpose: "IP - The assets"
+        purpose: "IP"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: tm-watch
-            purpose: "Agent that checks if others are using your brand"
-            status: planned
-          - name: patent-log
-            purpose: "Tracker for invention disclosures"
-            status: planned
-          - name: copyright
-            purpose: "Registry for creative assets"
-            status: planned
-          - name: domain-portfolio
-            purpose: "List of all owned web domains"
-            status: planned
-          - name: brand-protect
-            purpose: "Takedown request generator for copycats"
-            status: planned
+          - { name: tm-watch, purpose: "Trademark monitoring", status: planned }
+          - { name: patent-log, purpose: "Invention tracking", status: planned }
+          - { name: copyright, purpose: "Creative registry", status: planned }
+          - { name: domain-portfolio, purpose: "Domain management", status: planned }
+          - { name: brand-protect, purpose: "Takedown requests", status: planned }
 
       code:
-        purpose: "Compliance - The laws"
+        purpose: "Compliance"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: privacy-shield
-            purpose: "GDPR/CCPA requests and Cookie consent manager"
-            status: planned
-          - name: license-track
-            purpose: "Database of professional licenses (e.g., CPA, MD)"
-            status: planned
-          - name: permit-vault
-            purpose: "Storage for city/state business permits"
-            status: planned
-          - name: access-check
-            purpose: "ADA compliance scanner for the website"
-            status: planned
-          - name: data-map
-            purpose: "Visualizer of where customer data lives"
-            status: planned
+          - { name: privacy-shield, purpose: "GDPR/CCPA tools", status: planned }
+          - { name: license-track, purpose: "Professional licenses", status: planned }
+          - { name: permit-vault, purpose: "Permit storage", status: planned }
+          - { name: access-check, purpose: "ADA compliance", status: planned }
+          - { name: data-map, purpose: "Data location map", status: planned }
 
       guard:
-        purpose: "Risk - The safety net"
+        purpose: "Risk"
+        entity_type: coordination_unit
         status: planned
         modules:
-          - name: insure-policy
-            purpose: "Vault for Liability/E&O policy docs"
-            status: planned
-          - name: coi-request
-            purpose: "Generator for Certificate of Insurance"
-            status: planned
-          - name: dispute-log
-            purpose: "Tracker for threatened lawsuits"
-            status: planned
-          - name: incident-rep
-            purpose: "Form to log workplace accidents/security breaches"
-            status: planned
-          - name: waiver-gen
-            purpose: "Liability waiver builder for events/services"
-            status: planned
+          - { name: insure-policy, purpose: "Insurance vault", status: planned }
+          - { name: coi-request, purpose: "Certificate generator", status: planned }
+          - { name: dispute-log, purpose: "Lawsuit tracker", status: planned }
+          - { name: incident-rep, purpose: "Incident logging", status: planned }
+          - { name: waiver-gen, purpose: "Liability waivers", status: planned }
 
 # =============================================================================
 # NAVIGATION GUIDE
@@ -906,65 +699,88 @@ categories:
 #
 # When starting a session, agents should:
 # 1. Read this manifest to understand the structure
-# 2. Ask: "Which category and sub-category are you working on?"
-# 3. Navigate to docs/{category}/{subcategory}/
-# 4. If working on a specific module, navigate to docs/{category}/{subcategory}/{module}/
+# 2. Ask: "Which entity are you working on?"
+# 3. Determine entity type from path
+# 4. Navigate to appropriate location
 #
-# Example session start:
-#   Agent: "Which area are you working on?"
-#   User: "core-api"
-#   Agent: "Working in platform/backend/core-api for this session."
+# Entity Type Detection:
+#   docs/platform/*.md              -> constitution
+#   docs/platform/{module}/         -> infrastructure_module
+#   docs/{category}/                -> strategic_container (if has children)
+#   docs/{category}/{subcat}/       -> coordination_unit (if has children)
+#   docs/{cat}/{subcat}/{module}/   -> business_module
+#
+# Example session starts:
+#   User: "Working on core-api"
+#   Agent: "Infrastructure Module: docs/platform/core-api/"
+#
+#   User: "Working on strategy"
+#   Agent: "Strategic Container: docs/strategy/"
+#
+#   User: "Working on god-view in strategy/pulse"
+#   Agent: "Business Module: docs/strategy/pulse/god-view/"
 
 # =============================================================================
-# STANDARD FOLDER STRUCTURE (4-Level Hierarchy)
+# STANDARD FOLDER STRUCTURE
 # =============================================================================
 #
-# Level 0 - System (Constitution):
-# docs/
-# ├── prd.md                 # System PRD (PR-xxx, IC-xxx)
+# Constitution (L0 Meta Container):
+# docs/platform/
+# ├── prd.md                 # Constitution PRD (PR-xxx, IC-xxx)
 # ├── architecture.md        # System architecture
 # ├── ux-design.md           # System UX principles
 # ├── epics.md               # Cross-cutting epics
 # ├── product-brief.md       # Foundational vision
-# ├── manifest.yaml          # This file
-# └── index.md               # Navigation hub
+# ├── README.md              # Platform overview
+# └── {module}/              # Infrastructure modules (flat)
 #
-# Level 1 - Category:
+# Infrastructure Module:
+# docs/platform/{module}/
+# ├── README.md              # Module overview
+# ├── prd.md                 # Module requirements
+# ├── sprint-artifacts/      # Implementation tracking
+# └── interfaces/            # Public contracts
+#
+# Strategic Container:
 # docs/{category}/
 # ├── README.md              # Category overview
-# ├── prd.md                 # Category requirements (FR-{CAT}-xxx)
-# ├── architecture.md        # Category-specific decisions
-# └── epics.md               # Category roadmap (optional)
+# ├── prd.md                 # Strategic requirements (FR-{CAT}-xxx)
+# ├── architecture.md        # Category-level decisions
+# ├── ux-design.md           # Category UX (inherits from L0)
+# └── {subcategory}/         # Coordination Units
 #
-# Level 2 - Sub-category:
+# Coordination Unit:
 # docs/{category}/{subcategory}/
-# ├── README.md              # Sub-category overview
-# ├── prd.md                 # Sub-category requirements (FR-{SUB}-xxx)
+# ├── README.md              # Subcategory overview
+# ├── prd.md                 # Coordination requirements (FR-{SUB}-xxx)
 # ├── architecture.md        # Technical decisions
 # ├── epics.md               # Implementation roadmap
-# └── {module}/              # Individual modules
+# └── {module}/              # Business Modules
 #
-# Level 3 - Module:
+# Business Module:
 # docs/{category}/{subcategory}/{module}/
 # ├── README.md              # Module overview
 # ├── prd.md                 # Module requirements (FR-{MOD}-xxx)
 # ├── sprint-artifacts/      # Implementation tracking
 # │   ├── sprint-status.yaml
 # │   └── {story-files}.md
-# └── interfaces/            # Public contracts
-#
+# └── interfaces/            # Public contracts (if applicable)
+
 # =============================================================================
-# INHERITANCE RULES
+# INHERITANCE RULES (Zero-Trust)
 # =============================================================================
 #
-# Each level INHERITS all constraints from above and can only ADD:
-# - Module inherits: System PRs + Category FRs + Sub-category FRs
-# - Sub-category inherits: System PRs + Category FRs
-# - Category inherits: System PRs
+# Children inherit from parent ONLY (no skip-level):
+# - Business Module inherits: Coordination Unit PRD
+# - Coordination Unit inherits: Strategic Container PRD
+# - Strategic Container inherits: Constitution
+# - Infrastructure Module inherits: Constitution
 #
-# Documents use frontmatter to declare their level:
+# Each level can ADD requirements but NEVER CONTRADICT parent.
+#
+# Documents use frontmatter to declare their entity type:
 #   ---
-#   level: system | category | subcategory | module
+#   entity_type: constitution | infrastructure_module | strategic_container | coordination_unit | business_module
 #   document_type: prd | architecture | epics | ux-design | product-brief
-#   parent: path/to/parent/prd.md (for non-system levels)
+#   parent: path/to/parent/prd.md (for non-constitution entities)
 #   ---

@@ -1,41 +1,38 @@
-# Validate Domain PRD - Instructions
+# Validate Entity PRD - Instructions
 
 ## Purpose
 
-Validate a Category, Subcategory, or Module PRD to ensure it properly inherits from the Constitution and defines domain-specific requirements.
+Validate an entity PRD to ensure it properly inherits from the Constitution and defines entity-specific requirements.
 
 ## Prerequisites
 
-- Constitution PRD exists at `docs/prd.md`
+- Constitution PRD exists at `docs/platform/prd.md`
 - Target PRD has proper frontmatter
 
 ## Steps
 
-### Step 1: Determine Scope
+### Step 1: Determine Entity Type
 
-From the file path, extract:
-- **Category:** First folder under `docs/` (e.g., `strategy`)
-- **Subcategory:** Second folder (e.g., `soul`)
-- **Module:** Third folder if present (e.g., `mission-control`)
+From the file path, determine the entity type:
 
-Determine the **level**:
-- `docs/{category}/prd.md` → Level 1 (Category)
-- `docs/{category}/{subcategory}/prd.md` → Level 2 (Subcategory)
-- `docs/{category}/{subcategory}/{module}/prd.md` → Level 3 (Module)
+- `docs/platform/{module}/prd.md` → Infrastructure Module
+- `docs/{category}/prd.md` → Strategic Container
+- `docs/{category}/{subcategory}/prd.md` → Coordination Unit
+- `docs/{category}/{subcategory}/{module}/prd.md` → Business Module
 
 ### Step 2: Verify Frontmatter
 
 ```yaml
 ---
-level: subcategory           # Must match the file's position in hierarchy
-doc_type: domain_prd         # Must be "domain_prd"
-parent: docs/prd.md          # Must reference the Constitution
-scope: SOUL                  # Used for FR-{SCOPE}-xxx prefix
+entity_type: coordination_unit  # Must match detected type
+doc_type: prd                   # Must be "prd"
+parent: docs/platform/prd.md    # Must reference the Constitution
+scope: SOUL                     # Used for FR-{SCOPE}-xxx prefix
 ---
 ```
 
 **Pass criteria:**
-- Level matches file path depth
+- Entity type matches detected type
 - Parent points to Constitution
 - Scope is defined for FR numbering
 
@@ -79,21 +76,26 @@ This domain implements:
    - Testable
    - Prioritized (MVP/Growth/Vision)
 
-### Step 6: Check Level-Specific Rules
+### Step 6: Check Entity-Specific Rules
 
-**Category PRD (Level 1):**
+**Infrastructure Module PRD:**
+- Full PRD expected (platform-level concerns)
+- FRs should focus on interfaces and contracts
+- Must trace to Constitution PRs/ICs
+
+**Strategic Container PRD:**
 - May be a brief rather than full PRD
-- Should set direction for subcategories
+- Should set direction for coordination units
 - FRs should be high-level
 
-**Subcategory PRD (Level 2):**
+**Coordination Unit PRD:**
 - Full PRD expected
 - FRs should be implementation-ready
-- Must reference Category direction
+- Must reference Strategic Container direction
 
-**Module PRD (Level 3):**
+**Business Module PRD:**
 - Can be minimal
-- FRs should trace to Subcategory
+- FRs should trace to Coordination Unit
 - Focus on specific implementation
 
 ### Step 7: Run Checklist

@@ -9,46 +9,53 @@
 
 ## Documentation Navigation
 
-Documentation is organized by **category** and **module**. Always determine which module you're working on first.
+Documentation follows a **Five Entity Types** model. Entity type is determined by PURPOSE, not depth.
 
-**Manifest:** `docs/manifest.yaml` — Machine-readable module registry
+**Manifest:** `docs/manifest.yaml` — Machine-readable module registry (v4.0)
 
-### Module Context Prompt
+### Entity Type Detection
 
-At session start, ask: "Which area are you working on?"
+At session start, ask: "Which entity are you working on?"
+
+| Entity Type | Path Pattern | Example |
+|-------------|--------------|---------|
+| **Constitution** | `docs/platform/*.md` | `docs/platform/prd.md` |
+| **Infrastructure Module** | `docs/platform/{module}/` | `docs/platform/core-api/` |
+| **Strategic Container** | `docs/{category}/` | `docs/strategy/` |
+| **Coordination Unit** | `docs/{category}/{subcat}/` | `docs/strategy/pulse/` |
+| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | `docs/strategy/pulse/dashboard/` |
 
 ```
-Categories → Sub-categories:
-1. platform (meta)
-   - orchestration (cross-cutting, big picture)
-   - infrastructure (events, auth, billing, brief) - planned
-   - frontend (shell, ui)
-   - backend (core-api)
-   - shared (ts-schema)
-2. strategy (future)
-3. marketing (future) — formerly "brand"
-4. sales, finance, operations, team, legal (future)
-```
+Infrastructure Modules (platform):
+  - shell, ui, core-api, ts-schema, orchestration (active)
+  - events, auth, billing, brief (planned)
 
-All paths resolve to: `docs/{category}/{subcategory}/{module}/`
+Strategic Containers (user-facing categories):
+  - strategy, marketing, sales, finance, operations, team, legal
+```
 
 ### Structure
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Module registry v2.0 (SINGLE SOURCE OF TRUTH)
-├── platform/                   # META CATEGORY: Core infrastructure
-│   ├── orchestration/          # Sub-category: Cross-cutting, big picture
-│   ├── infrastructure/         # Sub-category: Events, auth, billing (planned)
-│   ├── frontend/               # Sub-category: User interface layer
-│   │   ├── shell/              # Module: apps/shell
-│   │   └── ui/                 # Module: packages/ui
-│   ├── backend/                # Sub-category: API and services
-│   │   └── core-api/           # Module: services/core-api
-│   └── shared/                 # Sub-category: Cross-module contracts
-│       └── ts-schema/          # Module: packages/ts-schema
-├── marketing/                  # Future (renamed from "brand")
+├── manifest.yaml               # Module registry v4.0 (SINGLE SOURCE OF TRUTH)
+│
+├── platform/                   # META CONTAINER (Constitution + Infrastructure)
+│   ├── prd.md                  # CONSTITUTION: System PRD
+│   ├── architecture.md         # CONSTITUTION: System Architecture
+│   ├── ux-design.md            # CONSTITUTION: System UX Principles
+│   ├── epics.md                # CONSTITUTION: Cross-cutting Epics
+│   ├── product-brief.md        # CONSTITUTION: Foundational Vision
+│   │
+│   ├── shell/                  # INFRASTRUCTURE MODULE (apps/shell)
+│   ├── ui/                     # INFRASTRUCTURE MODULE (packages/ui)
+│   ├── core-api/               # INFRASTRUCTURE MODULE (services/core-api)
+│   ├── ts-schema/              # INFRASTRUCTURE MODULE (packages/ts-schema)
+│   └── orchestration/          # INFRASTRUCTURE MODULE (cross-cutting)
+│
+├── strategy/                   # STRATEGIC CONTAINER (planned)
+├── marketing/                  # STRATEGIC CONTAINER (planned)
 └── {other-categories}/         # Future
 ```
 
@@ -59,17 +66,21 @@ docs/
 Use the provided scripts:
 
 ```bash
-# Modules (within sub-categories)
-./scripts/add-module.sh <category> <subcategory> <module>
-./scripts/remove-module.sh <category> <subcategory> <module>
+# Platform Infrastructure Modules (flat structure)
+./scripts/add-module.sh platform events
+./scripts/remove-module.sh platform events
 
-# Sub-categories
-./scripts/add-subcategory.sh <category> <subcategory> "<purpose>" [--meta]
-./scripts/remove-subcategory.sh <category> <subcategory>
+# Strategic Containers (categories)
+./scripts/add-category.sh analytics "Business Intelligence"
+./scripts/remove-category.sh analytics
 
-# Categories (rare)
-./scripts/add-category.sh <category> "<purpose>"
-./scripts/remove-category.sh <category>
+# Coordination Units (subcategories)
+./scripts/add-subcategory.sh strategy copilot "AI strategy conversations"
+./scripts/remove-subcategory.sh strategy copilot
+
+# Business Modules (within coordination units)
+./scripts/add-module.sh strategy copilot advisor
+./scripts/remove-module.sh strategy copilot advisor
 ```
 
 These scripts maintain `docs/manifest.yaml` as the single source of truth.
@@ -114,20 +125,32 @@ pnpm run build                         # Build all packages
 |----------|----------|
 | Hub | `docs/index.md` |
 | Manifest | `docs/manifest.yaml` |
-| Architecture | `docs/platform/orchestration/architecture.md` |
+| **Constitution PRD** | `docs/platform/prd.md` |
+| **Architecture** | `docs/platform/architecture.md` |
 | Deployment | `docs/platform/orchestration/deployment-plan.md` |
 | Incidents | `docs/platform/orchestration/incident-response.md` |
 
 ## Governance Rules
 
-### Orchestration Document Changes
+### Constitution Changes
 
-**Any change to orchestration-level documents requires explicit flagging and rationale.**
+**Any change to Constitution documents requires explicit flagging and rationale.**
 
-Protected documents (in `docs/platform/orchestration/`):
-- `prd.md`, `architecture.md` (includes Module Roadmap), `epics.md`, `product-brief.md`
+Protected documents (in `docs/platform/`):
+- `prd.md` — System PRD (PR-xxx, IC-xxx)
+- `architecture.md` — System Architecture
+- `ux-design.md` — System UX Principles
+- `epics.md` — Cross-cutting Epics
+- `product-brief.md` — Foundational Vision
 
 When modifying these files:
 1. Flag the change in your response
 2. Provide rationale explaining why
 3. Include rationale in commit message
+
+### Zero-Trust Inheritance
+
+All entities inherit from their **direct parent only**:
+- Children expose work upward, parents curate what's shared
+- No skip-level visibility
+- Each level can ADD requirements but NEVER CONTRADICT parent

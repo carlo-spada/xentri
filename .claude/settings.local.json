@@ -165,7 +165,9 @@
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri status --porcelain)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri diff --stat HEAD)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri diff --name-only)",
-      "Bash(PROJECT_ROOT=/Users/carlo/Desktop/Projects/xentri ./scripts/sync-folders-from-manifest.sh:*)"
+      "Bash(PROJECT_ROOT=/Users/carlo/Desktop/Projects/xentri ./scripts/sync-folders-from-manifest.sh:*)",
+      "Bash(git rm:*)",
+      "Bash(git -C /Users/carlo/Desktop/Projects/xentri rm -rf:*)"
     ],
     "deny": [],
     "ask": []

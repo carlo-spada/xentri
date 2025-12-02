@@ -15,73 +15,91 @@
 
 ## 2. Documentation Navigation
 
-### Module Context Selection
+### Five Entity Types Model
 
-At session start, determine which area you're working on:
+Documentation follows a **Five Entity Types** model (not levels). Entity type is determined by **PURPOSE**, not depth.
+
+| Entity Type | Path Pattern | PRD Focus | Example |
+|-------------|--------------|-----------|---------|
+| **Constitution** | `docs/platform/*.md` | PR/IC, system constraints | `docs/platform/prd.md` |
+| **Infrastructure Module** | `docs/platform/{module}/` | Implementation, interfaces | `docs/platform/core-api/prd.md` |
+| **Strategic Container** | `docs/{category}/` | Strategic alignment | `docs/strategy/prd.md` |
+| **Coordination Unit** | `docs/{category}/{subcat}/` | Module orchestration | `docs/strategy/pulse/prd.md` |
+| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | Feature FRs | `docs/strategy/pulse/dashboard/prd.md` |
+
+### Entity Type Detection
+
+At session start, determine which entity you're working on:
 
 ```
-Categories → Sub-categories:
-1. platform (meta)
-   - orchestration (cross-cutting, big picture)
-   - infrastructure (events, auth, billing, brief) - planned
-   - frontend (shell, ui)
-   - backend (core-api)
-   - shared (ts-schema)
-2. strategy (future)
-3. marketing (future) — formerly "brand"
-4. sales, finance, operations, team, legal (future)
+Entity Type Detection (by path pattern):
+  docs/platform/*.md              → Constitution
+  docs/platform/{module}/         → Infrastructure Module
+  docs/{category}/                → Strategic Container
+  docs/{category}/{subcat}/       → Coordination Unit
+  docs/{cat}/{subcat}/{module}/   → Business Module
+
+Infrastructure Modules (platform):
+  - shell, ui, core-api, ts-schema, orchestration (active)
+  - events, auth, billing, brief (planned)
+
+Strategic Containers (user-facing categories):
+  - strategy, marketing, sales, finance, operations, team, legal
 ```
 
-Store selection and resolve paths to: `docs/{category}/{subcategory}/{module}/`
+Store selection as `{entity_type}/{path}` and resolve paths accordingly.
 
 ### Documentation Structure
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Machine-readable module registry (v2.0)
-├── platform/                   # META CATEGORY: Core infrastructure
-│   ├── orchestration/          # Sub-category: Cross-cutting, big picture
-│   │   ├── architecture.md
-│   │   ├── prd.md
-│   │   ├── epics.md
-│   │   └── sprint-artifacts/
-│   ├── infrastructure/         # Sub-category: Events, auth, billing (planned)
-│   ├── frontend/               # Sub-category: User interface layer
-│   │   ├── shell/              # Module: Astro container (apps/shell)
-│   │   └── ui/                 # Module: Component library (packages/ui)
-│   ├── backend/                # Sub-category: API and services
-│   │   └── core-api/           # Module: Primary API (services/core-api)
-│   └── shared/                 # Sub-category: Cross-module contracts
-│       └── ts-schema/          # Module: Types & schemas (packages/ts-schema)
-├── strategy/                   # Future
-├── marketing/                  # Future (renamed from "brand")
-└── ...                         # Other categories
+├── manifest.yaml               # Machine-readable registry (v4.0)
+│
+├── platform/                   # META CONTAINER (Constitution + Infrastructure)
+│   ├── prd.md                  # CONSTITUTION: System PRD (PR-xxx, IC-xxx)
+│   ├── architecture.md         # CONSTITUTION: System Architecture
+│   ├── ux-design.md            # CONSTITUTION: System UX Principles
+│   ├── epics.md                # CONSTITUTION: Cross-cutting Epics
+│   ├── product-brief.md        # CONSTITUTION: Foundational Vision
+│   │
+│   ├── shell/                  # INFRASTRUCTURE MODULE (apps/shell)
+│   ├── ui/                     # INFRASTRUCTURE MODULE (packages/ui)
+│   ├── core-api/               # INFRASTRUCTURE MODULE (services/core-api)
+│   ├── ts-schema/              # INFRASTRUCTURE MODULE (packages/ts-schema)
+│   └── orchestration/          # INFRASTRUCTURE MODULE (cross-cutting)
+│
+├── strategy/                   # STRATEGIC CONTAINER (planned)
+│   └── pulse/                  # COORDINATION UNIT
+│       └── god-view/           # BUSINESS MODULE
+├── marketing/                  # STRATEGIC CONTAINER (planned)
+└── ...                         # Other categories (sales, finance, operations, team, legal)
 ```
 
-Each module is a **full BMAD project** with its own:
-- README.md, prd.md, architecture.md, epics.md
-- sprint-artifacts/ folder with stories and status
+Each module has its own: README.md, prd.md, architecture.md, epics.md, sprint-artifacts/
 
 ### Module Management (IMPORTANT)
 
 **NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
 
-Use the provided scripts to manage the hierarchy:
+Use the provided scripts:
 
 ```bash
-# Add/remove modules (within a sub-category)
-./scripts/add-module.sh <category> <subcategory> <module>
-./scripts/add-module.sh platform infrastructure events
-./scripts/remove-module.sh <category> <subcategory> <module>
+# Platform Infrastructure Modules (flat structure - no subcategories)
+./scripts/add-module.sh platform events        # Adds docs/platform/events/
+./scripts/remove-module.sh platform events
 
-# Add/remove sub-categories
-./scripts/add-subcategory.sh <category> <subcategory> "<purpose>" [--meta]
-./scripts/remove-subcategory.sh <category> <subcategory>
+# Strategic Containers (categories)
+./scripts/add-category.sh analytics "Business Intelligence"
+./scripts/remove-category.sh analytics
 
-# Add/remove categories (rare)
-./scripts/add-category.sh <category> "<purpose>"
-./scripts/remove-category.sh <category>          # Must be empty first
+# Coordination Units (subcategories within strategic containers)
+./scripts/add-subcategory.sh strategy copilot "AI strategy conversations"
+./scripts/remove-subcategory.sh strategy copilot
+
+# Business Modules (within coordination units)
+./scripts/add-module.sh strategy copilot advisor  # Adds docs/strategy/copilot/advisor/
+./scripts/remove-module.sh strategy copilot advisor
 ```
 
 These scripts maintain `docs/manifest.yaml` (single source of truth), manage folder structures, and handle GitHub labels automatically.
@@ -144,19 +162,34 @@ pnpm run build                         # Build all packages
 
 - **NEVER SKIP AHEAD:** Do not perform tasks without explicit request
 - **VALIDATION ONLY:** When asked to validate, check existing files only
-- **MODULE CONTEXT:** Always determine which module before starting work
+- **ENTITY CONTEXT:** Always determine which entity type before starting work
 - **DOCUMENTATION:** See `docs/index.md` for complete navigation
 
 ## 8. Governance Rules
 
-### Orchestration Document Changes
+### Constitution Changes
 
-**Any change to orchestration-level documents requires explicit flagging and rationale.**
+**Any change to Constitution documents requires explicit flagging and rationale.**
 
-Protected documents (in `docs/platform/orchestration/`):
-- `prd.md`, `architecture.md` (includes Module Roadmap), `epics.md`, `product-brief.md`
+Protected documents (in `docs/platform/`):
+- `prd.md` — System PRD (PR-xxx, IC-xxx)
+- `architecture.md` — System Architecture
+- `ux-design.md` — System UX Principles
+- `epics.md` — Cross-cutting Epics
+- `product-brief.md` — Foundational Vision
 
 When modifying these files:
 1. Flag the change in your response
 2. Provide rationale explaining why
 3. Include rationale in commit message
+
+### Zero-Trust Inheritance
+
+All entities inherit from their **direct parent only** (no skip-level):
+- Children expose work upward, parents curate what's shared
+- Business Module → Coordination Unit PRD
+- Coordination Unit → Strategic Container PRD
+- Strategic Container → Constitution
+- Infrastructure Module → Constitution
+
+Each level can ADD requirements but NEVER CONTRADICT parent.

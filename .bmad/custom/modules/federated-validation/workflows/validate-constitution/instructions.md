@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Validate the System-level PRD (`docs/prd.md`) to ensure it properly serves as the Constitution for all categories.
+Validate the Constitution PRD (`docs/platform/prd.md`) to ensure it properly serves as the Constitution for all entities.
 
 ## Steps
 
 ### Step 1: Load Context
 
-1. Read the target file: `docs/prd.md`
+1. Read the target file: `docs/platform/prd.md`
 2. Load the checklist from: `.bmad/custom/modules/federated-validation/checklists/constitution-checklist.md`
 3. Check if `docs/manifest.yaml` exists (for cross-reference)
 
@@ -18,19 +18,19 @@ Check the YAML frontmatter at the top of the file:
 
 ```yaml
 ---
-level: system              # MUST be "system"
-doc_type: constitution     # MUST be "constitution"
+entity_type: constitution  # MUST be "constitution"
+doc_type: prd              # MUST be "prd"
 title: "..."               # Should include "Constitution" or "System PRD"
 ---
 ```
 
 **Pass criteria:**
-- `level: system` is present
-- `doc_type: constitution` is present
+- `entity_type: constitution` is present
+- `doc_type: prd` is present
 
 **Fail criteria:**
 - Missing frontmatter
-- Wrong level or doc_type
+- Wrong entity_type or doc_type
 
 ### Step 3: Validate Platform Requirements
 
@@ -82,7 +82,7 @@ Create a validation report at `docs/proposals/validation-reports/constitution-re
 # Constitution PRD Validation Report
 
 **Date:** {date}
-**Target:** docs/prd.md
+**Target:** docs/platform/prd.md
 **Status:** PASS | FAIL | PARTIAL
 
 ## Summary

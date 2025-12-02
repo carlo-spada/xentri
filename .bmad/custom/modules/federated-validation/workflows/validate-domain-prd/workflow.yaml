@@ -24,7 +24,7 @@ instructions: "{installed_path}/instructions.md"
 validation: "{project-root}/.bmad/custom/modules/federated-validation/checklists/domain-prd-checklist.md"
 
 # Constitution reference (for inheritance checking)
-constitution: "{project-root}/docs/prd.md"
+constitution: "{project-root}/docs/platform/prd.md"
 
 # Target file (determined by agent's level selection)
 target_file: "{output_folder_resolved}/prd.md"
@@ -37,9 +37,9 @@ default_output_file: "{project-root}/docs/proposals/validation-reports/domain-pr
 validation_rules:
   frontmatter:
     required_fields:
-      - level: ["category", "subcategory", "module"]
-      - doc_type: "domain_prd"
-      - parent: "docs/prd.md"
+      - entity_type: ["infrastructure_module", "strategic_container", "coordination_unit", "business_module"]
+      - doc_type: "prd"
+      - parent: "docs/platform/prd.md"
 
   content:
     must_contain:

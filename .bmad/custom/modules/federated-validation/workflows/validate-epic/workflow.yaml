@@ -24,7 +24,7 @@ instructions: "{installed_path}/instructions.md"
 validation: "{project-root}/.bmad/custom/modules/federated-validation/checklists/epic-checklist.md"
 
 # References
-constitution: "{project-root}/docs/prd.md"
+constitution: "{project-root}/docs/platform/prd.md"
 
 # Target file (determined by agent's level selection)
 # For system epics: docs/epics.md

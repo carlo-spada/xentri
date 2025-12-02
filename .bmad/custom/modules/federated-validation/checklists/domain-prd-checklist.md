@@ -1,13 +1,13 @@
-# Domain PRD Validation Checklist
+# Entity PRD Validation Checklist
 
-> For validating Category/Subcategory/Module PRDs (Levels 1-3)
+> For validating Infrastructure Module, Strategic Container, Coordination Unit, and Business Module PRDs
 
 ## 1. Document Structure
 
 ### Frontmatter
-- [ ] `level` present and matches file location (category | subcategory | module)
-- [ ] `doc_type: domain_prd` present
-- [ ] `parent: docs/prd.md` present (references Constitution)
+- [ ] `entity_type` present and matches one of: `infrastructure_module | strategic_container | coordination_unit | business_module`
+- [ ] `doc_type: prd` present
+- [ ] `parent: docs/platform/prd.md` present (references Constitution)
 - [ ] `scope` defined (used for FR-{SCOPE}-xxx prefix)
 
 ### Required Sections

@@ -88,9 +88,9 @@ so that **I have a private, fully-configured workspace for my business data**.
 
 ### Architecture Constraints
 
-- **Clerk-First:** Org creation is triggered by Clerk webhook, not direct API call [Source: docs/architecture.md#Auth-Patterns]
-- **Event Backbone:** All provisioning actions emit events to `system_events` [Source: docs/architecture.md#ADR-002]
-- **RLS Enforcement:** New tables must have fail-closed RLS policies [Source: docs/architecture.md#ADR-003]
+- **Clerk-First:** Org creation is triggered by Clerk webhook, not direct API call [Source: docs/platform/architecture.md#Auth-Patterns]
+- **Event Backbone:** All provisioning actions emit events to `system_events` [Source: docs/platform/architecture.md#ADR-002]
+- **RLS Enforcement:** New tables must have fail-closed RLS policies [Source: docs/platform/architecture.md#ADR-003]
 - **Idempotency:** Webhook handlers must be idempotent per Clerk retry behavior [Source: docs/sprint-artifacts/1-3-user-authentication-signup.md#Edge-Cases]
 
 ### Technical Specifications
@@ -163,7 +163,7 @@ interface OrgProvisionedPayload {
 }
 ```
 
-[Source: docs/architecture.md#ADR-002]
+[Source: docs/platform/architecture.md#ADR-002]
 
 ### Project Structure Notes
 
@@ -234,9 +234,9 @@ packages/ts-schema/src/index.ts                 (export orgs)
 
 ### References
 
-- [Source: docs/architecture.md#ADR-003] - Multi-Tenant Security (RLS & Context)
-- [Source: docs/architecture.md#Auth-Patterns] - Clerk Organizations
-- [Source: docs/epics.md#Story-1.4] - Acceptance criteria
+- [Source: docs/platform/architecture.md#ADR-003] - Multi-Tenant Security (RLS & Context)
+- [Source: docs/platform/architecture.md#Auth-Patterns] - Clerk Organizations
+- [Source: docs/platform/epics.md#Story-1.4] - Acceptance criteria
 - [Source: docs/sprint-artifacts/tech-spec-epic-1.md] - Epic Technical Specification
 - [Source: docs/sprint-artifacts/1-3-user-authentication-signup.md] - Previous story context
 
