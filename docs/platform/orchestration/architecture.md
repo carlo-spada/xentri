@@ -13,7 +13,7 @@ Xentri is a **Fractal Business Operating System** orchestrated by a hierarchical
 | Principle | Description |
 |-----------|-------------|
 | **Decoupled Unity** | Eg. Unified Shell (Astro) for seamless UX; isolated Micro-Apps (React), Tool Services (Node.js), and Agent Services (Python) for technical independence |
-| **Event-Driven Backbone** | Services communicate via immutable events through Redis/n8n—no direct coupling; new modules integrate without rewrites |
+| **Event-Driven Backbone** | Services communicate via immutable events through Redis—no direct coupling; new modules integrate without rewrites |
 | **Multi-Tenancy by Design** | Single Postgres cluster with RLS enforces "Client Zero" data isolation from day one |
 | **Reality-In Data** | Ingest messy inputs (voice, text) and progressively structure them—no rigid forms upfront |
 
@@ -33,7 +33,6 @@ We employ a **Monorepo** structure managed by **Turborepo**.
 | **Agent Layer** | **Python** | **Reasoning & Intelligence.** Powers the ~42 complex Agents (7 Category Co-pilots + 35 Sub-Category Agents). |
 | **Data** | **Postgres** | Single cluster with **RLS** for multi-tenancy. |
 | **Events** | **Redis** | The "Nervous System" transport layer for high-volume synchronization. |
-| **Orchestration** | **n8n** | Self-hosted workflow engine for complex business logic and integrations. |
 
 ### Decision Summary Table
 
@@ -46,7 +45,6 @@ We employ a **Monorepo** structure managed by **Turborepo**.
 | AuthN/AuthZ | Clerk + JWT cookies | @clerk/fastify 3.x / @clerk/astro 1.x | Delegates identity with native Organizations support; email/OAuth/SSO; multi-tenant JWT claims (org_id, role) out of the box. |
 | Billing/Subscriptions | Clerk Billing (Stripe-backed) | Clerk Billing 1.x | Unified auth+billing; subscriptions tied to Clerk Organizations; supports module-based pricing model. (v0.4 scope) |
 | Events & Transport | Postgres `system_events` log + Upstash Redis Streams | Upstash Redis (managed) | Durable source-of-truth log with pay-per-request streaming; scales from zero to millions. |
-| Orchestration | n8n (self-hosted) | n8n 1.121.2 | Visual workflows and retries; separates business logic from app code. |
 | File/Object Storage | S3-compatible blobs (prod: AWS S3, local: MinIO) | MinIO 8.0.6 client (server RELEASE.2024-09-30) | Presigned uploads for media/assets; CDN-friendly and infra-portable. |
 | Deployment Target | Managed Kubernetes | k8s 1.31.0 | Standardized runtime for services, HPA-ready, secrets and ingress consistency. |
 | Observability | OpenTelemetry traces + Pino JSON logs to Loki/Grafana | OTel SDK 1.9.0 / Pino 10.1.0 | Trace propagation across shell/services; structured logs for debugging. |
@@ -90,9 +88,8 @@ graph TD
 
     subgraph "The Nervous System (Async)"
         Svc3 -->|Event: xentri.brief.updated| Redis[Redis Streams]
-        Redis -->|Transport| N8N[n8n Workflow Engine]
-        N8N -->|Trigger| Svc1
-        N8N -->|Trigger| Svc2
+        Redis -->|Trigger| Svc1
+        Redis -->|Trigger| Svc2
     end
 ```
 
@@ -204,6 +201,13 @@ USING (
     * **Access:** Load-Heavy. Injected into every LLM context.
 
 **Implication:** We need a background "Dreaming" process (Python) that runs nightly to compress Episodes into Synthetic Memory (e.g., "Client X prefers email over phone").
+
+**Dreaming Process Specification:**
+
+* **Trigger:** Nightly Cron job (02:00 local time) managed by the Category Copilot.
+* **Resilience:**
+  * **Retry:** 3 retries with exponential backoff.
+  * **Failure:** If all retries fail, emit a P3 incident alert to the Event Spine. The system continues to function with "stale" Synthetic Memory until the next successful run.
 
 ### ADR-007: Federated Soul Registry
 
@@ -419,9 +423,10 @@ interface CopilotContext {
 **Notification Badge Logic:**
 
 Badge shows count of:
-- Unread copilot suggestions for current scope
-- Pending recommendations awaiting user action
-- Clears on widget open
+
+* Unread copilot suggestions for current scope
+* Pending recommendations awaiting user action
+* Clears on widget open
 
 **Implication:** Shell must track navigation context and pass it to the widget. Copilot services must support both streaming (quick) and full conversation (stateful) modes.
 
@@ -466,7 +471,6 @@ Standard headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Res
 | **Agent service crash** | "Your assistant is temporarily unavailable. You can continue working—changes will sync when they return." | Tools remain functional; copilot endpoints return 503 without time estimate |
 | **Redis down** | "Syncing paused. Changes will sync when connection restores." | Events queue locally in service; write-through to Postgres; reconnect with exponential backoff |
 | **Postgres read replica lag** | Transparent to user | Route reads to primary for critical paths |
-| **n8n queue backed up** | "Background tasks delayed. We'll catch up." | Dashboard shows queue depth; DLQ for failures |
 
 **Principle:** Tools must never depend on Agents to function. Events may delay, but CRUD must work.
 
@@ -498,6 +502,13 @@ Standard headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Res
 ├── /services
 │   ├── /core-api            # Node.js: Auth, Orgs, Billing
 │   ├── /strategy-copilot    # [NEW] Python: Strategy Agent
+│   │   ├── /src
+│   │   │   ├── /agent       # Agent definition (LangGraph)
+│   │   │   ├── /tools       # Agent tools
+│   │   │   ├── /memory      # Memory interfaces
+│   │   │   └── /api         # (Fast)API routes
+│   │   ├── /tests
+│   │   └── pyproject.toml
 │   └── /brand-copilot       # [NEW] Python: Brand Agent
 └── /docs                    # Documentation
 ```
@@ -594,49 +605,6 @@ spec:
 
 **Sticky Sessions:** For socket.io, ensure `upstream-hash-by` routes same client to same pod.
 
-### n8n Worker Deployment (legacy?)
-
-n8n runs in **Queue Mode** with separate main and worker processes:
-
-```yaml
-# n8n-worker deployment spec
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: n8n-worker
-spec:
-  replicas: 2  # Scale based on queue depth
-  template:
-    spec:
-      containers:
-        - name: n8n-worker
-          image: n8nio/n8n:1.121.2
-          env:
-            - name: EXECUTIONS_MODE
-              value: "queue"
-            - name: QUEUE_BULL_REDIS_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: redis-credentials
-                  key: host
-            - name: N8N_ENCRYPTION_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: n8n-secrets
-                  key: encryption-key
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "512Mi"
-            limits:
-              cpu: "1000m"
-              memory: "2Gi"
-```
-
-**Scaling:** HPA based on Redis queue depth metric. Target: <100 pending jobs.
-
-**Security:** `N8N_ENCRYPTION_KEY` is the crown jewel—rotate quarterly, never log.
-
 ### Deployment Target (GCP Native)
 
 We standardize on **Google Cloud Platform (GCP)** for the "Client Zero" implementation.
@@ -667,7 +635,6 @@ We standardize on **Google Cloud Platform (GCP)** for the "Client Zero" implemen
 |------------|-----------|
 | **Docker-first** | All services via Dockerfile—no Nixpacks. Ensures K8s portability. |
 | **Redis with Volume** | Streams require persistence. Pin version ≥7.x. |
-| **n8n Queue Mode** | Separate main + worker services. `N8N_ENCRYPTION_KEY` is crown jewel. |
 
 ### Testing Strategy
 
@@ -772,7 +739,7 @@ corepack enable
 pnpm install
 
 # Start data plane locally
-docker compose up -d postgres redis n8n minio
+docker compose up -d postgres redis minio
 
 # Dev servers (run in parallel shells)
 pnpm run dev --filter apps/shell
@@ -861,7 +828,7 @@ We prioritize **Indirect Communication** (Stigmergy/Events) to decouple the 175+
 
 * **Loading/Error UX:** Skeletons for primary content; inline errors with retry; toast only for non-blocking notices.
 * **Retries:** Client retries idempotent GETs with backoff; mutations rely on server idempotency keys.
-* **Background Jobs:** n8n flows must be idempotent; retries with exponential backoff; dead-letter to `redis:stream:dlq`.
+* **Background Jobs:** Event handlers must be idempotent; retries with exponential backoff; dead-letter to `redis:stream:dlq`.
 
 ### H. Offline & Sync Patterns
 

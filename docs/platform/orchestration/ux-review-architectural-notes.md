@@ -186,4 +186,88 @@ Conventional cards/lists for power users who need density and quick scanning.
 
 ---
 
+## 8. Theme Architecture
+
+**Decision:** Multiple themes with dark/light modes, implemented via CSS custom properties.
+
+### MVP Themes
+
+| Theme | Modes | Description |
+|-------|-------|-------------|
+| **Modern** | Dark, Light | Conversational, gradient accents, immersive, chat-like copilot |
+| **Power** | Dark, Light | Dense, high-contrast, minimal chrome, speed-focused |
+
+### Future Themes
+
+| Theme | Modes | Description |
+|-------|-------|-------------|
+| **Traditional** | Dark, Light | Professional clarity, balanced, warm but businesslike |
+
+### Implementation Approach
+
+```css
+/* Theme tokens - one source, multiple themes */
+:root {
+  /* Base tokens (theme-agnostic) */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+
+  /* Theme-specific tokens (overridden per theme) */
+  --color-primary: var(--theme-primary);
+  --color-surface: var(--theme-surface);
+  --color-text: var(--theme-text);
+  --font-body: var(--theme-font-body);
+  --density: var(--theme-density); /* compact | comfortable */
+}
+
+[data-theme="modern-dark"] {
+  --theme-primary: #e879f9;
+  --theme-surface: #1c1921;
+  --theme-density: comfortable;
+}
+
+[data-theme="power-dark"] {
+  --theme-primary: #06b6d4;
+  --theme-surface: #09090b;
+  --theme-density: compact;
+}
+```
+
+### User Preference Storage
+
+- Theme preference stored in user settings table
+- Default: Modern Dark
+- Brief-aware suggestion: Copilot can recommend theme based on business type
+  - Tech startups → Modern
+  - Professional services → Traditional (when available)
+  - Power users (based on usage patterns) → Power
+
+### Architectural Implications
+
+- All UI components must use theme tokens, never hardcoded colors
+- Tailwind config extends with theme-aware utilities
+- Theme switcher component in Settings
+- Theme persisted per user (not per org - personal preference)
+
+---
+
+## Action Items (Updated)
+
+1. [ ] Winston: Review and integrate Hierarchical Pulse requirement into architecture.md
+2. [ ] Winston: Define Pulse data structure in ts-schema (including narrative fields)
+3. [ ] Winston: Define Story Arc data structure in ts-schema
+4. [ ] Winston: Add session bridging / recap logic to architecture
+5. [ ] Winston: Add theme token architecture to frontend patterns
+6. [ ] Carlo: Review and confirm these decisions align with product vision
+7. [ ] Update PRD "User Experience Principles" section with:
+   - No-scroll constraint
+   - Chronicle-first philosophy
+   - Narrative Continuity as core differentiator
+   - Theme options (Modern, Power, Traditional-future)
+8. [ ] Add Pulse API endpoints to platform integration requirements
+9. [ ] Add Story Arc API endpoints to platform integration requirements
+10. [ ] Define theme token system in packages/ui
+
+---
+
 *This document was generated during the UX Design Direction Workshop (2025-12-01) and should be archived after integration.*
