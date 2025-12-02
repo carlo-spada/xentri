@@ -1,12 +1,64 @@
+# Federated Validation Module
+# Validates documents against the 4-level Federated Requirements Model
+
 name: federated-validation
-description: Workflows and checklists for validating the Federated Requirements Model
-version: 1.0.0
+description: "Workflows and checklists for validating the Federated Requirements Model (4-level hierarchy: System → Category → Subcategory → Module)"
+version: 1.1.0
 author: BMad Builder
-components:
-  workflows:
-    - workflows/validate-constitution.md
-    - workflows/validate-domain-prd.md
+status: stable
+
+# Dependencies
+requires:
+  - bmm  # Base BMM workflows
+
+# What this module provides
+provides:
   checklists:
-    - checklists/constitution-checklist.md
-    - checklists/domain-prd-checklist.md
-    - checklists/epic-checklist.md
+    - name: constitution-checklist
+      path: checklists/constitution-checklist.md
+      purpose: "Validate System-level PRD (Level 0)"
+      validates: "docs/prd.md"
+
+    - name: domain-prd-checklist
+      path: checklists/domain-prd-checklist.md
+      purpose: "Validate Category/Subcategory/Module PRDs (Levels 1-3)"
+      validates: "docs/{category}/**/*prd.md"
+
+    - name: epic-checklist
+      path: checklists/epic-checklist.md
+      purpose: "Validate Epic breakdowns with traceability"
+      validates: "docs/**/epics.md"
+
+  workflows:
+    - name: validate-constitution
+      path: workflows/validate-constitution/workflow.yaml
+      purpose: "Full validation of System PRD"
+      trigger: "Manual or on docs/prd.md changes"
+
+    - name: validate-domain-prd
+      path: workflows/validate-domain-prd/workflow.yaml
+      purpose: "Full validation of Domain PRDs"
+      trigger: "Manual or on domain PRD changes"
+
+    - name: validate-epic
+      path: workflows/validate-epic/workflow.yaml
+      purpose: "Validate epic with traceability matrix"
+      trigger: "Manual or on epics.md changes"
+
+  templates:
+    - name: validation-report
+      path: templates/validation-report.md
+      purpose: "Standard format for validation reports"
+
+# Integration notes
+integration:
+  manifest_reference: "docs/manifest.yaml"
+  frontmatter_fields:
+    - level: "system | category | subcategory | module"
+    - doc_type: "constitution | domain_prd | epic | architecture | ux-design"
+    - parent: "path/to/parent/prd.md (for levels 1-3)"
+
+  naming_conventions:
+    platform_requirement: "PR-xxx"
+    integration_contract: "IC-xxx"
+    functional_requirement: "FR-{SCOPE}-xxx"

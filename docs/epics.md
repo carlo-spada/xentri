@@ -24,6 +24,46 @@ This document tracks the implementation roadmap for Xentri. Epic 1 (Foundation) 
 
 ---
 
+## Traceability Matrix
+
+This matrix maps Platform Requirements (PRs) and Integration Contracts (ICs) to the epics and stories that implement them.
+
+### Platform Requirements Coverage
+
+| Requirement | Description | Epic | Stories | Status |
+|-------------|-------------|------|---------|--------|
+| PR-001 | RLS + org_id on all tables | 1 | 1.1, 1.2, 1.4 | ✅ Complete |
+| PR-002 | Event emission with standard envelope | 1 | 1.2, 1.6 | ✅ Complete |
+| PR-003 | Auth required for all endpoints | 1 | 1.3 | ✅ Complete |
+| PR-004 | Brief access via API only | 2 | TBD | 🔄 Planned |
+| PR-005 | Permission checks on actions | 1 | 1.4 | ✅ Complete |
+| PR-006 | Audit logging | 1 | 1.2, 1.7 | ✅ Complete |
+| PR-007 | Error boundaries (graceful fail) | 1 | 1.5 | ✅ Complete |
+| PR-008 | Copilot adapts to Brief | 2 | TBD | 🔄 Planned |
+
+### Integration Contracts Coverage
+
+| Contract | Description | Epic | Stories | Status |
+|----------|-------------|------|---------|--------|
+| IC-001 | Event Envelope Schema | 1 | 1.2 | ✅ Complete |
+| IC-002 | Event Naming Convention | 1 | 1.2 | ✅ Complete |
+| IC-003 | Module Registration Manifest | 1 | 1.5 | ✅ Complete |
+| IC-004 | Brief Access API | 2 | TBD | 🔄 Planned |
+| IC-005 | Recommendation Protocol | 2 | TBD | 🔄 Planned |
+| IC-006 | Notification Delivery | 2+ | TBD | 🔄 Planned |
+| IC-007 | Permission Primitives | 1 | 1.4 | ✅ Complete |
+
+### Coverage Summary
+
+| Type | Total | Covered | Percentage |
+|------|-------|---------|------------|
+| Platform Requirements (PRs) | 8 | 6 | 75% |
+| Integration Contracts (ICs) | 7 | 4 | 57% |
+
+**Note:** Remaining PRs and ICs will be covered in Epic 2 (Strategy & Clarity Engine) and subsequent epics.
+
+---
+
 ## Epic 1: Foundation & Access (Complete)
 
 **Goal:** Establish the secure, multi-tenant shell, event backbone, and complete user access flow.

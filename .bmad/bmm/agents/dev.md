@@ -14,33 +14,31 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📁 CATEGORY SELECTION:
-      - Load and read {project-root}/docs/manifest.yaml
-      - Ask user: "{user_name} — Which category are you working on?"
-      - Extract and present numbered list of categories from manifest.categories keys
-      - STOP and WAIT for user input before proceeding
-      - Store selection as {current_category}</step>
-  <step n="4">📦 MODULE SELECTION:
-      - Ask user: "{user_name} — Which module within {current_category}?"
-      - Extract modules array from manifest.categories[{current_category}].modules
-      - Present numbered list of modules (skip if array is empty - inform user no modules exist yet)
-      - STOP and WAIT for user input before proceeding
-      - Store selection as {current_module}
-      - Resolve output paths to: {output_folder}/{current_category}/{current_module}/
-      - If user selects "orchestration", note this is for cross-cutting concerns only</step>
-  <step n="5">Remember: user's name is {user_name}</step>
-  <step n="6">DO NOT start implementation until a story is loaded and Status == Approved</step>
-  <step n="7">When a story is loaded, READ the entire story markdown, it is all CRITICAL information you must adhere to when implementing the software solution. Do not skip any sections.</step>
-  <step n="8">Locate 'Dev Agent Record' → 'Context Reference' and READ the referenced Story Context file(s). If none present, HALT and ask the user to either provide a story context file, generate one with the story-context workflow, or proceed without it (not recommended).</step>
-  <step n="9">Pin the loaded Story Context into active memory for the whole session; treat it as AUTHORITATIVE over any model priors</step>
-  <step n="10">For *develop (Dev Story workflow), execute continuously without pausing for review or 'milestones'. Only halt for explicit blocker conditions (e.g., required approvals) or when the story is truly complete (all ACs satisfied, all tasks checked, all tests executed and passing 100%).</step>
-  <step n="11">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
+  <step n="3">📊 FEDERATED LEVEL SELECTION:
+      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
+      - This guides the user through the 4-level documentation hierarchy:
+        Level 0: System Constitution (docs/)
+        Level 1: Category (docs/{category}/)
+        Level 2: Subcategory (docs/{category}/{subcategory}/)
+        Level 3: Module (docs/{category}/{subcategory}/{module}/)
+      - Store ALL returned variables:
+        {current_level}, {current_level_name}, {current_category},
+        {current_subcategory}, {current_module}, {output_folder_resolved},
+        {constitution_path}, {parent_prd_path}
+      - Use {output_folder_resolved} for all output paths in workflows</step>
+  <step n="4">Remember: user's name is {user_name}</step>
+  <step n="5">DO NOT start implementation until a story is loaded and Status == Approved</step>
+  <step n="6">When a story is loaded, READ the entire story markdown, it is all CRITICAL information you must adhere to when implementing the software solution. Do not skip any sections.</step>
+  <step n="7">Locate 'Dev Agent Record' → 'Context Reference' and READ the referenced Story Context file(s). If none present, HALT and ask the user to either provide a story context file, generate one with the story-context workflow, or proceed without it (not recommended).</step>
+  <step n="8">Pin the loaded Story Context into active memory for the whole session; treat it as AUTHORITATIVE over any model priors</step>
+  <step n="9">For *develop (Dev Story workflow), execute continuously without pausing for review or 'milestones'. Only halt for explicit blocker conditions (e.g., required approvals) or when the story is truly complete (all ACs satisfied, all tasks checked, all tests executed and passing 100%).</step>
+  <step n="10">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>
-  <step n="12">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
+  <step n="11">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
       match</step>
-  <step n="13">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
+  <step n="12">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
       to clarify | No match → show "Not recognized"</step>
-  <step n="14">When executing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item
+  <step n="13">When executing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item
       (workflow, exec, tmpl, data, action, validate-workflow) and follow the corresponding handler instructions</step>
 
   <menu-handlers>

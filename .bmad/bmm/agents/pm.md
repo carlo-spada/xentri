@@ -14,29 +14,27 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📁 CATEGORY SELECTION:
-      - Load and read {project-root}/docs/manifest.yaml
-      - Ask user: "{user_name} — Which category are you working on?"
-      - Extract and present numbered list of categories from manifest.categories keys
-      - STOP and WAIT for user input before proceeding
-      - Store selection as {current_category}</step>
-  <step n="4">📦 MODULE SELECTION:
-      - Ask user: "{user_name} — Which module within {current_category}?"
-      - Extract modules array from manifest.categories[{current_category}].modules
-      - Present numbered list of modules (skip if array is empty - inform user no modules exist yet)
-      - STOP and WAIT for user input before proceeding
-      - Store selection as {current_module}
-      - Resolve output paths to: {output_folder}/{current_category}/{current_module}/
-      - If user selects "orchestration", note this is for cross-cutting concerns only</step>
-  <step n="5">Remember: user's name is {user_name}</step>
+  <step n="3">📊 FEDERATED LEVEL SELECTION:
+      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
+      - This guides the user through the 4-level documentation hierarchy:
+        Level 0: System Constitution (docs/)
+        Level 1: Category (docs/{category}/)
+        Level 2: Subcategory (docs/{category}/{subcategory}/)
+        Level 3: Module (docs/{category}/{subcategory}/{module}/)
+      - Store ALL returned variables:
+        {current_level}, {current_level_name}, {current_category},
+        {current_subcategory}, {current_module}, {output_folder_resolved},
+        {constitution_path}, {parent_prd_path}
+      - Use {output_folder_resolved} for all output paths in workflows</step>
+  <step n="4">Remember: user's name is {user_name}</step>
 
-  <step n="6">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
+  <step n="5">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>
-  <step n="7">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
+  <step n="6">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
       match</step>
-  <step n="8">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
+  <step n="7">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
       to clarify | No match → show "Not recognized"</step>
-  <step n="9">When executing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item
+  <step n="8">When executing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item
       (workflow, exec, tmpl, data, action, validate-workflow) and follow the corresponding handler instructions</step>
 
   <menu-handlers>
@@ -88,6 +86,9 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Create Product Requirements Document (PRD)</item>
     <item cmd="*create-epics-and-stories" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics-and-stories/workflow.yaml">Break PRD requirements into implementable epics and stories</item>
     <item cmd="*validate-prd" validate-workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Validate PRD + Epics + Stories completeness and quality</item>
+    <item cmd="*validate-constitution" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-constitution/workflow.yaml">Validate System Constitution (Level 0 PRD with PRs and ICs)</item>
+    <item cmd="*validate-domain-prd" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-domain-prd/workflow.yaml">Validate Domain PRD (Category/Subcategory/Module level)</item>
+    <item cmd="*validate-epic" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-epic/workflow.yaml">Validate Epic with Traceability Matrix</item>
     <item cmd="*tech-spec" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Create Tech Spec (Simple work efforts, no PRD or Architecture docs)</item>
     <item cmd="*validate-tech-spec" validate-workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Validate Technical Specification Document</item>
     <item cmd="*correct-course" workflow="{project-root}/.bmad/bmm/workflows/4-implementation/correct-course/workflow.yaml">Course Correction Analysis</item>

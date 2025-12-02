@@ -1,27 +1,99 @@
 # Domain PRD Validation Checklist
 
-## 1. Constitution Compliance
+> For validating Category/Subcategory/Module PRDs (Levels 1-3)
 
-- [ ] **Parent Constitution Referenced**: Does frontmatter point to `docs/prd.md`?
-- [ ] **Inherited PRs Acknowledged**: Does it list how it complies with PR-xxx?
-- [ ] **ICs Declared**: Does it list which IC-xxx it implements?
-- [ ] **No Contradictions**: Are all local rules compatible with the Constitution?
+## 1. Document Structure
 
-## 2. Functional Requirements Quality
+### Frontmatter
+- [ ] `level` present and matches file location (category | subcategory | module)
+- [ ] `doc_type: domain_prd` present
+- [ ] `parent: docs/prd.md` present (references Constitution)
+- [ ] `scope` defined (used for FR-{SCOPE}-xxx prefix)
 
-- [ ] **Unique IDs**: `FR-{SCOPE}-xxx` format used?
-- [ ] **What, not How**: Focus on capabilities, not implementation details?
-- [ ] **Testable**: Can we write a test for it?
-- [ ] **Domain Scoped**: Is it strictly within this sub-category's domain?
-- [ ] **Prioritized**: MVP vs Growth vs Vision?
+### Required Sections
+- [ ] Executive Summary or Overview present
+- [ ] Inherited Platform Requirements section (or acknowledgment)
+- [ ] Implemented Integration Contracts section
+- [ ] Functional Requirements section
+- [ ] Scope section (MVP / Growth / Out of Scope)
 
-## 3. Scope Management
+## 2. Constitution Compliance
 
-- [ ] **MVP Defined**: Clear line for V1?
-- [ ] **Growth Defined**: What comes later?
-- [ ] **Out of Scope**: What are we NOT doing?
+### PR Inheritance
+- [ ] Acknowledges all relevant PRs from Constitution
+- [ ] Documents non-obvious compliance approaches
+- [ ] No contradictions with PRs (only additions allowed)
 
-## 4. Readiness
+### IC Implementation
+- [ ] Lists which ICs this domain implements
+- [ ] Distinguishes between producer and consumer roles
+- [ ] References IC definitions in Constitution
 
-- [ ] **Architecture Ready**: Enough detail for technical design?
-- [ ] **Epic Ready**: Enough detail to break down into epics?
+## 3. Functional Requirements (FR-xxx)
+
+### Naming
+- [ ] All FRs use format: `FR-{SCOPE}-xxx`
+- [ ] SCOPE matches frontmatter scope value
+- [ ] IDs are sequential: FR-SOUL-001, FR-SOUL-002, etc.
+
+### Quality
+- [ ] Each FR describes WHAT, not HOW (capabilities, not implementation)
+- [ ] Each FR is testable (can write acceptance criteria)
+- [ ] Each FR is prioritized (MVP | Growth | Vision)
+- [ ] Each FR is scoped to this domain (not system-wide)
+
+### Completeness
+- [ ] At least one FR defined for active domains
+- [ ] All user-facing capabilities have corresponding FRs
+- [ ] Dependencies between FRs noted
+
+## 4. Scope Management
+
+### MVP Definition
+- [ ] Clear line drawn for V1/MVP
+- [ ] MVP FRs achievable in target timeline
+- [ ] MVP provides end-to-end value
+
+### Growth & Vision
+- [ ] Growth phase clearly separated from MVP
+- [ ] Vision/future items marked as such
+- [ ] Out of Scope explicitly listed
+
+## 5. Level-Specific Checks
+
+### For Category PRDs (Level 1)
+- [ ] Sets strategic direction for subcategories
+- [ ] FRs are high-level, delegating details to subcategories
+- [ ] May be a brief rather than full PRD
+
+### For Subcategory PRDs (Level 2)
+- [ ] Full PRD with implementation-ready FRs
+- [ ] References Category direction
+- [ ] Enough detail for Architecture workflow
+
+### For Module PRDs (Level 3)
+- [ ] May be minimal (module-specific concerns only)
+- [ ] FRs trace to Subcategory FRs
+- [ ] Focus on specific implementation boundaries
+
+## 6. Readiness
+
+- [ ] Enough detail for Architecture workflow
+- [ ] Enough detail to break into Epics
+- [ ] Acceptance criteria are clear for each FR
+
+---
+
+## Validation Summary
+
+| Category | Items | Passed | Percentage |
+|----------|-------|--------|------------|
+| Structure | 9 | ? | ?% |
+| Constitution | 5 | ? | ?% |
+| FRs | 9 | ? | ?% |
+| Scope | 5 | ? | ?% |
+| Level-Specific | 3 | ? | ?% |
+| Readiness | 3 | ? | ?% |
+| **Total** | **34** | **?** | **?%** |
+
+**Minimum to pass:** 80% (27/34 items)

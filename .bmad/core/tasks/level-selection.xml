@@ -1,0 +1,210 @@
+<task id="{bmad_folder}/core/tasks/level-selection.xml" name="Federated Level Selection">
+  <objective>Guide user through selecting their working level in the 4-level documentation hierarchy and return context variables</objective>
+
+  <description>
+    The Federated Requirements Model uses a 4-level hierarchy:
+    - Level 0 (System): Constitution documents at docs/ root
+    - Level 1 (Category): Category-level docs at docs/{category}/
+    - Level 2 (Subcategory): Subcategory docs at docs/{category}/{subcategory}/
+    - Level 3 (Module): Module docs at docs/{category}/{subcategory}/{module}/
+
+    This task guides the user through selecting their level and returns the appropriate
+    context variables for workflows to use.
+  </description>
+
+  <returns>
+    <variable name="current_level">Number 0-3 indicating the hierarchy level</variable>
+    <variable name="current_level_name">String: system, category, subcategory, or module</variable>
+    <variable name="current_category">Category name (empty for level 0)</variable>
+    <variable name="current_subcategory">Subcategory name (empty for levels 0-1)</variable>
+    <variable name="current_module">Module name (empty for levels 0-2)</variable>
+    <variable name="output_folder_resolved">Full path to the output folder for this level</variable>
+    <variable name="constitution_path">Always docs/prd.md - the system constitution</variable>
+    <variable name="parent_prd_path">Path to the parent PRD (for inheritance)</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Load Manifest">
+      <action>Read {project-root}/docs/manifest.yaml</action>
+      <action>Store manifest data for category/subcategory/module lookups</action>
+      <action>Verify manifest has 'categories' section</action>
+    </step>
+
+    <step n="2" title="Level Selection">
+      <action>Present the 4-level hierarchy to the user:</action>
+      <prompt>
+        {user_name} — Which documentation level are you working on?
+
+        1. **System Constitution** (Level 0)
+           → docs/*.md (prd.md, architecture.md, epics.md)
+           → Platform Requirements (PR-xxx), Integration Contracts (IC-xxx)
+           → Rules that ALL categories must follow
+
+        2. **Category** (Level 1)
+           → docs/{category}/*.md
+           → Category-level direction and requirements (FR-{CAT}-xxx)
+           → Example: docs/strategy/, docs/marketing/
+
+        3. **Subcategory** (Level 2)
+           → docs/{category}/{subcategory}/*.md
+           → Domain PRD with functional requirements (FR-{SUB}-xxx)
+           → Example: docs/strategy/soul/, docs/platform/frontend/
+
+        4. **Module** (Level 3)
+           → docs/{category}/{subcategory}/{module}/*.md
+           → Module-specific requirements (FR-{MOD}-xxx)
+           → Example: docs/platform/frontend/shell/
+
+        Enter 1-4:
+      </prompt>
+      <action>STOP and WAIT for user input</action>
+      <action>Store response as {current_level} (subtract 1 to get 0-3)</action>
+      <action>Set {current_level_name} based on level:
+        0 = "system"
+        1 = "category"
+        2 = "subcategory"
+        3 = "module"
+      </action>
+    </step>
+
+    <step n="3" title="System Level Path" if="current_level == 0">
+      <action>Set {current_category} = ""</action>
+      <action>Set {current_subcategory} = ""</action>
+      <action>Set {current_module} = ""</action>
+      <action>Set {output_folder_resolved} = "{project-root}/docs/"</action>
+      <action>Set {constitution_path} = "docs/prd.md"</action>
+      <action>Set {parent_prd_path} = "" (no parent for system level)</action>
+      <action>SKIP to step 8</action>
+    </step>
+
+    <step n="4" title="Category Selection" if="current_level >= 1">
+      <action>Extract category names from manifest.categories keys</action>
+      <action>Filter to show only relevant categories (exclude 'system' if present)</action>
+      <prompt>
+        {user_name} — Which category?
+
+        [Present numbered list of categories with their codenames and purposes]
+        Example format:
+        1. strategy (Bridge) - Business strategy and clarity
+        2. marketing (Stage) - Brand, website, and market presence
+        3. platform (meta) - Core infrastructure
+        ...
+      </prompt>
+      <action>STOP and WAIT for user input</action>
+      <action>Store selection as {current_category}</action>
+      <check if="current_level == 1">
+        <action>Set {current_subcategory} = ""</action>
+        <action>Set {current_module} = ""</action>
+        <action>Set {output_folder_resolved} = "{project-root}/docs/{current_category}/"</action>
+        <action>Set {parent_prd_path} = "docs/prd.md"</action>
+        <action>SKIP to step 8</action>
+      </check>
+    </step>
+
+    <step n="5" title="Subcategory Selection" if="current_level >= 2">
+      <action>Extract subcategories from manifest.categories[{current_category}].subcategories</action>
+      <check if="subcategories is empty">
+        <action>Inform user: "No subcategories defined for {current_category} yet."</action>
+        <action>Ask: "Would you like to work at the Category level instead?"</action>
+        <action>If yes, set {current_level} = 1 and GOTO step 4</action>
+      </check>
+      <prompt>
+        {user_name} — Which subcategory within {current_category}?
+
+        [Present numbered list of subcategories with purposes]
+        Example format:
+        1. soul - Identity - The immutable DNA
+        2. pulse - Monitoring - The vital signs
+        3. horizon - Intelligence - The external view
+        ...
+      </prompt>
+      <action>STOP and WAIT for user input</action>
+      <action>Store selection as {current_subcategory}</action>
+      <check if="current_level == 2">
+        <action>Set {current_module} = ""</action>
+        <action>Set {output_folder_resolved} = "{project-root}/docs/{current_category}/{current_subcategory}/"</action>
+        <action>Set {parent_prd_path} = "docs/{current_category}/prd.md" if exists, else "docs/prd.md"</action>
+        <action>SKIP to step 8</action>
+      </check>
+    </step>
+
+    <step n="6" title="Module Selection" if="current_level == 3">
+      <action>Extract modules from manifest...subcategories[{current_subcategory}].modules</action>
+      <check if="modules is empty or not defined">
+        <action>Inform user: "No modules defined for {current_subcategory} yet."</action>
+        <action>Ask: "Would you like to work at the Subcategory level instead?"</action>
+        <action>If yes, set {current_level} = 2 and GOTO step 5 output</action>
+      </check>
+      <prompt>
+        {user_name} — Which module within {current_category}/{current_subcategory}?
+
+        [Present numbered list of modules with purposes and status]
+        Example format:
+        1. mission-control - Editor for Mission, Vision, Purpose [planned]
+        2. brand-dna - Voice, Tone, and Personality settings [planned]
+        ...
+      </prompt>
+      <action>STOP and WAIT for user input</action>
+      <action>Store selection as {current_module}</action>
+      <action>Set {output_folder_resolved} = "{project-root}/docs/{current_category}/{current_subcategory}/{current_module}/"</action>
+      <action>Set {parent_prd_path} = "docs/{current_category}/{current_subcategory}/prd.md" if exists, else parent chain</action>
+    </step>
+
+    <step n="7" title="Ensure Output Directory Exists">
+      <action>Check if {output_folder_resolved} exists</action>
+      <check if="directory does not exist">
+        <action>Create the directory</action>
+        <action>Inform user: "Created new directory: {output_folder_resolved}"</action>
+      </check>
+    </step>
+
+    <step n="8" title="Load Constitution Context">
+      <action>Set {constitution_path} = "docs/prd.md"</action>
+      <action>Read {project-root}/docs/prd.md and store key context:
+        - Extract all PR-xxx (Platform Requirements)
+        - Extract all IC-xxx (Integration Contracts)
+        - Note: These are inherited by all lower levels
+      </action>
+      <check if="current_level > 0">
+        <action>Inform user: "Working at {current_level_name} level. Inherits from System Constitution (docs/prd.md)."</action>
+      </check>
+    </step>
+
+    <step n="9" title="Display Context Summary">
+      <action>Show the user their working context:</action>
+      <output>
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        📍 Working Context
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Level:        {current_level_name} (Level {current_level})
+        Category:     {current_category or "N/A"}
+        Subcategory:  {current_subcategory or "N/A"}
+        Module:       {current_module or "N/A"}
+        Output Path:  {output_folder_resolved}
+        Constitution: {constitution_path}
+        Parent PRD:   {parent_prd_path or "N/A (this IS the constitution)"}
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      </output>
+    </step>
+
+    <step n="10" title="Return Variables">
+      <action>Return all context variables to the calling agent:
+        - {current_level}
+        - {current_level_name}
+        - {current_category}
+        - {current_subcategory}
+        - {current_module}
+        - {output_folder_resolved}
+        - {constitution_path}
+        - {parent_prd_path}
+      </action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>The Constitution (docs/prd.md) contains PR-xxx and IC-xxx that ALL levels inherit</note>
+    <note>Lower levels can ADD requirements but never CONTRADICT higher levels</note>
+    <note>Validation checklists differ by level - use constitution-checklist for level 0, domain-prd-checklist for levels 1-3</note>
+    <note>When creating new PRDs at levels 1-3, always reference the parent PRD in frontmatter</note>
+  </notes>
+</task>

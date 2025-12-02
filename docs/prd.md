@@ -627,7 +627,7 @@ Even solo operators get the architecture that supports growth. When they're read
 
 **Decision:** Primitives + owner-defined roles. No generic global roles.
 
-**Permission primitives:**
+**IC-007: Permission primitives:**
 
 | Primitive | Meaning |
 |-----------|---------|
@@ -899,7 +899,7 @@ Each sub-category PRD inherits from this constitution and adds specific implemen
 | **Register with Shell** | Expose manifest with routes, navigation, permissions required |
 | **Emit events** | All state changes emit to Event Spine with standard envelope |
 | **Consume events** | Subscribe only to declared event types; handle gracefully if unavailable |
-| **Read Brief** | Access Brief through standard API; never write directly (use recommendation events) |
+| **PR-004: Read Brief** | Access Brief through standard API; never write directly (use recommendation events) |
 | **Respect permissions** | Check user permissions before every action; fail closed if unclear |
 | **Authenticate users** | Use platform auth; never implement custom auth flows |
 

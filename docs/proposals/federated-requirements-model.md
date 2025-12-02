@@ -2,8 +2,15 @@
 
 **Author:** Carlo + PM Agent (John)
 **Date:** 2025-12-01
-**Status:** Draft for BMad Builder Review
+**Status:** IMPLEMENTED (see implementation plan)
 **Context:** Adapting BMAD validation for multi-team, hierarchical architectures
+
+---
+
+> **Implementation Status:** This proposal has been implemented. For current status and decisions, see:
+> - [federated-requirements-implementation-plan.md](./federated-requirements-implementation-plan.md)
+> - Constitution PRD: [docs/prd.md](../prd.md)
+> - Validation module: `.bmad/custom/modules/federated-validation/`
 
 ---
 
@@ -89,11 +96,15 @@ The current BMAD PRD validation assumes a **monolithic requirements model** wher
 
 ### 2.1 Document Type Definitions
 
-| Document Type | Location Pattern | Contains | Validated By |
-|---------------|------------------|----------|--------------|
-| **Constitution PRD** | `{category}/orchestration/prd.md` | PR-xxx, IC-xxx, philosophy, NFRs | Constitution Checklist |
-| **Domain PRD** | `{category}/{subcategory}/prd.md` | FR-xxx, domain context, scope | Domain PRD Checklist |
-| **Epic Breakdown** | `{category}/{subcategory}/epics.md` | Epics, stories, traceability | Epic Checklist |
+> **UPDATE:** We now use a 4-level hierarchy. The Constitution lives at `docs/prd.md` (root level), not within a category.
+
+| Level | Document Type | Location Pattern | Contains | Validated By |
+|-------|---------------|------------------|----------|--------------|
+| **0 (System)** | Constitution PRD | `docs/prd.md` | PR-xxx, IC-xxx, philosophy, NFRs | Constitution Checklist |
+| **1 (Category)** | Category PRD | `docs/{category}/prd.md` | FR-{CAT}-xxx, category direction | Domain PRD Checklist |
+| **2 (Subcategory)** | Subcategory PRD | `docs/{category}/{subcategory}/prd.md` | FR-{SUB}-xxx, domain features | Domain PRD Checklist |
+| **3 (Module)** | Module PRD | `docs/{category}/{subcategory}/{module}/prd.md` | FR-{MOD}-xxx | Domain PRD Checklist |
+| **Any** | Epic Breakdown | `docs/**/epics.md` | Epics, stories, traceability | Epic Checklist |
 
 ### 2.2 Constitution PRD Structure
 
@@ -456,8 +467,11 @@ validation_routing:
 
 ### 6.1 For Existing Projects (Like Xentri)
 
+> **UPDATE:** Migration complete. Constitution now at `docs/prd.md`.
+
 1. **Identify constitution document**
-   - Current: `docs/platform/orchestration/prd.md`
+   - ~~Current: `docs/platform/orchestration/prd.md`~~
+   - **Now:** `docs/prd.md` (root level)
 
 2. **Extract PRs from existing content**
    - Security mandates → PR-001 through PR-00x
@@ -523,7 +537,7 @@ validation_routing:
 # Infrastructure - Product Requirements Document
 
 ## Overview
-- **Parent Constitution:** `docs/platform/orchestration/prd.md`
+- **Parent Constitution:** `docs/prd.md`
 - **Scope:** Event Spine, Brief System, Auth, Billing
 - **Package:** `services/core-api` (partial), future dedicated services
 
