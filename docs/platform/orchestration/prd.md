@@ -221,6 +221,7 @@ How do we prevent noise? **Hierarchical Filtering.**
 **Drilling Down:**
 
 Users can always drill down from any Pulse to see more detail:
+
 - Strategy Pulse → Click category → Category Pulse → Click sub-category → Sub-category Pulse → Click module → Module Pulse
 
 Each level shows what was promoted from below, with links to the source for context.
@@ -240,6 +241,7 @@ Each level shows what was promoted from below, with links to the source for cont
 **Context Awareness:**
 
 The widget shows the copilot relevant to the current view:
+
 - Viewing Strategy Pulse → Strategy Copilot
 - Viewing Finance category → Finance Copilot
 - Viewing Invoicing module → Invoicing Sub-agent
@@ -711,8 +713,8 @@ That's not a notification. That's **narrative awareness**. The system knows wher
 
 From foundation to polish:
 
-| Level | Principle | What It Means |
-|-------|-----------|---------------|
+| **Level** | **Principle** | **What It Means** |
+|---|---|---|
 | **Foundation** | Calm, not noisy | The system respects attention. Surface what matters when it matters. |
 | **Spatial** | No-scroll, full-screen | The entire application fits the viewport. Zero scrolling. Content density respects screen real estate. |
 | **Interaction** | Conversational-first | Default is dialogue. Talk to accomplish, don't navigate to configure. |
@@ -723,6 +725,7 @@ From foundation to polish:
 | **Adaptation** | Context-aware interaction | Language, tone, and terminology adapt to the business type. |
 | **Continuity** | Narrative awareness | Each session continues the story. The system remembers where you are. |
 | **Polish** | Delight in details | Micro-interactions that make users feel understood. "How did it know that?" moments. |
+| **Aesthetics** | Theme-aware | Multiple themes (Modern, Power, Traditional) to match user preference. |
 
 ### No-Scroll Design Constraint
 
@@ -748,6 +751,23 @@ From foundation to polish:
 5. Sidebar can collapse to icon-only mode for maximum SPA space
 
 **Exception:** Long-form content (documentation, legal text, detailed reports) may scroll within a dedicated content area, but the shell frame remains fixed.
+
+### Narrative-First Philosophy (Chronicle View)
+
+**Decision:** The default experience is a journal-like "Chronicle" that tells the business story, not a dashboard of widgets.
+
+**Core Elements:**
+
+- **Chronicle View (Default):** "Since yesterday...", "Story Arcs", "Here's what developed."
+- **Efficiency Toggle:** Power users can switch to a dense, list-based view.
+- **Session Bridging:** System detects absence duration and generates a narrative recap on return.
+- **Story Arcs:** Persistent threads that evolve across sessions (e.g., "Deal Negotiation - Day 3").
+
+**Theme Architecture:**
+
+- **Modern (Default):** Conversational, immersive, gradient accents.
+- **Power:** High density, high contrast, speed-focused.
+- **Traditional:** Professional, balanced, business-like.
 
 ### Context-Aware Interaction
 

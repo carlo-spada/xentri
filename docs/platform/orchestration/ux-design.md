@@ -652,6 +652,7 @@ Open Chronicle → Read "Since Yesterday" → Handle exceptions → Check Story 
 
 | Artifact | Path | Contents |
 |----------|------|----------|
+| **MVP Themes** | [ux-themes-mvp.html](./ux/ux-themes-mvp.html) | Modern + Power themes in dark/light (interactive) |
 | **Design Directions** | [ux-design-directions.html](./ux/ux-design-directions.html) | 7 visual direction explorations |
 | Color Themes | [ux-color-themes-v2.html](./ux/ux-color-themes-v2.html) | Blue options on Dusk base |
 | Daily Loop Wireframes | [ux-daily-loop-wireframes-v2.html](./ux/ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |

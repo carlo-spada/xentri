@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xentri MVP Themes - Modern & Power (Dark/Light)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #f0ecf7;
+      line-height: 1.6;
+    }
+
+    /* ========================================
+       THEME TOKENS
+       ======================================== */
+
+    /* Modern Dark */
+    [data-theme="modern-dark"] {
+      --bg-base: #0c0a0f;
+      --bg-chrome: #141118;
+      --bg-surface: #1c1921;
+      --bg-surface-plus: #252230;
+      --bg-hover: rgba(232, 121, 249, 0.08);
+      --bg-active: rgba(232, 121, 249, 0.12);
+
+      --primary: #e879f9;
+      --primary-hover: #f0abfc;
+      --secondary: #38bdf8;
+      --gradient: linear-gradient(135deg, #e879f9, #38bdf8);
+
+      --success: #34d399;
+      --warning: #fbbf24;
+      --error: #f87171;
+
+      --text: #f5f3f7;
+      --text-secondary: #b8b0c8;
+      --text-muted: #7a7289;
+      --text-dim: #5a5368;
+
+      --border: #2e2a38;
+      --border-subtle: #252230;
+      --border-strong: #3d3850;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+
+      --density-spacing: 1.5rem;
+      --density-padding: 1.25rem;
+      --font-size-base: 0.9375rem;
+
+      --copilot-bg: rgba(232, 121, 249, 0.1);
+      --copilot-border: rgba(232, 121, 249, 0.3);
+      --copilot-avatar: linear-gradient(135deg, #e879f9, #38bdf8);
+    }
+
+    /* Modern Light */
+    [data-theme="modern-light"] {
+      --bg-base: #faf8fc;
+      --bg-chrome: #f3f0f7;
+      --bg-surface: #ffffff;
+      --bg-surface-plus: #f8f5fb;
+      --bg-hover: rgba(168, 85, 247, 0.08);
+      --bg-active: rgba(168, 85, 247, 0.12);
+
+      --primary: #a855f7;
+      --primary-hover: #9333ea;
+      --secondary: #0ea5e9;
+      --gradient: linear-gradient(135deg, #a855f7, #0ea5e9);
+
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+
+      --text: #1e1b24;
+      --text-secondary: #4a4458;
+      --text-muted: #7a7289;
+      --text-dim: #a8a0b8;
+
+      --border: #e8e4ef;
+      --border-subtle: #f0edf5;
+      --border-strong: #d8d3e3;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+
+      --density-spacing: 1.5rem;
+      --density-padding: 1.25rem;
+      --font-size-base: 0.9375rem;
+
+      --copilot-bg: rgba(168, 85, 247, 0.08);
+      --copilot-border: rgba(168, 85, 247, 0.25);
+      --copilot-avatar: linear-gradient(135deg, #a855f7, #0ea5e9);
+    }
+
+    /* Power Dark */
+    [data-theme="power-dark"] {
+      --bg-base: #09090b;
+      --bg-chrome: #0f0f12;
+      --bg-surface: #18181b;
+      --bg-surface-plus: #1f1f23;
+      --bg-hover: rgba(6, 182, 212, 0.08);
+      --bg-active: rgba(6, 182, 212, 0.12);
+
+      --primary: #06b6d4;
+      --primary-hover: #22d3ee;
+      --secondary: #8b5cf6;
+      --gradient: linear-gradient(90deg, #06b6d4, #8b5cf6);
+
+      --success: #22c55e;
+      --warning: #eab308;
+      --error: #ef4444;
+
+      --text: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --text-dim: #52525b;
+
+      --border: #27272a;
+      --border-subtle: #1f1f23;
+      --border-strong: #3f3f46;
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+
+      --density-spacing: 1rem;
+      --density-padding: 0.875rem;
+      --font-size-base: 0.875rem;
+
+      --copilot-bg: rgba(6, 182, 212, 0.08);
+      --copilot-border: rgba(6, 182, 212, 0.2);
+      --copilot-avatar: none;
+    }
+
+    /* Power Light */
+    [data-theme="power-light"] {
+      --bg-base: #fafafa;
+      --bg-chrome: #f4f4f5;
+      --bg-surface: #ffffff;
+      --bg-surface-plus: #f8f8f9;
+      --bg-hover: rgba(6, 182, 212, 0.08);
+      --bg-active: rgba(6, 182, 212, 0.12);
+
+      --primary: #0891b2;
+      --primary-hover: #0e7490;
+      --secondary: #7c3aed;
+      --gradient: linear-gradient(90deg, #0891b2, #7c3aed);
+
+      --success: #16a34a;
+      --warning: #ca8a04;
+      --error: #dc2626;
+
+      --text: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #71717a;
+      --text-dim: #a1a1aa;
+
+      --border: #e4e4e7;
+      --border-subtle: #f4f4f5;
+      --border-strong: #d4d4d8;
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+
+      --density-spacing: 1rem;
+      --density-padding: 0.875rem;
+      --font-size-base: 0.875rem;
+
+      --copilot-bg: rgba(6, 182, 212, 0.06);
+      --copilot-border: rgba(6, 182, 212, 0.2);
+      --copilot-avatar: none;
+    }
+
+    /* ========================================
+       THEME SWITCHER
+       ======================================== */
+    .theme-switcher {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 15, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #2a2538;
+      padding: 1rem 2rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .theme-switcher h1 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #f0ecf7;
+    }
+
+    .theme-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .theme-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      border: 1px solid #2a2538;
+      background: #16131e;
+      color: #b8b0c8;
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      background: #1e1a28;
+      color: #f0ecf7;
+    }
+
+    .theme-btn.active {
+      background: linear-gradient(135deg, #e879f9, #38bdf8);
+      color: #0a0a0f;
+      border-color: transparent;
+      font-weight: 500;
+    }
+
+    .theme-btn.active.power {
+      background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+    }
+
+    /* ========================================
+       MOCKUP CONTAINER
+       ======================================== */
+    .mockup-wrapper {
+      margin-top: 70px;
+      padding: 2rem;
+    }
+
+    .mockup-info {
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+      padding: 1.5rem;
+      background: #16131e;
+      border-radius: 12px;
+      border: 1px solid #2a2538;
+    }
+
+    .mockup-info h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: #f0ecf7;
+    }
+
+    .mockup-info p {
+      color: #b8b0c8;
+      font-size: 0.9375rem;
+    }
+
+    .mockup-info .tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .mockup-info .tag {
+      background: #1e1a28;
+      color: #a78bfa;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid #352f45;
+    }
+
+    .mockup-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ========================================
+       LAYOUT
+       ======================================== */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 700px;
+      background: var(--bg-base);
+    }
+
+    /* Power theme: narrower sidebar */
+    [data-theme="power-dark"] .app-layout,
+    [data-theme="power-light"] .app-layout {
+      grid-template-columns: 56px 1fr;
+    }
+
+    /* ========================================
+       HEADER
+       ======================================== */
+    .app-header {
+      grid-column: 1 / -1;
+      background: var(--bg-chrome);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Power theme: icon-only logo */
+    [data-theme="power-dark"] .logo,
+    [data-theme="power-light"] .logo {
+      font-size: 1rem;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      width: 240px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .header-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+
+    .view-toggle {
+      display: flex;
+      background: var(--bg-surface);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      border: 1px solid var(--border);
+    }
+
+    .view-toggle button {
+      padding: 0.375rem 0.75rem;
+      border-radius: calc(var(--radius-sm) - 2px);
+      font-size: 0.8125rem;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .view-toggle button.active {
+      background: var(--bg-surface-plus);
+      color: var(--text);
+    }
+
+    /* ========================================
+       SIDEBAR
+       ======================================== */
+    .sidebar {
+      background: var(--bg-chrome);
+      border-right: 1px solid var(--border);
+      padding: var(--density-padding) 0;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      padding: 0 var(--density-padding);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem var(--density-padding);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+      font-size: var(--font-size-base);
+    }
+
+    .nav-item:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      background: var(--bg-active);
+      color: var(--primary);
+      border-left-color: var(--primary);
+    }
+
+    .nav-item .icon {
+      font-size: 1.125rem;
+    }
+
+    .nav-sub {
+      padding-left: calc(var(--density-padding) + 1.5rem);
+      font-size: calc(var(--font-size-base) - 0.0625rem);
+    }
+
+    /* Power theme: icon-only sidebar */
+    [data-theme="power-dark"] .sidebar,
+    [data-theme="power-light"] .sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem 0;
+    }
+
+    [data-theme="power-dark"] .nav-label,
+    [data-theme="power-light"] .nav-label {
+      display: none;
+    }
+
+    [data-theme="power-dark"] .nav-item,
+    [data-theme="power-light"] .nav-item {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      border-left: none;
+      margin-bottom: 0.25rem;
+    }
+
+    [data-theme="power-dark"] .nav-item .label,
+    [data-theme="power-light"] .nav-item .label {
+      display: none;
+    }
+
+    [data-theme="power-dark"] .nav-sub,
+    [data-theme="power-light"] .nav-sub {
+      display: none;
+    }
+
+    /* ========================================
+       MAIN CONTENT
+       ======================================== */
+    .main-content {
+      background: var(--bg-base);
+      padding: var(--density-spacing);
+      overflow-y: auto;
+    }
+
+    .chronicle {
+      max-width: 800px;
+    }
+
+    /* Power theme: full width */
+    [data-theme="power-dark"] .chronicle,
+    [data-theme="power-light"] .chronicle {
+      max-width: 100%;
+    }
+
+    /* ========================================
+       GREETING
+       ======================================== */
+    .greeting {
+      margin-bottom: var(--density-spacing);
+    }
+
+    .greeting-text {
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--text);
+    }
+
+    .greeting-text strong {
+      font-weight: 600;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .greeting-sub {
+      color: var(--text-muted);
+      font-size: var(--font-size-base);
+      margin-top: 0.25rem;
+    }
+
+    /* Power theme: compact greeting */
+    [data-theme="power-dark"] .greeting-text,
+    [data-theme="power-light"] .greeting-text {
+      font-size: 1.25rem;
+    }
+
+    /* ========================================
+       SECTION
+       ======================================== */
+    .section {
+      margin-bottom: var(--density-spacing);
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* ========================================
+       DEVELOPMENT ITEM (Chronicle View)
+       ======================================== */
+    .development {
+      padding: var(--density-padding);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+    }
+
+    .development-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .development-icon {
+      font-size: 1.25rem;
+    }
+
+    .development-title {
+      font-weight: 500;
+      color: var(--text);
+      font-size: var(--font-size-base);
+    }
+
+    .development-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.125rem;
+    }
+
+    .development-body {
+      color: var(--text-secondary);
+      font-size: var(--font-size-base);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ========================================
+       COPILOT INLINE (Modern Theme)
+       ======================================== */
+    .copilot-inline {
+      background: var(--copilot-bg);
+      border: 1px solid var(--copilot-border);
+      border-radius: var(--radius-md);
+      padding: var(--density-padding);
+      margin: 0.75rem 0;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .copilot-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--copilot-avatar);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    /* Power theme: no avatar */
+    [data-theme="power-dark"] .copilot-avatar,
+    [data-theme="power-light"] .copilot-avatar {
+      display: none;
+    }
+
+    [data-theme="power-dark"] .copilot-inline,
+    [data-theme="power-light"] .copilot-inline {
+      border-left: 2px solid var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      background: var(--copilot-bg);
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .copilot-content {
+      flex: 1;
+    }
+
+    .copilot-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .copilot-message {
+      color: var(--text-secondary);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+    }
+
+    /* Power theme: inline prefix */
+    [data-theme="power-dark"] .copilot-label,
+    [data-theme="power-light"] .copilot-label {
+      display: none;
+    }
+
+    [data-theme="power-dark"] .copilot-message::before,
+    [data-theme="power-light"] .copilot-message::before {
+      content: "💡 ";
+    }
+
+    /* ========================================
+       ACTIONS
+       ======================================== */
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--bg-base);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-plus);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      color: var(--text);
+      border-color: var(--primary);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+    }
+
+    /* ========================================
+       STORY ARCS
+       ======================================== */
+    .arcs {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .arc {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .arc-icon {
+      color: var(--secondary);
+      font-size: 1rem;
+    }
+
+    .arc-name {
+      font-size: var(--font-size-base);
+      color: var(--text);
+    }
+
+    .arc-bar {
+      width: 120px;
+      height: 6px;
+      background: var(--bg-chrome);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .arc-bar-fill {
+      height: 100%;
+      background: var(--gradient);
+      border-radius: 3px;
+    }
+
+    .arc-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: right;
+      min-width: 60px;
+    }
+
+    /* Power theme: compact arcs */
+    [data-theme="power-dark"] .arc,
+    [data-theme="power-light"] .arc {
+      padding: 0.5rem 0.75rem;
+    }
+
+    /* ========================================
+       EFFICIENCY VIEW (Power Default)
+       ======================================== */
+    .efficiency-grid {
+      display: none;
+    }
+
+    [data-theme="power-dark"] .chronicle,
+    [data-theme="power-light"] .chronicle {
+      display: none;
+    }
+
+    [data-theme="power-dark"] .efficiency-grid,
+    [data-theme="power-light"] .efficiency-grid {
+      display: block;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: var(--density-padding);
+    }
+
+    .stat-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stat-value.primary {
+      color: var(--primary);
+    }
+
+    .stat-value.secondary {
+      color: var(--secondary);
+    }
+
+    .data-table {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-chrome);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      align-items: center;
+      font-size: var(--font-size-base);
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .table-row:hover {
+      background: var(--bg-hover);
+    }
+
+    .item-title {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .item-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 999px;
+    }
+
+    .status-badge.new {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--primary);
+    }
+
+    .status-badge.pending {
+      background: rgba(234, 179, 8, 0.15);
+      color: var(--warning);
+    }
+
+    .table-action {
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg-chrome);
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+
+    .table-action:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ========================================
+       COPILOT WIDGET
+       ======================================== */
+    .copilot-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 100;
+    }
+
+    .widget-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: var(--gradient);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s;
+      color: var(--bg-base);
+    }
+
+    .widget-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .widget-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 20px;
+      height: 20px;
+      background: var(--error);
+      border-radius: 50%;
+      font-size: 0.6875rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    /* Power theme: smaller widget */
+    [data-theme="power-dark"] .widget-btn,
+    [data-theme="power-light"] .widget-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      font-size: 1.25rem;
+    }
+
+    /* ========================================
+       NOTES SECTION
+       ======================================== */
+    .notes {
+      max-width: 1200px;
+      margin: 2rem auto 0;
+      padding: 1.5rem;
+      background: #16131e;
+      border-radius: 12px;
+      border: 1px solid #2a2538;
+    }
+
+    .notes h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #f0ecf7;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .note-card {
+      padding: 1rem;
+      background: #1e1a28;
+      border-radius: 8px;
+      border: 1px solid #2a2538;
+    }
+
+    .note-card h4 {
+      font-size: 0.875rem;
+      color: #a78bfa;
+      margin-bottom: 0.5rem;
+    }
+
+    .note-card ul {
+      color: #b8b0c8;
+      font-size: 0.8125rem;
+      padding-left: 1.25rem;
+    }
+
+    .note-card li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Switcher -->
+  <div class="theme-switcher">
+    <h1>Xentri MVP Themes</h1>
+    <div class="theme-buttons">
+      <button class="theme-btn active" onclick="setTheme('modern-dark')">Modern Dark</button>
+      <button class="theme-btn" onclick="setTheme('modern-light')">Modern Light</button>
+      <button class="theme-btn power" onclick="setTheme('power-dark')">Power Dark</button>
+      <button class="theme-btn power" onclick="setTheme('power-light')">Power Light</button>
+    </div>
+  </div>
+
+  <div class="mockup-wrapper">
+    <!-- Theme Info -->
+    <div class="mockup-info" id="theme-info">
+      <h2 id="theme-name">Modern Dark</h2>
+      <p id="theme-desc">Conversational, immersive, gradient accents. Copilot appears as a colleague with avatar. Chronicle view is default.</p>
+      <div class="tags" id="theme-tags">
+        <span class="tag">Conversational</span>
+        <span class="tag">Immersive</span>
+        <span class="tag">Gradients</span>
+        <span class="tag">Comfortable Density</span>
+      </div>
+    </div>
+
+    <!-- Mockup -->
+    <div class="mockup-container" data-theme="modern-dark" id="mockup">
+      <div class="app-layout">
+        <!-- Header -->
+        <header class="app-header">
+          <div class="header-left">
+            <div class="logo">Xentri</div>
+            <div class="search-bar">
+              <span>🔍</span>
+              <span>Search...</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="view-toggle">
+              <button class="active">Chronicle</button>
+              <button>Efficiency</button>
+            </div>
+            <button class="header-btn">⚙️</button>
+            <button class="header-btn">👤</button>
+          </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="nav-section">
+            <div class="nav-label">Categories</div>
+            <div class="nav-item active">
+              <span class="icon">📊</span>
+              <span class="label">Strategy</span>
+            </div>
+            <div class="nav-item nav-sub active">
+              <span class="icon"></span>
+              <span class="label">Pulse</span>
+            </div>
+            <div class="nav-item">
+              <span class="icon">📣</span>
+              <span class="label">Marketing</span>
+            </div>
+            <div class="nav-item">
+              <span class="icon">💰</span>
+              <span class="label">Sales</span>
+            </div>
+            <div class="nav-item">
+              <span class="icon">💵</span>
+              <span class="label">Finance</span>
+            </div>
+            <div class="nav-item">
+              <span class="icon">⚙️</span>
+              <span class="label">Operations</span>
+            </div>
+            <div class="nav-item">
+              <span class="icon">👥</span>
+              <span class="label">Team</span>
+            </div>
+            <div class="nav-item">
+              <span class="icon">⚖️</span>
+              <span class="label">Legal</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+          <!-- Chronicle View (Modern Theme Default) -->
+          <div class="chronicle">
+            <div class="greeting">
+              <div class="greeting-text">Good morning, <strong>Carlo</strong></div>
+              <div class="greeting-sub">Sunday, December 1, 2025 — Here's your story today</div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Since Yesterday</div>
+
+              <div class="development">
+                <div class="development-header">
+                  <span class="development-icon">📬</span>
+                  <div>
+                    <div class="development-title">Acme Corp responded to your proposal</div>
+                    <div class="development-meta">2 hours ago • Sales</div>
+                  </div>
+                </div>
+                <div class="development-body">
+                  They want to discuss pricing. This is a positive signal — they're engaged and moving toward a decision.
+                </div>
+                <div class="copilot-inline">
+                  <div class="copilot-avatar">🧠</div>
+                  <div class="copilot-content">
+                    <div class="copilot-label">Strategy Copilot</div>
+                    <div class="copilot-message">
+                      Based on your past negotiations, one pricing discussion typically closes these deals. I've drafted a reply using your standard approach — confident but flexible.
+                    </div>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-primary">View Draft</button>
+                  <button class="btn btn-secondary">Edit First</button>
+                  <button class="btn btn-ghost">Skip</button>
+                </div>
+              </div>
+
+              <div class="development">
+                <div class="development-header">
+                  <span class="development-icon">⏰</span>
+                  <div>
+                    <div class="development-title">Invoice #247 (Beta Inc) hit 30 days</div>
+                    <div class="development-meta">This morning • Finance</div>
+                  </div>
+                </div>
+                <div class="development-body">
+                  Clean payment history — 12/12 invoices paid on time. This is likely just an oversight.
+                </div>
+                <div class="copilot-inline">
+                  <div class="copilot-avatar">💰</div>
+                  <div class="copilot-content">
+                    <div class="copilot-label">Finance Copilot</div>
+                    <div class="copilot-message">
+                      I'd suggest a friendly nudge rather than formal notice. They've been reliable — no need to escalate tone.
+                    </div>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-primary">Send Nudge</button>
+                  <button class="btn btn-secondary">Remind Tomorrow</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Story Arcs</div>
+              <div class="arcs">
+                <div class="arc">
+                  <span class="arc-icon">📖</span>
+                  <span class="arc-name">Acme Corp Proposal</span>
+                  <div class="arc-bar">
+                    <div class="arc-bar-fill" style="width: 60%"></div>
+                  </div>
+                  <span class="arc-status">Day 3/5</span>
+                </div>
+                <div class="arc">
+                  <span class="arc-icon">📖</span>
+                  <span class="arc-name">Q4 Revenue Target</span>
+                  <div class="arc-bar">
+                    <div class="arc-bar-fill" style="width: 70%"></div>
+                  </div>
+                  <span class="arc-status">$42K / $60K</span>
+                </div>
+                <div class="arc">
+                  <span class="arc-icon">📖</span>
+                  <span class="arc-name">Client Diversification</span>
+                  <div class="arc-bar">
+                    <div class="arc-bar-fill" style="width: 35%"></div>
+                  </div>
+                  <span class="arc-status">40% → 25%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Efficiency View (Power Theme Default) -->
+          <div class="efficiency-grid">
+            <div class="greeting">
+              <div class="greeting-text">Strategy Pulse</div>
+              <div class="greeting-sub">December 1, 2025</div>
+            </div>
+
+            <div class="stats-row">
+              <div class="stat-card">
+                <div class="stat-label">Needs Attention</div>
+                <div class="stat-value primary">2</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Active Arcs</div>
+                <div class="stat-value">3</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Q4 Progress</div>
+                <div class="stat-value secondary">70%</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">This Week</div>
+                <div class="stat-value">+$8.2K</div>
+              </div>
+            </div>
+
+            <div class="data-table">
+              <div class="table-header">
+                <div>Item</div>
+                <div>Status</div>
+                <div>Priority</div>
+                <div>Action</div>
+              </div>
+              <div class="table-row">
+                <div>
+                  <div class="item-title">Acme Corp — Proposal Response</div>
+                  <div class="item-sub">Sales • 2 hours ago</div>
+                </div>
+                <div><span class="status-badge new">● New</span></div>
+                <div>High</div>
+                <div><button class="table-action">View Draft</button></div>
+              </div>
+              <div class="table-row">
+                <div>
+                  <div class="item-title">Invoice #247 — Beta Inc</div>
+                  <div class="item-sub">Finance • 30 days overdue</div>
+                </div>
+                <div><span class="status-badge pending">● Pending</span></div>
+                <div>Medium</div>
+                <div><button class="table-action">Send Nudge</button></div>
+              </div>
+              <div class="table-row">
+                <div>
+                  <div class="item-title">Q4 Revenue Target</div>
+                  <div class="item-sub">Strategy • Arc in progress</div>
+                </div>
+                <div>70% complete</div>
+                <div>—</div>
+                <div><button class="table-action">Details</button></div>
+              </div>
+              <div class="table-row">
+                <div>
+                  <div class="item-title">Client Diversification</div>
+                  <div class="item-sub">Strategy • Arc in progress</div>
+                </div>
+                <div>35% complete</div>
+                <div>—</div>
+                <div><button class="table-action">Details</button></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Copilot Widget -->
+      <div class="copilot-widget">
+        <button class="widget-btn">🧠</button>
+        <span class="widget-badge">2</span>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes">
+      <h3>Theme Comparison Notes</h3>
+      <div class="notes-grid">
+        <div class="note-card">
+          <h4>Modern Theme</h4>
+          <ul>
+            <li>Chronicle view by default (narrative-first)</li>
+            <li>Copilot appears with avatar, feels like colleague</li>
+            <li>Gradient accents create immersive feel</li>
+            <li>Comfortable spacing, breathing room</li>
+            <li>Full sidebar with labels</li>
+            <li>Friendly, conversational typography</li>
+          </ul>
+        </div>
+        <div class="note-card">
+          <h4>Power Theme</h4>
+          <ul>
+            <li>Efficiency view by default (data-forward)</li>
+            <li>Copilot as inline notes, no avatar</li>
+            <li>Muted colors, high contrast</li>
+            <li>Compact spacing, more on screen</li>
+            <li>Icon-only sidebar saves space</li>
+            <li>Table-based data presentation</li>
+          </ul>
+        </div>
+        <div class="note-card">
+          <h4>Light vs Dark</h4>
+          <ul>
+            <li>Same structure, inverted colors</li>
+            <li>Light modes use slightly deeper primaries</li>
+            <li>Contrast ratios maintained for accessibility</li>
+            <li>Border colors adjust for visibility</li>
+          </ul>
+        </div>
+        <div class="note-card">
+          <h4>User Preference</h4>
+          <ul>
+            <li>Theme stored per user (not per org)</li>
+            <li>Default: Modern Dark</li>
+            <li>Toggle available in Settings</li>
+            <li>Brief-aware suggestions possible</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const themeInfo = {
+      'modern-dark': {
+        name: 'Modern Dark',
+        desc: 'Conversational, immersive, gradient accents. Copilot appears as a colleague with avatar. Chronicle view is default.',
+        tags: ['Conversational', 'Immersive', 'Gradients', 'Comfortable Density']
+      },
+      'modern-light': {
+        name: 'Modern Light',
+        desc: 'Same conversational feel as Modern Dark, with light backgrounds. Great for well-lit environments or users who prefer light mode.',
+        tags: ['Conversational', 'Light Mode', 'Gradients', 'Comfortable Density']
+      },
+      'power-dark': {
+        name: 'Power Dark',
+        desc: 'Dense, fast, information-forward. Efficiency view by default. Copilot as inline hints without avatar. Maximum screen utilization.',
+        tags: ['Dense', 'Efficient', 'Keyboard-friendly', 'Compact']
+      },
+      'power-light': {
+        name: 'Power Light',
+        desc: 'Same power-user focus with light backgrounds. High contrast for quick scanning. Great for extended work sessions in bright environments.',
+        tags: ['Dense', 'Light Mode', 'High Contrast', 'Compact']
+      }
+    };
+
+    function setTheme(theme) {
+      // Update mockup
+      document.getElementById('mockup').setAttribute('data-theme', theme);
+
+      // Update info
+      const info = themeInfo[theme];
+      document.getElementById('theme-name').textContent = info.name;
+      document.getElementById('theme-desc').textContent = info.desc;
+      document.getElementById('theme-tags').innerHTML = info.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+      // Update buttons
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase().replace(' ', '-') === theme) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Fix button matching
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        const btnTheme = btn.textContent.toLowerCase().replace(' ', '-');
+        btn.classList.toggle('active', btnTheme === theme);
+      });
+    }
+  </script>
+</body>
+</html>

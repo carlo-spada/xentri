@@ -208,6 +208,7 @@ USING (
 * **Resilience:**
   * **Retry:** 3 retries with exponential backoff.
   * **Failure:** If all retries fail, emit a P3 incident alert to the Event Spine. The system continues to function with "stale" Synthetic Memory until the next successful run.
+  * **Monitoring:** Alert if `xentri.dreaming.completed` event not seen by 03:00 local time.
 
 ### ADR-007: Federated Soul Registry
 
@@ -430,6 +431,23 @@ Badge shows count of:
 
 **Implication:** Shell must track navigation context and pass it to the widget. Copilot services must support both streaming (quick) and full conversation (stateful) modes.
 
+### ADR-013: Narrative Continuity & UX Philosophy
+
+**Context:** Users shouldn't feel like they are "checking a dashboard" but rather "reading a story" of their business.
+
+**Decision:** We adopt a **Narrative-First** UX philosophy.
+
+1. **Chronicle View (Default):** The primary view is a journal-like feed ("Since yesterday...", "Story Arcs").
+2. **Efficiency/Power Toggle:** Power users can switch to a dense, list-based view.
+3. **No-Scroll Constraint:** The entire app must fit in the viewport. Sidebar collapses; content uses progressive disclosure.
+4. **Theme Architecture:** Multiple themes (Modern, Power, Traditional) supported via CSS variables and a "Theme Token" system.
+
+**Implication:**
+
+* **Story Arcs:** New data entity to track long-running threads (e.g., "Deal Negotiation - Day 3").
+* **Session Bridging:** System must detect absence duration and generate a "Recap" narrative on return.
+* **Brief-Aware Config:** Copilots configure the system (roles, pipeline stages) based on the Universal Brief.
+
 ---
 
 ### ADR-010: Resilience & Graceful Degradation
@@ -503,7 +521,7 @@ Standard headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Res
 │   ├── /core-api            # Node.js: Auth, Orgs, Billing
 │   ├── /strategy-copilot    # [NEW] Python: Strategy Agent
 │   │   ├── /src
-│   │   │   ├── /agent       # Agent definition (LangGraph)
+│   │   │   ├── /agents      # Agents definition (LangGraph)
 │   │   │   ├── /tools       # Agent tools
 │   │   │   ├── /memory      # Memory interfaces
 │   │   │   └── /api         # (Fast)API routes
@@ -513,7 +531,7 @@ Standard headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Res
 └── /docs                    # Documentation
 ```
 
-Future services (brand-engine, sales-engine, ai-service, n8n-host) follow the same pattern.
+Future services (brand-engine, sales-engine, ai-service) follow the same pattern.
 
 ### Contract Source of Truth
 
@@ -1024,7 +1042,7 @@ ALTER TABLE organizations ADD COLUMN default_language TEXT DEFAULT 'en';
 * **Object Storage:** S3/MinIO for assets; presigned PUT/GET; store only keys/metadata in DB.
 * **Performance Budgets:** p75 FMP < 2s on 3G for shell; API p95 < 300ms for reads, < 600ms for writes; background jobs complete < 30s or enqueue follow-up.
 * **Observability:** OpenTelemetry traces across shell/services; logs to Loki/Grafana; metrics via Prometheus; `trace_id` propagated through API and events.
-* **n8n Reliability:** Workers run with queue-backed execution; retry with backoff (3 attempts), DLQ to Redis stream `n8n:dlq`; flows must be idempotent and check org context.
+* **Background Job Reliability:** Workers run with queue-backed execution; retry with backoff (3 attempts), DLQ to Redis stream `jobs:dlq`; flows must be idempotent and check org context.
 
 ### DLQ Monitoring & Recovery
 
@@ -1032,7 +1050,7 @@ Dead Letter Queue patterns for failed events and n8n jobs:
 
 | Stream | Alert Threshold | Response |
 |--------|-----------------|----------|
-| `n8n:dlq` | > 10 messages in 1 hour | Page on-call; investigate flow failures |
+| `jobs:dlq` | > 10 messages in 1 hour | Page on-call; investigate flow failures |
 | `events:dlq` | > 5 messages in 1 hour | Page on-call; check consumer health |
 | `sync:dlq` | > 20 messages in 1 hour | Alert (non-urgent); batch retry overnight |
 
@@ -1040,13 +1058,13 @@ Dead Letter Queue patterns for failed events and n8n jobs:
 
 ```bash
 # List DLQ messages
-redis-cli XRANGE n8n:dlq - + COUNT 10
+redis-cli XRANGE jobs:dlq - + COUNT 10
 
 # Replay single message to original stream
-redis-cli XADD n8n:jobs MAXLEN ~10000 * [fields from DLQ message]
+redis-cli XADD jobs:work MAXLEN ~10000 * [fields from DLQ message]
 
 # Bulk replay (use with caution)
-./scripts/dlq-replay.sh n8n:dlq n8n:jobs --batch 50
+./scripts/dlq-replay.sh jobs:dlq jobs:work --batch 50
 ```
 
 **Poison Message Handling:**
@@ -1120,7 +1138,7 @@ Bring in a human specialist (contractor) when:
 |---------|--------|
 | **> 100 concurrent users** | Increase HPA min replicas; review Redis connection pooling |
 | **> 1,000 orgs** | Consider Postgres read replicas; review RLS policy performance |
-| **> 10,000 events/hour** | Scale Redis cluster; add n8n worker pods |
+| **> 10,000 events/hour** | Scale Redis cluster; add background worker pods |
 | **Revenue > $10k MRR** | Security audit; consider managed k8s support contract |
 | **Adding regulated features** | Engage compliance consultant before implementation |
 
