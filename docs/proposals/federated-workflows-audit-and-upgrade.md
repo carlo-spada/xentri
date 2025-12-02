@@ -152,6 +152,7 @@ All workflows COMPOSE these shared tasks (no duplication):
 | `task-impact-analysis.md` | `.bmad/bmm/tasks/` | Scan downstream for references to changed items |
 | `task-validate-inheritance.md` | `.bmad/bmm/tasks/` | Verify parent constraints are not contradicted |
 | `task-save-with-checkpoint.md` | `.bmad/bmm/tasks/` | Consistent save protocol with user approval |
+| `task-verify-traceability.md` | `.bmad/bmm/tasks/` | Verify FR coverage between PRD and epics |
 
 ### Task: detect-entity-type
 
@@ -586,13 +587,13 @@ Each checklist shares a base structure with entity-type-specific sections:
 
 | Category | Count | Items |
 |----------|-------|-------|
-| Shared Tasks | 5 | detect-entity-type, generate-frontmatter, impact-analysis, validate-inheritance, save-with-checkpoint |
+| Shared Tasks | 6 | detect-entity-type, generate-frontmatter, impact-analysis, validate-inheritance, save-with-checkpoint, verify-traceability |
 | CREATE Workflows | 8 | 2 per doc type (system + domain) |
 | VALIDATE Workflows | 8 | 2 per doc type (system + domain) |
 | AMEND Workflows | 8 | 2 per doc type (system + domain) |
 | ROUTER Workflows | 12 | 3 per doc type (create + validate + amend) |
 | Checklists | 20 | 5 entity types × 4 doc types |
-| **Total** | **61** | |
+| **Total** | **62** | |
 
 ---
 
@@ -626,7 +627,103 @@ Each checklist shares a base structure with entity-type-specific sections:
 
 ---
 
-## Appendix: Entity Type Detection Logic
+## Appendix A: Initial Constitution Candidates (Temporary)
+
+> **Note:** This appendix will be removed after Phase 2 when `docs/platform/prd.md` is retrofitted with formal PR/IC identifiers. These are extracted candidates from the current system PRD, not yet officially adopted.
+
+### Platform Requirements (Candidates)
+
+| ID | Requirement | Source |
+|----|-------------|--------|
+| PR-001 | All database tables MUST include `org_id` column with RLS policy | Current PRD |
+| PR-002 | All mutations MUST emit events to Event Spine with standard envelope | Current PRD |
+| PR-003 | All API endpoints MUST require authentication except health checks | Current PRD |
+| PR-004 | All modules MUST read Brief through standard API, never write directly | Current PRD |
+| PR-005 | All user actions MUST respect permission primitives (view/edit/approve/configure) | Current PRD |
+| PR-006 | All automated actions MUST be logged with human-readable explanation | Current PRD |
+| PR-007 | All modules MUST fail gracefully; never crash the shell | Current PRD |
+| PR-008 | All copilots MUST adapt vocabulary to Brief-indicated business type | Current PRD |
+
+### Integration Contracts (Candidates)
+
+| ID | Contract | Description |
+|----|----------|-------------|
+| IC-001 | Event Envelope Schema | SystemEvent interface definition |
+| IC-002 | Event Naming Convention | `xentri.{category}.{entity}.{action}.{version}` |
+| IC-003 | Module Registration Manifest | Format for registering modules with shell |
+| IC-004 | Brief Access API | `GET /api/v1/brief/{section}` |
+| IC-005 | Recommendation Submission Protocol | How modules submit recommendations |
+| IC-006 | Notification Delivery Contract | How notifications are delivered to users |
+| IC-007 | Permission Check Protocol | How modules verify user permissions |
+
+---
+
+## Appendix B: Requirement ID Syntax
+
+### Format
+
+```
+{TYPE}-{PATH}-{NUMBER}
+
+TYPE:
+  PR = Platform Requirement (Constitution only)
+  IC = Integration Contract (Constitution only)
+  FR = Functional Requirement (all other entity types)
+
+PATH (for FR only):
+  Variable depth, max 3 letters per segment, hyphen-separated
+
+  Infrastructure Module:    {MOD}               → FR-SHL-001
+  Strategic Container:      {CAT}               → FR-STR-001
+  Coordination Unit:        {CAT}-{SUB}         → FR-STR-PUL-001
+  Business Module:          {CAT}-{SUB}-{MOD}   → FR-STR-PUL-DAS-001
+
+NUMBER:
+  Three digits (001-999)
+  Grouped by feature area within entity
+```
+
+### Uniqueness Rule
+
+Within any parent, no two children may share the same 3-letter code. Enforced at `manifest.yaml` registration time.
+
+### Canonical Abbreviation Registry
+
+Defined in `manifest.yaml`:
+
+```yaml
+# Platform infrastructure modules
+platform:
+  modules:
+    shell:         { code: SHL }
+    ui:            { code: UIC }
+    core-api:      { code: API }
+    ts-schema:     { code: TSS }
+    orchestration: { code: ORC }
+
+# Business categories
+categories:
+  strategy:   { code: STR }
+  marketing:  { code: MKT }
+  sales:      { code: SAL }
+  finance:    { code: FIN }
+  operations: { code: OPS }
+  team:       { code: TEA }
+  legal:      { code: LEG }
+```
+
+### Examples
+
+| Entity | Path | FR ID |
+|--------|------|-------|
+| Shell module | `platform/shell` | FR-SHL-001 |
+| Strategy category | `strategy/` | FR-STR-001 |
+| Pulse subcategory | `strategy/pulse/` | FR-STR-PUL-001 |
+| Dashboard module | `strategy/pulse/dashboard/` | FR-STR-PUL-DAS-001 |
+
+---
+
+## Appendix C: Entity Type Detection Logic
 
 ```yaml
 # task-detect-entity-type.md pseudo-logic
@@ -671,3 +768,4 @@ steps:
 | 2025-12-02 | Five Entity Types model adopted | Carlo + Team |
 | 2025-12-02 | Clarifications resolved, ready for implementation | Carlo |
 | 2025-12-02 | **Phase 0 Migration Complete** - Constitution docs moved, platform flattened, all config files updated | Claude Code |
+| 2025-12-02 | **Gemini Review Merge** - Added Appendix A (PR/IC candidates), Appendix B (ID syntax with 3-letter codes), task-verify-traceability; deleted obsolete proposal files | Carlo + Claude Code |
