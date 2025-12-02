@@ -1,0 +1,55 @@
+# PRD Validation Router
+
+<critical>This is a ROUTER workflow - detects entity type and dispatches to correct validation workflow</critical>
+
+<workflow>
+
+<step n="1" goal="Detect Entity Type">
+<output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 PRD VALIDATION WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This workflow validates a PRD at any level in the
+federated documentation hierarchy.
+
+Let's determine which PRD to validate.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</output>
+
+<invoke-task name="detect-entity-type">
+  <param name="prompt_user">true</param>
+</invoke-task>
+
+<output>
+📍 Detected: {entity_type_display}
+   Path: {output_folder_resolved}prd.md
+</output>
+
+<ask>Validate this PRD? (y/n/change)</ask>
+<check if="response == 'change'">
+  <goto step="1">Re-detect</goto>
+</check>
+<check if="response == 'n'">
+  <action>Exit workflow</action>
+</check>
+</step>
+
+<step n="2" goal="Route to Appropriate Validation">
+<check if="entity_type == 'constitution'">
+  <output>🏛️ Routing to Constitution PRD validation...</output>
+  <invoke-workflow path="{system_validate_workflow}" />
+</check>
+
+<check if="entity_type != 'constitution'">
+  <output>📋 Routing to {entity_type_display} PRD validation...</output>
+  <invoke-workflow path="{domain_validate_workflow}">
+    <param name="entity_type">{entity_type}</param>
+    <param name="entity_type_display">{entity_type_display}</param>
+    <param name="fr_prefix">{fr_prefix}</param>
+    <param name="output_folder_resolved">{output_folder_resolved}</param>
+    <param name="parent_prd_path">{parent_prd_path}</param>
+  </invoke-workflow>
+</check>
+</step>
+
+</workflow>

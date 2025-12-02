@@ -1,0 +1,57 @@
+# System PRD Creation Workflow (Constitution)
+name: create-system-prd
+description: "Create or update the System PRD (Constitution) with Platform Requirements (PR-xxx) and Integration Contracts (IC-xxx). This is the foundational document that ALL other entities inherit from."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
+date: system-generated
+
+# Federated hierarchy - Constitution is fixed
+entity_type: constitution
+entity_type_display: "Constitution"
+fr_prefix: "PR/IC"
+output_folder_resolved: "{project-root}/docs/platform/"
+constitution_path: "docs/platform/prd.md"
+parent_prd_path: ""
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-system-prd"
+instructions: "{installed_path}/instructions.md"
+
+# Templates
+prd_template: "{installed_path}/constitution-prd-template.md"
+
+# Checklists
+checklist: "{project-root}/.bmad/bmm/checklists/constitution-prd-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+
+# Input file patterns - Constitution references product brief
+input_file_patterns:
+  product_brief:
+    description: "Product vision and goals (required for Constitution)"
+    whole: "{output_folder_resolved}product-brief.md"
+    sharded: "{output_folder_resolved}product-brief/index.md"
+    load_strategy: "FULL_LOAD"
+
+  existing_prd:
+    description: "Existing Constitution PRD (if updating)"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+status_file: "{output_folder}/bmm-workflow-status.yaml"
+default_output_file: "{output_folder_resolved}prd.md"
+
+standalone: true

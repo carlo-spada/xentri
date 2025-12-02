@@ -1,0 +1,24 @@
+# PRD Validation Router Workflow
+name: validate-prd
+description: "Smart router that detects entity type and dispatches to the appropriate PRD validation workflow (validate-system-prd or validate-domain-prd)."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+
+# Target workflows
+system_validate_workflow: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-system-prd/workflow.yaml"
+domain_validate_workflow: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-domain-prd/workflow.yaml"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-prd"
+instructions: "{installed_path}/instructions.md"
+
+template: false
+standalone: true

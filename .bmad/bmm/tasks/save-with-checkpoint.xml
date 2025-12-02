@@ -1,0 +1,128 @@
+<task id="{bmad_folder}/bmm/tasks/save-with-checkpoint.xml" name="Save With Checkpoint">
+  <objective>Provide consistent save protocol with user approval for document changes</objective>
+
+  <description>
+    All document saves in BMAD workflows should follow a consistent pattern:
+    1. Show the content being saved
+    2. Display a checkpoint separator
+    3. Get user approval
+    4. Save the file
+    5. Confirm success
+
+    This ensures users always have visibility and control over document changes.
+  </description>
+
+  <inputs>
+    <variable name="file_path" required="true">Path where file will be saved</variable>
+    <variable name="content" required="true">Content to save</variable>
+    <variable name="section_name" required="false">Name of section being saved (for partial saves)</variable>
+    <variable name="is_new_file" required="false">Boolean indicating if this is a new file</variable>
+    <variable name="yolo_mode" required="false">If true, skip approval prompts</variable>
+  </inputs>
+
+  <returns>
+    <variable name="save_successful">Boolean: true if file was saved</variable>
+    <variable name="user_action">What the user chose: approved, edited, rejected</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Display Content Preview">
+      <check if="section_name is set">
+        <output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 Section: {section_name}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        </output>
+      </check>
+      <check if="section_name is not set">
+        <output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📄 Document: {file_path}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        </output>
+      </check>
+      <action>Display content (truncate if very long, show first 100 lines with note)</action>
+    </step>
+
+    <step n="2" title="Show Checkpoint and Get Approval" if="yolo_mode != true">
+      <output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💾 Save Checkpoint
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+File: {file_path}
+{is_new_file ? "Action: CREATE new file" : "Action: UPDATE existing file"}
+      </output>
+      <ask>
+Choose an option:
+[c] Continue - Save and proceed
+[e] Edit - Make changes before saving
+[a] Advanced Elicitation - Explore this section deeper
+[p] Party Mode - Get multi-agent perspectives
+[r] Reject - Skip this save
+[y] YOLO - Save this and approve all remaining sections automatically
+      </ask>
+      <action>WAIT for user response</action>
+    </step>
+
+    <step n="3" title="Handle User Response">
+      <logic>
+        <check if="response == 'c' OR response == 'continue'">
+          <action>Proceed to save</action>
+          <set var="user_action">approved</set>
+        </check>
+        <check if="response == 'e' OR response == 'edit'">
+          <ask>Please provide your edits or describe the changes you want:</ask>
+          <action>Apply user edits to content</action>
+          <action>Return to step 1 with updated content</action>
+          <set var="user_action">edited</set>
+        </check>
+        <check if="response == 'a' OR response == 'advanced'">
+          <action>Invoke advanced-elicitation task</action>
+          <action>Return to step 1 with enriched content</action>
+        </check>
+        <check if="response == 'p' OR response == 'party'">
+          <action>Invoke party-mode workflow for this section</action>
+          <action>Return to step 1 with multi-agent input</action>
+        </check>
+        <check if="response == 'r' OR response == 'reject'">
+          <set var="save_successful">false</set>
+          <set var="user_action">rejected</set>
+          <action>Skip save, return to calling workflow</action>
+        </check>
+        <check if="response == 'y' OR response == 'yolo'">
+          <action>Set yolo_mode = true for remainder of workflow</action>
+          <action>Proceed to save</action>
+          <set var="user_action">approved</set>
+        </check>
+      </logic>
+    </step>
+
+    <step n="4" title="Save File">
+      <check if="is_new_file">
+        <action>Create parent directories if needed</action>
+        <action>Write content to file_path</action>
+      </check>
+      <check if="not is_new_file">
+        <action>Update existing file with content</action>
+      </check>
+      <set var="save_successful">true</set>
+    </step>
+
+    <step n="5" title="Confirm Save">
+      <output>
+✅ Saved: {file_path}
+      </output>
+    </step>
+
+    <step n="6" title="Return Results">
+      <action>Return save_successful and user_action to calling workflow</action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>YOLO mode persists for the remainder of the workflow only</note>
+    <note>Each workflow invocation starts with yolo_mode = false</note>
+    <note>Advanced Elicitation and Party Mode enrich content before save</note>
+    <note>Rejected saves should be noted but not block workflow progress</note>
+  </notes>
+</task>

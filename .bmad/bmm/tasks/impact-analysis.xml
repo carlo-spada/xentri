@@ -1,0 +1,161 @@
+<task id="{bmad_folder}/bmm/tasks/impact-analysis.xml" name="Impact Analysis">
+  <objective>Scan downstream documents for references to changed items and generate an impact report</objective>
+
+  <description>
+    When amending documents in the federated hierarchy, changes may cascade downstream.
+    This task identifies all documents that reference the changed items and assesses
+    the impact of proposed changes.
+
+    Impact types:
+    - BREAKING: Change contradicts or removes something downstream depends on
+    - REQUIRING_UPDATE: Downstream docs need updating but aren't broken
+    - INFORMATIONAL: Downstream docs reference item but no change needed
+  </description>
+
+  <inputs>
+    <variable name="document_path" required="true">Path to document being amended</variable>
+    <variable name="entity_type" required="true">Entity type of the document</variable>
+    <variable name="changed_items" required="true">List of items being changed (e.g., FR-SHL-001, PR-003)</variable>
+    <variable name="change_type" required="true">One of: add, modify, remove</variable>
+  </inputs>
+
+  <returns>
+    <variable name="impact_report">Structured impact analysis report</variable>
+    <variable name="affected_documents">List of documents that reference changed items</variable>
+    <variable name="impact_severity">Overall severity: breaking, requiring_update, informational, none</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Determine Scan Scope">
+      <logic>
+        <check if="entity_type == 'constitution'">
+          <action>Scan ALL documents in docs/ hierarchy</action>
+          <set var="scan_scope">Full hierarchy (Constitution changes affect everything)</set>
+        </check>
+        <check if="entity_type == 'infrastructure_module'">
+          <action>Scan sibling infrastructure modules for interface dependencies</action>
+          <action>Note: Infrastructure modules don't have children</action>
+          <set var="scan_scope">Sibling infrastructure modules</set>
+        </check>
+        <check if="entity_type == 'strategic_container'">
+          <action>Scan all coordination units and business modules within this category</action>
+          <set var="scan_scope">All children within {category}/</set>
+        </check>
+        <check if="entity_type == 'coordination_unit'">
+          <action>Scan all business modules within this subcategory</action>
+          <set var="scan_scope">All children within {category}/{subcategory}/</set>
+        </check>
+        <check if="entity_type == 'business_module'">
+          <action>Business modules are terminal - no downstream to scan</action>
+          <set var="scan_scope">None (terminal node)</set>
+          <set var="impact_severity">none</set>
+          <action>SKIP to step 5</action>
+        </check>
+      </logic>
+    </step>
+
+    <step n="2" title="Scan for References">
+      <action>For each document in scan_scope:</action>
+      <substep n="2a">
+        <action>Search document content for each item in changed_items</action>
+        <action>Record: file path, line numbers, context snippets</action>
+      </substep>
+      <substep n="2b">
+        <action>Check frontmatter for parent_prd or inherits_from references</action>
+        <action>If references document_path, mark as directly dependent</action>
+      </substep>
+    </step>
+
+    <step n="3" title="Classify Impact">
+      <action>For each reference found:</action>
+      <logic>
+        <check if="change_type == 'remove' AND reference is direct dependency">
+          <set var="impact">BREAKING</set>
+          <set var="reason">Removing item that downstream document depends on</set>
+        </check>
+        <check if="change_type == 'modify' AND reference is direct implementation">
+          <set var="impact">REQUIRING_UPDATE</set>
+          <set var="reason">Downstream implementation may need adjustment</set>
+        </check>
+        <check if="change_type == 'add'">
+          <set var="impact">INFORMATIONAL</set>
+          <set var="reason">New item added, downstream may want to reference</set>
+        </check>
+        <check if="reference is informational only">
+          <set var="impact">INFORMATIONAL</set>
+          <set var="reason">Reference exists but no action required</set>
+        </check>
+      </logic>
+    </step>
+
+    <step n="4" title="Generate Impact Report">
+      <template>
+# Impact Analysis Report
+
+**Document:** {document_path}
+**Entity Type:** {entity_type}
+**Scan Scope:** {scan_scope}
+**Generated:** {date}
+
+## Changed Items
+{for each item in changed_items}
+- {item} ({change_type})
+{end for}
+
+## Impact Summary
+
+| Severity | Count |
+|----------|-------|
+| BREAKING | {breaking_count} |
+| REQUIRING_UPDATE | {update_count} |
+| INFORMATIONAL | {info_count} |
+
+**Overall Severity:** {impact_severity}
+
+## Affected Documents
+
+{for each affected_doc}
+### {affected_doc.path}
+- **Impact:** {affected_doc.impact}
+- **Reason:** {affected_doc.reason}
+- **References:**
+{for each ref in affected_doc.references}
+  - Line {ref.line}: `{ref.context}`
+{end for}
+{end for}
+
+## Recommendations
+
+{if impact_severity == 'breaking'}
+⚠️ **BREAKING CHANGES DETECTED**
+- Review each affected document before proceeding
+- Consider staged rollout or versioning
+- Update downstream documents before finalizing this change
+{end if}
+
+{if impact_severity == 'requiring_update'}
+📝 **Updates Needed**
+- Schedule updates to affected documents
+- Changes can proceed but downstream updates required
+{end if}
+
+{if impact_severity == 'informational'}
+ℹ️ **Informational Only**
+- No required actions
+- Consider notifying owners of affected documents
+{end if}
+      </template>
+    </step>
+
+    <step n="5" title="Return Results">
+      <action>Return impact_report, affected_documents, and impact_severity to calling workflow</action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>Zero-trust hierarchy means children only see what parent exposes</note>
+    <note>Constitution changes have widest impact - scan thoroughly</note>
+    <note>Business modules are terminal - they have no downstream</note>
+    <note>Amendment workflow should present this report before proceeding</note>
+  </notes>
+</task>

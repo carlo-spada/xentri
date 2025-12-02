@@ -1,0 +1,180 @@
+<task id="{bmad_folder}/bmm/tasks/verify-traceability.xml" name="Verify Traceability">
+  <objective>Verify that all requirements in a PRD are traced to epics and vice versa</objective>
+
+  <description>
+    Traceability ensures:
+    - Every FR in the PRD maps to at least one epic/story
+    - Every epic/story traces back to at least one FR
+    - No orphaned requirements or stories exist
+    - Coverage gaps are identified and reported
+
+    This task generates a traceability matrix and coverage report.
+  </description>
+
+  <inputs>
+    <variable name="prd_path" required="true">Path to PRD document</variable>
+    <variable name="epics_path" required="true">Path to epics document</variable>
+    <variable name="entity_type" required="true">Entity type for FR prefix validation</variable>
+    <variable name="fr_prefix" required="true">Expected FR prefix (e.g., FR-SHL, PR)</variable>
+  </inputs>
+
+  <returns>
+    <variable name="is_complete">Boolean: true if all requirements traced and all stories have FR</variable>
+    <variable name="coverage_percent">Percentage of FRs with epic coverage</variable>
+    <variable name="orphaned_frs">List of FRs without epic coverage</variable>
+    <variable name="orphaned_stories">List of stories without FR traceability</variable>
+    <variable name="traceability_matrix">Full mapping of FRs to epics/stories</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Load Documents">
+      <action>Read PRD from prd_path</action>
+      <action>Read Epics from epics_path</action>
+      <check if="either file not found">
+        <action>Report error and return with is_complete = false</action>
+      </check>
+    </step>
+
+    <step n="2" title="Extract Requirements from PRD">
+      <action>Scan PRD for requirement IDs matching pattern: {fr_prefix}-\d{3}</action>
+      <action>For Constitution, also scan for: PR-\d{3} and IC-\d{3}</action>
+      <action>Store each requirement with:</action>
+      <substep>
+        <item>ID (e.g., FR-SHL-001)</item>
+        <item>Title/Description</item>
+        <item>Priority (if specified)</item>
+        <item>Section location in PRD</item>
+      </substep>
+      <action>Store as requirements_list</action>
+    </step>
+
+    <step n="3" title="Extract Epics and Stories">
+      <action>Scan Epics document for epic and story definitions</action>
+      <action>For each epic, extract:</action>
+      <substep>
+        <item>Epic ID (e.g., Epic 1, 1-1, 1-1-1)</item>
+        <item>Title</item>
+        <item>Traced requirements (look for "Traces to:" or "Implements:" sections)</item>
+        <item>Child stories</item>
+      </substep>
+      <action>For each story, extract:</action>
+      <substep>
+        <item>Story ID</item>
+        <item>Title</item>
+        <item>Acceptance criteria FR references</item>
+      </substep>
+      <action>Store as epics_list and stories_list</action>
+    </step>
+
+    <step n="4" title="Build Traceability Matrix">
+      <action>Create matrix structure:</action>
+      <template>
+| Requirement | Epic | Stories | Status |
+|-------------|------|---------|--------|
+{for each requirement in requirements_list}
+| {requirement.id} | {find_epics(requirement.id)} | {find_stories(requirement.id)} | {status} |
+{end for}
+      </template>
+      <logic>
+        <check if="requirement has no epic or story">
+          <set var="status">❌ No Coverage</set>
+          <action>Add to orphaned_frs</action>
+        </check>
+        <check if="requirement has epic but no story">
+          <set var="status">⚠️ Epic Only</set>
+        </check>
+        <check if="requirement has epic and stories">
+          <set var="status">✅ Full Coverage</set>
+        </check>
+      </logic>
+    </step>
+
+    <step n="5" title="Find Orphaned Stories">
+      <action>For each story in stories_list:</action>
+      <logic>
+        <check if="story has no FR reference in acceptance criteria">
+          <action>Add to orphaned_stories</action>
+        </check>
+        <check if="story references FR not in requirements_list">
+          <action>Add warning: "Story references unknown FR"</action>
+        </check>
+      </logic>
+    </step>
+
+    <step n="6" title="Calculate Coverage">
+      <action>covered_count = requirements with at least one epic/story</action>
+      <action>total_count = total requirements in PRD</action>
+      <action>coverage_percent = (covered_count / total_count) * 100</action>
+      <action>is_complete = (orphaned_frs.length == 0 AND orphaned_stories.length == 0)</action>
+    </step>
+
+    <step n="7" title="Generate Report">
+      <template>
+# Traceability Verification Report
+
+**PRD:** {prd_path}
+**Epics:** {epics_path}
+**Entity Type:** {entity_type}
+**Generated:** {date}
+
+## Summary
+
+| Metric | Value |
+|--------|-------|
+| Total Requirements | {total_count} |
+| Covered Requirements | {covered_count} |
+| Coverage Percentage | {coverage_percent}% |
+| Orphaned Requirements | {orphaned_frs.length} |
+| Orphaned Stories | {orphaned_stories.length} |
+
+**Status:** {is_complete ? "✅ COMPLETE" : "❌ INCOMPLETE"}
+
+## Traceability Matrix
+
+{traceability_matrix}
+
+{if orphaned_frs.length > 0}
+## Orphaned Requirements (No Epic/Story Coverage)
+
+{for each fr in orphaned_frs}
+- **{fr.id}:** {fr.title}
+  - Location: {fr.section}
+  - Action: Create epic/story to cover this requirement
+{end for}
+{end if}
+
+{if orphaned_stories.length > 0}
+## Orphaned Stories (No FR Traceability)
+
+{for each story in orphaned_stories}
+- **{story.id}:** {story.title}
+  - Action: Add FR reference to acceptance criteria OR link to existing FR
+{end for}
+{end if}
+
+## Recommendations
+
+{if coverage_percent < 100}
+- [ ] Create epics/stories for {orphaned_frs.length} uncovered requirements
+{end if}
+{if orphaned_stories.length > 0}
+- [ ] Add FR traceability to {orphaned_stories.length} stories
+{end if}
+{if is_complete}
+- ✅ Traceability is complete. No action required.
+{end if}
+      </template>
+    </step>
+
+    <step n="8" title="Return Results">
+      <action>Return is_complete, coverage_percent, orphaned_frs, orphaned_stories, traceability_matrix</action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>100% coverage is the goal but not always achievable immediately</note>
+    <note>Stories should reference FRs in acceptance criteria for traceability</note>
+    <note>Epic-level traceability is acceptable for initial planning</note>
+    <note>This task should run during validation and before implementation</note>
+  </notes>
+</task>

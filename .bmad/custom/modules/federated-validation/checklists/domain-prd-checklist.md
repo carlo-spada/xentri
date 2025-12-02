@@ -7,7 +7,11 @@
 ### Frontmatter
 - [ ] `entity_type` present and matches one of: `infrastructure_module | strategic_container | coordination_unit | business_module`
 - [ ] `doc_type: prd` present
-- [ ] `parent: docs/platform/prd.md` present (references Constitution)
+- [ ] `parent` present and references direct parent PRD:
+  - Infrastructure Module → `docs/platform/prd.md` (Constitution)
+  - Strategic Container → `docs/platform/prd.md` (Constitution)
+  - Coordination Unit → `docs/{category}/prd.md` (Strategic Container)
+  - Business Module → `docs/{category}/{subcat}/prd.md` (Coordination Unit)
 - [ ] `scope` defined (used for FR-{SCOPE}-xxx prefix)
 
 ### Required Sections
@@ -59,22 +63,31 @@
 - [ ] Vision/future items marked as such
 - [ ] Out of Scope explicitly listed
 
-## 5. Level-Specific Checks
+## 5. Entity-Type-Specific Checks
 
-### For Category PRDs (Level 1)
-- [ ] Sets strategic direction for subcategories
-- [ ] FRs are high-level, delegating details to subcategories
+### For Infrastructure Module PRDs
+- [ ] Defines exposed interfaces (what this module provides)
+- [ ] Defines consumed interfaces (what this module requires)
+- [ ] Focus on technical boundaries and contracts
+- [ ] FRs scope to module-specific implementation
+
+### For Strategic Container PRDs
+- [ ] Sets strategic direction for coordination units
+- [ ] FRs are high-level, delegating details to children
+- [ ] Defines coordination patterns between subcategories
 - [ ] May be a brief rather than full PRD
 
-### For Subcategory PRDs (Level 2)
+### For Coordination Unit PRDs
 - [ ] Full PRD with implementation-ready FRs
-- [ ] References Category direction
+- [ ] References Strategic Container direction
+- [ ] Orchestrates modules within subcategory
 - [ ] Enough detail for Architecture workflow
 
-### For Module PRDs (Level 3)
+### For Business Module PRDs
 - [ ] May be minimal (module-specific concerns only)
-- [ ] FRs trace to Subcategory FRs
-- [ ] Focus on specific implementation boundaries
+- [ ] FRs trace to Coordination Unit FRs
+- [ ] Focus on specific feature implementation
+- [ ] Defines user-facing functionality
 
 ## 6. Readiness
 
@@ -88,12 +101,14 @@
 
 | Category | Items | Passed | Percentage |
 |----------|-------|--------|------------|
-| Structure | 9 | ? | ?% |
+| Structure | 12 | ? | ?% |
 | Constitution | 5 | ? | ?% |
 | FRs | 9 | ? | ?% |
 | Scope | 5 | ? | ?% |
-| Level-Specific | 3 | ? | ?% |
+| Entity-Type-Specific | 4 | ? | ?% |
 | Readiness | 3 | ? | ?% |
-| **Total** | **34** | **?** | **?%** |
+| **Total** | **38** | **?** | **?%** |
 
-**Minimum to pass:** 80% (27/34 items)
+**Note:** Entity-Type-Specific section has 4 items per entity type. Only check the items relevant to the document's `entity_type`.
+
+**Minimum to pass:** 80% (30/38 items)

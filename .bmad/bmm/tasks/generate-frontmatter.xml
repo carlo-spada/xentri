@@ -1,0 +1,96 @@
+<task id="{bmad_folder}/bmm/tasks/generate-frontmatter.xml" name="Generate Frontmatter">
+  <objective>Generate entity-type-aware YAML frontmatter for documents in the federated hierarchy</objective>
+
+  <description>
+    All documents in the federated hierarchy require consistent frontmatter that indicates:
+    - Entity type and document type
+    - Parent document reference (for inheritance chain)
+    - Creation and modification dates
+    - Status and version
+    - FR prefix for requirement IDs
+  </description>
+
+  <inputs>
+    <variable name="entity_type" required="true">From detect-entity-type task</variable>
+    <variable name="entity_type_display" required="true">Human-readable entity type</variable>
+    <variable name="document_type" required="true">One of: prd, architecture, epics, ux-design</variable>
+    <variable name="fr_prefix" required="true">Requirement ID prefix (e.g., FR-SHL, PR/IC)</variable>
+    <variable name="parent_prd_path" required="false">Path to parent PRD (empty for Constitution)</variable>
+    <variable name="title" required="true">Document title</variable>
+  </inputs>
+
+  <returns>
+    <variable name="frontmatter">Complete YAML frontmatter block</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Determine Document-Specific Fields">
+      <logic>
+        <check if="document_type == 'prd'">
+          <set var="doc_type_label">Product Requirements Document</set>
+          <set var="status_options">draft, review, approved, deprecated</set>
+        </check>
+        <check if="document_type == 'architecture'">
+          <set var="doc_type_label">Architecture Document</set>
+          <set var="status_options">draft, review, approved, deprecated</set>
+        </check>
+        <check if="document_type == 'epics'">
+          <set var="doc_type_label">Epics Document</set>
+          <set var="status_options">draft, review, approved, in-progress, complete</set>
+        </check>
+        <check if="document_type == 'ux-design'">
+          <set var="doc_type_label">UX Design Document</set>
+          <set var="status_options">draft, review, approved, deprecated</set>
+        </check>
+      </logic>
+    </step>
+
+    <step n="2" title="Generate Constitution Frontmatter" if="entity_type == 'constitution'">
+      <template>
+---
+title: "{title}"
+document_type: {document_type}
+entity_type: constitution
+fr_prefix: "{fr_prefix}"
+version: "1.0.0"
+status: draft
+created: {date}
+updated: {date}
+governance:
+  protected: true
+  change_requires: "Explicit flagging and rationale"
+  commit_format: "docs(constitution): {description}"
+---
+      </template>
+    </step>
+
+    <step n="3" title="Generate Domain Frontmatter" if="entity_type != 'constitution'">
+      <template>
+---
+title: "{title}"
+document_type: {document_type}
+entity_type: {entity_type}
+entity_type_display: "{entity_type_display}"
+fr_prefix: "{fr_prefix}"
+parent_prd: "{parent_prd_path}"
+inherits_from: "{parent_prd_path}"
+version: "1.0.0"
+status: draft
+created: {date}
+updated: {date}
+---
+      </template>
+    </step>
+
+    <step n="4" title="Return Frontmatter">
+      <action>Return the generated frontmatter block to calling workflow</action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>Constitution documents have governance section for change tracking</note>
+    <note>Domain documents reference their parent for inheritance validation</note>
+    <note>Version follows semver: major.minor.patch</note>
+    <note>Status transitions should be tracked in document history</note>
+  </notes>
+</task>

@@ -1,0 +1,174 @@
+<task id="{bmad_folder}/bmm/tasks/validate-inheritance.xml" name="Validate Inheritance">
+  <objective>Verify that a document does not contradict its parent constraints and properly inherits from the chain</objective>
+
+  <description>
+    The Zero-Trust Inheritance model requires:
+    - Each entity inherits from its DIRECT PARENT only (no skip-level)
+    - Children can ADD specificity but never CONTRADICT parent
+    - Constitution (docs/platform/prd.md) is the ultimate authority
+
+    This task validates that a document respects its inheritance chain.
+  </description>
+
+  <inputs>
+    <variable name="document_path" required="true">Path to document being validated</variable>
+    <variable name="document_content" required="true">Content of the document</variable>
+    <variable name="entity_type" required="true">Entity type of the document</variable>
+    <variable name="parent_prd_path" required="true">Path to parent PRD</variable>
+  </inputs>
+
+  <returns>
+    <variable name="is_valid">Boolean: true if no contradictions found</variable>
+    <variable name="violations">List of inheritance violations found</variable>
+    <variable name="warnings">List of potential issues (not violations)</variable>
+    <variable name="validation_report">Detailed report of validation</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Load Parent Chain">
+      <action>Load parent_prd_path document</action>
+      <action>Extract parent's constraints, requirements, and NFRs</action>
+      <check if="entity_type != 'constitution'">
+        <action>Load Constitution (docs/platform/prd.md) as ultimate authority</action>
+        <action>Extract PR-xxx (Platform Requirements) and IC-xxx (Integration Contracts)</action>
+      </check>
+    </step>
+
+    <step n="2" title="Extract Constraints from Parent">
+      <substep n="2a" title="Identify Mandatory Constraints">
+        <action>Find all MUST/SHALL/REQUIRED statements in parent</action>
+        <action>Find all PR-xxx and IC-xxx if Constitution is parent</action>
+        <action>Store as mandatory_constraints list</action>
+      </substep>
+      <substep n="2b" title="Identify Prohibited Items">
+        <action>Find all MUST NOT/SHALL NOT/PROHIBITED statements</action>
+        <action>Store as prohibited_items list</action>
+      </substep>
+      <substep n="2c" title="Identify Scope Boundaries">
+        <action>Determine what scope the parent defines for this child</action>
+        <action>Store as scope_boundaries</action>
+      </substep>
+    </step>
+
+    <step n="3" title="Validate Document Against Constraints">
+      <substep n="3a" title="Check for Contradictions">
+        <action>For each mandatory_constraint:</action>
+        <logic>
+          <check if="document contradicts constraint">
+            <action>Add to violations list with details</action>
+            <set var="violation.type">CONTRADICTION</set>
+            <set var="violation.severity">ERROR</set>
+          </check>
+          <check if="document ignores constraint that should be addressed">
+            <action>Add to warnings list</action>
+            <set var="warning.type">MISSING_REFERENCE</set>
+          </check>
+        </logic>
+      </substep>
+      <substep n="3b" title="Check for Prohibited Items">
+        <action>For each prohibited_item:</action>
+        <logic>
+          <check if="document includes prohibited item">
+            <action>Add to violations list</action>
+            <set var="violation.type">PROHIBITED</set>
+            <set var="violation.severity">ERROR</set>
+          </check>
+        </logic>
+      </substep>
+      <substep n="3c" title="Check Scope Boundaries">
+        <action>Verify document stays within defined scope</action>
+        <logic>
+          <check if="document defines items outside its scope">
+            <action>Add to violations list</action>
+            <set var="violation.type">SCOPE_VIOLATION</set>
+            <set var="violation.severity">ERROR</set>
+          </check>
+        </logic>
+      </substep>
+    </step>
+
+    <step n="4" title="Validate Constitution Compliance" if="entity_type != 'constitution'">
+      <action>Check document against Constitution PR-xxx and IC-xxx</action>
+      <logic>
+        <check if="document violates Platform Requirement">
+          <action>Add to violations with CONSTITUTION_VIOLATION type</action>
+          <set var="violation.severity">CRITICAL</set>
+        </check>
+        <check if="document violates Integration Contract">
+          <action>Add to violations with CONTRACT_VIOLATION type</action>
+          <set var="violation.severity">CRITICAL</set>
+        </check>
+      </logic>
+    </step>
+
+    <step n="5" title="Check Skip-Level References">
+      <action>Scan document for direct references to grandparent or higher</action>
+      <logic>
+        <check if="document references non-parent ancestor directly">
+          <action>Add to warnings list</action>
+          <set var="warning.type">SKIP_LEVEL_REFERENCE</set>
+          <set var="warning.message">Reference should go through parent chain</set>
+        </check>
+      </logic>
+      <note>Direct Constitution references are allowed but should be through inheritance</note>
+    </step>
+
+    <step n="6" title="Generate Validation Report">
+      <action>Set is_valid = (violations.length == 0)</action>
+      <template>
+# Inheritance Validation Report
+
+**Document:** {document_path}
+**Entity Type:** {entity_type}
+**Parent PRD:** {parent_prd_path}
+**Validated:** {date}
+
+## Result: {is_valid ? "✅ VALID" : "❌ INVALID"}
+
+{if violations.length > 0}
+## Violations ({violations.length})
+
+{for each violation in violations}
+### {violation.type} [{violation.severity}]
+- **Location:** {violation.location}
+- **Parent Constraint:** {violation.parent_constraint}
+- **Document States:** {violation.document_states}
+- **Resolution:** {violation.suggested_resolution}
+{end for}
+{end if}
+
+{if warnings.length > 0}
+## Warnings ({warnings.length})
+
+{for each warning in warnings}
+- **{warning.type}:** {warning.message}
+  - Location: {warning.location}
+{end for}
+{end if}
+
+{if is_valid AND warnings.length == 0}
+## Summary
+Document properly inherits from parent chain with no contradictions or concerns.
+{end if}
+
+## Inheritance Chain
+- Constitution: docs/platform/prd.md
+{if parent_prd_path != 'docs/platform/prd.md'}
+- Parent: {parent_prd_path}
+{end if}
+- This Document: {document_path}
+      </template>
+    </step>
+
+    <step n="7" title="Return Results">
+      <action>Return is_valid, violations, warnings, and validation_report to calling workflow</action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>Constitution violations are CRITICAL - must be resolved before approval</note>
+    <note>Zero-trust means children never directly negotiate with siblings</note>
+    <note>Parent curates what's shared between siblings</note>
+    <note>Skip-level references should be warnings, not errors (sometimes needed)</note>
+  </notes>
+</task>

@@ -1,0 +1,40 @@
+# Domain PRD Validation Workflow
+name: validate-domain-prd
+description: "Validate domain PRDs (Infrastructure Module, Strategic Container, Coordination Unit, Business Module) against quality standards, inheritance rules, and entity-specific requirements."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Federated hierarchy - determined at runtime
+entity_type: "{entity_type}"
+entity_type_display: "{entity_type_display}"
+fr_prefix: "{fr_prefix}"
+output_folder_resolved: "{output_folder_resolved}"
+prd_path: "{output_folder_resolved}prd.md"
+parent_prd_path: "{parent_prd_path}"
+constitution_path: "docs/platform/prd.md"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-domain-prd"
+instructions: "{installed_path}/instructions.md"
+
+# Entity-specific checklists
+checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-prd-checklist.md"
+checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-prd-checklist.md"
+checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-prd-checklist.md"
+checklist_business: "{project-root}/.bmad/bmm/checklists/business-prd-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+
+# Output
+validation_report_path: "{output_folder_resolved}validation-reports/prd-validation-{date}.md"
+
+template: false
+standalone: true

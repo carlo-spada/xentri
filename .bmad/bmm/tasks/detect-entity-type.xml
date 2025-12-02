@@ -1,0 +1,143 @@
+<task id="{bmad_folder}/bmm/tasks/detect-entity-type.xml" name="Detect Entity Type">
+  <objective>Detect the entity type from a given path or context and return appropriate variables for federated workflows</objective>
+
+  <description>
+    The Federated Requirements Model uses Five Entity Types (not levels):
+    - Constitution: System-wide rules at docs/platform/*.md
+    - Infrastructure Module: Platform modules at docs/platform/{module}/
+    - Strategic Container: Category-level at docs/{category}/ (has children)
+    - Coordination Unit: Subcategory-level at docs/{category}/{subcategory}/ (has children)
+    - Business Module: Terminal modules at docs/{category}/{subcategory}/{module}/
+
+    Entity type is determined by PURPOSE, not depth. Platform's L1 modules are Infrastructure Modules
+    (terminal nodes). Business category's L1 containers are Strategic Containers (have children).
+  </description>
+
+  <returns>
+    <variable name="entity_type">One of: constitution, infrastructure_module, strategic_container, coordination_unit, business_module</variable>
+    <variable name="entity_type_display">Human-readable: Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module</variable>
+    <variable name="fr_prefix">Requirement ID prefix: PR/IC for constitution, FR-{CODE} for others</variable>
+    <variable name="output_folder_resolved">Full path to the output folder for this entity</variable>
+    <variable name="parent_prd_path">Path to the parent PRD (for inheritance validation)</variable>
+    <variable name="constitution_path">Always docs/platform/prd.md - the system constitution</variable>
+    <variable name="entity_code">3-letter code from manifest (e.g., SHL, API, STR)</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Load Manifest">
+      <action>Read {project-root}/docs/manifest.yaml</action>
+      <action>Store manifest data for lookups</action>
+      <action>Verify manifest version is 4.0 or higher</action>
+    </step>
+
+    <step n="2" title="Normalize Input Path">
+      <action>Accept path as input (from workflow context or user)</action>
+      <action>Normalize: remove trailing slash, resolve to absolute if relative</action>
+      <action>Extract path segments after "docs/"</action>
+    </step>
+
+    <step n="3" title="Detect Entity Type">
+      <logic>
+        <rule priority="1" name="Constitution">
+          <condition>path matches "docs/platform/*.md" (file in platform root)</condition>
+          <result>
+            <set var="entity_type">constitution</set>
+            <set var="entity_type_display">Constitution</set>
+            <set var="fr_prefix">PR/IC</set>
+            <set var="output_folder_resolved">{project-root}/docs/platform/</set>
+            <set var="parent_prd_path"></set>
+            <set var="constitution_path">docs/platform/prd.md</set>
+            <set var="entity_code">SYS</set>
+          </result>
+        </rule>
+
+        <rule priority="2" name="Infrastructure Module">
+          <condition>path matches "docs/platform/{folder}/" AND folder is directory</condition>
+          <result>
+            <set var="entity_type">infrastructure_module</set>
+            <set var="entity_type_display">Infrastructure Module</set>
+            <action>Look up module code from manifest.platform.modules[folder].code</action>
+            <set var="fr_prefix">FR-{entity_code}</set>
+            <set var="output_folder_resolved">{project-root}/docs/platform/{folder}/</set>
+            <set var="parent_prd_path">docs/platform/prd.md</set>
+            <set var="constitution_path">docs/platform/prd.md</set>
+          </result>
+        </rule>
+
+        <rule priority="3" name="Strategic Container">
+          <condition>path matches "docs/{category}/" AND category != "platform" AND has_subdirectories</condition>
+          <result>
+            <set var="entity_type">strategic_container</set>
+            <set var="entity_type_display">Strategic Container</set>
+            <action>Look up category code from manifest.categories[category].code</action>
+            <set var="fr_prefix">FR-{entity_code}</set>
+            <set var="output_folder_resolved">{project-root}/docs/{category}/</set>
+            <set var="parent_prd_path">docs/platform/prd.md</set>
+            <set var="constitution_path">docs/platform/prd.md</set>
+          </result>
+        </rule>
+
+        <rule priority="4" name="Coordination Unit">
+          <condition>path matches "docs/{category}/{subcategory}/" AND has_subdirectories</condition>
+          <result>
+            <set var="entity_type">coordination_unit</set>
+            <set var="entity_type_display">Coordination Unit</set>
+            <action>Look up subcategory code from manifest.categories[category].subcategories[subcategory].code</action>
+            <set var="fr_prefix">FR-{category_code}-{entity_code}</set>
+            <set var="output_folder_resolved">{project-root}/docs/{category}/{subcategory}/</set>
+            <set var="parent_prd_path">docs/{category}/prd.md</set>
+            <set var="constitution_path">docs/platform/prd.md</set>
+          </result>
+        </rule>
+
+        <rule priority="5" name="Business Module">
+          <condition>path matches "docs/{category}/{subcategory}/{module}/" OR no_subdirectories at depth >= 2</condition>
+          <result>
+            <set var="entity_type">business_module</set>
+            <set var="entity_type_display">Business Module</set>
+            <action>Look up module code from manifest...modules[module].code</action>
+            <set var="fr_prefix">FR-{category_code}-{subcategory_code}-{entity_code}</set>
+            <set var="output_folder_resolved">{project-root}/docs/{category}/{subcategory}/{module}/</set>
+            <set var="parent_prd_path">docs/{category}/{subcategory}/prd.md</set>
+            <set var="constitution_path">docs/platform/prd.md</set>
+          </result>
+        </rule>
+
+        <rule priority="6" name="Default Fallback">
+          <condition>No other rule matched</condition>
+          <result>
+            <set var="entity_type">business_module</set>
+            <action>Warn user: "Could not determine entity type, defaulting to business_module"</action>
+          </result>
+        </rule>
+      </logic>
+    </step>
+
+    <step n="4" title="Display Detection Result">
+      <output>
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Entity Type Detection
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Path:           {input_path}
+        Entity Type:    {entity_type_display}
+        FR Prefix:      {fr_prefix}
+        Output Folder:  {output_folder_resolved}
+        Parent PRD:     {parent_prd_path or "N/A (this IS the Constitution)"}
+        Constitution:   {constitution_path}
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      </output>
+    </step>
+
+    <step n="5" title="Return Variables">
+      <action>Return all context variables to the calling workflow</action>
+    </step>
+  </flow>
+
+  <notes>
+    <note>Entity type is PURPOSE-based, not depth-based</note>
+    <note>Platform modules are ALWAYS Infrastructure Modules (terminal nodes with exposed interfaces)</note>
+    <note>Business category containers with children are Strategic Containers or Coordination Units</note>
+    <note>The Constitution (docs/platform/prd.md) contains PR-xxx and IC-xxx that ALL entities inherit</note>
+    <note>Lower entities can ADD requirements but never CONTRADICT higher entities</note>
+  </notes>
+</task>

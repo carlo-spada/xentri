@@ -1,0 +1,76 @@
+# Domain PRD Creation Workflow
+name: create-domain-prd
+description: "Create PRD for domain entities: Infrastructure Module, Strategic Container, Coordination Unit, or Business Module. Inherits from parent PRD and generates entity-appropriate requirements."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
+date: system-generated
+
+# Federated hierarchy - determined at runtime
+# These are set by detect-entity-type task or passed from router
+entity_type: "{entity_type}"
+entity_type_display: "{entity_type_display}"
+fr_prefix: "{fr_prefix}"
+output_folder_resolved: "{output_folder_resolved}"
+parent_prd_path: "{parent_prd_path}"
+constitution_path: "docs/platform/prd.md"
+entity_code: "{entity_code}"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-domain-prd"
+instructions: "{installed_path}/instructions.md"
+
+# Templates - single template with conditional sections
+prd_template: "{installed_path}/domain-prd-template.md"
+
+# Checklists - entity-specific (resolved at runtime)
+checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-prd-checklist.md"
+checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-prd-checklist.md"
+checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-prd-checklist.md"
+checklist_business: "{project-root}/.bmad/bmm/checklists/business-prd-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+
+# Data files for discovery (inherited from main prd workflow)
+project_types_data: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/project-types.csv"
+domain_complexity_data: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/domain-complexity.csv"
+
+# Input file patterns
+input_file_patterns:
+  constitution:
+    description: "System Constitution (always loaded)"
+    whole: "{project-root}/docs/platform/prd.md"
+    load_strategy: "FULL_LOAD"
+
+  parent_prd:
+    description: "Parent PRD for inheritance validation"
+    whole: "{parent_prd_path}"
+    load_strategy: "FULL_LOAD"
+
+  product_brief:
+    description: "Product brief if available"
+    whole: "{output_folder_resolved}product-brief.md"
+    sharded: "{output_folder_resolved}product-brief/index.md"
+    load_strategy: "FULL_LOAD"
+
+  existing_prd:
+    description: "Existing PRD at this level (if updating)"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+status_file: "{output_folder}/bmm-workflow-status.yaml"
+default_output_file: "{output_folder_resolved}prd.md"
+
+standalone: true

@@ -1,0 +1,31 @@
+# System PRD Validation Workflow (Constitution)
+name: validate-system-prd
+description: "Validate the System PRD (Constitution) against quality standards, completeness, and governance requirements."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Fixed paths for Constitution
+entity_type: constitution
+prd_path: "{project-root}/docs/platform/prd.md"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-system-prd"
+instructions: "{installed_path}/instructions.md"
+
+# Checklist
+checklist: "{project-root}/.bmad/bmm/checklists/constitution-prd-checklist.md"
+
+# Shared tasks
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+
+# Output
+validation_report_path: "{project-root}/docs/platform/validation-reports/prd-validation-{date}.md"
+
+template: false
+standalone: true
