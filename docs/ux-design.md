@@ -1,7 +1,15 @@
-# Xentri UX Design Specification
+---
+level: system
+document_type: ux-design
+title: "Xentri System UX Design"
+description: "System-wide UX principles, design system foundations, and interaction patterns that all categories must follow."
+---
+
+# Xentri UX Design Specification (System Constitution)
 
 _Created: 2025-11-25_
 _Major Revision: 2025-12-01 (v2.0 - Narrative Continuity & Theme Architecture)_
+_Level: System (applies to ALL categories)_
 _Generated using BMad Method - Create UX Design Workflow v1.0_
 
 ---
@@ -453,6 +461,8 @@ When a new organization is created, the Strategy Copilot suggests roles tailored
 
 **shadcn/ui** — Tailwind-native, copy-paste components built on Radix primitives.
 
+**Version:** shadcn/ui with Tailwind v4 + Radix UI primitives (latest stable as of 2025-01)
+
 **Rationale:**
 - Tailwind integration matches Xentri's stack (Astro Shell + React Islands)
 - Full customization control (no vendor CSS overrides)
@@ -460,7 +470,40 @@ When a new organization is created, the Strategy Copilot suggests roles tailored
 - Strong community, excellent documentation
 - AI-friendly (v0, Bolt, Cursor all understand it)
 
-### 8.2 4-Layer Neutral System
+### 8.2 Component Inventory
+
+**From shadcn/ui (used as-is or lightly customized):**
+
+| Component | Usage | Customization |
+|-----------|-------|---------------|
+| Button | All actions | Theme colors, density variants |
+| Card | Exception cards, content panels | Left border status indicator |
+| Dialog | Confirmations, detail views | Surface+ background |
+| Dropdown Menu | Context menus, actions | Theme styling |
+| Input | Form fields | Validation states |
+| Label | Form labels | Typography scale |
+| Select | Dropdowns | Theme styling |
+| Sheet | Mobile/tablet slide-overs | Side positioning |
+| Slider | Policy adjusters | Custom track styling |
+| Switch | Toggles | Theme colors |
+| Tabs | Module navigation | Active state styling |
+| Toast | Undo-first feedback | Green accent, undo action |
+| Tooltip | Contextual help | Theme styling |
+
+**Custom Components (Xentri-specific):**
+
+| Component | Purpose | Specification Section |
+|-----------|---------|----------------------|
+| Exception Card | Status-aware action cards | 9.1 |
+| Autonomy Badge | Autopilot health indicator | 9.3 |
+| Policy Slider | 3-position autonomy control | 9.4 |
+| Chronicle View | Narrative landing experience | 2.2 |
+| Efficiency View | Dense alternative landing | 2.3 |
+| Story Arc | Progress visualization | 2.4 |
+| Copilot Widget | Draggable AI assistant | 4.3 |
+| Pulse Header | Scope-aware greeting + summary | 3.3 |
+
+### 8.3 4-Layer Neutral System
 
 | Layer | Purpose |
 |-------|---------|
@@ -471,7 +514,60 @@ When a new organization is created, the Strategy Copilot suggests roles tailored
 
 Exact colors defined per theme in CSS variables.
 
-### 8.3 Content Canvas Pattern
+### 8.4 Typography System
+
+**Font Families:**
+
+| Role | Modern Theme | Power Theme | Fallback |
+|------|--------------|-------------|----------|
+| **Heading** | Cal Sans | Inter | system-ui, sans-serif |
+| **Body** | Inter | Inter | system-ui, sans-serif |
+| **Monospace** | JetBrains Mono | JetBrains Mono | ui-monospace, monospace |
+
+**Type Scale (rem-based, 1rem = 16px):**
+
+| Token | Size | Line Height | Weight | Usage |
+|-------|------|-------------|--------|-------|
+| `--text-xs` | 0.75rem (12px) | 1.5 | 400 | Captions, timestamps |
+| `--text-sm` | 0.875rem (14px) | 1.5 | 400 | Secondary text, labels |
+| `--text-base` | 1rem (16px) | 1.5 | 400 | Body text, inputs |
+| `--text-lg` | 1.125rem (18px) | 1.5 | 500 | Emphasized body |
+| `--text-xl` | 1.25rem (20px) | 1.4 | 600 | Card titles, section headers |
+| `--text-2xl` | 1.5rem (24px) | 1.3 | 600 | Page section titles |
+| `--text-3xl` | 1.875rem (30px) | 1.25 | 700 | Page titles |
+| `--text-4xl` | 2.25rem (36px) | 1.2 | 700 | Hero text (Chronicle greeting) |
+
+**Font Weights:**
+
+| Weight | Token | Usage |
+|--------|-------|-------|
+| 400 | `--font-normal` | Body text, secondary content |
+| 500 | `--font-medium` | Labels, emphasized body, buttons |
+| 600 | `--font-semibold` | Headings, card titles |
+| 700 | `--font-bold` | Page titles, strong emphasis |
+
+**Theme Density Adjustments:**
+
+| Theme | Body Size | Heading Adjustment | Line Height |
+|-------|-----------|-------------------|-------------|
+| Modern | 16px | Standard scale | 1.5 (relaxed) |
+| Power | 14px | -1 step (smaller) | 1.4 (tighter) |
+
+```css
+/* Typography tokens */
+:root {
+  --font-heading: 'Cal Sans', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+[data-theme="power-dark"], [data-theme="power-light"] {
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --text-base: 0.875rem; /* 14px for density */
+}
+```
+
+### 8.5 Content Canvas Pattern
 
 To avoid "card-on-card" ambiguity:
 
@@ -486,14 +582,56 @@ To avoid "card-on-card" ambiguity:
 
 ### 9.1 Exception Cards
 
-Cards for items needing user attention. Visual status via left border:
+Cards for items needing user attention. Visual status via left border.
 
-| Border Color | Status | Meaning |
-|--------------|--------|---------|
-| Warning (yellow) | Needs Review | Draft ready for approval |
-| Error (red) | Blocked | Requires action to proceed |
-| Success (green) | Auto-executed | FYI, completed automatically |
-| Info (blue) | Quarantine | Needs classification |
+**Status Types:**
+
+| Border Color | Status | Meaning | Icon |
+|--------------|--------|---------|------|
+| Warning (yellow) | Needs Review | Draft ready for approval | ⏳ |
+| Error (red) | Blocked | Requires action to proceed | ⚠️ |
+| Success (green) | Auto-executed | FYI, completed automatically | ✓ |
+| Info (blue) | Quarantine | Needs classification | ❓ |
+
+**Card Structure:**
+
+```
+┌────┬────────────────────────────────────────────────────────────┐
+│ ▌  │ [Icon] Title                                    [Timestamp]│
+│ ▌  │ Description or preview text                                │
+│ ▌  │                                                            │
+│ ▌  │                        [Secondary Action]  [Primary Action]│
+└────┴────────────────────────────────────────────────────────────┘
+  ↑
+  Status border (4px)
+```
+
+**Card States:**
+
+| State | Visual Treatment |
+|-------|------------------|
+| Default | Standard appearance |
+| Hover | Subtle background shift, shadow increase |
+| Selected | Primary color border highlight |
+| Expanded | Full content visible, actions prominent |
+| Collapsed | Preview only, actions hidden |
+| Loading | Content shimmer, actions disabled |
+| Disabled | 50% opacity, no interactions |
+
+**Card Variants:**
+
+| Variant | Use Case | Behavior |
+|---------|----------|----------|
+| **Compact** | Lists, mobile | Single line, minimal info |
+| **Standard** | Default | Title + description + actions |
+| **Expanded** | Detail view | Full content, all metadata |
+| **Inline** | Within Chronicle | No card chrome, embedded |
+
+**Accessibility:**
+- `role="article"` for semantic grouping
+- Status announced via `aria-label`
+- Actions have descriptive labels
+- Focus visible on card and actions separately
 
 ### 9.2 Toast Pattern (Undo-First)
 
@@ -503,29 +641,126 @@ Cards for items needing user attention. Visual status via left border:
 └─────────────────────────────────────────┘
 ```
 
-- Duration: 5 seconds
-- Always shows undo option
-- Success state with green left accent
+**Toast Types:**
+
+| Type | Icon | Border | Duration | Use Case |
+|------|------|--------|----------|----------|
+| Success | ✓ | Green | 5s | Action completed |
+| Error | ✗ | Red | Persistent | Action failed |
+| Warning | ⚠ | Yellow | 8s | Action needs attention |
+| Info | ℹ | Blue | 5s | Informational |
+| Loading | ⟳ | None | Until complete | In progress |
+
+**Toast States:**
+
+| State | Behavior |
+|-------|----------|
+| Entering | Slide in from bottom-right, fade in |
+| Visible | Static, timer counting |
+| Hovering | Timer paused, undo button highlighted |
+| Exiting | Fade out, slide down |
+| Dismissed | Immediate removal (via X or undo) |
+
+**Toast Variants:**
+
+| Variant | Description |
+|---------|-------------|
+| **With Undo** | Shows Undo button, action reversible |
+| **With Action** | Custom action button (e.g., "View") |
+| **Simple** | Message only, no actions |
+| **Persistent** | No auto-dismiss, requires manual close |
+
+**Stacking Behavior:**
+- Max 3 visible toasts
+- Newest at bottom
+- Older toasts compress/fade
+- Overflow: Show count badge "+2 more"
+
+**Accessibility:**
+- `role="status"` for non-urgent, `role="alert"` for errors
+- `aria-live="polite"` (or `assertive` for errors)
+- Focus moves to toast on error
+- Undo actionable via keyboard
 
 ### 9.3 Autonomy Badge
 
-Shows current autopilot status in header:
+Shows current autopilot status in header.
 
-| State | Color | Label |
-|-------|-------|-------|
-| Healthy | Green | "High" or "Balanced" |
-| Degraded | Yellow | "Degraded" |
-| Limited | Red | "Limited" |
+**Badge States:**
+
+| State | Color | Label | Icon | Meaning |
+|-------|-------|-------|------|---------|
+| Healthy | Green | "High" / "Balanced" | ● | All systems operational |
+| Degraded | Yellow | "Degraded" | ◐ | Some features limited |
+| Limited | Red | "Limited" | ○ | Manual mode required |
+
+**Badge Structure:**
+
+```
+┌─────────────────────┐
+│ ●  Balanced    ▾   │
+└─────────────────────┘
+```
+
+**Interactions:**
+- **Hover:** Tooltip with current policy summary
+- **Click:** Opens Autonomy Settings panel
+- **Dropdown (▾):** Quick-switch between presets
+
+**Badge Variants:**
+
+| Variant | Use Case |
+|---------|----------|
+| **Full** | Desktop header, shows label |
+| **Compact** | Mobile/tablet, icon only |
+| **Inline** | Within settings, expanded info |
+
+**Accessibility:**
+- `role="status"` for live updates
+- Color + icon + label (never color alone)
+- Focusable, activates dropdown
 
 ### 9.4 Policy Sliders
 
-For adjusting autonomy levels:
+For adjusting autonomy levels.
+
+**Slider Structure:**
 
 ```
 Autonomy Level                    Auto-send
 ├────────────────────────────────●────┤
 Suggest       Auto-draft       Auto-send
+   ↑              ↑                ↑
+ Position 1   Position 2      Position 3
 ```
+
+**Slider States:**
+
+| State | Visual Treatment |
+|-------|------------------|
+| Default | Track visible, thumb at current position |
+| Hover | Track highlighted, cursor changes |
+| Active/Dragging | Thumb enlarged, position label visible |
+| Focus | Focus ring around thumb |
+| Disabled | 50% opacity, no interaction |
+
+**Slider Types:**
+
+| Type | Positions | Use Case |
+|------|-----------|----------|
+| **Autonomy** | 3 (Conservative, Balanced, Autonomous) | Global preset |
+| **Action-Level** | 3 (Suggest, Auto-draft, Auto-send) | Per-action type |
+| **Continuous** | 0-100 | Percentage thresholds |
+
+**Keyboard Navigation:**
+- Left/Right arrows move between positions
+- Home/End jump to min/max
+- Step-by-step announcements
+
+**Accessibility:**
+- `role="slider"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`
+- `aria-valuetext` for human-readable position (e.g., "Balanced")
+- Labels visible and linked
 
 ### 9.5 Batch Operations
 
@@ -543,6 +778,253 @@ Priority recipe (in order):
 2. Time Sensitivity (SLA timer > deadline today > this week > none)
 3. Revenue Impact ($ amount > no $ attached)
 4. Staleness (Newer > Older, as tie-breaker only)
+
+### 9.7 Button Hierarchy
+
+**Button Variants:**
+
+| Variant | Appearance | Usage | Example |
+|---------|------------|-------|---------|
+| **Primary** | Solid fill, high contrast | Main action per context | "Send Reply", "Save" |
+| **Secondary** | Outline/border only | Supporting actions | "Cancel", "View Details" |
+| **Tertiary** | Text only, no border | Inline/low-emphasis actions | "Learn more", "Skip" |
+| **Destructive** | Red fill or outline | Dangerous/irreversible actions | "Delete", "Remove" |
+| **Ghost** | Transparent, icon-only | Toolbar actions, compact UI | Icon buttons in header |
+
+**Button States:**
+
+| State | Visual Treatment |
+|-------|------------------|
+| Default | Standard appearance |
+| Hover | Subtle brightness/opacity shift |
+| Active/Pressed | Darker shade, slight scale reduction |
+| Focus | 2px ring using `--color-focus` (visible focus indicator) |
+| Disabled | 50% opacity, cursor: not-allowed |
+| Loading | Spinner replaces text or icon, disabled state |
+
+**Button Sizes (follows density):**
+
+| Size | Height | Padding | Font Size | Usage |
+|------|--------|---------|-----------|-------|
+| `sm` | 32px | 12px 16px | 14px | Inline, compact areas |
+| `md` | 40px | 16px 24px | 16px | Default for most contexts |
+| `lg` | 48px | 20px 32px | 18px | Primary CTAs, mobile |
+
+**Usage Rules:**
+- One primary button per visible context
+- Destructive actions always require confirmation (see 9.11)
+- Icon-only buttons require tooltip
+- Loading state shows spinner; never double-submit
+
+### 9.8 Form Patterns
+
+**Form Layout:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Label *                                                      │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Input value                                             │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│ Helper text or validation message                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Form Field Structure:**
+1. **Label** — Always above input, never floating
+2. **Required indicator** — Asterisk (*) after label
+3. **Input** — Full width within container
+4. **Helper text** — Below input, muted color
+5. **Validation message** — Replaces helper text on error
+
+**Validation States:**
+
+| State | Border Color | Icon | Message Color |
+|-------|--------------|------|---------------|
+| Default | `--color-border` | None | N/A |
+| Focus | `--color-primary` | None | N/A |
+| Valid | `--color-success` | ✓ (optional) | Green |
+| Error | `--color-error` | ✗ | Red |
+| Warning | `--color-warning` | ⚠ | Yellow |
+
+**Validation Timing:**
+- Validate on blur (not on every keystroke)
+- Show errors immediately after first blur
+- Clear errors as user types valid input
+- Validate entire form on submit attempt
+
+**Form Accessibility:**
+- Labels linked to inputs via `htmlFor`/`id`
+- Error messages linked via `aria-describedby`
+- Required fields use `aria-required="true"`
+- Invalid fields use `aria-invalid="true"`
+- Focus moves to first error on submit failure
+
+**Common Form Patterns:**
+
+| Pattern | Behavior |
+|---------|----------|
+| **Inline edit** | Click to edit, blur to save, Escape to cancel |
+| **Auto-save** | Save on blur with debounce, show "Saved" toast |
+| **Multi-step** | Progress indicator, back/next buttons, validation per step |
+| **Confirmation field** | Match against original (passwords, emails) |
+
+### 9.9 Modal Pattern
+
+**Modal Types:**
+
+| Type | Size | Use Case | Close Behavior |
+|------|------|----------|----------------|
+| **Alert** | sm (400px) | Simple messages, errors | Click outside, Escape, X |
+| **Confirm** | sm (400px) | Destructive action confirmation | Explicit button only |
+| **Dialog** | md (560px) | Forms, detail views | Escape, X (warn if unsaved) |
+| **Panel** | lg (800px) | Complex editing, previews | Escape, X (warn if unsaved) |
+| **Fullscreen** | 100% | Immersive tasks (on mobile) | Explicit close button |
+
+**Modal Structure:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Title                                                    [X] │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│                     Modal Content                           │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                              [Secondary]  [Primary Action]   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Modal Behavior:**
+- Backdrop: Semi-transparent overlay, click dismisses (except Confirm)
+- Focus trap: Tab cycles within modal
+- Focus return: Return focus to trigger element on close
+- Scroll lock: Body scroll disabled while open
+- Stacking: Max 2 modals deep (avoid modal-from-modal)
+- Animation: Fade in + slight scale (respect prefers-reduced-motion)
+
+**Modal Accessibility:**
+- `role="dialog"` with `aria-modal="true"`
+- `aria-labelledby` pointing to title
+- Focus moves to first focusable element (or close button)
+- Escape key closes (announce action)
+
+### 9.10 Search Pattern
+
+**Search Trigger:**
+- Header search icon opens command palette (Cmd/Ctrl + K)
+- Inline search fields for scoped searches (within tables, lists)
+
+**Global Search (Command Palette):**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🔍  Search Xentri...                                        │
+├─────────────────────────────────────────────────────────────┤
+│ RECENT                                                      │
+│   📄 Acme Corp                                    Contact   │
+│   📊 Q4 Revenue                                  Story Arc  │
+├─────────────────────────────────────────────────────────────┤
+│ ACTIONS                                                     │
+│   ➕ Create new contact                          Cmd + N    │
+│   📋 Go to Chronicles                            Cmd + H    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Search Behavior:**
+- Instant results (debounced 150ms)
+- Category grouping (Contacts, Arcs, Actions, Settings)
+- Keyboard navigation (arrows, Enter to select)
+- Result type icons for visual scanning
+- No results: Show "No results for '[query]'" + suggestions
+
+**Inline Search (Tables/Lists):**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🔍  Filter contacts...                              [Clear] │
+└─────────────────────────────────────────────────────────────┘
+```
+
+- Filter as you type
+- Clear button appears when input has value
+- Show result count: "Showing 5 of 42"
+- Persist filter in URL for shareability
+
+### 9.11 Confirmation Pattern
+
+**When to Confirm:**
+
+| Action Type | Confirmation Required |
+|-------------|----------------------|
+| Delete/Remove | Always |
+| Bulk operations (>5 items) | Always |
+| Send external communication | If not auto-send policy |
+| Payment/financial | Always (high-risk) |
+| Permission changes | Always |
+| Publish/make public | Always |
+| Undo-able actions | Never (use toast with undo) |
+
+**Confirmation Dialog:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Delete Contact                                           [X] │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│ Are you sure you want to delete "Acme Corp"?                │
+│                                                             │
+│ This will remove all associated history and cannot be       │
+│ undone.                                                     │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                                   [Cancel]  [Delete]        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Confirmation Rules:**
+- Title states the action clearly
+- Body explains consequences
+- Primary button matches action verb ("Delete", not "Confirm")
+- Destructive actions use red primary button
+- Cancel is always available
+- No click-outside dismiss for destructive confirmations
+- Double-confirm for critical actions (type to confirm)
+
+### 9.12 Date/Time Pattern
+
+**Date Formats:**
+
+| Context | Format | Example |
+|---------|--------|---------|
+| **Display (relative)** | Smart relative | "Today", "Yesterday", "3 days ago" |
+| **Display (absolute)** | MMM D, YYYY | "Dec 1, 2025" |
+| **Display (with time)** | MMM D, YYYY h:mm A | "Dec 1, 2025 2:30 PM" |
+| **Input** | YYYY-MM-DD | "2025-12-01" (ISO for parsing) |
+| **Timestamp** | Relative + absolute on hover | "2 hours ago" → "Dec 1, 2025 10:30 AM" |
+
+**Relative Time Thresholds:**
+
+| Elapsed | Display |
+|---------|---------|
+| <1 min | "Just now" |
+| 1-59 min | "X minutes ago" |
+| 1-23 hours | "X hours ago" |
+| 1-6 days | "X days ago" / "Yesterday" |
+| 7-30 days | "Last week" / "2 weeks ago" |
+| >30 days | Absolute date |
+
+**Date Picker:**
+- Calendar view with month navigation
+- Today highlighted
+- Range selection for reports/filters
+- Quick presets: Today, Yesterday, Last 7 days, Last 30 days, Custom
+
+**Timezone Handling:**
+- Store all times in UTC
+- Display in user's local timezone (detected or configured)
+- Show timezone indicator for ambiguous times
+- Chronicle greeting uses local time for "Good morning/afternoon/evening"
 
 ---
 
@@ -572,11 +1054,194 @@ Priority recipe (in order):
 
 ### 10.4 Accessibility
 
-- WCAG 2.1 AA compliance target
-- Radix primitives handle keyboard navigation, focus management, ARIA
-- Color contrast ratios: 4.5:1 minimum for text
-- Touch targets: 44px minimum
-- Motion: Respect prefers-reduced-motion
+**Compliance Target:** WCAG 2.1 AA
+
+#### 10.4.1 Focus Management
+
+**Focus Indicators:**
+- All interactive elements have visible focus state
+- Focus ring: 2px solid `--color-focus` with 2px offset
+- Focus ring color meets 3:1 contrast against background
+- Never remove focus outline without visible alternative
+
+```css
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid CanvasText;
+  }
+}
+```
+
+**Focus Order:**
+- Logical tab order follows visual layout (left-to-right, top-to-bottom)
+- Skip links: "Skip to main content" as first focusable element
+- Focus trapped within modals/dialogs
+- Focus returns to trigger element when modal closes
+
+#### 10.4.2 Keyboard Navigation
+
+**Global Shortcuts:**
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd/Ctrl + K` | Open command palette |
+| `Escape` | Close modal/menu, cancel action |
+| `Tab` / `Shift+Tab` | Navigate forward/backward |
+| `Enter` / `Space` | Activate button/link |
+| `Arrow keys` | Navigate within menus, sliders |
+
+**Component-Specific:**
+
+| Component | Keys |
+|-----------|------|
+| Dropdown/Menu | Arrows navigate, Enter selects, Escape closes |
+| Tabs | Left/Right arrows switch tabs |
+| Modal | Tab trapped, Escape closes |
+| Slider | Left/Right adjust value |
+| Date Picker | Arrows navigate calendar, Enter selects |
+
+#### 10.4.3 Screen Reader Support
+
+**Semantic Structure:**
+- Use semantic HTML (`<nav>`, `<main>`, `<article>`, `<aside>`)
+- Heading hierarchy (h1 → h2 → h3) without skipping levels
+- Landmark regions for major sections
+- Lists for groups of related items
+
+**ARIA Usage:**
+
+| Element | ARIA Attributes |
+|---------|-----------------|
+| Modal | `role="dialog"`, `aria-modal="true"`, `aria-labelledby` |
+| Toast | `role="status"`, `aria-live="polite"` |
+| Error message | `role="alert"`, `aria-live="assertive"` |
+| Loading | `aria-busy="true"`, `aria-live="polite"` |
+| Expandable | `aria-expanded`, `aria-controls` |
+| Tabs | `role="tablist"`, `role="tab"`, `role="tabpanel"` |
+
+**Live Regions:**
+
+| Priority | Attribute | Use Case |
+|----------|-----------|----------|
+| Polite | `aria-live="polite"` | Success messages, status updates |
+| Assertive | `aria-live="assertive"` | Errors, urgent alerts |
+
+**Screen Reader Announcements:**
+- Form errors announced immediately
+- Loading states announced ("Loading...", "Complete")
+- Toast messages announced
+- Navigation changes announced ("Navigated to Finance")
+
+#### 10.4.4 Visual Accessibility
+
+**Color Contrast:**
+
+| Element | Minimum Ratio |
+|---------|---------------|
+| Body text | 4.5:1 |
+| Large text (18px+ or 14px bold) | 3:1 |
+| UI components (borders, icons) | 3:1 |
+| Focus indicators | 3:1 |
+
+**Color Independence:**
+- Never use color alone to convey meaning
+- Status indicators use icon + color + text
+- Links use underline + color
+- Form errors use icon + color + message
+
+**Alt Text Strategy:**
+
+| Image Type | Alt Text |
+|------------|----------|
+| Decorative | `alt=""` (empty, not omitted) |
+| Informative | Describe content and purpose |
+| Functional (button/link) | Describe action |
+| Complex (charts/graphs) | Brief alt + detailed description nearby |
+| User avatar | "[Name]'s avatar" or decorative if name shown |
+| Logo | "Xentri logo" (or decorative if in header) |
+
+#### 10.4.5 Form Accessibility
+
+**Labels and Instructions:**
+- Every input has visible label
+- Required fields marked with * and `aria-required`
+- Group related fields with `<fieldset>` and `<legend>`
+- Helper text linked via `aria-describedby`
+
+**Error Handling:**
+- Error messages linked to inputs via `aria-describedby`
+- Invalid inputs use `aria-invalid="true"`
+- Error summary at top of form on submit
+- Focus moves to first error
+- Errors announced to screen readers
+
+**Accessible Form Example:**
+```html
+<div class="form-field">
+  <label for="email">Email address *</label>
+  <input
+    type="email"
+    id="email"
+    aria-required="true"
+    aria-invalid="true"
+    aria-describedby="email-error email-hint"
+  />
+  <span id="email-hint" class="hint">We'll never share your email</span>
+  <span id="email-error" class="error" role="alert">
+    Please enter a valid email address
+  </span>
+</div>
+```
+
+#### 10.4.6 Motion and Animation
+
+**Reduced Motion:**
+- Respect `prefers-reduced-motion: reduce`
+- Essential animations (loading spinners) → reduce duration
+- Non-essential animations → disable entirely
+- No auto-playing video/animation
+- Provide pause controls for any motion
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+#### 10.4.7 Testing Strategy
+
+**Automated Testing:**
+- ESLint plugin: `eslint-plugin-jsx-a11y`
+- CI integration: axe-core via `@axe-core/react` or Playwright
+- Lighthouse accessibility audit (target: 90+)
+- Color contrast checker in design tools
+
+**Manual Testing Checklist:**
+
+| Test | Method |
+|------|--------|
+| Keyboard navigation | Tab through entire page without mouse |
+| Screen reader | Test with VoiceOver (Mac) or NVDA (Windows) |
+| Zoom | Test at 200% zoom, ensure no horizontal scroll |
+| Color contrast | Verify with browser DevTools |
+| Focus visibility | Ensure focus ring always visible |
+| Touch targets | Verify 44px minimum on mobile |
+
+**Testing Frequency:**
+- Every PR: Automated checks
+- Weekly: Manual keyboard navigation review
+- Sprint: Full screen reader test of new features
+- Quarterly: External accessibility audit
 
 ---
 
@@ -646,7 +1311,6 @@ Open Chronicle → Read "Since Yesterday" → Handle exceptions → Check Story 
 - Product Brief: [product-brief.md](./product-brief.md)
 - Epics: [epics.md](./epics.md)
 - Architecture: [architecture.md](./architecture.md)
-- Architectural Notes (pending integration): [ux-review-architectural-notes.md](./ux-review-architectural-notes.md)
 
 ### Interactive Deliverables
 
@@ -682,6 +1346,7 @@ Open Chronicle → Read "Since Yesterday" → Handle exceptions → Check Story 
 | 2025-11-26 | 1.2 | Changed default preset to Balanced; confirmed shadcn/ui | Carlo + Winston |
 | 2025-11-28 | 1.3 | Marked Journey 3 deferred; fixed paths | Carlo |
 | 2025-12-01 | **2.0** | **Major revision:** Narrative Continuity philosophy, Chronicle-first default, Hierarchical Pulse, Story Arcs, Theme Architecture (Modern/Power/Traditional), No-scroll constraint, CEO mental model, Copilot as human-in-the-loop, Brief-aware deep personalization | Carlo + Sally (UX Designer) |
+| 2025-12-01 | **2.1** | **Implementation readiness:** Added complete Typography system (fonts, scale, weights, line heights), Component Inventory with shadcn/ui version, Button Hierarchy, Form Patterns, Modal Pattern, Search Pattern, Confirmation Pattern, Date/Time Pattern, expanded Accessibility section (focus management, keyboard nav, screen reader support, alt text strategy, form a11y, testing strategy), full component state specifications (Exception Cards, Toast, Autonomy Badge, Policy Sliders) | Carlo + Sally (UX Designer) |
 
 ---
 

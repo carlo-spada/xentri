@@ -12,22 +12,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Documentation Navigation
 
-Documentation follows a **hierarchical structure** organized by category and module.
+Documentation follows a **4-level hierarchical structure**:
 
-### First: Determine Your Module Context
+| Level | Location | Contains | Example |
+|-------|----------|----------|---------|
+| **System (Constitution)** | `docs/` | PR-xxx, IC-xxx, system-wide rules | `docs/prd.md` |
+| **Category** | `docs/{category}/` | Category requirements (FR-{CAT}-xxx) | `docs/platform/prd.md` |
+| **Sub-category** | `docs/{category}/{subcategory}/` | Sub-category requirements | `docs/platform/frontend/prd.md` |
+| **Module** | `docs/{category}/{subcategory}/{module}/` | Module requirements | `docs/platform/frontend/shell/prd.md` |
+
+### First: Determine Your Context Level
 
 When starting a session, ask the user which area they're working on:
 
 ```
-Categories → Sub-categories:
+Level 0 - System: Working on constitutional docs (prd.md, architecture.md at docs/ root)
+
+Level 1-3 - Categories → Sub-categories → Modules:
 1. platform (meta)
-   - orchestration (cross-cutting, big picture)
+   - orchestration (platform coordination)
    - infrastructure (events, auth, billing, brief)
    - frontend (shell, ui)
    - backend (core-api)
    - shared (ts-schema)
 2. strategy (future)
-3. marketing (future) — formerly "brand"
+3. marketing (future)
 4. sales (future)
 5. finance (future)
 6. operations (future)
@@ -35,39 +44,49 @@ Categories → Sub-categories:
 8. legal (future)
 ```
 
-Store the selection as `{category}/{subcategory}/{module}` and resolve all doc paths accordingly.
+Store the selection as `{level}/{category}/{subcategory}/{module}` and resolve all doc paths accordingly.
 
 ### Documentation Structure
 
 ```
 docs/
+├── prd.md                      # LEVEL 0: System PRD (Constitution)
+├── architecture.md             # LEVEL 0: System Architecture
+├── ux-design.md                # LEVEL 0: System UX Principles
+├── epics.md                    # LEVEL 0: Cross-cutting Epics
+├── product-brief.md            # LEVEL 0: Foundational Vision
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Machine-readable module registry (v2.0)
-├── platform/                   # META CATEGORY: Core infrastructure
-│   ├── orchestration/          # Sub-category: Cross-cutting, big picture
-│   ├── infrastructure/         # Sub-category: Events, auth, billing, brief
-│   ├── frontend/               # Sub-category: User interface layer
-│   │   ├── shell/              # Module: Astro container (apps/shell)
-│   │   └── ui/                 # Module: Component library (packages/ui)
-│   ├── backend/                # Sub-category: API and services
-│   │   └── core-api/           # Module: Primary API (services/core-api)
-│   └── shared/                 # Sub-category: Cross-module contracts
-│       └── ts-schema/          # Module: Types & schemas (packages/ts-schema)
-├── strategy/                   # Strategy & Clarity Engine (planned)
-├── marketing/                  # Brand & Marketing (planned) — renamed from "brand"
+├── manifest.yaml               # Machine-readable registry (v3.0)
+│
+├── platform/                   # LEVEL 1: META CATEGORY
+│   ├── orchestration/          # LEVEL 2: Platform coordination
+│   ├── infrastructure/         # LEVEL 2: Events, auth, billing, brief
+│   ├── frontend/               # LEVEL 2: User interface layer
+│   │   ├── shell/              # LEVEL 3: Astro container (apps/shell)
+│   │   └── ui/                 # LEVEL 3: Component library (packages/ui)
+│   ├── backend/                # LEVEL 2: API and services
+│   │   └── core-api/           # LEVEL 3: Primary API (services/core-api)
+│   └── shared/                 # LEVEL 2: Cross-module contracts
+│       └── ts-schema/          # LEVEL 3: Types & schemas (packages/ts-schema)
+│
+├── strategy/                   # LEVEL 1: Strategy category (planned)
+├── marketing/                  # LEVEL 1: Marketing category (planned)
 └── ...                         # Other categories
 ```
 
 ### Key Documentation
 
-| Document | Location |
-|----------|----------|
-| Documentation Hub | `docs/index.md` |
-| Module Manifest | `docs/manifest.yaml` |
-| System Architecture | `docs/platform/orchestration/architecture.md` |
-| Product Requirements | `docs/platform/orchestration/prd.md` |
-| Deployment Guide | `docs/platform/orchestration/deployment-plan.md` |
-| Incident Response | `docs/platform/orchestration/incident-response.md` |
+| Document | Location | Level |
+|----------|----------|-------|
+| Documentation Hub | `docs/index.md` | — |
+| Module Manifest | `docs/manifest.yaml` | — |
+| **System PRD (Constitution)** | `docs/prd.md` | 0 |
+| **System Architecture** | `docs/architecture.md` | 0 |
+| **System UX Design** | `docs/ux-design.md` | 0 |
+| **System Epics** | `docs/epics.md` | 0 |
+| **Product Brief** | `docs/product-brief.md` | 0 |
+| Platform Deployment | `docs/platform/orchestration/deployment-plan.md` | 2 |
+| Incident Response | `docs/platform/orchestration/incident-response.md` | 2 |
 
 ### Module Management (IMPORTANT)
 
@@ -199,15 +218,16 @@ Key workflows:
 
 ## Governance Rules
 
-### Orchestration Document Changes
+### System Constitution Changes
 
-**Any change to orchestration-level documents requires explicit flagging and rationale.**
+**Any change to system-level (Level 0) documents requires explicit flagging and rationale.**
 
-Protected documents (in `docs/platform/orchestration/`):
-- `prd.md` — Product Requirements
-- `architecture.md` — System Architecture (includes Module Roadmap)
-- `epics.md` — Implementation Roadmap
-- `product-brief.md` — Product Vision
+Protected documents (in `docs/` root):
+- `prd.md` — System PRD (PR-xxx, IC-xxx)
+- `architecture.md` — System Architecture
+- `ux-design.md` — System UX Principles
+- `epics.md` — Cross-cutting Epics
+- `product-brief.md` — Foundational Vision
 
 When modifying these files:
 1. **Flag the change** in your response to the user
@@ -216,10 +236,14 @@ When modifying these files:
 
 Example commit message:
 ```
-docs(orchestration): Update architecture with caching strategy
+docs(system): Update architecture with caching strategy
 
 Rationale: New caching layer needed for performance targets.
 See ADR-006 for full decision record.
 ```
 
-This governance ensures architectural decisions are traceable and intentional.
+This governance ensures system-wide decisions are traceable and intentional.
+
+### Inheritance Rule
+
+Lower-level documents (category, sub-category, module) INHERIT all constraints from system-level documents. They can ADD requirements but never CONTRADICT system-level rules.

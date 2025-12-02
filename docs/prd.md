@@ -1,8 +1,16 @@
-# Xentri - Product Requirements Document
+---
+level: system
+document_type: prd
+title: "Xentri System PRD (Constitution)"
+description: "System-wide product requirements, platform requirements (PR-xxx), and integration contracts (IC-xxx) that all categories must follow."
+---
+
+# Xentri - Product Requirements Document (System Constitution)
 
 **Author:** Carlo
 **Date:** 2025-12-01
 **Version:** 2.1
+**Level:** System (applies to ALL categories)
 
 ---
 

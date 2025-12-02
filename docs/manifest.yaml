@@ -2,20 +2,53 @@
 # This file is the source of truth for navigating the documentation hierarchy.
 # AI agents should read this file first to understand the documentation structure.
 #
-# Structure: docs/{category}/{subcategory}/{module}/
-# Each subcategory follows full BMAD project structure with optional modules.
+# FOUR-LEVEL HIERARCHY:
+#   Level 0: System (Constitution) - docs/*.md
+#   Level 1: Category - docs/{category}/
+#   Level 2: Sub-category - docs/{category}/{subcategory}/
+#   Level 3: Module - docs/{category}/{subcategory}/{module}/
 
-version: "2.0"
-last_updated: "2025-11-29"
+version: "3.0"
+last_updated: "2025-12-01"
 project: Xentri
 
 # =============================================================================
-# HIERARCHY DEFINITIONS
+# LEVEL 0: SYSTEM CONSTITUTION
+# =============================================================================
+# These documents define system-wide rules that ALL categories must follow.
+# Location: docs/ (root level)
+# Changes require explicit governance review.
+
+system:
+  description: "Constitutional documents - system-wide rules for all categories"
+  location: "docs/"
+  documents:
+    - file: prd.md
+      type: prd
+      purpose: "Platform Requirements (PR-xxx) and Integration Contracts (IC-xxx)"
+    - file: architecture.md
+      type: architecture
+      purpose: "System-wide technology decisions and patterns"
+    - file: ux-design.md
+      type: ux-design
+      purpose: "System-wide UX principles and design system"
+    - file: epics.md
+      type: epics
+      purpose: "Cross-cutting initiatives and system-level roadmap"
+    - file: product-brief.md
+      type: product-brief
+      purpose: "Foundational vision - all work traces to this"
+  governance:
+    changes_require: "Explicit flagging and rationale"
+    protected: true
+
+# =============================================================================
+# HIERARCHY DEFINITIONS (Levels 1-3)
 # =============================================================================
 #
-# Category: Major domain of business value (e.g., platform, strategy, sales)
-# Sub-category: Capability area with its own product strategy (has PRD, architecture)
-# Module: Smallest unit of implementation and billing within a sub-category
+# Level 1 - Category: Major domain of business value (platform, strategy, sales)
+# Level 2 - Sub-category: Capability area with its own PRD and architecture
+# Level 3 - Module: Smallest unit of implementation and billing
 #
 # Meta designation: Internal infrastructure, not user-facing
 # - All of Platform is meta
@@ -34,16 +67,15 @@ categories:
     meta: true
     subcategories:
       orchestration:
-        purpose: "Cross-cutting concerns, big picture, system coherence"
+        purpose: "Platform-specific cross-cutting concerns and coordination (NOT system constitution - that's at docs/ root)"
         meta: true
         type: meta  # Not an SPA
         modules: []  # No implementation modules, just docs
         key_files:
-          - architecture.md
-          - prd.md
-          - product-brief.md
-          - deployment-plan.md
-          - incident-response.md
+          - deployment-plan.md      # Platform deployment strategy
+          - incident-response.md    # Platform incident handling
+          - module_matrix.md        # Platform module overview
+        notes: "System-wide constitutional docs (prd.md, architecture.md, etc.) are now at docs/ root level"
 
       infrastructure:
         purpose: "Events, authentication, billing, brief system"
@@ -161,21 +193,55 @@ categories:
 #   Agent: "Working in platform/backend/core-api for this session."
 
 # =============================================================================
-# STANDARD FOLDER STRUCTURE
+# STANDARD FOLDER STRUCTURE (4-Level Hierarchy)
 # =============================================================================
 #
-# Sub-category level (has its own product strategy):
+# Level 0 - System (Constitution):
+# docs/
+# ├── prd.md                 # System PRD (PR-xxx, IC-xxx)
+# ├── architecture.md        # System architecture
+# ├── ux-design.md           # System UX principles
+# ├── epics.md               # Cross-cutting epics
+# ├── product-brief.md       # Foundational vision
+# ├── manifest.yaml          # This file
+# └── index.md               # Navigation hub
+#
+# Level 1 - Category:
+# docs/{category}/
+# ├── README.md              # Category overview
+# ├── prd.md                 # Category requirements (FR-{CAT}-xxx)
+# ├── architecture.md        # Category-specific decisions
+# └── epics.md               # Category roadmap (optional)
+#
+# Level 2 - Sub-category:
 # docs/{category}/{subcategory}/
 # ├── README.md              # Sub-category overview
-# ├── prd.md                 # Sub-category requirements
+# ├── prd.md                 # Sub-category requirements (FR-{SUB}-xxx)
 # ├── architecture.md        # Technical decisions
-# ├── epics.md               # Implementation roadmap (optional)
-# └── {module}/              # Individual modules (if any)
+# ├── epics.md               # Implementation roadmap
+# └── {module}/              # Individual modules
 #
-# Module level (implementation unit):
+# Level 3 - Module:
 # docs/{category}/{subcategory}/{module}/
 # ├── README.md              # Module overview
+# ├── prd.md                 # Module requirements (FR-{MOD}-xxx)
 # ├── sprint-artifacts/      # Implementation tracking
 # │   ├── sprint-status.yaml
 # │   └── {story-files}.md
 # └── interfaces/            # Public contracts
+#
+# =============================================================================
+# INHERITANCE RULES
+# =============================================================================
+#
+# Each level INHERITS all constraints from above and can only ADD:
+# - Module inherits: System PRs + Category FRs + Sub-category FRs
+# - Sub-category inherits: System PRs + Category FRs
+# - Category inherits: System PRs
+#
+# Documents use frontmatter to declare their level:
+#   ---
+#   level: system | category | subcategory | module
+#   document_type: prd | architecture | epics | ux-design | product-brief
+#   parent: path/to/parent/prd.md (for non-system levels)
+#   ---

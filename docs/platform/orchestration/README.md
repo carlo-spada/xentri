@@ -1,47 +1,51 @@
 # Orchestration
 
-> System-wide architecture, cross-cutting concerns, and platform infrastructure.
+> Platform-specific coordination, deployment, and operational concerns.
 
-This module contains **big picture** documentation that spans across all modules. It defines:
-- System-wide architectural decisions
-- Cross-cutting infrastructure (deployment, observability)
-- Platform-level product requirements
-- Multi-module coordination patterns
+**Note:** System-wide constitutional documents (PRD, Architecture, UX Design, Epics, Product Brief) have moved to `docs/` root. See [docs/index.md](../../index.md) for the 4-level hierarchy.
 
-**Important:** This module contains NO module-specific implementation details. Each module (shell, core-api, etc.) has its own documentation folder.
+This sub-category contains **platform-specific** documentation:
+- Platform deployment and operations
+- Platform-specific coordination
+- Platform incident response
+- Platform UX prototypes and research
 
-## Contents
+## System Constitution (Level 0) — Now at docs/ root
+
+| Document | New Location |
+|----------|--------------|
+| System PRD | [docs/prd.md](../../prd.md) |
+| System Architecture | [docs/architecture.md](../../architecture.md) |
+| System UX Design | [docs/ux-design.md](../../ux-design.md) |
+| System Epics | [docs/epics.md](../../epics.md) |
+| Product Brief | [docs/product-brief.md](../../product-brief.md) |
+
+## Platform Operations (Level 2) — Remains Here
 
 | Document | Purpose |
 |----------|---------|
-| [architecture.md](./architecture.md) | Technical Constitution - system-wide decisions |
-| [prd.md](./prd.md) | Platform-level Product Requirements |
-| [product-brief.md](./product-brief.md) | Vision, personas, market positioning |
-| [epics.md](./epics.md) | Platform-level roadmap (cross-module milestones) |
-| [deployment-plan.md](./deployment-plan.md) | Railway deployment guide |
+| [deployment-plan.md](./deployment-plan.md) | Platform deployment guide |
 | [incident-response.md](./incident-response.md) | Platform troubleshooting runbook |
-| [testing-strategy.md](./testing-strategy.md) | Cross-module test philosophy |
-| [backlog.md](./backlog.md) | Future platform capabilities |
+| [module_matrix.md](./module_matrix.md) | Platform module overview |
 
 ## Subfolders
 
 | Folder | Contents |
 |--------|----------|
-| [architecture/](./architecture/) | ADRs and technical deep-dives |
-| [research/](./research/) | Market and competitive research |
-| [product/](./product/) | Product concept explorations |
-| [ux/](./ux/) | Platform-wide UX prototypes |
+| [architecture/](./architecture/) | Platform ADRs and technical deep-dives |
+| [research/](./research/) | Platform research artifacts |
+| [proposals/](./proposals/) | Platform proposals (e.g., federated requirements model) |
+| [ux/](./ux/) | Platform UX prototypes |
 | [sprint-artifacts/](./sprint-artifacts/) | Platform infrastructure stories |
 
-## What Belongs Here vs. Module Folders
+## What Belongs Where
 
-| Here (Orchestration) | Module Folders |
-|---------------------|----------------|
-| System-wide architecture | Module-specific architecture |
-| Cross-module event contracts | Module API endpoints |
-| Deployment infrastructure | Module build configuration |
-| Platform-level epics | Module-specific stories |
-| RLS and multi-tenancy design | Module data models |
+| Level 0 (docs/ root) | Level 2 (orchestration/) |
+|---------------------|--------------------------|
+| System-wide PRD (PR-xxx, IC-xxx) | Platform deployment |
+| System architecture | Platform incident response |
+| System UX principles | Platform UX prototypes |
+| Cross-cutting epics | Platform-specific research |
 
 ## Current Status
 

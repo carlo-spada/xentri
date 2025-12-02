@@ -1,8 +1,16 @@
-# Product Brief: Xentri
+---
+level: system
+document_type: product-brief
+title: "Xentri Product Brief"
+description: "The foundational vision document for Xentri. All category and module work traces back to this brief."
+---
+
+# Product Brief: Xentri (System Vision)
 
 **Date:** 2025-11-28 (revised)
 **Author:** Carlo
 **Context:** Enterprise Greenfield
+**Level:** System (foundational vision)
 
 ---
 

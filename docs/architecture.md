@@ -1,8 +1,16 @@
-# Xentri Architecture
+---
+level: system
+document_type: architecture
+title: "Xentri System Architecture"
+description: "System-wide architectural decisions, technology stack, and patterns that all categories must follow."
+---
+
+# Xentri Architecture (System Constitution)
 
 > **Status:** Draft
 > **Version:** 2.3.0
 > **Last Updated:** 2025-12-01
+> **Level:** System (applies to ALL categories)
 
 ## 1. Executive Summary
 
@@ -42,14 +50,14 @@ We employ a **Monorepo** structure managed by **Turborepo**.
 | Monorepo Tooling | Turborepo + pnpm workspaces | Turbo 2.6.1 / pnpm 10.23.0 | Fast incremental builds and deterministic installs across apps/services/packages. |
 | Backend Runtime & API | Node.js + Fastify REST APIs | Node 24.11.1 LTS / Fastify 5.6.2 | Current LTS for runtime security; schema-first, high-performance JSON APIs. |
 | Database & ORM | Postgres with Prisma | Postgres 16.11 / Prisma 7.0.1 | Typed queries with RLS support; aligns with event log and multi-tenant policies. |
-| AuthN/AuthZ | Clerk + JWT cookies | @clerk/fastify 3.x / @clerk/astro 1.x | Delegates identity with native Organizations support; email/OAuth/SSO; multi-tenant JWT claims (org_id, role) out of the box. |
-| Billing/Subscriptions | Clerk Billing (Stripe-backed) | Clerk Billing 1.x | Unified auth+billing; subscriptions tied to Clerk Organizations; supports module-based pricing model. (v0.4 scope) |
+| AuthN/AuthZ | Clerk + JWT cookies | @clerk/fastify 2.6.5 / @clerk/astro 2.16.3 | Delegates identity with native Organizations support; email/OAuth/SSO; multi-tenant JWT claims (org_id, role) out of the box. |
+| Billing/Subscriptions | Clerk Billing (Stripe-backed) | @clerk/backend 2.24.0 (Billing API) | Unified auth+billing via Backend SDK; subscriptions tied to Clerk Organizations; supports module-based pricing model. (v0.4 scope) |
 | Events & Transport | Postgres `system_events` log + Upstash Redis Streams | Upstash Redis (managed) | Durable source-of-truth log with pay-per-request streaming; scales from zero to millions. |
 | File/Object Storage | S3-compatible blobs (prod: AWS S3, local: MinIO) | MinIO 8.0.6 client (server RELEASE.2024-09-30) | Presigned uploads for media/assets; CDN-friendly and infra-portable. |
 | Deployment Target | Managed Kubernetes | k8s 1.31.0 | Standardized runtime for services, HPA-ready, secrets and ingress consistency. |
 | Observability | OpenTelemetry traces + Pino JSON logs to Loki/Grafana | OTel SDK 1.9.0 / Pino 10.1.0 | Trace propagation across shell/services; structured logs for debugging. |
 
-Version check date: 2025-11-26 (re-verify with WebSearch before releases).
+Version check date: 2025-12-01 (re-verify with WebSearch before releases).
 
 ### Version Compatibility Notes
 
@@ -447,6 +455,64 @@ Badge shows count of:
 * **Story Arcs:** New data entity to track long-running threads (e.g., "Deal Negotiation - Day 3").
 * **Session Bridging:** System must detect absence duration and generate a "Recap" narrative on return.
 * **Brief-Aware Config:** Copilots configure the system (roles, pipeline stages) based on the Universal Brief.
+
+**Story Arc Data Structure (ts-schema):**
+
+```typescript
+interface StoryArc {
+  id: string;                           // UUID
+  org_id: string;                       // Tenant context
+  scope: PulseScope;                    // Where this arc lives (strategy | category.{name} | etc.)
+
+  // Identity
+  title: string;                        // "Acme Corp Proposal"
+  arc_type: 'deal' | 'goal' | 'project' | 'improvement' | 'custom';
+  icon?: string;                        // Emoji or icon identifier
+
+  // Progress
+  status: 'active' | 'paused' | 'completed' | 'abandoned';
+  progress_type: 'timeline' | 'percentage' | 'milestone';
+  progress_current: number;             // Current value (day 3, 70%, milestone 2)
+  progress_target: number;              // Target value (5 days, 100%, 4 milestones)
+  progress_label?: string;              // Custom label: "Day 3/5" or "$42K / $60K"
+
+  // Timeline
+  started_at: string;                   // ISO8601
+  target_date?: string;                 // ISO8601 — when should this complete?
+  completed_at?: string;                // ISO8601 — when did it actually complete?
+
+  // Context
+  related_entity?: {                    // Link to source entity
+    type: string;                       // 'deal' | 'invoice' | 'project' | etc.
+    id: string;
+  };
+  related_events: string[];             // Event IDs that affected this arc
+
+  // Metadata
+  created_at: string;
+  updated_at: string;
+  created_by: { type: 'user' | 'system' | 'copilot'; id: string };
+}
+```
+
+**Story Arc API Endpoints:**
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/v1/arcs` | GET | List arcs for current org (filterable by scope, status) |
+| `/api/v1/arcs` | POST | Create a new arc (typically by copilot) |
+| `/api/v1/arcs/{id}` | GET | Get arc details |
+| `/api/v1/arcs/{id}` | PATCH | Update arc progress/status |
+| `/api/v1/arcs/{id}` | DELETE | Archive/delete arc |
+| `/api/v1/arcs/{id}/events` | GET | Get events related to this arc |
+
+**Arc Lifecycle:**
+
+1. **Creation:** Copilot identifies a thread worth tracking (deal response, goal set, project started)
+2. **Updates:** Events automatically update progress via event handlers
+3. **Promotion:** Arcs can be promoted to parent scopes (module → subcategory → category → strategy)
+4. **Completion:** Marked complete when target reached or manually closed
+5. **Archival:** Completed arcs move to history after 30 days
 
 ---
 

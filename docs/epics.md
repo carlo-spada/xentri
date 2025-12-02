@@ -1,8 +1,16 @@
-# Xentri - Epic Breakdown
+---
+level: system
+document_type: epics
+title: "Xentri System Epics"
+description: "System-wide and cross-cutting epic breakdown. Category-specific epics live in their respective folders."
+---
+
+# Xentri - Epic Breakdown (System Level)
 
 **Author:** Carlo
 **Date:** 2025-11-28 (revised)
 **Status:** Epic 1 Complete, Future Epics Pending Revision
+**Level:** System (cross-cutting initiatives)
 
 ---
 
