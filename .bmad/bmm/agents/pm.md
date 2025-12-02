@@ -14,17 +14,16 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📊 FEDERATED LEVEL SELECTION:
-      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
-      - This guides the user through the 4-level documentation hierarchy:
-        Level 0: System Constitution (docs/)
-        Level 1: Category (docs/{category}/)
-        Level 2: Subcategory (docs/{category}/{subcategory}/)
-        Level 3: Module (docs/{category}/{subcategory}/{module}/)
-      - Store ALL returned variables:
-        {current_level}, {current_level_name}, {current_category},
-        {current_subcategory}, {current_module}, {output_folder_resolved},
-        {constitution_path}, {parent_prd_path}
+  <step n="3">📊 FEDERATED ENTITY TYPE DETECTION:
+      - Use {project-root}/.bmad/bmm/tasks/detect-entity-type.xml for workflows that need it
+      - The Five Entity Types (determined by PURPOSE, not depth):
+        Constitution: docs/platform/*.md (system rules)
+        Infrastructure Module: docs/platform/{module}/ (terminal platform nodes)
+        Strategic Container: docs/{category}/ (business category with children)
+        Coordination Unit: docs/{category}/{subcategory}/ (coordinates modules)
+        Business Module: docs/{category}/{subcategory}/{module}/ (terminal feature nodes)
+      - Workflows now detect entity type automatically via detect-entity-type task
+      - Router workflows (create-prd, validate-prd, amend-prd) handle routing
       - Use {output_folder_resolved} for all output paths in workflows</step>
   <step n="4">Remember: user's name is {user_name}</step>
 
@@ -83,11 +82,14 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*help">Show numbered menu</item>
     <item cmd="*workflow-init" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/init/workflow.yaml">Start a new sequenced workflow path</item>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
-    <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Create Product Requirements Document (PRD)</item>
+    <!-- Federated PRD Workflows (Five Entity Types) -->
+    <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-prd/workflow.yaml">Create PRD (auto-detects entity type: Constitution, Infrastructure, Strategic, Coordination, Business)</item>
+    <item cmd="*validate-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-prd/workflow.yaml">Validate PRD with entity-specific checklist and inheritance check</item>
+    <item cmd="*amend-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-prd/workflow.yaml">Amend PRD with impact analysis on downstream entities</item>
+    <!-- Legacy PRD workflow (full discovery) -->
+    <item cmd="*create-prd-full" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Create PRD with full discovery (legacy workflow)</item>
     <item cmd="*create-epics-and-stories" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics-and-stories/workflow.yaml">Break PRD requirements into implementable epics and stories</item>
-    <item cmd="*validate-prd" validate-workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Validate PRD + Epics + Stories completeness and quality</item>
-    <item cmd="*validate-constitution" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-constitution/workflow.yaml">Validate System Constitution (Level 0 PRD with PRs and ICs)</item>
-    <item cmd="*validate-domain-prd" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-domain-prd/workflow.yaml">Validate Domain PRD (Category/Subcategory/Module level)</item>
+    <!-- Legacy validation (kept for backward compatibility) -->
     <item cmd="*validate-epic" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-epic/workflow.yaml">Validate Epic with Traceability Matrix</item>
     <item cmd="*tech-spec" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Create Tech Spec (Simple work efforts, no PRD or Architecture docs)</item>
     <item cmd="*validate-tech-spec" validate-workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Validate Technical Specification Document</item>

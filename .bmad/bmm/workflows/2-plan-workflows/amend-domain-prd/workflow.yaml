@@ -1,0 +1,31 @@
+# Domain PRD Amendment Workflow
+name: amend-domain-prd
+description: "Amend domain PRDs (Infrastructure Module, Strategic Container, Coordination Unit, Business Module) with impact analysis on downstream entities."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Federated hierarchy - determined at runtime
+entity_type: "{entity_type}"
+entity_type_display: "{entity_type_display}"
+fr_prefix: "{fr_prefix}"
+output_folder_resolved: "{output_folder_resolved}"
+prd_path: "{output_folder_resolved}prd.md"
+parent_prd_path: "{parent_prd_path}"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-domain-prd"
+instructions: "{installed_path}/instructions.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+impact_analysis_task: "{project-root}/.bmad/bmm/tasks/impact-analysis.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+
+template: false
+standalone: true
