@@ -405,17 +405,20 @@ The current single PRD checklist must be split into three:
 ### 5.3 Template Changes
 
 **New: Constitution PRD Template**
+
 - Platform Requirements section with numbered PR-xxx
 - Integration Contracts section with numbered IC-xxx
 - Sub-category requirements section
 - No Functional Requirements section (that's for domain PRDs)
 
 **New: Domain PRD Template**
+
 - Constitution compliance section
 - Functional Requirements section with FR-{SCOPE}-xxx
 - Lighter structure (inherits NFRs from constitution)
 
 **Modified: Epic Template**
+
 - Add traceability matrix section
 - Add "Implements" and "Uses Contracts" fields to stories
 - Add cross-team dependency documentation
@@ -583,31 +586,54 @@ validation_routing:
 
 ---
 
-## Part 8: Open Questions for BMad Builder
+## Part 8: BMad Builder Decisions & Rationale
 
-1. **Checklist file organization:**
-   - Single file with sections, or separate files per document type?
-   - Recommendation: Separate files for clarity
+**Date:** 2025-12-01
+**Decider:** BMad Builder Agent
 
-2. **Workflow routing:**
-   - Auto-detect document type, or ask user?
-   - Recommendation: Auto-detect with override option
+### 1. Checklist File Organization
 
-3. **Cross-sub-category dependencies:**
-   - How should BMAD handle FR references across sub-categories?
-   - Recommendation: Explicit "Blocked By" field with external FR reference
+**Decision:** **Separate Files**
 
-4. **Constitution updates:**
-   - What governance workflow when PRs or ICs change?
-   - Recommendation: Special workflow requiring explicit approval
+- `checklists/constitution-checklist.md`
+- `checklists/domain-prd-checklist.md`
+- `checklists/epic-checklist.md`
 
-5. **Validation timing:**
-   - Validate constitution before allowing domain PRDs?
-   - Recommendation: Yes, constitution must pass before domain PRDs can reference it
+**Rationale:** Modular files are more efficient to parse and load individually. Monolithic checklists create unnecessary cognitive load for agents and humans alike.
 
-6. **Backward compatibility:**
-   - How to handle projects that don't use this model?
-   - Recommendation: Detect based on document structure; fall back to current checklist
+### 2. Workflow Routing
+
+**Decision:** **Auto-detect via Frontmatter**
+
+- **Mechanism:** Add `doc_type: constitution` or `doc_type: domain_prd` to document frontmatter.
+- **Rationale:** Deterministic and fast. Asking the user for input breaks the flow of automated validation. Explicit metadata is always superior to heuristic guessing.
+
+### 3. Cross-Sub-Category Dependencies
+
+**Decision:** **Explicit `Blocked By` Fields**
+
+- **Format:** `Blocked By: FR-{SCOPE}-{ID}`
+- **Rationale:** Structured data allows for automated dependency graph generation. Vague text references are untraceable.
+
+### 4. Constitution Updates
+
+**Decision:** **Dedicated Workflow**
+
+- **Rationale:** Changing the "laws of the land" (PRs/ICs) is a high-risk operation requiring specific ceremony and safety checks. It should not be mixed with standard PRD edits.
+
+### 5. Validation Timing
+
+**Decision:** **Strict Sequencing**
+
+- **Rule:** Constitution must pass validation *before* Domain PRDs can reference it.
+- **Rationale:** You cannot build on a shifting foundation. Integrity must be verified at the root before the branches.
+
+### 6. Implementation Strategy (Crucial)
+
+**Decision:** **Custom Module (`federated-validation`)**
+
+- **Action:** Created `.bmad/custom/modules/federated-validation/`
+- **Rationale:** Modifying core BMAD workflows (`prd/workflow.yaml`) creates upgrade conflicts. A custom module isolates this advanced capability, keeping the core clean and making the federated model portable to other projects.
 
 ---
 
@@ -622,6 +648,7 @@ This federated model enables:
 - **Appropriate validation** via document-type-specific checklists
 
 The BMad Builder should review this proposal and determine:
+
 1. Which elements to adopt
 2. How to implement in BMAD workflows
 3. Whether to make this optional or default for multi-team projects

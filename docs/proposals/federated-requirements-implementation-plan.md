@@ -61,6 +61,7 @@ Level 3 - Module: docs/{category}/{subcategory}/{module}/
 ### 1.3 Inheritance Model
 
 Each level **inherits** all constraints from above:
+
 - Module inherits: System PRs + Category FRs + Sub-category FRs
 - Sub-category inherits: System PRs + Category FRs
 - Category inherits: System PRs
@@ -101,6 +102,7 @@ Each level **inherits** all constraints from above:
 ### 2.2 Retrofit System PRD with PR/IC Labels
 
 **Action needed:** Go through `docs/prd.md` and:
+
 1. Identify platform-wide mandates → Label as PR-xxx
 2. Identify integration contracts → Label as IC-xxx
 3. Keep domain-specific features → Will become FR-xxx in category PRDs
@@ -187,67 +189,45 @@ validation_routing:
 
 ---
 
-## Open Questions for Review
+## Decisions on Open Questions
 
 ### Question 1: Granularity of Naming
 
-Should every requirement at every level have a formal ID?
+**Decision:** **Option B (Hybrid)**
 
-| Option | Pros | Cons |
-|--------|------|------|
-| **A: Full formal IDs everywhere** | Complete traceability | Bureaucratic overhead |
-| **B: Formal IDs for System + Sub-category only** | Balanced | Modules may have orphaned requirements |
-| **C: Formal IDs for System only** | Minimal overhead | Lose traceability at lower levels |
-
-**Current recommendation:** Option B - Formal IDs at System (PR/IC) and Sub-category (FR-{SUB}). Modules can use informal requirements.
+- **System Level:** Formal IDs (`PR-xxx`, `IC-xxx`) are **MANDATORY**.
+- **Sub-Category Level:** Formal IDs (`FR-{SCOPE}-xxx`) are **MANDATORY**.
+- **Module Level:** Informal requirements allowed, but must trace to Sub-Category FRs.
 
 ### Question 2: Migration Path for Existing Epics
 
-Epic 1 is complete. How do we handle retroactive traceability?
+**Decision:** **Option C (Incremental)**
 
-| Option | Approach |
-|--------|----------|
-| **A: Full retrofit** | Go back and add traceability to completed stories |
-| **B: Forward-only** | Only new epics use traceability |
-| **C: Incremental** | Add traceability as we touch stories |
-
-**Current recommendation:** Option C - Add traceability incrementally.
+- We will not halt work to retrofit old stories. We will add traceability as we touch them.
+- **Exception:** The Constitution (`docs/prd.md`) was retrofitted immediately to establish the baseline.
 
 ### Question 3: Category PRDs
 
-When a new category starts (e.g., Strategy), should we require a full Category PRD before sub-category work?
+**Decision:** **Option C (Brief First)**
 
-| Option | Approach |
-|--------|----------|
-| **A: Mandatory Category PRD** | Category PRD required before any sub-category |
-| **B: Optional Category PRD** | Sub-categories can start with just system inheritance |
-| **C: Lightweight Category Brief** | Simple category brief, not full PRD |
-
-**Current recommendation:** Option C - Categories start with a brief, full PRD comes later if needed.
+- Categories start with a Product Brief.
+- Full PRD is only required when complexity demands it (e.g., multiple sub-categories needing coordination).
 
 ### Question 4: Validation Workflow Changes
 
-Should we modify existing BMAD workflows or create new ones?
+**Decision:** **Option B (New Workflows in Custom Module)**
 
-| Option | Approach |
-|--------|----------|
-| **A: Modify existing** | Update prd/workflow.yaml with routing |
-| **B: Create new workflows** | New validate-constitution, validate-domain-prd |
-| **C: Add new checklist only** | Keep workflow, add constitution-checklist.md |
-
-**Current recommendation:** Option C first, then B if needed.
+- We created a new module: `federated-validation`.
+- We did NOT modify core BMAD workflows.
+- This ensures upgrade safety and modularity.
 
 ### Question 5: Integration Contracts and Code
 
-ICs define contracts (event schemas, API formats). Should IC definitions:
+**Decision:** **Option B (Reference Code)**
 
-| Option | Approach |
-|--------|----------|
-| **A: Live only in PRD** | ICs are documentation only |
-| **B: Reference code** | ICs point to canonical code (e.g., `packages/ts-schema`) |
-| **C: Be machine-readable** | ICs defined in YAML/JSON, code generates from them |
-
-**Current recommendation:** Option B - ICs reference canonical code definitions.
+- ICs in the PRD are the *legal* definition.
+- They point to `packages/ts-schema` as the *technical* definition.
+- The PRD governs the Code.
 
 ---
 
@@ -258,6 +238,7 @@ ICs define contracts (event schemas, API formats). Should IC definitions:
 **Risk:** The federated model adds complexity without proportional value.
 
 **Mitigation:**
+
 - Start with naming convention only (Phase 2)
 - Measure: Does traceability catch gaps? Does it slow us down?
 - Only add more if value proven
@@ -267,6 +248,7 @@ ICs define contracts (event schemas, API formats). Should IC definitions:
 **Risk:** Some modules use the model, others don't.
 
 **Mitigation:**
+
 - Make it opt-in initially
 - Add validation to CI only after model is proven
 - Document clear examples
@@ -276,6 +258,7 @@ ICs define contracts (event schemas, API formats). Should IC definitions:
 **Risk:** External tools or links reference old paths.
 
 **Mitigation:**
+
 - Constitutional docs moved via git mv (history preserved)
 - Old paths now 404 (no silent failures)
 - Update all known references
@@ -285,6 +268,7 @@ ICs define contracts (event schemas, API formats). Should IC definitions:
 **Risk:** AI dev agents don't understand the new hierarchy.
 
 **Mitigation:**
+
 - `manifest.yaml` is the source of truth
 - `CLAUDE.md` updated with clear hierarchy
 - Frontmatter on every doc declares its level
@@ -294,27 +278,34 @@ ICs define contracts (event schemas, API formats). Should IC definitions:
 ## Proposed Phase 2 Implementation Steps
 
 ### Step 1: Retrofit System PRD (Low Effort)
+
 - [ ] Add PR-xxx labels to existing platform mandates
 - [ ] Add IC-xxx labels to existing integration contracts
 - [ ] Add "Platform Requirements" section to PRD
 - [ ] Add "Integration Contracts" section to PRD
 
 ### Step 2: Add Traceability Matrix (Low Effort)
+
 - [ ] Add matrix to `docs/epics.md`
 - [ ] Map completed stories to PRs and ICs
 - [ ] Verify no orphaned requirements
 
 ### Step 3: Create Constitution Checklist (Medium Effort)
-- [ ] Write `constitution-checklist.md`
-- [ ] Test against current system PRD
-- [ ] Document gaps found
+
+- [x] Create `federated-validation` module
+- [x] Write `constitution-checklist.md`
+- [x] Write `domain-prd-checklist.md`
+- [x] Write `epic-checklist.md`
+- [x] Implement validation workflows
 
 ### Step 4: Update Proposal Document (Low Effort)
+
 - [ ] Reflect 4-level model in federated-requirements-model.md
 - [ ] Archive or supersede original proposal
 - [ ] Document decisions made
 
 ### Step 5: Pilot on New Sub-category (Medium Effort)
+
 - [ ] When infrastructure/events starts, use full federated model
 - [ ] Create infrastructure PRD with FR-INFRA-xxx
 - [ ] Create epics with traceability matrix
