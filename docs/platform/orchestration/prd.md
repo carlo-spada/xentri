@@ -1,8 +1,8 @@
 # Xentri - Product Requirements Document
 
 **Author:** Carlo
-**Date:** 2025-11-28
-**Version:** 2.0
+**Date:** 2025-12-01
+**Version:** 2.1
 
 ---
 
@@ -200,6 +200,58 @@ How do we prevent noise? **Hierarchical Filtering.**
     - It makes the final decision based on the *Universal Brief* (e.g., "Ignore the invoice, call the client to save the relationship").
 
 **Result:** The Owner sees only what survives four layers of intelligent filtering (unless they choose to dig deeper, because the rest of the information is still there, it just might have a lower priority and wasn't able to surface to a higher level filter).
+
+### Hierarchical Pulse Views
+
+**Decision:** Every level of the hierarchy exposes its own Pulse view.
+
+| Level | Pulse View | Content | Who Sees It |
+|-------|------------|---------|-------------|
+| **Strategy** | Strategy Pulse | What survived all 4 layers of filtering | Owner/Founder — the CEO briefing |
+| **Category** | Category Pulse | What's happening in that category | Category managers |
+| **Sub-category** | Sub-category Pulse | What's happening in that sub-category | Team leads |
+| **Module** | Module Pulse | What's happening in that specific module | Module users |
+
+**Landing Logic:**
+
+- User lands on their **highest-level available** Pulse based on permissions
+- Multi-scope users land on **most recently used** scope
+- Owner lands on Strategy Pulse by default
+
+**Drilling Down:**
+
+Users can always drill down from any Pulse to see more detail:
+- Strategy Pulse → Click category → Category Pulse → Click sub-category → Sub-category Pulse → Click module → Module Pulse
+
+Each level shows what was promoted from below, with links to the source for context.
+
+### Context-Aware Copilot Widget
+
+**Decision:** A draggable widget that summons the context-relevant copilot.
+
+**Behavior:**
+
+| State | Appearance | Function |
+|-------|------------|----------|
+| **Collapsed** | Small icon + notification badge | User-positionable anywhere on screen |
+| **Panel** | Right or bottom panel | Shares screen with SPA content |
+| **Full** | Replaces main content area | Full copilot focus, SPA hidden |
+
+**Context Awareness:**
+
+The widget shows the copilot relevant to the current view:
+- Viewing Strategy Pulse → Strategy Copilot
+- Viewing Finance category → Finance Copilot
+- Viewing Invoicing module → Invoicing Sub-agent
+
+**Response Modes:**
+
+| Mode | When | Experience |
+|------|------|------------|
+| **Quick Answer** | Short question, collapsed widget | Streaming text in small overlay |
+| **Full Interaction** | Complex question, expanded widget | Full chat with history and tools |
+
+**Notification Badge:** Shows count of unread copilot suggestions and pending recommendations for the current scope.
 
 ### The War Room
 
@@ -495,6 +547,33 @@ If it's wrong, they adjust. But the default is *intelligent*, not generic.
 - Brief → Module Config mapping driven by copilots
 - User override always available — intelligent defaults, not locked constraints
 
+### What Copilots Can Configure
+
+Copilots don't just change labels — they **structurally configure** the system based on the Brief.
+
+| Configuration | What It Means | Examples |
+|---------------|---------------|----------|
+| **Pipeline stages** | Define the workflow stages for a module | Doctor: Inquiry → Consultation → Treatment → Ongoing Care<br>Hotel: Inquiry → Booking → Stay → Review<br>Startup: Lead → Qualified → Demo → Proposal → Close |
+| **Flexible fields** | Add/remove entity attributes | Doctor adds "Insurance Provider", Hotel adds "Room Preferences", Startup adds "Company Size" |
+| **Role suggestions** | Recommend team roles based on business type | Restaurant: Chef, Server, Host, Manager<br>Agency: Account Manager, Creative Director, Developer |
+| **Module recommendations** | Suggest which modules to activate | Service business → Scheduling module<br>E-commerce → Inventory module |
+| **Default settings** | Pre-configure module behavior | Invoice payment terms based on industry norms<br>Follow-up timing based on sales cycle |
+| **Workflow rules** | Set up automation triggers | Auto-remind after X days (based on industry patterns)<br>Escalation rules based on client importance |
+
+**The Principle:** Intelligent defaults, not locked constraints. Users can always override what the copilot configured.
+
+**The Experience:**
+
+```
+User completes Brief
+    → Copilot reads Brief
+    → Copilot configures module (pipeline, fields, settings)
+    → User sees: "I've set up your CRM with these stages: [stages]. Does this match how you work?"
+    → User confirms, adjusts, or asks for alternatives
+```
+
+**One question, not fifty.** The copilot does the configuration work. The user validates.
+
 ### The Competitive Moat
 
 **Competitors compete on features. Xentri competes on fit.**
@@ -635,6 +714,7 @@ From foundation to polish:
 | Level | Principle | What It Means |
 |-------|-----------|---------------|
 | **Foundation** | Calm, not noisy | The system respects attention. Surface what matters when it matters. |
+| **Spatial** | No-scroll, full-screen | The entire application fits the viewport. Zero scrolling. Content density respects screen real estate. |
 | **Interaction** | Conversational-first | Default is dialogue. Talk to accomplish, don't navigate to configure. |
 | **Fallback** | Forms when needed | Never force one pattern. Some users prefer structure. |
 | **Trust** | Explain, don't hide | Every automated action comes with "here's why." |
@@ -643,6 +723,31 @@ From foundation to polish:
 | **Adaptation** | Context-aware interaction | Language, tone, and terminology adapt to the business type. |
 | **Continuity** | Narrative awareness | Each session continues the story. The system remembers where you are. |
 | **Polish** | Delight in details | Micro-interactions that make users feel understood. "How did it know that?" moments. |
+
+### No-Scroll Design Constraint
+
+**Decision:** The entire application is a full-screen experience with zero scrolling.
+
+**Rationale:** Scrolling creates cognitive overhead and hides information. A calm system shows everything that matters in a single view.
+
+**Implications:**
+
+| Component | Constraint |
+|-----------|------------|
+| **Sidebar** | Only one category expanded at a time; collapsible to icons for maximum SPA space |
+| **Content area** | All Pulse views, forms, and content must fit viewport |
+| **Module tabs** | Overflow handling required (if 10+ modules, show most-used + "more" overflow) |
+| **Mobile** | Fundamentally different layout required (separate design needed) |
+
+**Sidebar Behavior:**
+
+1. Categories only in sidebar (7 items max)
+2. Click category → sub-categories expand inline (shows only recommended + owned)
+3. Click sub-category → SPA loads with module tabs at top
+4. Only ONE category expanded at a time (accordion pattern)
+5. Sidebar can collapse to icon-only mode for maximum SPA space
+
+**Exception:** Long-form content (documentation, legal text, detailed reports) may scroll within a dedicated content area, but the shell frame remains fixed.
 
 ### Context-Aware Interaction
 
@@ -1301,6 +1406,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 |---------|------|--------|---------|
 | 1.0 | 2025-11-25 | Carlo + AI | Initial PRD (superseded) |
 | 2.0 | 2025-11-28 | Carlo + BMAD Team | Complete rewrite with party mode collaboration |
+| 2.1 | 2025-12-01 | Carlo + Winston | Integrated UX review: hierarchical Pulse views, no-scroll constraint, copilot widget, sidebar behavior, expanded Brief-aware personalization |
 
 ### Contributors
 

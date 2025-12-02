@@ -1,7 +1,7 @@
 # Xentri Architecture
 
 > **Status:** Draft
-> **Version:** 2.2.0
+> **Version:** 2.3.0
 > **Last Updated:** 2025-12-01
 
 ## 1. Executive Summary
@@ -262,6 +262,7 @@ The "Category Consolidation" pattern uses vertical scaling initially. Split to h
 | **Category isolation needed** | One sub-agent causing instability | Extract to dedicated pod |
 
 **Split Protocol:**
+
 1. Identify bottleneck sub-agent via tracing
 2. Create dedicated deployment for that agent
 3. Update service mesh routing
@@ -277,7 +278,7 @@ The "Category Consolidation" pattern uses vertical scaling initially. Split to h
 
 **Generation Pipeline:**
 
-```
+```ts
 ts-schema (Zod)
   → zod-to-json-schema
   → schemas/*.json
@@ -300,6 +301,131 @@ ts-schema (Zod)
 | Integration | Vitest + pytest | Round-trip: Node emits → Redis → Python consumes → validates |
 
 **Implication:** CI enforces `pnpm run generate:schemas` on any `ts-schema` change. Custom Zod validators (`.refine()`) don't auto-translate—require manual integration tests.
+
+### ADR-011: Hierarchical Pulse Architecture
+
+**Context:** The UX design requires that every level of the hierarchy (Strategy, Category, Sub-category, Module) exposes its own Pulse view. This enables CEO-level briefings at the top and operational detail at the bottom.
+
+**Decision:** We implement a **Fractal Pulse System** where each hierarchy level produces and consumes Pulse data.
+
+**Pulse Hierarchy:**
+
+| Level | Pulse View | Content | Audience |
+|-------|------------|---------|----------|
+| **Strategy Pulse** | What survived all 4 layers of filtering | CEO briefing — cross-domain synthesis | Owner/Founder |
+| **Category Pulse** | What's happening in that category | Department head view | Category managers |
+| **Sub-category Pulse** | What's happening in that sub-category | Team lead view | Sub-category owners |
+| **Module Pulse** | What's happening in that specific module | Operational view | Module users |
+
+**Landing Logic:**
+
+1. User lands on their **highest-level available** Pulse based on permissions
+2. Multi-scope users land on **most recently used** scope (tracked in user session)
+3. Owner/Founder lands on Strategy Pulse by default
+
+**Pulse Data Structure (ts-schema):**
+
+```typescript
+interface PulseItem {
+  id: string;
+  scope: PulseScope;                    // strategy | category.{name} | subcategory.{name} | module.{name}
+  source_event_id: string;              // Link to originating event
+  importance: 1 | 2 | 3 | 4 | 5;        // 1 = highest
+  title: string;
+  summary: string;
+  action_required: boolean;
+  action_url?: string;
+  expires_at?: string;                  // ISO8601 — auto-dismiss after
+  created_at: string;
+  promoted_from?: string;               // If escalated from child scope
+}
+
+type PulseScope =
+  | 'strategy'
+  | `category.${string}`
+  | `subcategory.${string}`
+  | `module.${string}`;
+```
+
+**API Endpoints:**
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/v1/pulse/{scope}` | Get Pulse items for a specific scope |
+| `GET /api/v1/pulse/landing` | Get user's landing Pulse (respects permissions + last used) |
+| `POST /api/v1/pulse/{scope}/dismiss/{id}` | Dismiss a Pulse item |
+| `PUT /api/v1/users/me/last-scope` | Update user's last used scope |
+
+**Promotion Logic (Escalation):**
+
+When a child agent determines an item should surface to a parent:
+
+1. Child emits event with `promote_to: "parent"` flag
+2. Parent agent receives, re-evaluates importance in parent context
+3. If still important, creates new PulseItem at parent scope with `promoted_from` reference
+4. Original item remains at child scope (user can drill down)
+
+**Implication:** Each agent level (Strategy, Category, Sub-category, Module) must implement Pulse output generation. The Python Agent Layer processes events and produces Pulse items as part of its synthesis cycle.
+
+---
+
+### ADR-012: Copilot Widget Architecture
+
+**Context:** The UX design specifies a draggable widget that summons the context-relevant copilot, supporting both quick answers and full interaction modes.
+
+**Decision:** We implement a **Context-Aware Copilot Widget** as a Shell-level component.
+
+**Widget States:**
+
+| State | Appearance | Behavior |
+|-------|------------|----------|
+| **Collapsed** | Small icon + notification badge | User-positionable, persists position |
+| **Panel** | Right or bottom panel (user choice) | Shares screen with SPA content |
+| **Full** | Replaces main section | SPA content hidden, full copilot focus |
+
+**Context Resolution:**
+
+The widget determines which copilot to summon based on navigation context:
+
+```typescript
+interface CopilotContext {
+  scope: 'strategy' | 'category' | 'subcategory' | 'module';
+  category?: string;
+  subcategory?: string;
+  module?: string;
+}
+
+// Resolution order:
+// 1. Current route → extract scope
+// 2. Load copilot for that scope
+// 3. Pass current Brief section + recent events as context
+```
+
+**Widget State Persistence:**
+
+| State | Storage | Scope |
+|-------|---------|-------|
+| Position (x, y) | localStorage | Per device |
+| Preferred mode (panel/full) | User preferences table | Per user |
+| Collapsed/expanded | Session storage | Per session |
+
+**Copilot Response Modes:**
+
+| Mode | Trigger | Behavior |
+|------|---------|----------|
+| **Quick Answer** | Short question, collapsed widget | Streaming text in small overlay |
+| **Full Interaction** | Complex question, panel/full mode | Full chat interface with history |
+
+**Notification Badge Logic:**
+
+Badge shows count of:
+- Unread copilot suggestions for current scope
+- Pending recommendations awaiting user action
+- Clears on widget open
+
+**Implication:** Shell must track navigation context and pass it to the widget. Copilot services must support both streaming (quick) and full conversation (stateful) modes.
+
+---
 
 ### ADR-010: Resilience & Graceful Degradation
 
@@ -468,7 +594,7 @@ spec:
 
 **Sticky Sessions:** For socket.io, ensure `upstream-hash-by` routes same client to same pod.
 
-### n8n Worker Deployment
+### n8n Worker Deployment (legacy?)
 
 n8n runs in **Queue Mode** with separate main and worker processes:
 
@@ -567,6 +693,7 @@ We standardize on **Google Cloud Platform (GCP)** for the "Client Zero" implemen
 **Scripts location:** `scripts/load-tests/`
 
 **Baseline Protocol:**
+
 1. Deploy to staging with production-like data (anonymized)
 2. Run load test suite
 3. Record p50, p75, p95, p99 for each endpoint
@@ -586,6 +713,7 @@ We standardize on **Google Cloud Platform (GCP)** for the "Client Zero" implemen
 | `__tests__/` | Test directory (alternative) | `src/lib/__tests__/` |
 
 **Mock Patterns:**
+
 * Use factory functions for test data: `createMockBrief()`, `createMockUser()`
 * Factories live in `src/test/factories/`
 * Use `vi.mock()` for module mocks, prefer dependency injection where possible
@@ -783,6 +911,7 @@ We prioritize **Indirect Communication** (Stigmergy/Events) to decouple the 175+
 **Strategy:** Last-write-wins with user notification.
 
 When conflict detected:
+
 1. Show diff preview (local vs server versions)
 2. User chooses: "Keep mine" / "Keep server" / "Merge manually"
 3. Decision logged in event spine for audit
@@ -818,9 +947,10 @@ Step 1: Profile → Step 2: Organization → Step 3: Language & Region → Dashb
 ```
 
 **Data captured:**
-- Profile: Name, email (pre-filled from Clerk), phone (optional)
-- Organization: Name, industry, size (Solo / 2-10 / 11-50 / 51+)
-- Language & Region: Language, timezone, currency
+
+* Profile: Name, email (pre-filled from Clerk), phone (optional)
+* Organization: Name, industry, size (Solo / 2-10 / 11-50 / 51+)
+* Language & Region: Language, timezone, currency
 
 #### Settings Page Structure
 
@@ -917,6 +1047,7 @@ ALTER TABLE organizations ADD COLUMN default_language TEXT DEFAULT 'en';
 | **User-generated content** | Stored in original language |
 | **System-generated (Copilot)** | Responds in user's preferred language |
 | **Emails/notifications** | Rendered in user's preferred language |
+
 * **Testing:**
   * Unit Tests: Jest/Vitest per package.
   * E2E Tests: Playwright running against the full docker-compose stack.
@@ -952,12 +1083,14 @@ redis-cli XADD n8n:jobs MAXLEN ~10000 * [fields from DLQ message]
 ```
 
 **Poison Message Handling:**
+
 1. Messages that fail 3x go to DLQ
 2. After 24 hours in DLQ without manual intervention, archive to `dlq:archive:{stream}:{date}`
 3. Archive retained for 30 days for forensics
 4. Alert if same `correlation_id` appears in DLQ 3+ times (systemic issue)
 
 **Dashboard:** Grafana panel showing DLQ depth per stream, replay success rate, and poison message patterns.
+
 * **Cache/Invalidation Map:**
   * Brief: key `brief:{org_id}` in Redis; invalidated on `xentri.brief.updated.v1`; projections downstream rehydrate.
   * Site: key `site:{org_id}:{site_id}` and CDN path `/sites/{site_id}`; purge on `xentri.website.published.v1` or `xentri.page.updated.v1`.
@@ -1165,10 +1298,11 @@ priority_score = (vote_count × 1) + (paying_org_votes × 5) + (churn_risk_votes
 | `GET /api/v1/roadmap` | Public roadmap with aggregated data |
 
 **Shell Integration:**
-- Sidebar shows status badges on category/module items
-- Click "Coming Soon" → modal with description + "Vote" button + optional "What would you use this for?"
-- Dedicated `/roadmap` page shows all modules with vote counts
-- Status change to "In Development" triggers notification to voters
+
+* Sidebar shows status badges on category/module items
+* Click "Coming Soon" → modal with description + "Vote" button + optional "What would you use this for?"
+* Dedicated `/roadmap` page shows all modules with vote counts
+* Status change to "In Development" triggers notification to voters
 
 ### The SPA + Copilot First Strategy
 
