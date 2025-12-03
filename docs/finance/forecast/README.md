@@ -12,7 +12,7 @@ Planning - The future model
 
 ## Modules
 
-See [manifest.yaml](../../../manifest.yaml) for module list.
+See [manifest.yaml](../../manifest.yaml) for module list.
 
 ---
 

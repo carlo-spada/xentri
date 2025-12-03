@@ -1982,7 +1982,7 @@ stateDiagram-v2
 
 ## 11. Module Composition Strategy & Roadmap
 
-> **Decision:** [ADR-005 (SPA + Copilot First)](./architecture/adr-005-spa-copilot-first.md)
+> **Decision:** ADR-005 (SPA + Copilot First) — see [§11.2 The SPA + Copilot First Strategy](#the-spa--copilot-first-strategy)
 > **Date:** 2025-11-28
 
 This section is the **single source of truth** for understanding how Xentri's modules are organized, sequenced, and built. Any team member from any module can reference this to understand the high-level platform vision.
@@ -2175,7 +2175,7 @@ Once a category's SPA + Copilot are complete, secondary modules can be built:
 | Team | Payroll integration, Time tracking, Performance reviews |
 | Legal | E-signatures, Compliance calendar, Document templates |
 
-**Rule:** No secondary module can be built until its category's SPA + Copilot pass the [Definition of Done](./architecture/adr-005-spa-copilot-first.md#definition-of-done).
+**Rule:** No secondary module can be built until its category's SPA + Copilot pass the Definition of Done (see below).
 
 ### Integration Patterns
 
@@ -2204,7 +2204,7 @@ import StrategyApp from '@xentri/strategy-app';
 
 ### Progress Tracking
 
-* **[Pulse](../../pulse.md)** — Cross-team coordination and system-wide status
+* **[Pulse](./pulse.md)** — Cross-team coordination and system-wide status
 * **[Sprint Status](./sprint-artifacts/sprint-status.yaml)** — Epic-level tracking
 * **GitHub Issues** — Story-level tracking with `cross-module` label
 
@@ -2216,7 +2216,7 @@ import StrategyApp from '@xentri/strategy-app';
 4. **Estimate dependencies** — What other modules does it need?
 5. **Get approval** — ADR required for new foundational modules
 
-See [ADR-005](./architecture/adr-005-spa-copilot-first.md) for full rationale and Definition of Done criteria.
+See [§11.2 The SPA + Copilot First Strategy](#the-spa--copilot-first-strategy) for full rationale and Definition of Done criteria.
 
 ---
 

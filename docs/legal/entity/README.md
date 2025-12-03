@@ -12,7 +12,7 @@ Corporate - The structure
 
 ## Modules
 
-See [manifest.yaml](../../../manifest.yaml) for module list.
+See [manifest.yaml](../../manifest.yaml) for module list.
 
 ---
 

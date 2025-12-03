@@ -12,7 +12,7 @@ Pipeline - Managing the deal stream
 
 ## Modules
 
-See [manifest.yaml](../../../manifest.yaml) for module list.
+See [manifest.yaml](../../manifest.yaml) for module list.
 
 ---
 

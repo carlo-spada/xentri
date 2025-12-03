@@ -12,7 +12,7 @@ Support - Helping the customer
 
 ## Modules
 
-See [manifest.yaml](../../../manifest.yaml) for module list.
+See [manifest.yaml](../../manifest.yaml) for module list.
 
 ---
 

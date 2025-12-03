@@ -12,7 +12,7 @@ Administration - The basics
 
 ## Modules
 
-See [manifest.yaml](../../../manifest.yaml) for module list.
+See [manifest.yaml](../../manifest.yaml) for module list.
 
 ---
 

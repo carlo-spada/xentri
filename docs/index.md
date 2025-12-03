@@ -39,11 +39,10 @@ Platform modules are flat (no subcategories) — terminal nodes with implementat
 | [ui](./platform/ui/) | Design system, shared components | `packages/ui` | Active |
 | [core-api](./platform/core-api/) | Authentication, events, organizations | `services/core-api` | Active |
 | [ts-schema](./platform/ts-schema/) | TypeScript types and Zod schemas | `packages/ts-schema` | Active |
-| [orchestration](./platform/orchestration/) | Platform coordination, deployment | — | Active |
 | events | Event Spine and Operational Pulse | — | Planned |
 | auth | Authentication and permissions | — | Planned |
 | billing | Subscription and payment processing | — | Planned |
-| brief | Brief system storage and synthesis | — | Planned |
+| soul | Soul system storage and synthesis | — | Planned |
 
 ---
 
@@ -66,16 +65,11 @@ User-facing business categories with coordination units and business modules.
 ## Quick Links
 
 ### Strategic Decisions
-- [ADR-005: SPA + Copilot First](./platform/orchestration/architecture/adr-005-spa-copilot-first.md) — Category build strategy
 - [Module Roadmap](./platform/architecture.md#11-module-composition-strategy--roadmap) — 16 foundational modules
 
-### Operations
-- [Deployment Plan](./platform/orchestration/deployment-plan.md) — Platform deployment strategy
-- [Incident Response](./platform/orchestration/incident-response.md) — Platform incident handling
-
 ### Sprint Status
-- [Pulse](./platform/orchestration/pulse.md) — Cross-team coordination and system-wide progress
-- [Epic Status](./platform/orchestration/sprint-artifacts/sprint-status.yaml) — Overall progress
+- [Pulse](./platform/pulse.md) — Cross-team coordination and system-wide progress
+- [Epic Status](./platform/sprint-artifacts/sprint-status.yaml) — Overall progress
 - [Core API Stories](./platform/core-api/sprint-artifacts/) — API implementation
 - [Shell Stories](./platform/shell/sprint-artifacts/) — Frontend implementation
 
@@ -85,7 +79,7 @@ User-facing business categories with coordination units and business modules.
 
 | Concept | Description |
 |---------|-------------|
-| **Universal Brief** | The DNA of a business, generated through AI conversation |
+| **Universal Soul** | The living DNA of a business, generated through AI conversation |
 | **Event Backbone** | Immutable event log powering all cross-module intelligence |
 | **Calm Prompt** | Daily view of what needs attention |
 | **Open Loops** | Invisible commitments made visible |

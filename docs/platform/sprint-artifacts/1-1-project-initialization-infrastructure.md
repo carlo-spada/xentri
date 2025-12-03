@@ -320,7 +320,7 @@ The implementation successfully establishes the foundational infrastructure for 
 - **Dependencies:** `helmet` and `cors` configured in `core-api`.
 
 ### Best-Practices and References
-- [Xentri Architecture](docs/architecture.md)
+- [Xentri Architecture](../architecture.md)
 - [Prisma RLS Guide](https://www.prisma.io/docs/guides/other/multi-tenancy#row-level-security)
 
 ### Action Items

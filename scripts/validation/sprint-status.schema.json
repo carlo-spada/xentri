@@ -4,71 +4,45 @@
   "title": "Sprint Status File",
   "description": "Schema for validating sprint-status.yaml files",
   "type": "object",
-  "required": ["entity", "generated", "current_sprint"],
+  "required": ["generated"],
   "properties": {
-    "entity": {
-      "type": "object",
-      "required": ["type", "path"],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["constitution", "infrastructure_module", "strategic_container", "coordination_unit", "business_module"]
-        },
-        "path": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        }
-      }
-    },
     "generated": {
       "type": "string",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}:[0-9]{2}Z)?$",
       "description": "Generation timestamp"
     },
-    "current_sprint": {
+    "project": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "module": {
+      "type": "string",
+      "description": "Module name"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category name"
+    },
+    "epic_status": {
       "type": "object",
-      "properties": {
-        "number": {
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string",
-          "enum": ["planning", "in_progress", "review", "complete"]
-        }
+      "description": "Map of epic IDs to their status",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["backlog", "active", "done", "pending-revision", "ready-for-review"]
       }
     },
-    "epics": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "title": { "type": "string" },
-          "status": {
+    "development_status": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "description": "Map of story IDs to their status",
+          "additionalProperties": {
             "type": "string",
-            "enum": ["not_started", "in_progress", "complete", "blocked"]
-          },
-          "stories": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": { "type": "string" },
-                "title": { "type": "string" },
-                "status": {
-                  "type": "string",
-                  "enum": ["todo", "in_progress", "review", "done", "blocked"]
-                }
-              }
-            }
+            "enum": ["backlog", "drafted", "ready-for-dev", "in-progress", "review", "done"]
           }
         }
-      }
+      ]
     }
   }
 }

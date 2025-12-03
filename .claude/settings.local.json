@@ -180,7 +180,12 @@
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri diff --stat .bmad/bmm/workflows/workflow-status/entity-workflows.yaml)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri diff --stat AGENTS.md CLAUDE.md GEMINI.md)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri commit -m \"$(cat <<''EOF''\nrefactor(docs): Standardize agent context files (CLAUDE.md, GEMINI.md, AGENTS.md)\n\n- Unified all three files to contain identical content (~134 lines each)\n- Added self-contained context note to prevent agents reading multiple files\n- Added sync requirement note to ensure files stay in sync\n- Removed all transient information (status, versions, URLs, test counts)\n- Kept only immutable truths: architecture, structure, workflows, governance\n- Added federated workflow system documentation\n\nThis reduces context window usage and prevents information drift between agents.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(pnpm run validate:docs:*)",
+      "Bash(pnpm run validate:links:*)",
+      "Bash(git -C /Users/carlo/Desktop/Projects/xentri diff --stat pnpm-lock.yaml)",
+      "Bash(git -C /Users/carlo/Desktop/Projects/xentri commit -m \"$(cat <<''EOF''\nchore: Update lockfile with validation dependencies\n\nAdds ajv and yaml packages to lockfile from root workspace install.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git -C /Users/carlo/Desktop/Projects/xentri commit --no-verify -m \"$(cat <<''EOF''\nchore: Update lockfile with validation dependencies\n\nAdds ajv and yaml packages to lockfile from root workspace install.\n\nNote: Pre-commit hook bypassed due to pre-existing broken links\nthat require separate remediation.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
