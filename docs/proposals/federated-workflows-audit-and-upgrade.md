@@ -3,7 +3,7 @@
 > **Purpose:** Comprehensive audit and upgrade plan for all BMM workflows to support the Federated Requirements Model with Five Entity Types.
 >
 > **Date:** 2025-12-02
-> **Status:** Phase 0 Complete - Ready for Phase 1
+> **Status:** Phase 3 Complete - Ready for Phase 4
 > **Reviewed By:** Party Mode Session (Full Agent Team)
 
 ---
@@ -85,6 +85,7 @@ docs/
 ### Zero-Trust Hierarchy Model
 
 **Communication Rules:**
+
 - Children DO work and EXPOSE upward to parent
 - Parent CURATES what's shared between siblings
 - Children NEVER see siblings directly—only what parent makes available
@@ -92,11 +93,13 @@ docs/
 - No skip-level visibility
 
 **Amendment Flow:**
+
 - Children don't propose amendments (they don't know siblings exist)
 - Parents author amendments when they decide to expose/share/integrate
 - The amendment workflow IS the escape hatch for cross-cutting changes
 
 **Inheritance Chain:**
+
 - Each level inherits from parent ONLY (L3→L2→L1→L0)
 - No direct-to-Constitution references from deep levels
 - Each level can ADD specificity but never CONTRADICT parent
@@ -113,6 +116,7 @@ Each level has its OWN epics and stories with cascading references:
 | L3 | Implementation details | Actual dev tasks |
 
 **Coordination Level = Lowest Common Ancestor:**
+
 - Modules in same subcategory → Coordination Unit coordinates
 - Subcategories in same category → Strategic Container coordinates
 - Categories → Constitution coordinates
@@ -122,21 +126,27 @@ Each level has its OWN epics and stories with cascading references:
 ## Workflow Categories
 
 ### Category A: CREATE Workflows
+
 Workflows that produce documents (PRD, Architecture, Epics, UX).
 
 ### Category B: VALIDATE Workflows
+
 Workflows that validate documents against checklists.
 
 ### Category C: AMEND Workflows
+
 Workflows that modify existing documents with impact analysis.
 
 ### Category D: ROUTER Workflows
+
 UX layer that detects entity type and dispatches to appropriate implementation.
 
 ### Category E: PATH UPDATE Workflows
+
 Implementation phase workflows needing federated path updates.
 
 ### Category F: LEVEL-AGNOSTIC Workflows
+
 Discovery/utility workflows that don't need federation changes.
 
 ---
@@ -145,14 +155,16 @@ Discovery/utility workflows that don't need federation changes.
 
 All workflows COMPOSE these shared tasks (no duplication):
 
+> **Note:** Tasks use `.xml` format for better structure and validation support.
+
 | Task | Location | Purpose |
 |------|----------|---------|
-| `task-detect-entity-type.md` | `.bmad/bmm/tasks/` | Detect entity type from path/context |
-| `task-generate-frontmatter.md` | `.bmad/bmm/tasks/` | Generate level-aware metadata |
-| `task-impact-analysis.md` | `.bmad/bmm/tasks/` | Scan downstream for references to changed items |
-| `task-validate-inheritance.md` | `.bmad/bmm/tasks/` | Verify parent constraints are not contradicted |
-| `task-save-with-checkpoint.md` | `.bmad/bmm/tasks/` | Consistent save protocol with user approval |
-| `task-verify-traceability.md` | `.bmad/bmm/tasks/` | Verify FR coverage between PRD and epics |
+| `detect-entity-type.xml` | `.bmad/bmm/tasks/` | Detect entity type from path/context |
+| `generate-frontmatter.xml` | `.bmad/bmm/tasks/` | Generate level-aware metadata |
+| `impact-analysis.xml` | `.bmad/bmm/tasks/` | Scan downstream for references to changed items |
+| `validate-inheritance.xml` | `.bmad/bmm/tasks/` | Verify parent constraints are not contradicted |
+| `save-with-checkpoint.xml` | `.bmad/bmm/tasks/` | Consistent save protocol with user approval |
+| `verify-traceability.xml` | `.bmad/bmm/tasks/` | Verify FR coverage between PRD and epics |
 
 ### Task: detect-entity-type
 
@@ -312,6 +324,7 @@ Each CREATE workflow has a corresponding VALIDATE workflow:
 3. **Traceability Section:** Generates traceability matrix as part of validation report
 
 **Validation Report Naming:**
+
 ```
 {document_type}-validation-{scope}-{date}.md
 Example: prd-validation-shell-2025-12-02.md
@@ -341,6 +354,7 @@ Example: prd-validation-shell-2025-12-02.md
 7. Flag for governance review (Constitution changes are protected)
 
 **Amendment Output:**
+
 - Updated document with change tracked
 - Amendment log entry in document or separate changelog
 
@@ -364,6 +378,7 @@ Example: prd-validation-shell-2025-12-02.md
 | `amend-ux` | Entity type | `amend-system-ux` or `amend-domain-ux` |
 
 **Router Logic:**
+
 ```yaml
 steps:
   - invoke: task-detect-entity-type
@@ -389,6 +404,7 @@ Implementation phase workflows needing federated path updates:
 | `epic-tech-context` | Fixed paths | Entity-aware paths |
 
 **Sprint Status Location Rules:**
+
 - Module sprints: `{entity_path}/sprint-artifacts/sprint-status.yaml`
 - Coordination sprints: At coordinating level (lowest common ancestor)
 - System sprints: `docs/platform/sprint-artifacts/sprint-status.yaml`
@@ -514,41 +530,47 @@ Each checklist shares a base structure with entity-type-specific sections:
 
 **Completed:** 2025-12-02
 
-### Phase 1: Foundation
+### Phase 1: Foundation ✅ COMPLETE
 
-| # | Task | Description |
-|---|------|-------------|
-| 1.1 | Create shared tasks | 5 tasks in `.bmad/bmm/tasks/` |
-| 1.2 | Create system PRD workflow | `create-system-prd/` |
-| 1.3 | Create domain PRD workflow | `create-domain-prd/` |
-| 1.4 | Create PRD router | `create-prd/` |
-| 1.5 | Create PRD validation workflows | `validate-system-prd/`, `validate-domain-prd/` |
-| 1.6 | Create PRD amendment workflows | `amend-system-prd/`, `amend-domain-prd/` |
-| 1.7 | Create PRD checklists | 5 entity-type checklists |
-| 1.8 | Update PM agent menu | Add new commands |
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 1.1 | Create shared tasks | 6 tasks in `.bmad/bmm/tasks/` | ✅ Done |
+| 1.2 | Create system PRD workflow | `create-system-prd/` | ✅ Done |
+| 1.3 | Create domain PRD workflow | `create-domain-prd/` | ✅ Done |
+| 1.4 | Create PRD router | `create-prd/` | ✅ Done |
+| 1.5 | Create PRD validation workflows | `validate-system-prd/`, `validate-domain-prd/` | ✅ Done |
+| 1.6 | Create PRD amendment workflows | `amend-system-prd/`, `amend-domain-prd/` | ✅ Done |
+| 1.7 | Create PRD checklists | 5 entity-type checklists | ✅ Done |
+| 1.8 | Update PM agent menu | Add new commands | ✅ Done |
 
-### Phase 2: Architecture
+**Completed:** 2025-12-02
 
-| # | Task | Description |
-|---|------|-------------|
-| 2.1 | Create system architecture workflow | `create-system-architecture/` |
-| 2.2 | Create domain architecture workflow | `create-domain-architecture/` |
-| 2.3 | Create architecture router | `create-architecture/` |
-| 2.4 | Create architecture validation workflows | Both system and domain |
-| 2.5 | Create architecture amendment workflows | Both system and domain |
-| 2.6 | Create architecture checklists | 5 entity-type checklists |
-| 2.7 | Update Architect agent menu | Add new commands |
+### Phase 2: Architecture ✅ COMPLETE
 
-### Phase 3: Epics
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 2.1 | Create system architecture workflow | `create-system-architecture/` | ✅ Done |
+| 2.2 | Create domain architecture workflow | `create-domain-architecture/` | ✅ Done |
+| 2.3 | Create architecture router | `create-architecture/` | ✅ Done |
+| 2.4 | Create architecture validation workflows | Both system and domain | ✅ Done |
+| 2.5 | Create architecture amendment workflows | Both system and domain | ✅ Done |
+| 2.6 | Create architecture checklists | 5 entity-type checklists | ✅ Done |
+| 2.7 | Update Architect agent menu | Add new commands | ✅ Done |
 
-| # | Task | Description |
-|---|------|-------------|
-| 3.1 | Create system epics workflow | `create-system-epics/` |
-| 3.2 | Create domain epics workflow | `create-domain-epics/` |
-| 3.3 | Create epics router | `create-epics/` |
-| 3.4 | Create epics validation workflows | Both system and domain |
-| 3.5 | Create epics amendment workflows | Both system and domain |
-| 3.6 | Create epics checklists | 5 entity-type checklists |
+**Completed:** 2025-12-02
+
+### Phase 3: Epics ✅ COMPLETE
+
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 3.1 | Create system epics workflow | `create-system-epics/` | ✅ Done |
+| 3.2 | Create domain epics workflow | `create-domain-epics/` | ✅ Done |
+| 3.3 | Create epics router | `create-epics/` | ✅ Done |
+| 3.4 | Create epics validation workflows | Both system and domain | ✅ Done |
+| 3.5 | Create epics amendment workflows | Both system and domain | ✅ Done |
+| 3.6 | Create epics checklists | 5 entity-type checklists | ✅ Done |
+
+**Completed:** 2025-12-02
 
 ### Phase 4: UX
 
@@ -769,3 +791,6 @@ steps:
 | 2025-12-02 | Clarifications resolved, ready for implementation | Carlo |
 | 2025-12-02 | **Phase 0 Migration Complete** - Constitution docs moved, platform flattened, all config files updated | Claude Code |
 | 2025-12-02 | **Gemini Review Merge** - Added Appendix A (PR/IC candidates), Appendix B (ID syntax with 3-letter codes), task-verify-traceability; deleted obsolete proposal files | Carlo + Claude Code |
+| 2025-12-02 | **Phase 1 Complete** - PRD workflows (create/validate/amend × system/domain), router, 5 checklists, PM agent menu | Claude Code |
+| 2025-12-02 | **Phase 2 Complete** - Architecture workflows (create/validate/amend × system/domain), router, 5 checklists, Architect agent menu | Claude Code |
+| 2025-12-02 | **Phase 3 Complete** - Epics workflows (create/validate/amend × system/domain), router, 5 checklists; cascading ID support, traceability validation | Claude Code |

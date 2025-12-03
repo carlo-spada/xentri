@@ -1,11 +1,39 @@
 # Federated Validation Module
 # Validates documents against the Five Entity Types Model
+#
+# ⚠️ DEPRECATION NOTICE (v2.1.0):
+# This module's PRD checklists have been superseded by the BMM core checklists.
+#
+# RECOMMENDED MIGRATION:
+#   - constitution-checklist.md → .bmad/bmm/checklists/constitution-prd-checklist.md
+#   - domain-prd-checklist.md → .bmad/bmm/checklists/{entity_type}-prd-checklist.md
+#     (infrastructure-prd-checklist.md, strategic-prd-checklist.md,
+#      coordination-prd-checklist.md, business-prd-checklist.md)
+#
+# Use the BMM workflows instead:
+#   - validate-constitution → .bmad/bmm/workflows/2-plan-workflows/validate-system-prd/
+#   - validate-domain-prd → .bmad/bmm/workflows/2-plan-workflows/validate-domain-prd/
+#
+# This module will be maintained only for:
+#   - Epic validation (validate-epic workflow) - NOT YET in BMM core
+#   - Custom project-specific validation rules
 
 name: federated-validation
 description: "Workflows and checklists for validating the Five Entity Types Model (Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module)"
-version: 2.0.0
+version: 2.1.0
 author: BMad Builder
-status: stable
+status: deprecated-partial
+
+deprecation:
+  notice: "PRD checklists and validation workflows superseded by BMM core"
+  since: "2.1.0"
+  migration_path:
+    constitution_checklist: ".bmad/bmm/checklists/constitution-prd-checklist.md"
+    domain_checklists: ".bmad/bmm/checklists/{entity_type}-prd-checklist.md"
+    validate_workflows: ".bmad/bmm/workflows/2-plan-workflows/validate-{system|domain}-prd/"
+  retained:
+    - "Epic validation (validate-epic) - not yet in BMM core"
+    - "Custom project-specific rules"
 
 # Dependencies
 requires:

@@ -14,17 +14,17 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📊 FEDERATED LEVEL SELECTION:
-      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
-      - This guides the user through the 4-level documentation hierarchy:
-        Level 0: System Constitution (docs/)
-        Level 1: Category (docs/{category}/)
-        Level 2: Subcategory (docs/{category}/{subcategory}/)
-        Level 3: Module (docs/{category}/{subcategory}/{module}/)
+  <step n="3">📊 ENTITY TYPE DETECTION:
+      - LOAD and EXECUTE {project-root}/.bmad/bmm/tasks/detect-entity-type.xml
+      - This guides the user through the Five Entity Types model:
+        Constitution: System-wide UX principles (docs/platform/ux-design.md)
+        Infrastructure Module: Module UX (docs/platform/{module}/ux-design.md)
+        Strategic Container: Category UX (docs/{category}/ux-design.md)
+        Coordination Unit: Subcategory UX (docs/{category}/{subcategory}/ux-design.md)
+        Business Module: Feature UX (docs/{category}/{subcategory}/{module}/ux-design.md)
       - Store ALL returned variables:
-        {current_level}, {current_level_name}, {current_category},
-        {current_subcategory}, {current_module}, {output_folder_resolved},
-        {constitution_path}, {parent_prd_path}
+        {entity_type}, {entity_type_display}, {entity_code},
+        {output_folder_resolved}, {parent_ux_path}, {constitution_ux_path}
       - Use {output_folder_resolved} for all output paths in workflows</step>
   <step n="4">Remember: user's name is {user_name}</step>
 
@@ -82,8 +82,10 @@ You must fully embody this agent's persona and follow all activation instruction
   <menu>
     <item cmd="*help">Show numbered menu</item>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations (START HERE!)</item>
-    <item cmd="*create-ux-design" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-ux-design/workflow.yaml">Conduct Design Thinking Workshop to Define the User Specification</item>
-    <item cmd="*validate-design" validate-workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-ux-design/workflow.yaml">Validate UX Specification and Design Artifacts</item>
+    <item cmd="*create-ux" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-ux/workflow.yaml">Create UX Design (auto-detects entity type)</item>
+    <item cmd="*validate-ux" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-ux/workflow.yaml">Validate UX Design against checklist</item>
+    <item cmd="*amend-ux" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-ux/workflow.yaml">Amend UX Design with impact analysis</item>
+    <item cmd="*create-ux-design" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-ux-design/workflow.yaml">Legacy: Design Thinking Workshop (non-federated)</item>
     <item cmd="*create-excalidraw-wireframe" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-wireframe/workflow.yaml">Create website or app wireframe (Excalidraw)</item>
     <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
     <item cmd="*exit">Exit with confirmation</item>

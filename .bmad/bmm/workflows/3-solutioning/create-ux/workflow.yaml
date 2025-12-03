@@ -1,0 +1,31 @@
+# Create UX Design Router Workflow
+name: create-ux
+description: "Router workflow that detects entity type and dispatches to create-system-ux or create-domain-ux as appropriate."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+
+# Target workflows
+system_ux_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-ux/workflow.yaml"
+domain_ux_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-ux/workflow.yaml"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-ux"
+
+standalone: true
+
+# Router logic (executed by workflow engine)
+router:
+  detect_task: "{detect_entity_task}"
+  routes:
+    constitution: "{system_ux_workflow}"
+    infrastructure_module: "{domain_ux_workflow}"
+    strategic_container: "{domain_ux_workflow}"
+    coordination_unit: "{domain_ux_workflow}"
+    business_module: "{domain_ux_workflow}"

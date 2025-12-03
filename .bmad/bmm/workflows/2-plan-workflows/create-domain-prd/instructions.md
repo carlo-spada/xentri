@@ -7,8 +7,15 @@
 <critical>Generate all documents in {document_output_language}</critical>
 <critical>LIVING DOCUMENT: Write to PRD.md continuously as you discover - never wait until the end</critical>
 <critical>NO TIME ESTIMATES - NEVER mention hours, days, weeks, or any time-based predictions</critical>
-<critical>CHECKPOINT PROTOCOL: After EVERY <template-output>, SAVE → SHOW → PRESENT options → WAIT for user</critical>
+<critical>CHECKPOINT PROTOCOL: Use save-with-checkpoint task after each section to ensure user approval</critical>
 <critical>INHERITANCE: This PRD MUST NOT contradict its parent PRD or the Constitution</critical>
+
+<shared-tasks>
+  <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
+  <task name="generate-frontmatter" path="{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+  <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
+</shared-tasks>
 
 <workflow>
 
@@ -155,8 +162,19 @@ For {entity_type_display}, focus on:
   </action>
 </check>
 
-<template-output>entity_purpose</template-output>
-<template-output>scope_definition</template-output>
+<action>Generate content for entity_purpose and scope_definition sections</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{entity_purpose_content}</param>
+  <param name="section_name">Entity Purpose</param>
+</invoke-task>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{scope_definition_content}</param>
+  <param name="section_name">Scope Definition</param>
+</invoke-task>
 </step>
 
 <step n="2" goal="Functional Requirements Discovery">
@@ -230,7 +248,13 @@ IMPORTANT:
    Format: [Actor] can [capability] [context if needed]
 </action>
 
-<template-output>functional_requirements</template-output>
+<action>Generate content for functional_requirements section</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{functional_requirements_content}</param>
+  <param name="section_name">Functional Requirements ({fr_prefix}-xxx)</param>
+</invoke-task>
 </step>
 
 <step n="3" goal="Entity-Specific Sections" if="entity_type in ['infrastructure_module', 'strategic_container', 'coordination_unit']">
@@ -252,8 +276,17 @@ IMPORTANT:
   - Shared services used
   </action>
 
-  <template-output>exposed_interfaces</template-output>
-  <template-output>consumed_interfaces</template-output>
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{exposed_interfaces_content}</param>
+    <param name="section_name">Exposed Interfaces</param>
+  </invoke-task>
+
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{consumed_interfaces_content}</param>
+    <param name="section_name">Consumed Interfaces</param>
+  </invoke-task>
 </check>
 
 <check if="entity_type == 'strategic_container'">
@@ -272,8 +305,17 @@ IMPORTANT:
   - Escalation patterns
   </action>
 
-  <template-output>strategic_alignment</template-output>
-  <template-output>child_coordination</template-output>
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{strategic_alignment_content}</param>
+    <param name="section_name">Strategic Alignment</param>
+  </invoke-task>
+
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{child_coordination_content}</param>
+    <param name="section_name">Child Coordination</param>
+  </invoke-task>
 </check>
 
 <check if="entity_type == 'coordination_unit'">
@@ -292,8 +334,17 @@ IMPORTANT:
   - API dependencies
   </action>
 
-  <template-output>module_orchestration</template-output>
-  <template-output>integration_points</template-output>
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{module_orchestration_content}</param>
+    <param name="section_name">Module Orchestration</param>
+  </invoke-task>
+
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{integration_points_content}</param>
+    <param name="section_name">Integration Points</param>
+  </invoke-task>
 </check>
 </step>
 
@@ -309,7 +360,11 @@ Consider:
 </action>
 
 <check if="entity has specific NFRs">
-  <template-output>entity_nfrs</template-output>
+  <invoke-task name="save-with-checkpoint">
+    <param name="file_path">{default_output_file}</param>
+    <param name="content">{entity_nfrs_content}</param>
+    <param name="section_name">Entity-Specific NFRs</param>
+  </invoke-task>
 </check>
 </step>
 
@@ -354,7 +409,12 @@ Consider:
 - Entity-specific NFRs (if any)
 </action>
 
-<template-output>complete_document</template-output>
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{complete_document}</param>
+  <param name="section_name">Complete {entity_type_display} PRD</param>
+  <param name="is_new_file">true</param>
+</invoke-task>
 </step>
 
 <step n="7" goal="Select and Apply Checklist">

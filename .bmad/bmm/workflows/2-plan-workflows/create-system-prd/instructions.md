@@ -7,7 +7,12 @@
 <critical>Generate all documents in {document_output_language}</critical>
 <critical>LIVING DOCUMENT: Write to PRD.md continuously as you discover - never wait until the end</critical>
 <critical>NO TIME ESTIMATES - NEVER mention hours, days, weeks, or any time-based predictions</critical>
-<critical>CHECKPOINT PROTOCOL: After EVERY <template-output>, SAVE → SHOW → PRESENT options → WAIT for user</critical>
+<critical>CHECKPOINT PROTOCOL: Use save-with-checkpoint task after each section to ensure user approval</critical>
+
+<shared-tasks>
+  <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
+  <task name="generate-frontmatter" path="{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml" />
+</shared-tasks>
 
 <workflow>
 
@@ -72,8 +77,19 @@ Key questions for Constitution:
 - What success looks like at the system level
 </action>
 
-<template-output>system_vision</template-output>
-<template-output>core_principles</template-output>
+<action>Generate content for system_vision and core_principles sections</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{system_vision_content}</param>
+  <param name="section_name">System Vision</param>
+</invoke-task>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{core_principles_content}</param>
+  <param name="section_name">Core Principles</param>
+</invoke-task>
 </step>
 
 <step n="2" goal="Platform Requirements (PR-xxx)">
@@ -115,7 +131,13 @@ PR-003: All API endpoints MUST require authentication except designated health c
 - Enforcement: Auth middleware, penetration tests
 </example>
 
-<template-output>platform_requirements</template-output>
+<action>Generate content for platform_requirements section</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{platform_requirements_content}</param>
+  <param name="section_name">Platform Requirements (PR-xxx)</param>
+</invoke-task>
 </step>
 
 <step n="3" goal="Integration Contracts (IC-xxx)">
@@ -158,7 +180,13 @@ IC-003: Brief Access API
 - Response format: BriefSection interface
 </example>
 
-<template-output>integration_contracts</template-output>
+<action>Generate content for integration_contracts section</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{integration_contracts_content}</param>
+  <param name="section_name">Integration Contracts (IC-xxx)</param>
+</invoke-task>
 </step>
 
 <step n="4" goal="System-Wide NFRs">
@@ -176,7 +204,13 @@ Only include NFRs that are truly SYSTEM-WIDE.
 Module-specific NFRs belong in their own PRDs.
 </action>
 
-<template-output>system_nfrs</template-output>
+<action>Generate content for system_nfrs section</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{system_nfrs_content}</param>
+  <param name="section_name">System-Wide NFRs</param>
+</invoke-task>
 </step>
 
 <step n="5" goal="Governance & Change Process">
@@ -193,7 +227,13 @@ Document:
 - Commit message format for Constitution changes
 </action>
 
-<template-output>governance_rules</template-output>
+<action>Generate content for governance_rules section</action>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{governance_rules_content}</param>
+  <param name="section_name">Governance & Change Process</param>
+</invoke-task>
 </step>
 
 <step n="6" goal="Generate Frontmatter and Finalize">
@@ -213,7 +253,12 @@ Document:
 - Governance rules
 </action>
 
-<template-output>complete_document</template-output>
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{complete_document}</param>
+  <param name="section_name">Complete Constitution PRD</param>
+  <param name="is_new_file">true</param>
+</invoke-task>
 </step>
 
 <step n="7" goal="Validation and Summary">

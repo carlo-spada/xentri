@@ -14,17 +14,15 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📊 FEDERATED LEVEL SELECTION:
-      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
-      - This guides the user through the 4-level documentation hierarchy:
-        Level 0: System Constitution (docs/)
-        Level 1: Category (docs/{category}/)
-        Level 2: Subcategory (docs/{category}/{subcategory}/)
-        Level 3: Module (docs/{category}/{subcategory}/{module}/)
-      - Store ALL returned variables:
-        {current_level}, {current_level_name}, {current_category},
-        {current_subcategory}, {current_module}, {output_folder_resolved},
-        {constitution_path}, {parent_prd_path}
+  <step n="3">📊 FEDERATED ENTITY TYPE SELECTION:
+      - Architecture workflows use detect-entity-type task automatically
+      - Five Entity Types Model (determined by PURPOSE, not depth):
+        Constitution: System-wide rules (docs/platform/)
+        Infrastructure Module: Platform services (docs/platform/{module}/)
+        Strategic Container: User-facing categories (docs/{category}/)
+        Coordination Unit: Subcategory scope (docs/{category}/{subcat}/)
+        Business Module: Feature implementation (docs/{cat}/{subcat}/{module}/)
+      - Entity type detection runs at workflow start when needed
       - Use {output_folder_resolved} for all output paths in workflows</step>
   <step n="4">Remember: user's name is {user_name}</step>
 
@@ -82,11 +80,22 @@ You must fully embody this agent's persona and follow all activation instruction
   <menu>
     <item cmd="*help">Show numbered menu</item>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
-    <item cmd="*create-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/workflow.yaml">Produce a Scale Adaptive Architecture</item>
-    <item cmd="*validate-architecture" validate-workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/workflow.yaml">Validate Architecture Document</item>
+    <separator>─── Architecture (Federated) ───</separator>
+    <item cmd="*create-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-architecture/workflow.yaml">Create Architecture (detects entity type automatically)</item>
+    <item cmd="*validate-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-architecture/workflow.yaml">Validate Architecture (detects entity type automatically)</item>
+    <item cmd="*amend-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-architecture/workflow.yaml">Amend Architecture with impact analysis</item>
+    <separator>─── Specialized Architecture ───</separator>
+    <item cmd="*create-system-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-architecture/workflow.yaml">Create Constitution Architecture (docs/platform/)</item>
+    <item cmd="*create-domain-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-architecture/workflow.yaml">Create Domain Architecture (Infrastructure/Strategic/Coordination/Business)</item>
+    <item cmd="*validate-system-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-architecture/workflow.yaml">Validate Constitution Architecture</item>
+    <item cmd="*validate-domain-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/workflow.yaml">Validate Domain Architecture</item>
+    <item cmd="*amend-system-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-system-architecture/workflow.yaml">Amend Constitution Architecture (full cascade analysis)</item>
+    <item cmd="*amend-domain-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-architecture/workflow.yaml">Amend Domain Architecture (parent alignment check)</item>
+    <separator>─── Readiness & Diagrams ───</separator>
     <item cmd="*implementation-readiness" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/implementation-readiness/workflow.yaml">Validate implementation readiness - PRD, UX, Architecture, Epics aligned</item>
     <item cmd="*create-excalidraw-diagram" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-diagram/workflow.yaml">Create system architecture or technical diagram (Excalidraw)</item>
     <item cmd="*create-excalidraw-dataflow" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-dataflow/workflow.yaml">Create data flow diagram (Excalidraw)</item>
+    <separator>─── Collaboration ───</separator>
     <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>

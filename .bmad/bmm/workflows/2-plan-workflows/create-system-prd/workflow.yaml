@@ -28,8 +28,12 @@ instructions: "{installed_path}/instructions.md"
 # Templates
 prd_template: "{installed_path}/constitution-prd-template.md"
 
-# Checklists
+# Checklists and Validation
 checklist: "{project-root}/.bmad/bmm/checklists/constitution-prd-checklist.md"
+validation:
+  schema: "{checklist}"
+  required: true
+  on_fail: "warn_and_offer_fix"
 
 # Shared tasks
 detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"

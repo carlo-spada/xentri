@@ -1,120 +1,108 @@
-# Strategic Container PRD Validation Checklist
+# Strategic Prd Checklist
 
-> **Entity Type:** Strategic Container
-> **Location:** docs/{category}/prd.md
-> **Purpose:** Validate PRD for business category containers (strategy, marketing, sales, etc.)
+> **Auto-generated** from primitives. Do not edit directly.
+
+> Run `python scripts/generate-checklists.py` to regenerate.
 
 ---
 
 ## 1. Document Structure
 
 ### Frontmatter
-- [ ] YAML frontmatter present
-- [ ] `entity_type: strategic_container` specified
-- [ ] `fr_prefix: FR-{CAT}` correct (e.g., FR-STR, FR-MKT)
-- [ ] `parent_prd: docs/platform/prd.md` referenced
-- [ ] `inherits_from: docs/platform/prd.md` specified
+
+- [ ] YAML frontmatter present at top of document
+- [ ] `title` field populated
+- [ ] `document_type` specified correctly
+- [ ] `entity_type` specified correctly
 - [ ] `version` field with semver format
-- [ ] `status` field present
+- [ ] `status` field (draft/review/approved)
 - [ ] `created` and `updated` dates
 
-### Required Sections
-- [ ] Inheritance Context section present
-- [ ] Purpose & Scope section present
-- [ ] Functional Requirements section present
-- [ ] Strategic Alignment section present
-- [ ] Child Coordination section present
-- [ ] Traceability section present
-- [ ] Document History section present
-
-### Formatting
-- [ ] All sections have proper heading levels
-- [ ] No unfilled template variables
-- [ ] Tables properly formatted
 
 ---
 
-## 2. Inheritance Validation
+## Inheritance Validation
 
 ### Constitution Alignment
+
 - [ ] Constitution reference present
 - [ ] No contradictions with PR-xxx
 - [ ] No contradictions with IC-xxx
 - [ ] Constitution alignment table populated
 
 ### Parent Compliance
-- [ ] Parent PRD is Constitution (docs/platform/prd.md)
-- [ ] Category scope clear
-- [ ] Appropriate altitude (category-level, not module-level)
+
+- [ ] Parent PRD referenced correctly
+- [ ] Scope within parent boundaries
+- [ ] No skip-level references (direct only to Constitution)
+
 
 ---
 
-## 3. Functional Requirements (FR-xxx)
+## Functional Requirements (FR-xxx)
 
 ### Format
-- [ ] FR prefix matches category code (FR-{CAT}-xxx)
+
+- [ ] FR prefix matches entity code
 - [ ] Sequential numbering (no gaps)
 - [ ] Each FR has actor and capability
 - [ ] Clear, testable statements
 
 ### Content
-- [ ] Category-level capabilities (not too granular)
-- [ ] Business outcomes focused
-- [ ] Shared behaviors for all children
-- [ ] Strategic alignment reflected
 
-### Altitude Check
-- [ ] Requirements are category-level (not subcategory or module)
-- [ ] Leaves room for child specialization
-- [ ] Doesn't duplicate Constitution
+- [ ] Core capabilities documented
+- [ ] Not duplicating Constitution requirements
+- [ ] Appropriate altitude (WHAT not HOW)
+
+### Coverage
+
+- [ ] All responsibilities have FRs
+- [ ] Integration points have FRs
+- [ ] Error scenarios addressed
+
 
 ---
 
-## 4. Strategic Container-Specific Sections
+## Strategic-Specific Sections
 
 ### Strategic Alignment
-- [ ] Section present and populated
-- [ ] Business goals supported documented
+
+- [ ] Business goals supported
 - [ ] Success metrics defined
 - [ ] Strategic priorities listed
-- [ ] Alignment with platform vision clear
 
 ### Child Coordination
-- [ ] Section present and populated
-- [ ] Planned subcategories listed
-- [ ] What gets shared between children defined
-- [ ] What stays isolated defined
+
+- [ ] Shared resources defined
+- [ ] Isolation boundaries defined
 - [ ] Escalation patterns documented
-- [ ] Zero-trust model respected (parent curates)
+
 
 ---
 
-## 5. Entity-Specific NFRs (If Present)
+## Quality Standards
 
-- [ ] Only category-specific NFRs (beyond Constitution)
-- [ ] Justified for entire category
-- [ ] Not overly prescriptive for children
+### Language
 
----
+- [ ] Requirements use clear, unambiguous language
+- [ ] MUST/SHALL for mandatory, SHOULD for recommended
+- [ ] No vague terms ("good", "fast", "easy")
+- [ ] Technical terms defined or consistent with glossary
 
-## 6. Traceability
+### Traceability
 
-### Constitution Alignment Table
-- [ ] Relevant PRs mapped
-- [ ] Relevant ICs mapped
+- [ ] Document history tracks changes
 
-### Child Readiness
-- [ ] Scope clear enough for child PRDs to reference
-- [ ] FR IDs allow child prefix extension (FR-STR → FR-STR-PUL)
 
 ---
 
-## 7. Quality Standards
+### Formatting
 
-- [ ] Strategic language appropriate
-- [ ] Business outcomes focused
-- [ ] Clear boundaries for children
-- [ ] No implementation details
+- [ ] All sections have proper heading levels
+- [ ] No unfilled template variables ({{variable}})
+- [ ] Tables properly formatted
+- [ ] No broken markdown
+
 
 ---
 
@@ -122,17 +110,6 @@
 
 **Date:** _______________
 **Validator:** _______________
-**Category:** _______________
-
-| Category | Pass | Fail | N/A |
-|----------|------|------|-----|
-| Document Structure | | | |
-| Inheritance Validation | | | |
-| Functional Requirements | | | |
-| Strategic Sections | | | |
-| NFRs | | | |
-| Traceability | | | |
-| Quality Standards | | | |
 
 **Overall Status:** ☐ PASS ☐ FAIL ☐ NEEDS REVISION
 

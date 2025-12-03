@@ -104,6 +104,37 @@ Also check:
 </output>
 </step>
 
+<step n="6b" goal="Traceability Check (Optional)">
+<action>Check if system-level epics.md exists</action>
+
+<check if="docs/platform/epics.md exists">
+  <invoke-task name="verify-traceability">
+    <param name="prd_path">{prd_path}</param>
+    <param name="epics_path">docs/platform/epics.md</param>
+    <param name="entity_type">constitution</param>
+    <param name="fr_prefix">PR/IC</param>
+  </invoke-task>
+
+  <output>
+📊 Constitution Traceability Report
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PR-xxx Coverage: {traceability.pr_coverage_percent}%
+IC-xxx Coverage: {traceability.ic_coverage_percent}%
+Orphaned PRs: {traceability.orphaned_prs}
+Orphaned ICs: {traceability.orphaned_ics}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
+</check>
+
+<check if="docs/platform/epics.md does not exist">
+  <output>ℹ️ No system epics.md found - traceability check skipped.
+
+  Note: Constitution epics (docs/platform/epics.md) should trace
+  PR-xxx and IC-xxx to system-level implementation work.
+  </output>
+</check>
+</step>
+
 <step n="7" goal="Generate Validation Report">
 <action>Compile all validation results into report:
 
@@ -114,7 +145,8 @@ Structure:
 4. IC-xxx Validation
 5. Governance Validation
 6. Downstream Coverage
-7. Recommendations
+7. Traceability (if applicable)
+8. Recommendations
 </action>
 
 <output>

@@ -1,0 +1,24 @@
+# Epics Creation Router Workflow
+name: create-epics
+description: "Smart router that detects entity type and dispatches to the appropriate epics creation workflow (create-system-epics or create-domain-epics)."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+
+# Target workflows
+system_epics_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-epics/workflow.yaml"
+domain_epics_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-epics/workflow.yaml"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics"
+instructions: "{installed_path}/instructions.md"
+
+template: false
+standalone: true

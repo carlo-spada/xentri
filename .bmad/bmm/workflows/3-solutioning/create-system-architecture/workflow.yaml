@@ -1,0 +1,58 @@
+# System Architecture Creation Workflow (Constitution)
+name: create-system-architecture
+description: "Create the System Architecture document (Constitution level) defining cross-cutting architectural decisions, patterns, and constraints that ALL entities must follow."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
+date: system-generated
+
+# Federated hierarchy - Constitution is fixed
+entity_type: constitution
+entity_type_display: "Constitution"
+output_folder_resolved: "{project-root}/docs/platform/"
+constitution_path: "docs/platform/architecture.md"
+parent_prd_path: ""
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-architecture"
+instructions: "{installed_path}/instructions.md"
+
+# Templates
+architecture_template: "{installed_path}/constitution-architecture-template.md"
+
+# Shared resources from main architecture workflow
+decision_catalog: "{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/decision-catalog.yaml"
+architecture_patterns: "{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/architecture-patterns.yaml"
+pattern_categories: "{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/pattern-categories.csv"
+
+# Checklists
+checklist: "{project-root}/.bmad/bmm/checklists/constitution-architecture-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+
+# Input file patterns
+input_file_patterns:
+  constitution_prd:
+    description: "System PRD (Constitution) - required"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+  existing_architecture:
+    description: "Existing architecture (if updating)"
+    whole: "{output_folder_resolved}architecture.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+default_output_file: "{output_folder_resolved}architecture.md"
+
+standalone: true

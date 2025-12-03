@@ -1,0 +1,23 @@
+# System Architecture Validation Workflow
+name: validate-system-architecture
+description: "Validate the System Architecture (Constitution) against quality standards, completeness, and alignment with PRD."
+author: "BMad"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+entity_type: constitution
+architecture_path: "{project-root}/docs/platform/architecture.md"
+prd_path: "{project-root}/docs/platform/prd.md"
+
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-architecture"
+instructions: "{installed_path}/instructions.md"
+
+checklist: "{project-root}/.bmad/bmm/checklists/constitution-architecture-checklist.md"
+
+validation_report_path: "{project-root}/docs/platform/validation-reports/architecture-validation-{date}.md"
+
+template: false
+standalone: true

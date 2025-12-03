@@ -1,0 +1,73 @@
+# Domain Epics Creation Workflow
+name: create-domain-epics
+description: "Create Epics document for domain entities: Infrastructure Module, Strategic Container, Coordination Unit, or Business Module. Inherits from parent epics and Constitution."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
+date: system-generated
+
+# Federated hierarchy - determined at runtime
+entity_type: "{entity_type}"
+entity_type_display: "{entity_type_display}"
+output_folder_resolved: "{output_folder_resolved}"
+parent_epics_path: "{parent_epics_path}"
+constitution_epics_path: "docs/platform/epics.md"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-epics"
+instructions: "{installed_path}/instructions.md"
+
+# Templates
+epics_template: "{installed_path}/domain-epics-template.md"
+
+# Entity-specific checklists
+checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-epics-checklist.md"
+checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-epics-checklist.md"
+checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-epics-checklist.md"
+checklist_business: "{project-root}/.bmad/bmm/checklists/business-epics-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+
+# Input file patterns
+input_file_patterns:
+  constitution_epics:
+    description: "System Epics (always loaded for inheritance)"
+    whole: "{project-root}/docs/platform/epics.md"
+    load_strategy: "FULL_LOAD"
+
+  parent_epics:
+    description: "Parent Epics for inheritance"
+    whole: "{parent_epics_path}"
+    load_strategy: "FULL_LOAD"
+
+  entity_prd:
+    description: "This entity's PRD"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+  entity_architecture:
+    description: "This entity's Architecture"
+    whole: "{output_folder_resolved}architecture.md"
+    load_strategy: "FULL_LOAD"
+
+  existing_epics:
+    description: "Existing epics (if updating)"
+    whole: "{output_folder_resolved}epics.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+default_output_file: "{output_folder_resolved}epics.md"
+
+standalone: true

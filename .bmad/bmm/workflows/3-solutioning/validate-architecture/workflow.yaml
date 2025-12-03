@@ -1,0 +1,18 @@
+# Architecture Validation Router
+name: validate-architecture
+description: "Router for architecture validation - detects entity type and dispatches."
+author: "BMad"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+date: system-generated
+
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+system_validate_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-architecture/workflow.yaml"
+domain_validate_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/workflow.yaml"
+
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-architecture"
+instructions: "{installed_path}/instructions.md"
+
+template: false
+standalone: true

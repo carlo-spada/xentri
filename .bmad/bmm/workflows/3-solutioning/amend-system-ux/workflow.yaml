@@ -1,0 +1,25 @@
+# System UX Amendment Workflow (Constitution)
+name: amend-system-ux
+description: "Amend the System UX Design (Constitution) with governance safeguards. Constitution changes require explicit flagging and rationale."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Fixed paths for Constitution
+entity_type: constitution
+ux_path: "{project-root}/docs/platform/ux-design.md"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/amend-system-ux"
+instructions: "{installed_path}/instructions.md"
+
+# Shared tasks
+impact_analysis_task: "{project-root}/.bmad/bmm/tasks/impact-analysis.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+
+template: false
+standalone: true

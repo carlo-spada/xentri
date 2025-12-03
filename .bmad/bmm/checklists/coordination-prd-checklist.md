@@ -1,124 +1,108 @@
-# Coordination Unit PRD Validation Checklist
+# Coordination Prd Checklist
 
-> **Entity Type:** Coordination Unit
-> **Location:** docs/{category}/{subcategory}/prd.md
-> **Purpose:** Validate PRD for subcategory coordination units (e.g., strategy/pulse, marketing/brand)
+> **Auto-generated** from primitives. Do not edit directly.
+
+> Run `python scripts/generate-checklists.py` to regenerate.
 
 ---
 
 ## 1. Document Structure
 
 ### Frontmatter
-- [ ] YAML frontmatter present
-- [ ] `entity_type: coordination_unit` specified
-- [ ] `fr_prefix: FR-{CAT}-{SUB}` correct (e.g., FR-STR-PUL)
-- [ ] `parent_prd: docs/{category}/prd.md` referenced
-- [ ] `inherits_from: docs/{category}/prd.md` specified
+
+- [ ] YAML frontmatter present at top of document
+- [ ] `title` field populated
+- [ ] `document_type` specified correctly
+- [ ] `entity_type` specified correctly
 - [ ] `version` field with semver format
-- [ ] `status` field present
+- [ ] `status` field (draft/review/approved)
 - [ ] `created` and `updated` dates
 
-### Required Sections
-- [ ] Inheritance Context section present
-- [ ] Purpose & Scope section present
-- [ ] Functional Requirements section present
-- [ ] Module Orchestration section present
-- [ ] Integration Points section present
-- [ ] Traceability section present
-- [ ] Document History section present
-
-### Formatting
-- [ ] All sections have proper heading levels
-- [ ] No unfilled template variables
-- [ ] Tables properly formatted
 
 ---
 
-## 2. Inheritance Validation
+## Inheritance Validation
 
 ### Constitution Alignment
+
 - [ ] Constitution reference present
 - [ ] No contradictions with PR-xxx
 - [ ] No contradictions with IC-xxx
+- [ ] Constitution alignment table populated
 
-### Parent (Strategic Container) Compliance
-- [ ] Parent PRD (category) referenced
-- [ ] Within parent scope boundaries
-- [ ] Adds specificity without contradiction
-- [ ] Parent alignment table populated
+### Parent Compliance
 
-### Chain Integrity
-- [ ] References parent, not Constitution directly (unless through parent)
-- [ ] No skip-level to grandparent or siblings
+- [ ] Parent PRD referenced correctly
+- [ ] Scope within parent boundaries
+- [ ] No skip-level references (direct only to Constitution)
+
 
 ---
 
-## 3. Functional Requirements (FR-xxx)
+## Functional Requirements (FR-xxx)
 
 ### Format
-- [ ] FR prefix matches path (FR-{CAT}-{SUB}-xxx)
+
+- [ ] FR prefix matches entity code
 - [ ] Sequential numbering (no gaps)
 - [ ] Each FR has actor and capability
 - [ ] Clear, testable statements
 
 ### Content
-- [ ] Subcategory-level coordination focus
-- [ ] Module orchestration requirements
-- [ ] Shared patterns across child modules
-- [ ] Integration requirements between modules
 
-### Altitude Check
-- [ ] Requirements are coordination-level (not individual module features)
-- [ ] Leaves room for module specialization
-- [ ] Doesn't duplicate parent category FRs
+- [ ] Core capabilities documented
+- [ ] Not duplicating Constitution requirements
+- [ ] Appropriate altitude (WHAT not HOW)
+
+### Coverage
+
+- [ ] All responsibilities have FRs
+- [ ] Integration points have FRs
+- [ ] Error scenarios addressed
+
 
 ---
 
-## 4. Coordination Unit-Specific Sections
+## Coordination-Specific Sections
 
 ### Module Orchestration
-- [ ] Section present and populated
-- [ ] Child modules listed (planned or existing)
-- [ ] Workflow patterns between modules documented
-- [ ] Data flow between modules described
-- [ ] Event choreography documented
+
+- [ ] Workflow patterns defined
+- [ ] Data flow between modules mapped
+- [ ] Event choreography described
 
 ### Integration Points
-- [ ] Section present and populated
-- [ ] Shared data models documented
-- [ ] Event contracts between modules listed
-- [ ] API dependencies mapped
-- [ ] Common patterns identified
+
+- [ ] Shared data models defined
+- [ ] Event contracts specified
+- [ ] API dependencies listed
+
 
 ---
 
-## 5. Entity-Specific NFRs (If Present)
+## Quality Standards
 
-- [ ] Only subcategory-specific NFRs
-- [ ] Apply to all child modules
-- [ ] Beyond parent category NFRs
-- [ ] Justified need documented
+### Language
 
----
+- [ ] Requirements use clear, unambiguous language
+- [ ] MUST/SHALL for mandatory, SHOULD for recommended
+- [ ] No vague terms ("good", "fast", "easy")
+- [ ] Technical terms defined or consistent with glossary
 
-## 6. Traceability
+### Traceability
 
-### Parent Alignment
-- [ ] Parent (category) FRs mapped
-- [ ] Related parent FRs linked
+- [ ] Document history tracks changes
 
-### Child Readiness
-- [ ] Scope clear for module PRDs
-- [ ] FR IDs allow module prefix extension
 
 ---
 
-## 7. Quality Standards
+### Formatting
 
-- [ ] Coordination focus maintained
-- [ ] Not too implementation-specific
-- [ ] Clear boundaries for modules
-- [ ] Consistent with parent terminology
+- [ ] All sections have proper heading levels
+- [ ] No unfilled template variables ({{variable}})
+- [ ] Tables properly formatted
+- [ ] No broken markdown
+
 
 ---
 
@@ -126,17 +110,6 @@
 
 **Date:** _______________
 **Validator:** _______________
-**Category/Subcategory:** _______________
-
-| Category | Pass | Fail | N/A |
-|----------|------|------|-----|
-| Document Structure | | | |
-| Inheritance Validation | | | |
-| Functional Requirements | | | |
-| Coordination Sections | | | |
-| NFRs | | | |
-| Traceability | | | |
-| Quality Standards | | | |
 
 **Overall Status:** ☐ PASS ☐ FAIL ☐ NEEDS REVISION
 

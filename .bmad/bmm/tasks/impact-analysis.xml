@@ -17,12 +17,15 @@
     <variable name="entity_type" required="true">Entity type of the document</variable>
     <variable name="changed_items" required="true">List of items being changed (e.g., FR-SHL-001, PR-003)</variable>
     <variable name="change_type" required="true">One of: add, modify, remove</variable>
+    <variable name="scan_mode" required="false">Optional: "sibling_interfaces" for infrastructure modules</variable>
   </inputs>
 
   <returns>
     <variable name="impact_report">Structured impact analysis report</variable>
     <variable name="affected_documents">List of documents that reference changed items</variable>
     <variable name="impact_severity">Overall severity: breaking, requiring_update, informational, none</variable>
+    <variable name="sibling_impact_report">For infrastructure modules: report on sibling interface consumers</variable>
+    <variable name="sibling_impacts">Boolean: true if sibling modules consume changed interfaces</variable>
   </returns>
 
   <flow>
@@ -33,9 +36,22 @@
           <set var="scan_scope">Full hierarchy (Constitution changes affect everything)</set>
         </check>
         <check if="entity_type == 'infrastructure_module'">
-          <action>Scan sibling infrastructure modules for interface dependencies</action>
-          <action>Note: Infrastructure modules don't have children</action>
-          <set var="scan_scope">Sibling infrastructure modules</set>
+          <action>Infrastructure modules don't have children but may have sibling consumers</action>
+          <check if="scan_mode == 'sibling_interfaces'">
+            <action>Scan sibling infrastructure modules for interface dependencies:</action>
+            <substep n="1a">
+              <action>Load all docs/platform/{module}/prd.md files (excluding self)</action>
+              <action>For each sibling PRD, extract "Consumed Interfaces" section</action>
+              <action>Search for references to this module's exposed interfaces</action>
+              <action>Check if any changed_items appear in consumed interfaces</action>
+            </substep>
+            <set var="scan_scope">Sibling infrastructure modules (Consumed Interfaces sections)</set>
+          </check>
+          <check if="scan_mode != 'sibling_interfaces'">
+            <set var="scan_scope">None (no downstream, use scan_mode=sibling_interfaces for sibling check)</set>
+            <set var="impact_severity">none</set>
+            <set var="sibling_impacts">false</set>
+          </check>
         </check>
         <check if="entity_type == 'strategic_container'">
           <action>Scan all coordination units and business modules within this category</action>
@@ -156,6 +172,8 @@
     <note>Zero-trust hierarchy means children only see what parent exposes</note>
     <note>Constitution changes have widest impact - scan thoroughly</note>
     <note>Business modules are terminal - they have no downstream</note>
+    <note>Infrastructure modules have no downstream but may have sibling interface consumers</note>
+    <note>Use scan_mode="sibling_interfaces" for infrastructure modules to check sibling dependencies</note>
     <note>Amendment workflow should present this report before proceeding</note>
   </notes>
 </task>

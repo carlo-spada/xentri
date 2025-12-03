@@ -170,8 +170,48 @@ Affected documents:
 </check>
 </step>
 
-<step n="4b" goal="No Impact Analysis Needed" if="entity_type in ['infrastructure_module', 'business_module']">
-<output>ℹ️ {entity_type_display} has no downstream children.
+<step n="4b" goal="Sibling Interface Impact Analysis" if="entity_type == 'infrastructure_module'">
+<output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 SIBLING INTERFACE IMPACT ANALYSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Infrastructure modules have no downstream children, but other
+infrastructure modules may CONSUME interfaces this module EXPOSES.
+</output>
+
+<action>Scan sibling infrastructure modules for interface dependencies:
+1. Load all docs/platform/{module}/prd.md files
+2. Check their "Consumed Interfaces" sections
+3. Identify references to this module's exposed interfaces
+4. Flag any that reference changed items
+</action>
+
+<invoke-task name="impact-analysis">
+  <param name="document_path">{prd_path}</param>
+  <param name="entity_type">infrastructure_module</param>
+  <param name="changed_items">{affected_ids}</param>
+  <param name="change_type">{amendment_type}</param>
+  <param name="scan_mode">sibling_interfaces</param>
+</invoke-task>
+
+<check if="sibling_impacts found">
+  <output>
+⚠️ Sibling modules consume interfaces you're changing:
+{sibling_impact_report}
+  </output>
+  <ask>Proceed with amendment? (yes/no)</ask>
+  <check if="response != 'yes'">
+    <action>Exit workflow</action>
+  </check>
+</check>
+
+<check if="no sibling_impacts">
+  <output>✅ No sibling modules consume the interfaces being changed.</output>
+</check>
+</step>
+
+<step n="4c" goal="No Impact Analysis Needed" if="entity_type == 'business_module'">
+<output>ℹ️ Business Module is a terminal node with no downstream or sibling dependencies.
 No impact analysis required.</output>
 </step>
 

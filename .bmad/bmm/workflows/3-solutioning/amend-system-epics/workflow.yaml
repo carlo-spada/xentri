@@ -1,0 +1,43 @@
+# System Epics Amendment Workflow (Constitution)
+name: amend-system-epics
+description: "Amend the System Epics document (Constitution level) with impact analysis on downstream entities."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Federated hierarchy - Constitution is fixed
+entity_type: constitution
+entity_type_display: "Constitution"
+output_folder_resolved: "{project-root}/docs/platform/"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/amend-system-epics"
+instructions: "{installed_path}/instructions.md"
+
+# Checklist
+checklist: "{project-root}/.bmad/bmm/checklists/constitution-epics-checklist.md"
+
+# Shared tasks
+impact_analysis_task: "{project-root}/.bmad/bmm/tasks/impact-analysis.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+
+# Input file patterns
+input_file_patterns:
+  current_epics:
+    description: "Current System Epics"
+    whole: "{output_folder_resolved}epics.md"
+    load_strategy: "FULL_LOAD"
+
+  constitution_prd:
+    description: "System PRD for context"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+default_output_file: "{output_folder_resolved}epics.md"
+
+standalone: true

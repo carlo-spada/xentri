@@ -1,0 +1,90 @@
+<task id="{bmad_folder}/bmm/tasks/validate-workflow-structure.xml" name="Validate Workflow Structure">
+  <objective>Validate the structural integrity of a BMad workflow definition</objective>
+
+  <description>
+    Performs static analysis on a workflow.yaml and its associated instructions.md to ensure:
+    1. Required metadata exists
+    2. Referenced files exist
+    3. Syntax is valid
+    4. No broken links
+  </description>
+
+  <inputs>
+    <variable name="workflow_path" required="true">Path to the workflow.yaml file</variable>
+  </inputs>
+
+  <returns>
+    <variable name="is_valid">Boolean: true if valid</variable>
+    <variable name="validation_report">Text report of issues found</variable>
+    <variable name="error_count">Number of errors</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Load Workflow Config">
+      <action>Read content of {workflow_path}</action>
+      <check if="file does not exist">
+        <set var="is_valid">false</set>
+        <set var="validation_report">❌ Critical: Workflow file not found at {workflow_path}</set>
+        <action>Return results</action>
+      </check>
+      
+      <action>Parse YAML content</action>
+    </step>
+
+    <step n="2" title="Validate Metadata">
+      <logic>
+        <check if="name is missing">
+          <action>Add error: "Missing required field: name"</action>
+        </check>
+        <check if="description is missing">
+          <action>Add error: "Missing required field: description"</action>
+        </check>
+        <check if="instructions is missing">
+          <action>Add error: "Missing required field: instructions"</action>
+        </check>
+      </logic>
+    </step>
+
+    <step n="3" title="Validate Instructions File">
+      <action>Resolve instructions path (handle {installed_path} or {project-root} variables)</action>
+      <check if="instructions file exists">
+        <action>Read instructions content</action>
+        <check if="content missing <workflow> tag">
+          <action>Add error: "Instructions file missing root <workflow> tag"</action>
+        </check>
+      </check>
+      <check if="instructions file does not exist">
+        <action>Add error: "Referenced instructions file not found: {instructions_path}"</action>
+      </check>
+    </step>
+
+    <step n="4" title="Validate References">
+      <action>Extract all file paths from workflow.yaml (tasks, checklists, templates)</action>
+      <action>For each path:</action>
+      <substep n="4a">
+        <action>Resolve variables ({project-root}, etc.)</action>
+        <check if="file does not exist">
+          <action>Add error: "Referenced file not found: {path}"</action>
+        </check>
+      </substep>
+    </step>
+
+    <step n="5" title="Generate Report">
+      <check if="error_count == 0">
+        <set var="is_valid">true</set>
+        <set var="validation_report">✅ Workflow structure is valid.</set>
+      </check>
+      <check if="error_count > 0">
+        <set var="is_valid">false</set>
+        <set var="validation_report">
+❌ Validation Failed ({error_count} errors):
+{error_list}
+        </set>
+      </check>
+    </step>
+
+    <step n="6" title="Return Results">
+      <action>Return is_valid, validation_report, error_count</action>
+    </step>
+  </flow>
+</task>

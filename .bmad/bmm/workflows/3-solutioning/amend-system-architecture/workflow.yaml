@@ -1,0 +1,26 @@
+# System Architecture Amendment Workflow
+name: amend-system-architecture
+description: "Amend Constitution Architecture with impact analysis and downstream propagation."
+author: "BMad"
+
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+architecture_path: "docs/platform/architecture.md"
+prd_path: "docs/platform/prd.md"
+
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/amend-system-architecture"
+instructions: "{installed_path}/instructions.md"
+
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+impact_analysis_task: "{project-root}/.bmad/bmm/tasks/impact-analysis.xml"
+save_checkpoint_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+
+checklist: "{project-root}/.bmad/bmm/checklists/constitution-architecture-checklist.md"
+
+amendment_log_path: "docs/platform/orchestration/amendment-log.md"
+
+template: false
+standalone: true

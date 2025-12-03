@@ -1,0 +1,46 @@
+# Domain UX Validation Workflow
+name: validate-domain-ux
+description: "Validate domain UX Design (Infrastructure Module, Strategic Container, Coordination Unit, Business Module) against entity-specific checklist and inheritance requirements."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+date: system-generated
+
+# Federated hierarchy - determined at runtime
+entity_type: "{entity_type}"
+entity_type_display: "{entity_type_display}"
+output_folder_resolved: "{output_folder_resolved}"
+ux_path: "{output_folder_resolved}ux-design.md"
+parent_ux_path: "{parent_ux_path}"
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-ux"
+instructions: "{installed_path}/instructions.md"
+
+# Checklists - entity-specific
+checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-ux-checklist.md"
+checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-ux-checklist.md"
+checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md"
+checklist_business: "{project-root}/.bmad/bmm/checklists/business-ux-checklist.md"
+
+validation:
+  schema_map:
+    infrastructure_module: "{checklist_infrastructure}"
+    strategic_container: "{checklist_strategic}"
+    coordination_unit: "{checklist_coordination}"
+    business_module: "{checklist_business}"
+  strict: true
+  min_pass_rate: 80
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+
+# Output
+validation_report_path: "{output_folder_resolved}validation-reports/ux-validation-{date}.md"
+
+template: false
+standalone: true
