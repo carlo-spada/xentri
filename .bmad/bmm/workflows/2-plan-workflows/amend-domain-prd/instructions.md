@@ -4,38 +4,47 @@
 <critical>Impact analysis required for changes affecting downstream</critical>
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
 
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+  <task name="impact-analysis" path="{project-root}/.bmad/bmm/tasks/impact-analysis.xml" />
+  <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
+  <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
+</shared-tasks>
+
 <workflow>
 
 <step n="0" goal="Determine Entity Type and Load PRD">
-<check if="entity_type is not set">
-  <invoke-task name="detect-entity-type">
-    <param name="prompt_user">true</param>
-  </invoke-task>
-</check>
+  <check if="entity_type is not set">
+    <invoke-task name="select-entity">
+      <param name="prompt_user">true</param>
+    </invoke-task>
+  </check>
 
-<check if="entity_type == 'constitution'">
-  <output>⚠️ Constitution detected. Use amend-system-prd workflow instead.</output>
-  <action>Exit workflow</action>
-</check>
+  <check if="entity_type == 'constitution'">
+    <output>⚠️ Constitution detected. Use amend-system-prd workflow instead.</output>
+    <action>Exit workflow</action>
+  </check>
 
-<action>Load PRD from {prd_path}</action>
+  <action>Load PRD from {output_folder_resolved}prd.md</action>
+  <action>Set prd_path to {output_folder_resolved}prd.md</action>
 
-<check if="file not found">
-  <output>❌ PRD not found at {prd_path}
+  <check if="file not found">
+    <output>❌ PRD not found at {prd_path}
 
-Use create-domain-prd workflow to create it first.</output>
-  <action>Exit workflow</action>
-</check>
+    Use create-domain-prd workflow to create it first.</output>
+    <action>Exit workflow</action>
+  </check>
 
-<output>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📝 {entity_type_display} PRD AMENDMENT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Amending: {prd_path}
-Entity Type: {entity_type_display}
-Parent PRD: {parent_prd_path}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  <output>
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    📝 {entity_type_display} PRD AMENDMENT
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Amending: {prd_path}
+    Entity Type: {entity_type_display}
+    Parent PRD: {parent_prd_path}
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 </step>
 
 <step n="1" goal="Identify Amendment Type">
@@ -57,6 +66,7 @@ What type of amendment do you want to make?
   <ask>Describe the new requirement(s) to add:
 
 Remember:
+
 - Must use prefix {fr_prefix}-xxx
 - Must not contradict parent ({parent_prd_path})
 - Must not contradict Constitution
@@ -119,6 +129,7 @@ Your proposed amendment contradicts the parent PRD or Constitution:
 {validation.violations}
 
 You must either:
+
 1. Modify your amendment to not contradict
 2. First amend the parent PRD (requires higher-level change)
   </output>
@@ -180,6 +191,7 @@ infrastructure modules may CONSUME interfaces this module EXPOSES.
 </output>
 
 <action>Scan sibling infrastructure modules for interface dependencies:
+
 1. Load all docs/platform/{module}/prd.md files
 2. Check their "Consumed Interfaces" sections
 3. Identify references to this module's exposed interfaces

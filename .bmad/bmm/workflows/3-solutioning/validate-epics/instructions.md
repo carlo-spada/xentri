@@ -2,42 +2,27 @@
 
 <critical>This is a ROUTER workflow - detects entity type and dispatches to correct validation workflow</critical>
 
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+</shared-tasks>
+
 <workflow>
 
-<step n="1" goal="Welcome and Context Detection">
-<output>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 EPICS VALIDATION WORKFLOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-This workflow validates an Epics document at the
-appropriate level in your federated documentation hierarchy.
-
-Validation checks:
-- Structural completeness
-- Traceability to PRD requirements
-- Inheritance alignment
-- Quality standards
-
-Let's determine which epics to validate.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-
-<invoke-task name="detect-entity-type">
-  <param name="prompt_user">true</param>
-</invoke-task>
-
-<output>
-📍 Detected: {entity_type_display}
-   Path: {output_folder_resolved}epics.md
-</output>
-
-<ask>Validate epics at this location? (y/n/change)</ask>
-<check if="response == 'change'">
-  <goto step="1">Re-detect</goto>
-</check>
-<check if="response == 'n'">
-  <action>Exit workflow</action>
-</check>
+<step n="1" goal="Determine Entity Type">
+  <invoke-task name="select-entity">
+    <param name="prompt_user">true</param>
+  </invoke-task>
+  
+  <output>
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    📍 Entity Type Detected
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Type:           {entity_type_display}
+    Output Path:    {output_folder_resolved}epics.md
+    Parent Epics:   {parent_epics_path or "N/A (Constitution)"}
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 </step>
 
 <step n="2" goal="Route to Appropriate Workflow">

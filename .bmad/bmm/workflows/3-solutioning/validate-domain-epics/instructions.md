@@ -5,6 +5,7 @@
 <critical>INHERITANCE: Must validate alignment with Constitution and parent epics</critical>
 
 <shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
   <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
   <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
   <task name="verify-traceability" path="{project-root}/.bmad/bmm/tasks/verify-traceability.xml" />
@@ -14,7 +15,7 @@
 
 <step n="1" goal="Detect Entity Type and Load Context">
 <check if="entity_type is not set or empty">
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
 </check>
@@ -77,18 +78,21 @@ Validate document structure against selected checklist.
 **Inheritance Validation:**
 
 **Constitution Alignment:**
+
 | Constitution Epic | This Entity Contribution | Status |
 |-------------------|-------------------------|--------|
 | Epic 1 | ... | ✅/❌ |
 | ... | ... | ... |
 
 **Parent Alignment:**
+
 | Parent Epic | This Entity Extension | Status |
 |-------------|----------------------|--------|
 | Epic X-Y | Epic X-Y-Z | ✅/❌ |
 | ... | ... | ... |
 
 **Cascading ID Validation:**
+
 - [ ] All epic IDs follow {parent_id}-{local_id} pattern
 - [ ] No skip-level references
 - [ ] Parent epic IDs are valid
@@ -108,12 +112,14 @@ Validate document structure against selected checklist.
 **Traceability Validation:**
 
 **FR Coverage:**
+
 | FR ID | Description | Epic | Story | Status |
 |-------|-------------|------|-------|--------|
 | FR-xxx | ... | ... | ... | ✅/❌ |
 | ... | ... | ... | ... | ... |
 
 **Coverage Summary:**
+
 - Total FRs: X
 - Covered: X
 - Missing: X
@@ -184,6 +190,7 @@ Validator: {user_name}
 **Overall Status:** ✅ PASS / ⚠️ WARN / ❌ FAIL
 
 **Summary:**
+
 | Category | Pass | Fail | Warn |
 |----------|------|------|------|
 | Structural | X | X | X |

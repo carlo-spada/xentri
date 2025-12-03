@@ -3,10 +3,10 @@ entity_type: constitution
 document_type: ux-design
 title: "Xentri System UX Design"
 description: "System-wide UX principles, design system foundations, and interaction patterns that all categories must follow."
-version: "2.1.0"
+version: "2.2.0"
 status: approved
 created: 2025-11-25
-updated: 2025-12-01
+updated: 2025-12-02
 ---
 
 # Xentri UX Design Specification (System Constitution)
@@ -507,7 +507,9 @@ When a new organization is created, the Strategy Copilot suggests roles tailored
 | Copilot Widget | Draggable AI assistant | 4.3 |
 | Pulse Header | Scope-aware greeting + summary | 3.3 |
 
-### 8.3 4-Layer Neutral System
+### 8.3 Color System
+
+#### 8.3.1 4-Layer Neutral System
 
 | Layer | Purpose |
 |-------|---------|
@@ -516,7 +518,164 @@ When a new organization is created, the Strategy Copilot suggests roles tailored
 | **Surface** | Content cards, panels |
 | **Surface+** | Elevated, focused, hover states |
 
-Exact colors defined per theme in CSS variables.
+#### 8.3.2 Theme Color Palettes
+
+**Modern Theme (Dark):**
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--color-base` | `#0a0a0f` | App background |
+| `--color-chrome` | `#12121a` | Sidebar, header |
+| `--color-surface` | `#1c1921` | Cards, panels |
+| `--color-surface-plus` | `#252330` | Hover, elevated |
+| `--color-primary` | `#e879f9` | Primary actions, links |
+| `--color-primary-hover` | `#f0abfc` | Primary hover state |
+| `--color-text` | `#fafafa` | Primary text |
+| `--color-text-muted` | `#a1a1aa` | Secondary text |
+| `--color-border` | `#27272a` | Dividers, borders |
+| `--color-focus` | `#e879f9` | Focus ring |
+
+**Modern Theme (Light):**
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--color-base` | `#fafafa` | App background |
+| `--color-chrome` | `#f4f4f5` | Sidebar, header |
+| `--color-surface` | `#ffffff` | Cards, panels |
+| `--color-surface-plus` | `#f4f4f5` | Hover, elevated |
+| `--color-primary` | `#c026d3` | Primary actions, links |
+| `--color-primary-hover` | `#a21caf` | Primary hover state |
+| `--color-text` | `#18181b` | Primary text |
+| `--color-text-muted` | `#71717a` | Secondary text |
+| `--color-border` | `#e4e4e7` | Dividers, borders |
+| `--color-focus` | `#c026d3` | Focus ring |
+
+**Power Theme (Dark):**
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--color-base` | `#09090b` | App background |
+| `--color-chrome` | `#0f0f12` | Sidebar, header |
+| `--color-surface` | `#18181b` | Cards, panels |
+| `--color-surface-plus` | `#27272a` | Hover, elevated |
+| `--color-primary` | `#06b6d4` | Primary actions, links |
+| `--color-primary-hover` | `#22d3ee` | Primary hover state |
+| `--color-text` | `#fafafa` | Primary text |
+| `--color-text-muted` | `#a1a1aa` | Secondary text |
+| `--color-border` | `#3f3f46` | Dividers, borders |
+| `--color-focus` | `#06b6d4` | Focus ring |
+
+**Power Theme (Light):**
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--color-base` | `#fafafa` | App background |
+| `--color-chrome` | `#f4f4f5` | Sidebar, header |
+| `--color-surface` | `#ffffff` | Cards, panels |
+| `--color-surface-plus` | `#e4e4e7` | Hover, elevated |
+| `--color-primary` | `#0891b2` | Primary actions, links |
+| `--color-primary-hover` | `#0e7490` | Primary hover state |
+| `--color-text` | `#18181b` | Primary text |
+| `--color-text-muted` | `#52525b` | Secondary text |
+| `--color-border` | `#d4d4d8` | Dividers, borders |
+| `--color-focus` | `#0891b2` | Focus ring |
+
+#### 8.3.3 Semantic Colors
+
+These colors have consistent meaning across all themes:
+
+| Token | Dark Mode | Light Mode | Usage |
+|-------|-----------|------------|-------|
+| `--color-success` | `#22c55e` | `#16a34a` | Success states, positive actions |
+| `--color-success-bg` | `#052e16` | `#dcfce7` | Success background |
+| `--color-warning` | `#eab308` | `#ca8a04` | Warnings, caution states |
+| `--color-warning-bg` | `#422006` | `#fef9c3` | Warning background |
+| `--color-error` | `#ef4444` | `#dc2626` | Errors, destructive actions |
+| `--color-error-bg` | `#450a0a` | `#fee2e2` | Error background |
+| `--color-info` | `#3b82f6` | `#2563eb` | Informational, neutral alerts |
+| `--color-info-bg` | `#172554` | `#dbeafe` | Info background |
+
+#### 8.3.4 CSS Implementation
+
+```css
+/* Modern Dark Theme (Default) */
+:root, [data-theme="modern-dark"] {
+  /* Neutrals */
+  --color-base: #0a0a0f;
+  --color-chrome: #12121a;
+  --color-surface: #1c1921;
+  --color-surface-plus: #252330;
+
+  /* Brand */
+  --color-primary: #e879f9;
+  --color-primary-hover: #f0abfc;
+
+  /* Text */
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+
+  /* UI */
+  --color-border: #27272a;
+  --color-focus: #e879f9;
+
+  /* Semantic */
+  --color-success: #22c55e;
+  --color-success-bg: #052e16;
+  --color-warning: #eab308;
+  --color-warning-bg: #422006;
+  --color-error: #ef4444;
+  --color-error-bg: #450a0a;
+  --color-info: #3b82f6;
+  --color-info-bg: #172554;
+}
+
+[data-theme="modern-light"] {
+  --color-base: #fafafa;
+  --color-chrome: #f4f4f5;
+  --color-surface: #ffffff;
+  --color-surface-plus: #f4f4f5;
+  --color-primary: #c026d3;
+  --color-primary-hover: #a21caf;
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+  --color-border: #e4e4e7;
+  --color-focus: #c026d3;
+  --color-success: #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-warning: #ca8a04;
+  --color-warning-bg: #fef9c3;
+  --color-error: #dc2626;
+  --color-error-bg: #fee2e2;
+  --color-info: #2563eb;
+  --color-info-bg: #dbeafe;
+}
+
+[data-theme="power-dark"] {
+  --color-base: #09090b;
+  --color-chrome: #0f0f12;
+  --color-surface: #18181b;
+  --color-surface-plus: #27272a;
+  --color-primary: #06b6d4;
+  --color-primary-hover: #22d3ee;
+  --color-text: #fafafa;
+  --color-text-muted: #a1a1aa;
+  --color-border: #3f3f46;
+  --color-focus: #06b6d4;
+}
+
+[data-theme="power-light"] {
+  --color-base: #fafafa;
+  --color-chrome: #f4f4f5;
+  --color-surface: #ffffff;
+  --color-surface-plus: #e4e4e7;
+  --color-primary: #0891b2;
+  --color-primary-hover: #0e7490;
+  --color-text: #18181b;
+  --color-text-muted: #52525b;
+  --color-border: #d4d4d8;
+  --color-focus: #0891b2;
+}
+```
 
 ### 8.4 Typography System
 
@@ -1100,6 +1259,139 @@ Priority recipe (in order):
 - Show timezone indicator for ambiguous times
 - Chronicle greeting uses local time for "Good morning/afternoon/evening"
 
+### 9.13 Empty State Pattern
+
+Empty states communicate when there's no data to display and guide users toward meaningful action.
+
+**Empty State Structure:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                         [Illustration]                      │
+│                                                             │
+│                     Primary Message                         │
+│              Secondary explanatory text                     │
+│                                                             │
+│                    [Primary Action]                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Empty State Types:**
+
+| Type | When Used | Tone | Example |
+|------|-----------|------|---------|
+| **First Use** | User hasn't created anything yet | Encouraging, welcoming | "No contacts yet. Add your first contact to get started." |
+| **No Results** | Search/filter returned nothing | Helpful, suggestive | "No matches for 'acme'. Try a different search or clear filters." |
+| **All Clear** | Work queue is empty | Celebratory, calm | "You're all caught up. Your story continues tomorrow." |
+| **Error** | Data failed to load | Apologetic, actionable | "Couldn't load your invoices. Check your connection and try again." |
+| **Permission** | User lacks access | Informative, helpful | "You don't have access to this area. Contact your admin for access." |
+
+**Empty State Components:**
+
+| Component | Requirement | Notes |
+|-----------|-------------|-------|
+| **Illustration** | Optional | Simple, on-brand graphic. 64-128px. |
+| **Primary Message** | Required | Short, specific. What's missing. |
+| **Secondary Text** | Recommended | Why it's empty or what to do. |
+| **Primary Action** | Required (except All Clear) | Clear CTA to resolve the state. |
+| **Secondary Action** | Optional | Alternative path (e.g., "Learn more"). |
+
+**Empty State Guidelines:**
+
+1. **Be specific** — "No invoices" not "Nothing here"
+2. **Be helpful** — Always suggest what to do next
+3. **Match the tone** — First Use = welcoming, Error = apologetic
+4. **Don't blame** — "No results found" not "You didn't find anything"
+5. **Use narrative language** — "Your story continues tomorrow" not "Queue empty"
+
+**Accessibility:**
+
+- Primary message uses `<h2>` or appropriate heading level
+- Illustration has `alt=""` (decorative) or descriptive alt text if meaningful
+- Action buttons follow button hierarchy
+- Color not used alone to convey state
+
+### 9.14 Notification Pattern
+
+Notifications inform users of events, updates, and actions that occurred. This pattern defines the UI component; notification budgets are defined in section 6.4.
+
+**Notification Types:**
+
+| Type | Icon | Visual | Sound | Use Case |
+|------|------|--------|-------|----------|
+| **Interrupt** | 🔔 | Modal/Push | Optional | Urgent: payment failed, security alert |
+| **Badge** | Dot/Count | Indicator on icon | None | Medium: drafts ready, messages received |
+| **Toast** | Per status | Bottom-right overlay | None | Action feedback (see 9.2) |
+| **Timeline** | Per event | Chronicle entry | None | FYI: auto-handled items |
+
+**Notification Badge:**
+
+```
+┌──────────┐
+│  🔔  ●3  │  ← Badge with count
+└──────────┘
+```
+
+**Badge States:**
+
+| Count | Display |
+|-------|---------|
+| 0 | No badge visible |
+| 1-9 | Exact number |
+| 10-99 | Exact number (smaller font) |
+| 100+ | "99+" |
+
+**Notification Center (Dropdown):**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Notifications                               [Mark all read] │
+├─────────────────────────────────────────────────────────────┤
+│ ● Acme Corp responded to your proposal        2 hours ago   │
+│   They want to discuss pricing.                             │
+├─────────────────────────────────────────────────────────────┤
+│ ○ Invoice #247 was paid                      Yesterday      │
+│   $2,500 received from Beta Inc.                            │
+├─────────────────────────────────────────────────────────────┤
+│                     View all notifications                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Notification Item Structure:**
+
+| Element | Description |
+|---------|-------------|
+| **Read indicator** | ● unread, ○ read |
+| **Title** | Event summary (max 60 chars) |
+| **Description** | Additional context (optional, max 100 chars) |
+| **Timestamp** | Relative time |
+| **Actions** | Inline quick actions (optional) |
+
+**Notification States:**
+
+| State | Visual Treatment |
+|-------|------------------|
+| Unread | Bold title, filled indicator (●), subtle background |
+| Read | Normal weight, hollow indicator (○), no background |
+| Hover | Subtle highlight, show quick actions |
+| Dismissed | Fade out animation |
+
+**Notification Behavior:**
+
+- **Grouping:** Similar notifications group (e.g., "3 new messages from Acme")
+- **Auto-dismiss:** Read notifications auto-archive after 7 days
+- **Persistence:** Unread notifications persist until read or dismissed
+- **Overflow:** Beyond budget (5), shows "+X more in archive"
+
+**Accessibility:**
+
+- Notification count announced to screen readers on change
+- `aria-live="polite"` for new notifications
+- Notification center has `role="dialog"` when open
+- Each notification is focusable and actionable via keyboard
+
 ---
 
 ## 10. Responsive Strategy
@@ -1478,11 +1770,11 @@ Each level can ADD but never CONTRADICT its parent. When in doubt, the parent wi
 
 | Artifact | Path | Contents |
 |----------|------|----------|
-| **MVP Themes** | [ux-themes-mvp.html](./ux/ux-themes-mvp.html) | Modern + Power themes in dark/light (interactive) |
-| **Design Directions** | [ux-design-directions.html](./ux/ux-design-directions.html) | 7 visual direction explorations |
-| Color Themes | [ux-color-themes-v2.html](./ux/ux-color-themes-v2.html) | Blue options on Dusk base |
-| Daily Loop Wireframes | [ux-daily-loop-wireframes-v2.html](./ux/ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |
-| First-Time User Journey | [ux-journey-1-ftu.html](./ux/ux-journey-1-ftu.html) | Complete FTU flow |
+| **MVP Themes** | [ux-themes-mvp.html](./orchestration/ux/ux-themes-mvp.html) | Modern + Power themes in dark/light (interactive) |
+| **Design Directions** | [ux-design-directions.html](./orchestration/ux/ux-design-directions.html) | 7 visual direction explorations |
+| Color Themes | [ux-color-themes-v2.html](./orchestration/ux/ux-color-themes-v2.html) | Blue options on Dusk base |
+| Daily Loop Wireframes | [ux-daily-loop-wireframes-v2.html](./orchestration/ux/ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |
+| First-Time User Journey | [ux-journey-1-ftu.html](./orchestration/ux/ux-journey-1-ftu.html) | Complete FTU flow |
 
 ### Design Decisions Log
 
@@ -1509,6 +1801,7 @@ Each level can ADD but never CONTRADICT its parent. When in doubt, the parent wi
 | 2025-11-28 | 1.3 | Marked Journey 3 deferred; fixed paths | Carlo |
 | 2025-12-01 | **2.0** | **Major revision:** Narrative Continuity philosophy, Chronicle-first default, Hierarchical Pulse, Story Arcs, Theme Architecture (Modern/Power/Traditional), No-scroll constraint, CEO mental model, Copilot as human-in-the-loop, Brief-aware deep personalization | Carlo + Sally (UX Designer) |
 | 2025-12-01 | **2.1** | **Implementation readiness:** Added complete Typography system (fonts, scale, weights, line heights), Component Inventory with shadcn/ui version, Button Hierarchy, Form Patterns, Modal Pattern, Search Pattern, Confirmation Pattern, Date/Time Pattern, expanded Accessibility section (focus management, keyboard nav, screen reader support, alt text strategy, form a11y, testing strategy), full component state specifications (Exception Cards, Toast, Autonomy Badge, Policy Sliders) | Carlo + Sally (UX Designer) |
+| 2025-12-02 | **2.2** | **Validation compliance:** Fixed frontmatter (entity_type, version, status, dates), added complete Spacing System (4px base, 11-token scale, layout grid), added Inheritance Guidelines (immutable/constrained/customizable rules, extension points), fixed visual artifact paths, added Empty State Pattern (5 types, components, guidelines), added Notification Pattern (types, badge, notification center), added concrete Color Palette values (4 themes with hex values, semantic colors, CSS implementation) | Carlo + Sally (UX Designer) |
 
 ---
 

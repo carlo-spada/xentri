@@ -5,6 +5,7 @@
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
 
 <shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
   <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
   <task name="impact-analysis" path="{project-root}/.bmad/bmm/tasks/impact-analysis.xml" />
   <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
@@ -15,7 +16,7 @@
 
 <step n="0" goal="Determine Entity Type and Load UX">
 <check if="entity_type is not set">
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
 </check>
@@ -64,6 +65,7 @@ What type of amendment do you want to make?
   <ask>Describe what you want to add:
 
 Remember:
+
 - Must not contradict parent UX ({parent_ux_path})
 - Must not contradict Constitution UX
 - Should be appropriate for {entity_type_display}</ask>
@@ -97,11 +99,13 @@ Remember:
   <ask>Describe the change:
 
 For {entity_type_display} UX, this might include:
+
 - State updates
 - Accessibility improvements
 - Responsive behavior changes
 - Integration updates</ask>
 </check>
+
 </step>
 
 <step n="3" goal="Validate Against Parent">
@@ -120,6 +124,7 @@ Your proposed amendment contradicts the parent UX or Constitution:
 {validation.violations}
 
 You must either:
+
 1. Modify your amendment to not contradict
 2. First amend the parent UX (requires higher-level change)
   </output>

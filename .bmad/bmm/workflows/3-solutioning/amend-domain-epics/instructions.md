@@ -5,6 +5,7 @@
 <critical>INHERITANCE: Amendments must not violate Constitution or parent constraints</critical>
 
 <shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
   <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
   <task name="impact-analysis" path="{project-root}/.bmad/bmm/tasks/impact-analysis.xml" />
   <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
@@ -15,7 +16,7 @@
 
 <step n="1" goal="Detect Entity Type and Load Context">
 <check if="entity_type is not set or empty">
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
 </check>
@@ -48,6 +49,7 @@ Constitution: docs/platform/epics.md
 </output>
 
 <ask>What type of amendment?
+
 1. **ADD** - Add new epic or story
 2. **MODIFY** - Change existing epic or story
 3. **REMOVE** - Remove epic or story
@@ -65,22 +67,27 @@ Enter choice (1-4):</ask>
   Enter choice:</ask>
 
   <action>Gather details:
-  - For epic: parent epic ID, local ID, title, goal, FR coverage
-  - For story: which epic, title, acceptance criteria
+
+- For epic: parent epic ID, local ID, title, goal, FR coverage
+- For story: which epic, title, acceptance criteria
 
   Validate cascading ID pattern:
-  - New epic ID must follow {parent_id}-{local_id} pattern
+
+- New epic ID must follow {parent_id}-{local_id} pattern
   </action>
+
 </check>
 
 <check if="amendment_type == 'MODIFY'">
   <ask>Which epic or story to modify?</ask>
 
   <action>Gather modification details:
-  - What is changing?
-  - Why is this change needed?
-  - New content
+
+- What is changing?
+- Why is this change needed?
+- New content
   </action>
+
 </check>
 
 <check if="amendment_type == 'REMOVE'">
@@ -150,6 +157,7 @@ Please revise the amendment.</output>
 <ask>Please provide rationale for this change:</ask>
 
 <action>Apply the amendment:
+
 1. Make the requested change
 2. Maintain cascading ID integrity
 3. Update traceability matrix
@@ -173,10 +181,12 @@ Amendment: {amendment_summary}
 Rationale: {user_rationale}
 
 **Inheritance Status:**
+
 - Constitution alignment: ✅
 - Parent alignment: ✅
 
 **Changelog Entry Added:**
+
 | Date | Author | Change | Rationale |
 |------|--------|--------|-----------|
 | {date} | {user_name} | {change} | {rationale} |

@@ -4,75 +4,28 @@
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
 <critical>Communicate in {communication_language}</critical>
 
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+</shared-tasks>
+
 <workflow>
 
-<step n="1" goal="Welcome and Context Detection">
-<action>Welcome {user_name} to the PRD creation workflow</action>
-
-<output>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 PRD CREATION WORKFLOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-This workflow helps you create a Product Requirements
-Document at the appropriate level in your federated
-documentation hierarchy.
-
-Let's determine where this PRD should live.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-
-<action>Check for context clues:
-1. Current working directory (if in a docs/ subfolder)
-2. Recent workflow context (workflow-status.yaml)
-3. User's stated intent
-</action>
-
-<check if="context suggests specific path">
-  <output>Based on context, it looks like you want to create a PRD at:
-  **Path:** {detected_path}
+<step n="1" goal="Determine Entity Type">
+  <invoke-task name="select-entity">
+    <param name="prompt_user">true</param>
+  </invoke-task>
+  
+  <output>
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    📍 Entity Type Detected
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Type:           {entity_type_display}
+    Output Path:    {output_folder_resolved}
+    FR Prefix:      {fr_prefix}
+    Parent PRD:     {parent_prd_path or "N/A (Constitution)"}
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   </output>
-  <ask>Is this correct? (y/n)</ask>
-  <check if="response == 'y'">
-    <action>Use detected_path for entity detection</action>
-    <goto step="2">Detect entity type</goto>
-  </check>
-</check>
-</step>
-
-<step n="2" goal="Detect Entity Type">
-<invoke-task name="detect-entity-type">
-  <param name="path">{target_path or prompt_user}</param>
-</invoke-task>
-
-<action>Store all returned variables:
-- entity_type
-- entity_type_display
-- fr_prefix
-- output_folder_resolved
-- parent_prd_path
-- constitution_path
-- entity_code
-</action>
-
-<output>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Entity Type Detected
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type:           {entity_type_display}
-Output Path:    {output_folder_resolved}
-FR Prefix:      {fr_prefix}
-Parent PRD:     {parent_prd_path or "N/A (Constitution)"}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-
-<ask>Proceed with this location? (y/n/change)</ask>
-<check if="response == 'change'">
-  <action>Clear detected values</action>
-  <goto step="2">Re-detect with new path</goto>
-</check>
-<check if="response == 'n'">
-  <action>Exit workflow</action>
-</check>
 </step>
 
 <step n="3" goal="Route to Appropriate Workflow">
@@ -113,6 +66,7 @@ Users can call `create-prd` without knowing whether they need
 the system or domain variant - the router figures it out.
 
 The Five Entity Types:
+
 1. Constitution → create-system-prd
 2. Infrastructure Module → create-domain-prd
 3. Strategic Container → create-domain-prd

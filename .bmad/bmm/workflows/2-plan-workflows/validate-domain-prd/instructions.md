@@ -4,39 +4,47 @@
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
 <critical>Key validation: INHERITANCE - PRD must not contradict parent or Constitution</critical>
 
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+  <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
+  <task name="verify-traceability" path="{project-root}/.bmad/bmm/tasks/verify-traceability.xml" />
+</shared-tasks>
+
 <workflow>
 
 <step n="0" goal="Determine Entity Type and Load PRD">
-<check if="entity_type is not set">
-  <invoke-task name="detect-entity-type">
-    <param name="prompt_user">true</param>
-  </invoke-task>
-</check>
+  <check if="entity_type is not set">
+    <invoke-task name="select-entity">
+      <param name="prompt_user">true</param>
+    </invoke-task>
+  </check>
 
-<check if="entity_type == 'constitution'">
-  <output>⚠️ Constitution detected. Use validate-system-prd workflow instead.</output>
-  <action>Exit workflow</action>
-</check>
+  <check if="entity_type == 'constitution'">
+    <output>⚠️ Constitution detected. Use validate-system-prd workflow instead.</output>
+    <action>Exit workflow</action>
+  </check>
 
-<action>Load PRD from {prd_path}</action>
+  <action>Load PRD from {output_folder_resolved}prd.md</action>
+  <action>Set prd_path to {output_folder_resolved}prd.md</action>
 
-<check if="file not found">
-  <output>❌ PRD not found at {prd_path}
+  <check if="file not found">
+    <output>❌ PRD not found at {prd_path}
 
-Use create-domain-prd workflow to create it first.</output>
-  <action>Exit workflow</action>
-</check>
+    Use create-domain-prd workflow to create it first.</output>
+    <action>Exit workflow</action>
+  </check>
 
-<output>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 {entity_type_display} PRD VALIDATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Validating: {prd_path}
-Entity Type: {entity_type_display}
-Parent PRD: {parent_prd_path}
-Date: {date}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  <output>
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🔍 {entity_type_display} PRD VALIDATION
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Validating: {prd_path}
+    Entity Type: {entity_type_display}
+    Parent PRD: {parent_prd_path}
+    Date: {date}
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 </step>
 
 <step n="1" goal="Load Parent Context">
@@ -67,6 +75,7 @@ Date: {date}
 </check>
 
 <action>Check document structure:
+
 1. Frontmatter present with required fields
    - entity_type matches expected
    - parent_prd referenced
@@ -75,6 +84,7 @@ Date: {date}
 3. No unfilled template variables
 4. Proper markdown formatting
 </action>
+
 </step>
 
 <step n="3" goal="Inheritance Validation">
@@ -105,6 +115,7 @@ Date: {date}
 <action>Validate FR-xxx requirements:
 
 For each Functional Requirement:
+
 1. Has correct prefix format ({fr_prefix}-xxx)
 2. Sequential numbering (no gaps)
 3. Clear, testable requirement statement
@@ -113,9 +124,11 @@ For each Functional Requirement:
 6. Not contradicting parent FRs
 
 Coverage check:
+
 - Adequate requirements for entity scope
 - Key capability areas addressed
 </action>
+
 </step>
 
 <step n="5" goal="Entity-Specific Validation">
@@ -187,6 +200,7 @@ Orphaned Stories: {traceability.orphaned_stories}
 <action>Compile all validation results:
 
 Structure:
+
 1. Executive Summary
 2. Inheritance Validation (CRITICAL)
 3. Structural Checks
@@ -204,6 +218,7 @@ Document: {prd_path}
 Date: {date}
 
 **Summary**
+
 | Status | Count |
 |--------|-------|
 | ✅ PASS | {pass_count} |

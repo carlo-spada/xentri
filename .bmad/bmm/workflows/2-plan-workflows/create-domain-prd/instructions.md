@@ -13,6 +13,7 @@
 <shared-tasks>
   <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
   <task name="generate-frontmatter" path="{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml" />
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
   <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
   <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
 </shared-tasks>
@@ -21,8 +22,7 @@
 
 <step n="0" goal="Determine Entity Type and Context">
 <check if="entity_type is not set or empty">
-  <action>Entity type not provided - invoke detection task</action>
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
   <action>Store returned variables: entity_type, entity_type_display, fr_prefix, output_folder_resolved, parent_prd_path, entity_code</action>
@@ -44,6 +44,7 @@ Parent PRD:     {parent_prd_path}
 Constitution:   docs/platform/prd.md
 
 This PRD will:
+
 - Inherit from {parent_prd_path}
 - Add requirements specific to this scope
 - NOT contradict parent or Constitution
@@ -70,6 +71,7 @@ This PRD will:
 <note>Available: {constitution_content}, {parent_prd_content}, {product_brief_content}, {existing_prd_content}</note>
 
 <action>Extract inherited constraints from parent:
+
 1. Load Constitution (docs/platform/prd.md)
    - Extract all PR-xxx (Platform Requirements)
    - Extract all IC-xxx (Integration Contracts)
@@ -91,6 +93,7 @@ From Constitution:
 - {ic_count} Integration Contracts (IC-xxx)
 
 From Parent ({parent_prd_path}):
+
 - {parent_fr_count} Functional Requirements
 - Scope: {parent_scope_summary}
 
@@ -184,6 +187,7 @@ Requirements will use prefix: {fr_prefix}
 Example: {fr_prefix}-001, {fr_prefix}-002, etc.
 
 IMPORTANT:
+
 - FRs must be ADDITIVE to parent requirements
 - FRs must NOT contradict inherited constraints
 - FRs should be at appropriate altitude for this entity type
@@ -264,16 +268,18 @@ IMPORTANT:
 
   **Exposed Interfaces:**
   What does this module provide to others?
-  - API endpoints
-  - Event types emitted
-  - Shared utilities
-  - Data schemas
+
+- API endpoints
+- Event types emitted
+- Shared utilities
+- Data schemas
 
   **Consumed Interfaces:**
   What does this module depend on?
-  - Other module APIs used
-  - Events subscribed to
-  - Shared services used
+
+- Other module APIs used
+- Events subscribed to
+- Shared services used
   </action>
 
   <invoke-task name="save-with-checkpoint">
@@ -287,6 +293,7 @@ IMPORTANT:
     <param name="content">{consumed_interfaces_content}</param>
     <param name="section_name">Consumed Interfaces</param>
   </invoke-task>
+
 </check>
 
 <check if="entity_type == 'strategic_container'">
@@ -294,15 +301,17 @@ IMPORTANT:
 
   **Strategic Alignment:**
   How does this category align with platform strategy?
-  - Business goals supported
-  - Success metrics
-  - Strategic priorities
+
+- Business goals supported
+- Success metrics
+- Strategic priorities
 
   **Child Coordination:**
   How do subcategories and modules coordinate?
-  - What gets shared between children?
-  - What stays isolated?
-  - Escalation patterns
+
+- What gets shared between children?
+- What stays isolated?
+- Escalation patterns
   </action>
 
   <invoke-task name="save-with-checkpoint">
@@ -316,6 +325,7 @@ IMPORTANT:
     <param name="content">{child_coordination_content}</param>
     <param name="section_name">Child Coordination</param>
   </invoke-task>
+
 </check>
 
 <check if="entity_type == 'coordination_unit'">
@@ -323,15 +333,17 @@ IMPORTANT:
 
   **Module Orchestration:**
   How are child modules coordinated?
-  - Workflow patterns
-  - Data flow between modules
-  - Event choreography
+
+- Workflow patterns
+- Data flow between modules
+- Event choreography
 
   **Integration Points:**
   Where do modules connect?
-  - Shared data models
-  - Event contracts
-  - API dependencies
+
+- Shared data models
+- Event contracts
+- API dependencies
   </action>
 
   <invoke-task name="save-with-checkpoint">
@@ -345,6 +357,7 @@ IMPORTANT:
     <param name="content">{integration_points_content}</param>
     <param name="section_name">Integration Points</param>
   </invoke-task>
+
 </check>
 </step>
 
@@ -353,6 +366,7 @@ IMPORTANT:
 System-wide NFRs are inherited from Constitution.
 
 Consider:
+
 - Performance requirements beyond system baseline
 - Security requirements beyond platform minimum
 - Specific scalability needs
@@ -402,6 +416,7 @@ Consider:
 </invoke-task>
 
 <action>Assemble the complete Domain PRD with:
+
 - Generated frontmatter with inheritance reference
 - Entity purpose and scope
 - Functional Requirements ({fr_prefix}-xxx)
@@ -450,6 +465,7 @@ Consider:
 Created: {output_folder_resolved}prd.md
 
 Summary:
+
 - {fr_count} Functional Requirements ({fr_prefix}-xxx)
 - Inherits from: {parent_prd_path}
 - Validated against: Constitution + Parent PRD

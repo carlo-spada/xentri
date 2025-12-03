@@ -3,11 +3,17 @@
 <critical>Validates architecture for: Infrastructure Module, Strategic Container, Coordination Unit, Business Module</critical>
 <critical>Key validation: ALIGNMENT with Constitution and parent architecture</critical>
 
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+  <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
+</shared-tasks>
+
 <workflow>
 
 <step n="0" goal="Determine Entity Type">
 <check if="entity_type not set">
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
 </check>
@@ -49,10 +55,12 @@ Parent: {parent_architecture_path}
 </invoke-task>
 
 <action>Verify:
+
 - No tech stack deviations without ADR
 - Alignment with Constitution patterns
 - No contradictions to parent decisions
 </action>
+
 </step>
 
 <step n="3" goal="Structural Validation">

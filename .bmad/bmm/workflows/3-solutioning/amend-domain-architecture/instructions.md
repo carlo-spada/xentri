@@ -3,11 +3,19 @@
 <critical>For Infrastructure Module, Strategic Container, Coordination Unit, Business Module architectures</critical>
 <critical>Amendments must maintain alignment with parent architecture - no contradictions allowed</critical>
 
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+  <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
+  <task name="impact-analysis" path="{project-root}/.bmad/bmm/tasks/impact-analysis.xml" />
+  <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
+</shared-tasks>
+
 <workflow>
 
 <step n="0" goal="Determine Entity Type">
 <check if="entity_type not set">
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
 </check>
@@ -41,6 +49,7 @@ Date: {date}
 <ask>What architectural changes do you want to make?
 
 Options:
+
 1. Add/modify component design
 2. Add/modify API contract
 3. Add/modify integration pattern
@@ -48,11 +57,13 @@ Options:
 5. Other (describe)</ask>
 
 <action>Document the proposed change:
+
 - Section to modify
 - Current state
 - Proposed new state
 - Rationale for change
 </action>
+
 </step>
 
 <step n="2" goal="Parent Alignment Check">
@@ -73,10 +84,12 @@ Options:
   {violation_details}
 
   Options:
+
   1. Modify your change to align
   2. Request parent amendment first
   3. Document as local exception (requires ADR)
   </output>
+
   <ask>How would you like to proceed? (1/2/3)</ask>
 </check>
 </step>
@@ -167,11 +180,13 @@ Options:
   {child_update_list}
 
   **Recommended Actions:**
+
   1. Review each impacted document for alignment
   2. Use amend-domain-architecture for updates
   3. Validate after all changes complete
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   </output>
+
 </check>
 
 <output>
