@@ -3,7 +3,8 @@
 
   <description>
     This task standardizes how users select an entity (Constitution, Module, Category, etc.) across all workflows.
-    It reads the manifest, displays a structured list, accepts user input (number or name), and returns the fully resolved entity context.
+    It reads the LIGHTWEIGHT entity-menu.yaml (~80 lines) instead of the full manifest.yaml (~787 lines) to reduce context consumption.
+    After selection, it calls detect-entity-type.xml to resolve full entity context.
   </description>
 
   <returns>
@@ -18,14 +19,13 @@
   </returns>
 
   <flow>
-    <step n="1" title="Read Manifest">
-      <action>Read {project-root}/docs/manifest.yaml</action>
-      <action>Parse the file to identify all active and planned entities organized by type:
-        1. Constitution (docs/platform/*.md)
-        2. Infrastructure Modules (docs/platform/{module}/)
-        3. Strategic Containers (docs/{category}/)
-        4. Coordination Units (docs/{category}/{subcategory}/)
-        5. Business Modules (docs/{category}/{subcategory}/{module}/)
+    <step n="1" title="Read Entity Menu">
+      <action>Read {project-root}/.bmad/bmm/data/entity-menu.yaml (lightweight ~80 lines)</action>
+      <action>DO NOT read the full docs/manifest.yaml (~787 lines) - use entity-menu.yaml for selection UI</action>
+      <action>Parse to build the selection menu with:
+        - Constitution entry
+        - Infrastructure modules (active only)
+        - Strategic containers (categories)
       </action>
     </step>
 
@@ -59,7 +59,7 @@
         [M] Enter a specific module name or path manually
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       </output>
-      <action>Note: The list above is a template. You must dynamically generate the actual list based on the current contents of manifest.yaml. Group by category.</action>
+      <action>Build menu from entity-menu.yaml data. The template above shows the expected format.</action>
     </step>
 
     <step n="3" title="Capture Input">

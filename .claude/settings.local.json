@@ -169,7 +169,8 @@
       "Bash(git rm:*)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri rm -rf:*)",
       "Bash(python scripts/generate-checklists.py:*)",
-      "Bash(~/.claude/statusline.py)"
+      "Bash(~/.claude/statusline.py)",
+      "Bash(node scripts/generate-entity-menu.js:*)"
     ],
     "deny": [],
     "ask": []

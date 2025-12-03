@@ -1,0 +1,214 @@
+# Entity Selection Menu
+# Lightweight file for workflow entity selection UI (~90 lines vs ~787 in manifest.yaml)
+# AUTO-GENERATED - Do not edit manually!
+# Regenerate with: node scripts/generate-entity-menu.js
+
+version: "1.0"
+generated_from: "docs/manifest.yaml"
+last_updated: "2025-12-03"
+
+# Constitution (System-Wide)
+constitution:
+  name: "Constitution"
+  description: "System-wide rules (PR-xxx, IC-xxx)"
+  path: "docs/platform/"
+  documents: [prd.md, architecture.md, ux-design.md, epics.md, product-brief.md]
+
+# Infrastructure Modules (Platform)
+infrastructure:
+  - key: shell
+    name: "Shell"
+    description: "Astro container application (apps/shell)"
+    path: "docs/platform/shell/"
+    status: active
+
+  - key: ui
+    name: "UI"
+    description: "Shared component library (packages/ui)"
+    path: "docs/platform/ui/"
+    status: active
+
+  - key: core-api
+    name: "Core API"
+    description: "Primary Fastify API service (services/core-api)"
+    path: "docs/platform/core-api/"
+    status: active
+
+  - key: ts-schema
+    name: "TS Schema"
+    description: "TypeScript types and Zod schemas (packages/ts-schema)"
+    path: "docs/platform/ts-schema/"
+    status: active
+
+  - key: orchestration
+    name: "Orchestration"
+    description: "Platform coordination and cross-cutting concerns"
+    path: "docs/platform/orchestration/"
+    status: active
+
+# Strategic Containers (Categories) & Coordination Units (Subcategories)
+categories:
+  - key: strategy
+    name: "Strategy"
+    codename: "Bridge"
+    description: "The Command Center"
+    path: "docs/strategy/"
+    subcategories:
+      - key: soul
+        name: "Soul"
+        description: "Identity"
+        path: "docs/strategy/soul/"
+      - key: pulse
+        name: "Pulse"
+        description: "Monitoring"
+        path: "docs/strategy/pulse/"
+      - key: horizon
+        name: "Horizon"
+        description: "Intelligence"
+        path: "docs/strategy/horizon/"
+      - key: map
+        name: "Map"
+        description: "Planning"
+        path: "docs/strategy/map/"
+
+  - key: marketing
+    name: "Marketing"
+    codename: "Stage"
+    description: "The Platform"
+    path: "docs/marketing/"
+    subcategories:
+      - key: marquee
+        name: "Marquee"
+        description: "Presence"
+        path: "docs/marketing/marquee/"
+      - key: studio
+        name: "Studio"
+        description: "Content"
+        path: "docs/marketing/studio/"
+      - key: broadcast
+        name: "Broadcast"
+        description: "Distribution"
+        path: "docs/marketing/broadcast/"
+      - key: applause
+        name: "Applause"
+        description: "Reputation"
+        path: "docs/marketing/applause/"
+
+  - key: sales
+    name: "Sales"
+    codename: "Exchange"
+    description: "The Marketplace"
+    path: "docs/sales/"
+    subcategories:
+      - key: magnet
+        name: "Magnet"
+        description: "Inbound"
+        path: "docs/sales/magnet/"
+      - key: hunt
+        name: "Hunt"
+        description: "Outbound"
+        path: "docs/sales/hunt/"
+      - key: flow
+        name: "Flow"
+        description: "Pipeline"
+        path: "docs/sales/flow/"
+      - key: handshake
+        name: "Handshake"
+        description: "Closing"
+        path: "docs/sales/handshake/"
+
+  - key: finance
+    name: "Finance"
+    codename: "Vault"
+    description: "The Storehouse"
+    path: "docs/finance/"
+    subcategories:
+      - key: inflow
+        name: "Inflow"
+        description: "Receivables"
+        path: "docs/finance/inflow/"
+      - key: outflow
+        name: "Outflow"
+        description: "Payables"
+        path: "docs/finance/outflow/"
+      - key: treasury
+        name: "Treasury"
+        description: "Cash"
+        path: "docs/finance/treasury/"
+      - key: ledger
+        name: "Ledger"
+        description: "Accounting"
+        path: "docs/finance/ledger/"
+
+  - key: operations
+    name: "Operations"
+    codename: "Engine"
+    description: "The Machine"
+    path: "docs/operations/"
+    subcategories:
+      - key: workshop
+        name: "Workshop"
+        description: "Service Delivery"
+        path: "docs/operations/workshop/"
+      - key: supply
+        name: "Supply"
+        description: "Logistics"
+        path: "docs/operations/supply/"
+      - key: habitat
+        name: "Habitat"
+        description: "Facilities"
+        path: "docs/operations/habitat/"
+      - key: concierge
+        name: "Concierge"
+        description: "Support"
+        path: "docs/operations/concierge/"
+
+  - key: team
+    name: "Team"
+    codename: "Guild"
+    description: "The People"
+    path: "docs/team/"
+    subcategories:
+      - key: draft
+        name: "Draft"
+        description: "Recruiting"
+        path: "docs/team/draft/"
+      - key: welcome
+        name: "Welcome"
+        description: "Onboarding"
+        path: "docs/team/welcome/"
+      - key: admin
+        name: "Admin"
+        description: "Administration"
+        path: "docs/team/admin/"
+      - key: growth
+        name: "Growth"
+        description: "Performance"
+        path: "docs/team/growth/"
+
+  - key: legal
+    name: "Legal"
+    codename: "Shield"
+    description: "The Protection"
+    path: "docs/legal/"
+    subcategories:
+      - key: entity
+        name: "Entity"
+        description: "Corporate"
+        path: "docs/legal/entity/"
+      - key: pacts
+        name: "Pacts"
+        description: "Commercial"
+        path: "docs/legal/pacts/"
+      - key: moat
+        name: "Moat"
+        description: "IP"
+        path: "docs/legal/moat/"
+      - key: code
+        name: "Code"
+        description: "Compliance"
+        path: "docs/legal/code/"
+      - key: guard
+        name: "Guard"
+        description: "Risk"
+        path: "docs/legal/guard/"
