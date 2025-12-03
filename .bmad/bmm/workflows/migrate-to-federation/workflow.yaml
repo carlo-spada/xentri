@@ -1,0 +1,62 @@
+# Migrate to Federation Workflow
+name: migrate-to-federation
+version: "1.0.0"
+description: "Migrates existing documentation to the Five Entity Types federated model. Scans docs, detects entity types, adds frontmatter, validates inheritance, and generates migration report."
+author: "BMad"
+
+# Critical variables from config
+config_source: "{project-root}/.bmad/bmm/config.yaml"
+output_folder: "{config_source}:output_folder"
+user_name: "{config_source}:user_name"
+communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+date: system-generated
+
+# Workflow components
+installed_path: "{project-root}/.bmad/bmm/workflows/migrate-to-federation"
+instructions: "{installed_path}/instructions.md"
+
+# Manifest for hierarchy detection
+manifest_path: "{project-root}/docs/manifest.yaml"
+
+# Constitution paths (the root of federation)
+constitution_path: "{project-root}/docs/platform"
+constitution_prd: "{constitution_path}/prd.md"
+constitution_architecture: "{constitution_path}/architecture.md"
+constitution_ux: "{constitution_path}/ux-design.md"
+constitution_epics: "{constitution_path}/epics.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+
+# Document types to migrate
+document_types:
+  - prd.md
+  - architecture.md
+  - ux-design.md
+  - epics.md
+
+# Entity types for classification
+entity_types:
+  constitution: "docs/platform/*.md"
+  infrastructure_module: "docs/platform/{module}/"
+  strategic_container: "docs/{category}/"
+  coordination_unit: "docs/{category}/{subcategory}/"
+  business_module: "docs/{category}/{subcategory}/{module}/"
+
+# Output
+migration_report_path: "{output_folder}/migration-reports/federation-migration-{date}.md"
+backup_folder: "{output_folder}/.migration-backup-{date}"
+
+# Options
+options:
+  dry_run: false
+  backup_before_modify: true
+  add_frontmatter: true
+  validate_inheritance: true
+  fix_inheritance_violations: false
+
+standalone: true

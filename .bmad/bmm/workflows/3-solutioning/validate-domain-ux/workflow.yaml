@@ -28,10 +28,10 @@ checklist_business: "{project-root}/.bmad/bmm/checklists/business-ux-checklist.m
 
 validation:
   schema_map:
-    infrastructure_module: "{checklist_infrastructure}"
-    strategic_container: "{checklist_strategic}"
-    coordination_unit: "{checklist_coordination}"
-    business_module: "{checklist_business}"
+    infrastructure_module: "{project-root}/.bmad/bmm/checklists/infrastructure-ux-checklist.md"
+    strategic_container: "{project-root}/.bmad/bmm/checklists/strategic-ux-checklist.md"
+    coordination_unit: "{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md"
+    business_module: "{project-root}/.bmad/bmm/checklists/business-ux-checklist.md"
   strict: true
   min_pass_rate: 80
 

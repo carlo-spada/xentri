@@ -39,10 +39,10 @@ checklist_business: "{project-root}/.bmad/bmm/checklists/business-prd-checklist.
 # Validation - schema resolved based on entity type
 validation:
   schema_map:
-    infrastructure_module: "{checklist_infrastructure}"
-    strategic_container: "{checklist_strategic}"
-    coordination_unit: "{checklist_coordination}"
-    business_module: "{checklist_business}"
+    infrastructure_module: "{project-root}/.bmad/bmm/checklists/infrastructure-prd-checklist.md"
+    strategic_container: "{project-root}/.bmad/bmm/checklists/strategic-prd-checklist.md"
+    coordination_unit: "{project-root}/.bmad/bmm/checklists/coordination-prd-checklist.md"
+    business_module: "{project-root}/.bmad/bmm/checklists/business-prd-checklist.md"
   required: true
   on_fail: "warn_and_offer_fix"
 

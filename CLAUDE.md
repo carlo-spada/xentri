@@ -250,3 +250,39 @@ All entities inherit from their **direct parent only** (no skip-level):
 - Infrastructure Module → Constitution
 
 Each level can ADD requirements but NEVER CONTRADICT parent.
+
+### Requirement ID Syntax
+
+```
+{TYPE}-{PATH}-{NUMBER}
+
+TYPE:
+  PR = Platform Requirement (Constitution only)
+  IC = Integration Contract (Constitution only)
+  FR = Functional Requirement (all other entity types)
+
+PATH (for FR only):
+  Variable depth, max 3 letters per segment, hyphen-separated
+
+  Infrastructure Module:    {MOD}               → FR-SHL-001
+  Strategic Container:      {CAT}               → FR-STR-001
+  Coordination Unit:        {CAT}-{SUB}         → FR-STR-PUL-001
+  Business Module:          {CAT}-{SUB}-{MOD}   → FR-STR-PUL-DAS-001
+
+NUMBER:
+  Three digits (001-999)
+```
+
+**Uniqueness Rule:** Within any parent, no two children may share the same 3-letter code.
+
+**Canonical Abbreviations (from manifest.yaml):**
+
+| Entity | Code | Entity | Code |
+|--------|------|--------|------|
+| shell | SHL | strategy | STR |
+| ui | UIC | marketing | MKT |
+| core-api | API | sales | SAL |
+| ts-schema | TSS | finance | FIN |
+| orchestration | ORC | operations | OPS |
+| — | — | team | TEA |
+| — | — | legal | LEG |

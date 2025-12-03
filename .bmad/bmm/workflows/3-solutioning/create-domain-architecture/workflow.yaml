@@ -37,6 +37,16 @@ checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-architecture
 checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md"
 checklist_business: "{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md"
 
+# Validation - schema resolved based on entity type
+validation:
+  schema_map:
+    infrastructure_module: "{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md"
+    strategic_container: "{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md"
+    coordination_unit: "{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md"
+    business_module: "{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md"
+  required: true
+  on_fail: "warn_and_offer_fix"
+
 # Shared tasks
 detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
 frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"

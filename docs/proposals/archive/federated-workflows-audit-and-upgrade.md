@@ -3,8 +3,8 @@
 > **Purpose:** Comprehensive audit and upgrade plan for all BMM workflows to support the Federated Requirements Model with Five Entity Types.
 >
 > **Date:** 2025-12-02
-> **Status:** Phase 5 Complete - All Federated Workflows Upgraded
-> **Reviewed By:** Party Mode Session (Full Agent Team)
+> **Status:** Phase 6 Complete - All Phases Finished, Validated, and Brownfield Migration Ready
+> **Reviewed By:** Party Mode Session (Full Agent Team), BMad Builder (Phase 6 Validation)
 
 ---
 
@@ -599,6 +599,21 @@ Each checklist shares a base structure with entity-type-specific sections:
 
 **Completed:** 2025-12-02
 
+### Phase 6: Validation & Brownfield Migration ✅ COMPLETE
+
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 6.1 | Comprehensive deliverables inventory | Verify all 62 deliverables exist (6 tasks, 20 checklists, 36 workflows) | ✅ Done |
+| 6.2 | Fix domain workflow validation configs | Add missing `validation.schema_map` to 4 workflows, fix unresolved YAML vars in 4 workflows | ✅ Done |
+| 6.3 | Create migrate-to-federation workflow | Brownfield migration workflow for existing docs | ✅ Done |
+| 6.4 | Validation report generation | Document all fixes and remaining items | ✅ Done |
+
+**Details of 6.2 Fixes:**
+- `create-domain-prd`, `validate-domain-prd`, `create-domain-ux`, `validate-domain-ux`: Replaced `{checklist_xxx}` variable references with full paths (YAML variables don't resolve in nested maps)
+- `create-domain-architecture`, `validate-domain-architecture`, `create-domain-epics`, `validate-domain-epics`: Added missing `validation.schema_map` sections
+
+**Completed:** 2025-12-02
+
 ---
 
 ## Success Metrics
@@ -622,7 +637,8 @@ Each checklist shares a base structure with entity-type-specific sections:
 | AMEND Workflows | 8 | 2 per doc type (system + domain) |
 | ROUTER Workflows | 12 | 3 per doc type (create + validate + amend) |
 | Checklists | 20 | 5 entity types × 4 doc types |
-| **Total** | **62** | |
+| Migration Workflow | 1 | migrate-to-federation |
+| **Total** | **63** | |
 
 ---
 
@@ -649,10 +665,10 @@ Each checklist shares a base structure with entity-type-specific sections:
 - [x] Update sprint artifact references
 - [x] Update federated-validation module workflows and checklists
 
-### Future (Brownfield Migration)
+### Future (Brownfield Migration) ✅ COMPLETE
 
-- [ ] Document `migrate-to-federation` workflow for future use
-- [ ] Create script to scan and add frontmatter
+- [x] Document `migrate-to-federation` workflow for future use
+- [x] Create script to scan and add frontmatter (integrated into workflow)
 
 ---
 
@@ -804,3 +820,4 @@ steps:
 | 2025-12-02 | **Phase 1.5 Complete** - Composable checklist system with primitives, entity-specific, and doc-specific fragments; generator script for all 20 checklists | Claude Code |
 | 2025-12-02 | **Phase 4 Complete** - UX workflows (create/validate/amend × system/domain), routers, 5 checklists (auto-generated); UX Designer agent menu | Claude Code |
 | 2025-12-02 | **Phase 5 Complete** - Implementation workflows updated to Five Entity Types: create-story, sprint-planning, dev-story, story-context, code-review, epic-tech-context; parent fallback chains, hierarchical status files | Claude Code |
+| 2025-12-02 | **Phase 6 Complete** - Validation & Brownfield Migration: Inventoried all 62 deliverables, fixed 8 domain workflow validation configs (missing schema_map + unresolved YAML vars), created migrate-to-federation workflow | BMad Builder |

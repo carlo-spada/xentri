@@ -8,8 +8,8 @@ description: "System-wide product requirements, platform requirements (PR-xxx), 
 # Xentri - Product Requirements Document (System Constitution)
 
 **Author:** Carlo
-**Date:** 2025-12-01
-**Version:** 2.1
+**Date:** 2025-12-02
+**Version:** 2.2
 **Level:** System (applies to ALL categories)
 
 ---
@@ -53,6 +53,37 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 - *"Stop being your business's human router."*
 - *"Business confidence, not business anxiety."*
 - *"The business that runs itself — and explains why."*
+
+---
+
+## Platform Requirements Index
+
+> **Governance:** These are Constitution-level requirements. All Infrastructure Modules, Strategic Containers, Coordination Units, and Business Modules MUST comply. Changes require explicit rationale and governance review.
+
+### Platform Requirements (PR-xxx)
+
+| ID | Requirement | Section Reference |
+|----|-------------|-------------------|
+| **PR-001** | All database tables MUST include `org_id` column with RLS policy | [Security Requirements](#security-requirements) |
+| **PR-002** | All mutations MUST emit events to Event Spine with standard envelope | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
+| **PR-003** | All API endpoints MUST require authentication except health checks | [Security Requirements](#security-requirements) |
+| **PR-004** | All modules MUST read Brief through standard API, never write directly | [Brief Access Patterns](#brief-access-patterns) |
+| **PR-005** | All user actions MUST respect permission primitives (view/edit/approve/configure) | [Permission Model](#permission-model) |
+| **PR-006** | All automated actions MUST be logged with human-readable explanation | [Observability Requirements](#observability-requirements) |
+| **PR-007** | All modules MUST fail gracefully; never crash the shell | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
+| **PR-008** | All copilots MUST adapt vocabulary to Brief-indicated business type | [Context-Aware Interaction](#context-aware-interaction) |
+
+### Integration Contracts (IC-xxx)
+
+| ID | Contract | Section Reference |
+|----|----------|-------------------|
+| **IC-001** | Event Envelope Schema — `SystemEvent` interface definition | [Event Schema Requirements](#event-schema-requirements) |
+| **IC-002** | Event Naming Convention — `xentri.{category}.{entity}.{action}.{version}` | [Event Schema Requirements](#event-schema-requirements) |
+| **IC-003** | Module Registration Manifest — Format for registering modules with shell | [Sub-category Integration Contracts](#sub-category-integration-contracts) |
+| **IC-004** | Brief Access API — `GET /api/v1/brief/{section}` | [Brief Access Patterns](#brief-access-patterns) |
+| **IC-005** | Recommendation Submission Protocol — How modules submit recommendations | [Brief Access Patterns](#brief-access-patterns) |
+| **IC-006** | Notification Delivery Contract — How notifications are delivered to users | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
+| **IC-007** | Permission Check Protocol — Permission primitives definition | [Permission Model](#permission-model) |
 
 ---
 
@@ -1438,6 +1469,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | 1.0 | 2025-11-25 | Carlo + AI | Initial PRD (superseded) |
 | 2.0 | 2025-11-28 | Carlo + BMAD Team | Complete rewrite with party mode collaboration |
 | 2.1 | 2025-12-01 | Carlo + Winston | Integrated UX review: hierarchical Pulse views, no-scroll constraint, copilot widget, sidebar behavior, expanded Brief-aware personalization |
+| 2.2 | 2025-12-02 | Carlo + BMad Builder | Added Platform Requirements Index (PR-001 to PR-008, IC-001 to IC-007) — consolidated from scattered references per Federated Workflows Phase 6 |
 
 ### Contributors
 

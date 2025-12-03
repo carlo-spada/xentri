@@ -168,7 +168,8 @@
       "Bash(PROJECT_ROOT=/Users/carlo/Desktop/Projects/xentri ./scripts/sync-folders-from-manifest.sh:*)",
       "Bash(git rm:*)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri rm -rf:*)",
-      "Bash(python scripts/generate-checklists.py:*)"
+      "Bash(python scripts/generate-checklists.py:*)",
+      "Bash(~/.claude/statusline.py)"
     ],
     "deny": [],
     "ask": []
