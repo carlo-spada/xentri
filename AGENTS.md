@@ -1,85 +1,94 @@
-# Repository Guidelines (Codex)
+# AGENTS.md
+
+> **Self-contained context.** This file contains complete project context. Do NOT read CLAUDE.md or GEMINI.md — they contain identical information for their respective agents.
+>
+> **Sync requirement.** If you modify this file, you MUST apply the same changes to CLAUDE.md and GEMINI.md. All three files must remain identical (except for filename in header).
 
 ## Project Overview
 
-**Xentri** - A modular Business OS that starts with conversation, not configuration.
+**Xentri** is a modular Business OS that starts with conversation, not configuration. A **Strategy Co-pilot** generates a **Universal Brief** (the DNA of a business), which powers tools organized into 7 capability categories.
 
-## Documentation Navigation
+## Documentation Structure
 
-Documentation follows a **Five Entity Types** model. Entity type is determined by PURPOSE, not depth.
+Documentation follows a **Five Entity Types** model (determined by PURPOSE, not depth):
 
-**Manifest:** `docs/manifest.yaml` — Machine-readable module registry (SINGLE SOURCE OF TRUTH)
-
-### Entity Type Detection
-
-| Entity Type | Path Pattern |
-|-------------|--------------|
-| **Constitution** | `docs/platform/*.md` |
-| **Infrastructure Module** | `docs/platform/{module}/` |
-| **Strategic Container** | `docs/{category}/` |
-| **Coordination Unit** | `docs/{category}/{subcat}/` |
-| **Business Module** | `docs/{cat}/{subcat}/{mod}/` |
-
-### Structure
+| Entity Type | Path Pattern | Contains |
+|-------------|--------------|----------|
+| **Constitution** | `docs/platform/*.md` | PR-xxx, IC-xxx, system-wide rules |
+| **Infrastructure Module** | `docs/platform/{module}/` | Interfaces, implementation |
+| **Strategic Container** | `docs/{category}/` | Strategic alignment |
+| **Coordination Unit** | `docs/{category}/{subcat}/` | Module orchestration |
+| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | Feature FRs |
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Module registry (SINGLE SOURCE OF TRUTH)
-│
-├── platform/                   # META CONTAINER (Constitution + Infrastructure)
-│   ├── prd.md                  # CONSTITUTION: System PRD
-│   ├── architecture.md         # CONSTITUTION: System Architecture
-│   ├── ux-design.md            # CONSTITUTION: System UX Principles
-│   ├── epics.md                # CONSTITUTION: Cross-cutting Epics
-│   ├── product-brief.md        # CONSTITUTION: Foundational Vision
-│   │
-│   ├── shell/                  # INFRASTRUCTURE MODULE
-│   ├── ui/                     # INFRASTRUCTURE MODULE
-│   ├── core-api/               # INFRASTRUCTURE MODULE
-│   ├── ts-schema/              # INFRASTRUCTURE MODULE
-│   └── orchestration/          # INFRASTRUCTURE MODULE
-│
-├── strategy/                   # STRATEGIC CONTAINER
-│   └── {subcat}/               # COORDINATION UNIT
-│       └── {module}/           # BUSINESS MODULE
+├── manifest.yaml               # SINGLE SOURCE OF TRUTH
+├── platform/                   # Constitution + Infrastructure
+│   ├── prd.md, architecture.md, ux-design.md, epics.md, product-brief.md
+│   ├── shell/, ui/, core-api/, ts-schema/
+│   ├── ux/                     # UX artifacts (HTML mockups)
+│   └── sprint-artifacts/       # Constitution-level sprint tracking
+├── strategy/                   # Strategic Container
+│   └── {subcat}/{module}/      # Coordination Unit → Business Module
 └── {category}/                 # Other strategic containers
 ```
 
-### Module Management
+**Module Management:** NEVER manually edit `manifest.yaml`. Use scripts:
+```bash
+./scripts/add-module.sh platform {module}
+./scripts/add-category.sh {category} "Description"
+./scripts/add-subcategory.sh {category} {subcat} "Description"
+./scripts/add-module.sh {category} {subcat} {module}
+```
 
-**NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
+## Architecture: "Decoupled Unity"
+
+| Layer | Technology | Role |
+|-------|------------|------|
+| **Shell** | Astro | Container, routing, auth |
+| **Micro-Apps** | React Islands | Interactive SPAs, lazy-loaded |
+| **Backend** | Fastify + Prisma | Microservices per domain |
+| **Data** | PostgreSQL | Schema-per-service, RLS multi-tenancy |
+| **Events** | Redis Streams | Async event transport |
+
+**Non-negotiables:**
+- Multi-tenant: every table has `org_id` with Row-Level Security
+- Event-first: business actions write to `system_events` before domain tables
+- Visible automation: every automated action logged with explanation
+- Services communicate via events, not direct calls
+
+## Repository Structure
+
+```
+/xentri
+├── apps/shell/           # Astro Shell with React islands
+├── packages/ui/          # Shared Design System
+├── packages/ts-schema/   # Shared Types & Zod Schemas (the "Contract")
+├── services/core-api/    # Core API with Prisma, RLS
+├── docs/                 # Hierarchical documentation
+├── .bmad/                # BMAD framework
+└── .claude/commands/     # Slash commands (/bmad:*)
+```
+
+## Development Commands
 
 ```bash
-# Platform Infrastructure Modules
-./scripts/add-module.sh platform {module}
-./scripts/remove-module.sh platform {module}
-
-# Strategic Containers
-./scripts/add-category.sh {category} "Description"
-./scripts/remove-category.sh {category}
-
-# Coordination Units
-./scripts/add-subcategory.sh {category} {subcat} "Description"
-./scripts/remove-subcategory.sh {category} {subcat}
-
-# Business Modules
-./scripts/add-module.sh {category} {subcat} {module}
-./scripts/remove-module.sh {category} {subcat} {module}
+pnpm install && docker compose up -d postgres redis && pnpm run db:migrate
+pnpm run dev                    # All services
+pnpm run test                   # Tests
+pnpm run typecheck              # TypeScript
+pnpm run build                  # Build
 ```
 
 ## Federated Workflow System
 
-Workflows are tracked **per entity**, not project-wide. Each entity type has its own workflow sequence.
-
-### Workflow Commands
+Workflows tracked **per entity** (not project-wide). Each entity type has its own sequence.
 
 ```bash
-/bmad:bmm:workflows:workflow-init   # Select entity, create status file
-/bmad:bmm:workflows:workflow-status  # View progress, get next steps
+/bmad:bmm:workflows:workflow-init   # Select entity, create status
+/bmad:bmm:workflows:workflow-status  # View progress, next steps
 ```
-
-### Workflow Phases
 
 | Phase | Workflows | Status |
 |-------|-----------|--------|
@@ -91,78 +100,34 @@ Workflows are tracked **per entity**, not project-wide. Each entity type has its
 
 **Validation workflows are RECOMMENDED** to ensure quality gates.
 
-### Workflow Sequence by Entity Type
-
 | Entity Type | Key Differences |
 |-------------|-----------------|
-| **Constitution** | Full stack including product-brief, system-wide epics |
-| **Infrastructure Module** | Inherits from Constitution, module-specific PRD |
+| **Constitution** | Full stack, product-brief, system-wide epics |
+| **Infrastructure Module** | Inherits Constitution, module-specific PRD |
 | **Strategic Container** | Strategic PRD, no epics (children handle) |
 | **Coordination Unit** | Coordination PRD, no epics (children handle) |
-| **Business Module** | Full stack with implementation-ready requirements |
+| **Business Module** | Full stack, implementation-ready |
 
-## Build & Development Commands
+## Coding Standards
 
-```bash
-pnpm install                           # Install dependencies
-docker compose up -d postgres redis    # Start infrastructure
-pnpm run db:migrate                    # Apply Prisma migrations
+- **TypeScript** everywhere; shared types in `packages/ts-schema`
+- **2-space indent**, trailing commas, named exports
+- **Event-first**: `system_events` before domain tables
+- **Multi-tenant**: `org_id` + RLS on every table
+- Tests: `*.test.ts` alongside code, Vitest + Playwright
 
-pnpm run dev                           # Start all services
-pnpm run test                          # Run tests
-pnpm run typecheck                     # TypeScript validation
-pnpm run build                         # Build all packages
-```
-
-## Coding Conventions
-
-- **TypeScript** across all packages; shared types in `packages/ts-schema`
-- **2-space indentation**, trailing commas, named exports (no defaults in shared packages)
-- **Event-first**: All business actions write to `system_events` before domain tables
-- **Multi-tenant**: Every table has `org_id` with Row-Level Security
-
-## Testing
-
-- Tests alongside code (`*.test.ts` or `__tests__/`)
-- Vitest for unit tests, Playwright for E2E
-- Run `pnpm run test` before PRs
-
-## Commits & PRs
-
-- Concise imperative messages ("Add...", "Fix...", "Update...")
-- Include: summary, linked issue, testing performed
-- Call out `ts-schema` changes explicitly
-
-## Key Documentation
-
-| Document | Location |
-|----------|----------|
-| Hub | `docs/index.md` |
-| Manifest | `docs/manifest.yaml` |
-| **Constitution PRD** | `docs/platform/prd.md` |
-| **Architecture** | `docs/platform/architecture.md` |
-
-## Governance Rules
+## Governance
 
 ### Constitution Changes
+Protected documents (`docs/platform/*.md`): prd, architecture, ux-design, epics, product-brief
 
-**Any change to Constitution documents requires explicit flagging and rationale.**
-
-Protected documents (in `docs/platform/`):
-- `prd.md` — System PRD (PR-xxx, IC-xxx)
-- `architecture.md` — System Architecture
-- `ux-design.md` — System UX Principles
-- `epics.md` — Cross-cutting Epics
-- `product-brief.md` — Foundational Vision
-
-When modifying these files:
-1. Flag the change in your response
-2. Provide rationale explaining why
-3. Include rationale in commit message
+When modifying: **Flag change → Provide rationale → Include in commit message**
 
 ### Zero-Trust Inheritance
+Entities inherit from **direct parent only**. Can ADD requirements, never CONTRADICT parent.
 
-All entities inherit from their **direct parent only**:
-- Children expose work upward, parents curate what's shared
-- No skip-level visibility
-- Each level can ADD requirements but NEVER CONTRADICT parent
+### Requirement IDs
+```
+PR-xxx / IC-xxx     → Constitution only
+FR-{CODE}-xxx       → All other entities (e.g., FR-SHL-001, FR-STR-PUL-001)
+```
