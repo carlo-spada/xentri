@@ -11,6 +11,7 @@
 <shared-tasks>
   <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
   <task name="generate-frontmatter" path="{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml" />
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
   <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
   <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
 </shared-tasks>
@@ -19,7 +20,7 @@
 
 <step n="0" goal="Determine Entity Type and Load Context">
 <check if="entity_type is not set or empty">
-  <invoke-task name="detect-entity-type">
+  <invoke-task name="select-entity">
     <param name="prompt_user">true</param>
   </invoke-task>
 </check>

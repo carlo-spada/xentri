@@ -3,7 +3,7 @@ entity_type: constitution
 document_type: architecture
 title: "Xentri System Architecture"
 description: "System-wide architectural decisions, technology stack, and patterns that all categories must follow."
-version: "2.3.0"
+version: "2.4.0"
 status: draft
 created: "2025-11-25"
 updated: "2025-12-02"
@@ -12,8 +12,8 @@ updated: "2025-12-02"
 # Xentri Architecture (System Constitution)
 
 > **Status:** Draft
-> **Version:** 2.3.0
-> **Last Updated:** 2025-12-01
+> **Version:** 2.4.0
+> **Last Updated:** 2025-12-02
 > **Level:** System (applies to ALL categories)
 
 ## 1. Executive Summary
@@ -600,6 +600,672 @@ Standard headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Res
 **Tooling:** Start with manual scripts in `scripts/chaos/`. Consider Chaos Mesh for GKE at scale (>100 orgs).
 
 **Implication:** Every service must implement local event queuing. Shell HTTP client must auto-backoff on `retry_after`.
+
+### ADR-014: Module Registration Architecture (IC-003)
+
+**Status:** Accepted
+
+**Context:** The Shell must dynamically discover and load modules from different packages without hard-coding references. We need a standard registration format that allows modules to declare their routes, permissions, and event contracts.
+
+**Decision:** We implement a **Declarative Module Manifest** system where each module exposes a YAML manifest at build time.
+
+**Manifest Schema (IC-003 v1.0):**
+
+```yaml
+# Example: services/sales-crm/manifest.yaml
+manifest_version: "1.0"
+module_id: "sales.pipeline"
+name: "Sales Pipeline"
+category: "sales"
+subcategory: "pipeline"
+
+# Routing
+routes:
+  - path: "/sales/pipeline"
+    component: "PipelineView"
+    layout: "default"
+  - path: "/sales/pipeline/:dealId"
+    component: "DealDetail"
+    layout: "default"
+
+# Navigation
+navigation:
+  label: "Pipeline"
+  icon: "funnel"
+  parent: "sales"
+  order: 1
+
+# Permissions (references IC-007 primitives)
+permissions_required:
+  - "sales.pipeline.view"
+permissions_grants:
+  - id: "sales.pipeline.view"
+    primitives: ["view"]
+    scope: "module"
+  - id: "sales.pipeline.edit"
+    primitives: ["view", "edit"]
+    scope: "module"
+  - id: "sales.pipeline.admin"
+    primitives: ["view", "edit", "approve", "configure"]
+    scope: "module"
+
+# Event contracts
+events_emitted:
+  - type: "xentri.sales.deal.created.v1"
+    schema: "deal.created@1.0"
+  - type: "xentri.sales.deal.updated.v1"
+    schema: "deal.updated@1.0"
+events_consumed:
+  - type: "xentri.brief.updated.v1"
+    handler: "onBriefUpdated"
+
+# Brief integration
+brief_fields_read:
+  - "business_type"
+  - "sales_cycle_length"
+  - "pipeline_stages"
+
+# Dependencies
+depends_on:
+  - "core-api"
+  - "ts-schema"
+```
+
+**Registration Flow:**
+
+1. **Build time:** CI collects all `manifest.yaml` files into `shell/src/manifests/`
+2. **Boot time:** Shell loads manifests and builds route table
+3. **Runtime:** Shell lazy-loads module bundles on first navigation
+4. **Hot reload:** Dev server watches manifest changes
+
+**Validation:**
+
+- CI validates all manifests against JSON Schema
+- Missing required fields = build failure
+- Invalid event types = build failure
+- Circular dependencies = build failure
+
+**Implication:** Every module must include a valid `manifest.yaml`. Shell cannot load modules without manifests.
+
+### ADR-015: Permission Enforcement Architecture (IC-007)
+
+**Status:** Accepted
+
+**Context:** PRD defines four permission primitives (`view`, `edit`, `approve`, `configure`) but we need an architectural pattern for how these are checked and enforced across the stack.
+
+**Decision:** We implement a **3-Layer Permission Enforcement** pattern with fail-closed behavior.
+
+**Permission Primitives (IC-007 v1.0):**
+
+```typescript
+// packages/ts-schema/src/permissions.ts
+type PermissionPrimitive = "view" | "edit" | "approve" | "configure";
+
+interface PermissionGrant {
+  id: string;                          // e.g., "sales.pipeline.edit"
+  primitives: PermissionPrimitive[];   // What actions are allowed
+  scope: "module" | "category" | "org"; // Where it applies
+  conditions?: {                        // Optional restrictions
+    own_records_only?: boolean;
+    max_value?: number;                 // e.g., approve up to $5000
+  };
+}
+
+interface PermissionCheck {
+  user_id: string;
+  org_id: string;
+  permission_id: string;               // e.g., "sales.pipeline.edit"
+  resource_id?: string;                // Specific record being accessed
+  action_value?: number;               // For conditional checks (e.g., refund amount)
+}
+
+interface PermissionResult {
+  allowed: boolean;
+  reason?: string;                     // Why denied (for logging)
+  conditions_applied?: string[];       // Which conditions were checked
+}
+```
+
+**Enforcement Layers:**
+
+| Layer | Responsibility | Enforcement Point |
+|-------|----------------|-------------------|
+| **Shell (UI)** | Hide/disable UI elements | Component render |
+| **API Gateway** | Block unauthorized requests | Middleware |
+| **Database (RLS)** | Prevent data access | Query execution |
+
+**Layer 1: Shell (UI Gating)**
+
+```typescript
+// packages/ui/src/components/PermissionGate.tsx
+function PermissionGate({
+  permission,
+  children,
+  fallback = null
+}: Props) {
+  const { hasPermission } = usePermissions();
+
+  if (!hasPermission(permission)) {
+    return fallback;
+  }
+
+  return children;
+}
+
+// Usage
+<PermissionGate permission="sales.pipeline.edit">
+  <EditDealButton />
+</PermissionGate>
+```
+
+**Layer 2: API Middleware**
+
+```typescript
+// services/core-api/src/middleware/permissions.ts
+async function requirePermission(
+  permission: string,
+  options?: { resourceId?: string }
+) {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
+    const result = await checkPermission({
+      user_id: request.user.id,
+      org_id: request.org.id,
+      permission_id: permission,
+      resource_id: options?.resourceId,
+    });
+
+    if (!result.allowed) {
+      // Fail closed with Problem Details
+      throw new ForbiddenError({
+        type: "https://xentri.com/problems/forbidden",
+        title: "Permission Denied",
+        detail: result.reason || "You don't have permission for this action",
+        permission_required: permission,
+        trace_id: request.trace_id,
+      });
+    }
+  };
+}
+
+// Route usage
+app.put("/api/v1/deals/:id", {
+  preHandler: [requirePermission("sales.pipeline.edit")],
+  handler: updateDealHandler,
+});
+```
+
+**Layer 3: Database RLS Enhancement**
+
+```sql
+-- Extend RLS policies with permission checks
+CREATE POLICY deal_access ON deals
+USING (
+  -- Tenant isolation (PR-001)
+  current_setting('app.current_org_id', true) IS NOT NULL
+  AND org_id = current_setting('app.current_org_id', true)::uuid
+  -- Permission check (IC-007)
+  AND has_permission(
+    current_setting('app.current_user_id', true)::uuid,
+    'sales.pipeline.view'
+  )
+);
+
+-- Function for permission lookup
+CREATE FUNCTION has_permission(user_id uuid, permission_id text)
+RETURNS boolean AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM user_role_permissions urp
+    JOIN role_permissions rp ON urp.role_id = rp.role_id
+    WHERE urp.user_id = $1
+      AND rp.permission_id = $2
+      AND urp.org_id = current_setting('app.current_org_id', true)::uuid
+  );
+$$ LANGUAGE sql SECURITY DEFINER;
+```
+
+**Fail-Closed Principle:**
+
+- Missing permission context = deny
+- Invalid permission format = deny
+- Unknown permission ID = deny + log warning
+- Permission service unavailable = deny + 503 response
+
+**Implication:** All three layers must be implemented for any protected resource. UI gating alone is insufficient—API and DB layers are mandatory.
+
+### ADR-016: Brief Access Architecture (IC-004, IC-005)
+
+**Status:** Accepted
+
+**Context:** Modules need to read Brief data for configuration (IC-004) and submit recommendations for Brief updates (IC-005). We need patterns that enforce read-only access while enabling the recommendation flow.
+
+**Decision:** We implement a **Brief Gateway Service** that mediates all Brief access.
+
+**IC-004: Brief Access API (v1.0)**
+
+```typescript
+// API Endpoints
+GET  /api/v1/brief                    // Full Brief (cached, ETag)
+GET  /api/v1/brief/{section}          // Specific section
+GET  /api/v1/brief/stream             // SSE for real-time updates
+
+// Response shape
+interface BriefResponse {
+  version: string;                     // Brief version (for cache invalidation)
+  updated_at: string;                  // ISO8601
+  etag: string;                        // For conditional requests
+  sections: {
+    identity: IdentitySection;
+    offerings: OfferingsSection;
+    goals: GoalsSection;
+    operational: OperationalSection;
+    // ... other sections
+  };
+}
+
+// Caching strategy
+// - Redis: 5-minute TTL, invalidated on xentri.brief.updated.v1
+// - HTTP: Cache-Control with ETag validation
+// - Client: Stale-while-revalidate pattern
+```
+
+**IC-005: Recommendation Submission Protocol (v1.0)**
+
+```typescript
+// Recommendation event shape
+interface BriefRecommendation {
+  id: string;                          // UUID
+  org_id: string;
+  source_module: string;               // e.g., "sales.pipeline"
+  target_section: string;              // e.g., "operational.revenue"
+  recommendation_type: "update" | "add" | "remove";
+
+  // The proposed change
+  current_value?: unknown;             // What it is now
+  proposed_value: unknown;             // What we suggest
+
+  // Evidence
+  evidence: {
+    event_ids: string[];               // Events that informed this
+    analysis: string;                  // Human-readable reasoning
+    data_points?: Record<string, unknown>;
+  };
+
+  // Confidence scoring
+  confidence: number;                  // 0.0 - 1.0
+  confidence_factors: string[];        // Why this confidence level
+
+  // Protocol versioning
+  protocol_version: "1.0";
+  created_at: string;
+}
+
+// Submission endpoint
+POST /api/v1/brief/recommendations
+{
+  "target_section": "operational.client_concentration",
+  "recommendation_type": "update",
+  "proposed_value": { "risk_level": "high", "top_client_percentage": 0.42 },
+  "evidence": {
+    "event_ids": ["evt_abc123", "evt_def456"],
+    "analysis": "Client 'Acme Corp' now represents 42% of revenue, up from 35% last quarter.",
+    "data_points": {
+      "acme_revenue_percentage": 0.42,
+      "previous_percentage": 0.35,
+      "threshold": 0.40
+    }
+  },
+  "confidence": 0.95,
+  "confidence_factors": ["verified_revenue_data", "multi_quarter_trend"]
+}
+
+// Response
+{
+  "recommendation_id": "rec_xyz789",
+  "status": "queued",                   // queued | pending_review | approved | rejected
+  "review_eta": "2025-12-03T02:00:00Z" // Next synthesis cycle
+}
+```
+
+**Recommendation Processing:**
+
+1. Module emits `xentri.brief.recommendation.submitted.v1`
+2. Strategy Copilot queues for next synthesis cycle (nightly by default)
+3. High-confidence (>0.9) + low-impact = auto-approve
+4. Low-confidence or high-impact = flag for human review
+5. Approved → Brief updated → `xentri.brief.updated.v1` emitted
+6. Rejected → `xentri.brief.recommendation.rejected.v1` with reason
+
+**Exception:** War Room sessions can approve recommendations immediately with human present.
+
+**Implication:** Modules can influence Brief but never write directly. This maintains Brief integrity while enabling organic evolution.
+
+### ADR-017: Notification Delivery Architecture (IC-006)
+
+**Status:** Accepted
+
+**Context:** The Operational Pulse requires a unified notification system that respects user attention. We need consistent patterns for how modules emit notifications and how they're delivered.
+
+**Decision:** We implement a **Priority-Based Notification Router** with multiple delivery channels.
+
+**IC-006: Notification Delivery Contract (v1.0)**
+
+```typescript
+// Notification event shape (extends SystemEvent)
+interface NotificationEvent extends SystemEvent {
+  notification: {
+    // Required
+    id: string;
+    title: string;
+    body: string;
+    priority: "critical" | "high" | "medium" | "low";
+
+    // Routing
+    scope: PulseScope;                 // Where in hierarchy this belongs
+    action_required: boolean;
+    action_url?: string;               // Deep link
+
+    // Display
+    icon?: string;
+    category?: string;                 // For grouping in digest
+
+    // Lifecycle
+    expires_at?: string;               // Auto-dismiss after
+    dismissible: boolean;
+
+    // Protocol
+    notification_version: "1.0";
+  };
+}
+```
+
+**Delivery Channels:**
+
+| Priority | Delivery | Timing | Channel |
+|----------|----------|--------|---------|
+| **critical** | Immediate | Real-time | Push + Email + In-app |
+| **high** | Digest | User-scheduled | Email digest + In-app |
+| **medium** | Digest | Daily digest | Email digest + In-app |
+| **low** | In-app only | Passive | Dashboard only |
+
+**Module Emission Pattern:**
+
+```typescript
+// How modules emit notifications
+await eventEmitter.emit({
+  type: "xentri.finance.invoice.overdue.v1",
+  payload: { invoice_id, amount, days_overdue },
+  notification: {
+    id: generateId(),
+    title: "Invoice Overdue",
+    body: `Invoice #${invoice_id} is ${days_overdue} days overdue ($${amount})`,
+    priority: days_overdue > 30 ? "high" : "medium",
+    scope: "category.finance",
+    action_required: true,
+    action_url: `/finance/invoices/${invoice_id}`,
+    category: "collections",
+    dismissible: false,
+    notification_version: "1.0",
+  },
+});
+```
+
+**Delivery Infrastructure:**
+
+```
+Event Spine
+    │
+    ├── Notification Router (filters by priority)
+    │       │
+    │       ├── Critical → Push Service → User device
+    │       │              └── Email Service → Immediate email
+    │       │
+    │       ├── High/Medium → Digest Aggregator
+    │       │                     └── (Scheduled) → Email Service
+    │       │
+    │       └── All → In-App Store → Pulse Dashboard
+    │
+    └── Archive (for analytics)
+```
+
+**User Preferences:**
+
+Users can override defaults per category:
+
+- Mute a category entirely
+- Elevate a category's priority
+- Change delivery channel preferences
+- Set quiet hours (no push during these times)
+
+**Implication:** Modules emit events with notification metadata. Infrastructure handles routing and delivery. Modules don't need to know about channels.
+
+### ADR-018: Automated Action Explanation Pattern (PR-006)
+
+**Status:** Accepted
+
+**Context:** PR-006 mandates that "all automated actions MUST be logged with human-readable explanation." We need a pattern that ensures visibility without cluttering the experience.
+
+**Decision:** We implement an **Explainable Action** system where every automated action includes reasoning.
+
+**Action Explanation Schema:**
+
+```typescript
+interface ExplainableAction {
+  // The action taken
+  action_id: string;
+  action_type: string;                 // e.g., "invoice.reminder.sent"
+  action_timestamp: string;
+
+  // Who/what took the action
+  actor: {
+    type: "copilot" | "automation" | "system";
+    id: string;
+    name: string;                      // e.g., "Finance Copilot"
+  };
+
+  // The explanation (human-readable)
+  explanation: {
+    summary: string;                   // One sentence
+    reasoning: string[];               // Bullet points
+    inputs_considered: string[];       // What data was used
+    alternatives_rejected?: {          // Why we didn't do something else
+      action: string;
+      reason: string;
+    }[];
+  };
+
+  // Outcome
+  result: "success" | "partial" | "failed";
+  result_details?: string;
+
+  // Reversibility
+  reversible: boolean;
+  undo_action?: string;                // Action to reverse this
+  undo_deadline?: string;              // After this, cannot undo
+}
+```
+
+**Example Explanation:**
+
+```json
+{
+  "action_id": "act_123",
+  "action_type": "invoice.reminder.sent",
+  "action_timestamp": "2025-12-02T10:30:00Z",
+  "actor": {
+    "type": "copilot",
+    "id": "finance-copilot",
+    "name": "Finance Copilot"
+  },
+  "explanation": {
+    "summary": "Sent a friendly payment reminder to Acme Corp for invoice #247.",
+    "reasoning": [
+      "Invoice is 30 days overdue",
+      "Acme Corp has a good payment history (avg 15 days)",
+      "No previous reminder sent for this invoice",
+      "Brief indicates 'maintain relationship' priority for this client"
+    ],
+    "inputs_considered": [
+      "Invoice age: 30 days",
+      "Client payment history: 15 days average",
+      "Client importance: 40% of revenue",
+      "Brief relationship strategy: maintain"
+    ],
+    "alternatives_rejected": [
+      {
+        "action": "Formal collection notice",
+        "reason": "Client has good history; friendly reminder more appropriate"
+      },
+      {
+        "action": "Wait longer",
+        "reason": "30-day threshold reached per collection policy"
+      }
+    ]
+  },
+  "result": "success",
+  "reversible": false
+}
+```
+
+**UX Patterns:**
+
+| Context | How Explanation is Shown |
+|---------|-------------------------|
+| **Pulse item** | Expand to see full explanation |
+| **Activity feed** | Hover for summary, click for details |
+| **Notification** | "Why?" link expands reasoning |
+| **Audit log** | Full JSON stored for compliance |
+
+**Implication:** Every copilot and automation must generate explanations in this format. No "magic" actions allowed.
+
+### ADR-019: Vocabulary Adaptation Architecture (PR-008)
+
+**Status:** Accepted
+
+**Context:** PR-008 mandates that "all copilots MUST adapt vocabulary to Brief-indicated business type." We need an architectural pattern for how vocabulary adapts based on business context.
+
+**Decision:** We implement a **Context-Aware Vocabulary System** with Brief-driven term mapping.
+
+**Vocabulary Mapping Schema:**
+
+```typescript
+// In Brief: business_type and industry fields drive vocabulary
+interface VocabularyContext {
+  business_type: "service" | "product" | "hybrid";
+  industry: string;                    // e.g., "healthcare", "hospitality", "tech"
+  custom_terms?: Record<string, string>; // User overrides
+}
+
+// Default vocabulary mappings (in packages/ts-schema/src/vocabulary.ts)
+const vocabularyMappings: Record<string, Record<string, string>> = {
+  "healthcare": {
+    "customer": "patient",
+    "sale": "appointment",
+    "lead": "inquiry",
+    "deal": "treatment plan",
+    "pipeline": "patient journey",
+    "invoice": "statement",
+    "revenue": "collections",
+  },
+  "hospitality": {
+    "customer": "guest",
+    "sale": "booking",
+    "lead": "inquiry",
+    "deal": "reservation",
+    "pipeline": "booking funnel",
+    "invoice": "folio",
+  },
+  "agency": {
+    "customer": "client",
+    "sale": "engagement",
+    "lead": "prospect",
+    "deal": "proposal",
+    "pipeline": "business development",
+    "project": "engagement",
+  },
+  "saas": {
+    "customer": "user",
+    "sale": "subscription",
+    "lead": "signup",
+    "deal": "conversion",
+    "pipeline": "funnel",
+    "revenue": "MRR",
+  },
+  // ... more industries
+};
+```
+
+**Integration Points:**
+
+1. **Copilot Prompts:** Vocabulary injected into system prompts
+
+```typescript
+// In agent initialization
+const vocabContext = await getVocabulary(orgId);
+const systemPrompt = `
+You are the Finance Copilot for a ${vocabContext.industry} business.
+
+VOCABULARY ADAPTATION:
+- Instead of "customers", say "${vocabContext.terms.customer}"
+- Instead of "sales", say "${vocabContext.terms.sale}"
+- Instead of "leads", say "${vocabContext.terms.lead}"
+...
+
+Apply this vocabulary consistently in all responses.
+`;
+```
+
+2. **UI Labels:** Components read from vocabulary context
+
+```typescript
+// packages/ui/src/hooks/useVocabulary.ts
+function useVocabulary() {
+  const { brief } = useBrief();
+
+  const term = (key: string): string => {
+    return brief?.custom_terms?.[key]
+      || vocabularyMappings[brief?.industry]?.[key]
+      || defaultTerms[key];
+  };
+
+  return { term };
+}
+
+// Usage
+const { term } = useVocabulary();
+<Button>Add New {term("customer")}</Button>  // "Add New Patient"
+```
+
+3. **API Responses:** Optional vocabulary transformation
+
+```typescript
+// Middleware that adapts response labels
+function adaptVocabulary(response: ApiResponse, vocabContext: VocabularyContext) {
+  // Transform field labels in response metadata
+  if (response.meta?.field_labels) {
+    response.meta.field_labels = Object.fromEntries(
+      Object.entries(response.meta.field_labels).map(([key, label]) => [
+        key,
+        vocabContext.terms[label] || label
+      ])
+    );
+  }
+  return response;
+}
+```
+
+**User Customization:**
+
+Users can override any term in Settings:
+
+```yaml
+# Stored in Brief.custom_terms
+custom_terms:
+  customer: "member"        # Gym business
+  invoice: "dues statement"
+  lead: "prospective member"
+```
+
+**Implication:** All user-facing text that uses generic business terms must use the vocabulary system. Hard-coded "Customer" or "Sale" in UI = bug.
 
 ---
 
@@ -1558,3 +2224,20 @@ See [ADR-005](./architecture/adr-005-spa-copilot-first.md) for full rationale an
 
 * **Secondary Geo Expansion:** Architecture supports adding region-specific compliance modules (e.g., `finance-engine-mx` for CFDI) without altering the core `finance-engine`.
 * **Mobile App:** The API-first design allows a future React Native app to consume the same microservices.
+
+---
+
+## Document History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0 | 2025-11-25 | Carlo + AI | Initial architecture document |
+| 2.0 | 2025-11-28 | Carlo + BMAD Team | Major revision with Kubernetes-first, Python Agent Layer |
+| 2.1 | 2025-11-29 | Carlo + Winston | Added ADR-011 (Hierarchical Pulse), ADR-012 (Copilot Widget), ADR-013 (Narrative Continuity) |
+| 2.2 | 2025-12-01 | Carlo + Winston | Added Offline & Sync patterns, DLQ handling, Module rollout strategy |
+| 2.3 | 2025-12-01 | Carlo + Winston | Added State Machines for complex flows |
+| 2.4 | 2025-12-02 | Carlo + Winston | Validation fixes: standardized frontmatter, added ADR status to all ADRs, added missing IC architecture (ADR-014 to ADR-019 for IC-003, IC-004, IC-005, IC-006, IC-007, PR-006, PR-008) |
+
+---
+
+*This architecture document is the technical constitution for the Xentri platform. All Infrastructure Modules, Strategic Containers, Coordination Units, and Business Modules must comply with the patterns and decisions defined here.*

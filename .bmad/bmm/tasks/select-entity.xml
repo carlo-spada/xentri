@@ -1,0 +1,100 @@
+<task id="{bmad_folder}/bmm/tasks/select-entity.xml" name="Select Entity">
+  <objective>Present standardized entity selection UI, capture user choice, and return entity context variables</objective>
+
+  <description>
+    This task standardizes how users select an entity (Constitution, Module, Category, etc.) across all workflows.
+    It reads the manifest, displays a structured list, accepts user input (number or name), and returns the fully resolved entity context.
+  </description>
+
+  <returns>
+    <variable name="entity_type">One of: constitution, infrastructure_module, strategic_container, coordination_unit, business_module</variable>
+    <variable name="entity_type_display">Human-readable type name</variable>
+    <variable name="entity_path">Resolved absolute path to the entity's directory or file</variable>
+    <variable name="output_folder_resolved">Same as entity_path (for directory-based entities)</variable>
+    <variable name="fr_prefix">Requirement ID prefix</variable>
+    <variable name="parent_prd_path">Path to parent PRD</variable>
+    <variable name="constitution_path">Path to Constitution PRD</variable>
+    <variable name="entity_code">3-letter entity code</variable>
+  </returns>
+
+  <flow>
+    <step n="1" title="Read Manifest">
+      <action>Read {project-root}/docs/manifest.yaml</action>
+      <action>Parse the file to identify all active and planned entities organized by type:
+        1. Constitution (docs/platform/*.md)
+        2. Infrastructure Modules (docs/platform/{module}/)
+        3. Strategic Containers (docs/{category}/)
+        4. Coordination Units (docs/{category}/{subcategory}/)
+        5. Business Modules (docs/{category}/{subcategory}/{module}/)
+      </action>
+    </step>
+
+    <step n="2" title="Display Selection Menu">
+      <output>
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        🌍 SELECT ENTITY
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Please select the entity you are working on:
+
+        [0] Constitution (System-wide Rules)
+            - prd.md, architecture.md, ux-design.md, epics.md
+
+        --- INFRASTRUCTURE (Platform) ---
+        [1] Shell (apps/shell)
+        [2] UI (packages/ui)
+        [3] Core API (services/core-api)
+        [4] TS Schema (packages/ts-schema)
+        [5] Orchestration
+
+        --- STRATEGIC DOMAINS ---
+        [6] Strategy (Bridge)
+        [7] Marketing (Stage)
+        [8] Sales (Exchange)
+        [9] Finance (Vault)
+        [10] Operations (Engine)
+        [11] Team (Guild)
+        [12] Legal (Shield)
+
+        --- SPECIFIC MODULE ---
+        [M] Enter a specific module name or path manually
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      </output>
+      <action>Note: The list above is a template. You must dynamically generate the actual list based on the current contents of manifest.yaml. Group by category.</action>
+    </step>
+
+    <step n="3" title="Capture Input">
+      <action>Wait for user input.</action>
+      <logic>
+        <if condition="input is a number corresponding to a list item">
+          <then>Resolve to the specific path for that entity.</then>
+        </if>
+        <if condition="input is 'M' or manual path">
+          <then>Ask user for the path or module name, then resolve it.</then>
+        </if>
+        <if condition="input matches an entity name (fuzzy match)">
+          <then>Confirm the match with the user if ambiguous, otherwise resolve.</then>
+        </if>
+      </logic>
+    </step>
+
+    <step n="4" title="Detect Entity Type">
+      <action>Call detect-entity-type.xml with the resolved path.</action>
+      <invoke-task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml">
+        <param name="input_path">{resolved_path}</param>
+      </invoke-task>
+    </step>
+
+    <step n="5" title="Confirm Selection">
+      <output>
+        You selected: {entity_type_display}
+        Path: {output_folder_resolved}
+        Context: {entity_code}
+      </output>
+      <action>Proceed if valid. If invalid, return to Step 2.</action>
+    </step>
+
+    <step n="6" title="Return Context">
+      <action>Return all variables from detect-entity-type to the calling workflow.</action>
+    </step>
+  </flow>
+</task>

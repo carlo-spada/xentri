@@ -1,8 +1,12 @@
 ---
-level: system
+entity_type: constitution
 document_type: ux-design
 title: "Xentri System UX Design"
 description: "System-wide UX principles, design system foundations, and interaction patterns that all categories must follow."
+version: "2.1.0"
+status: approved
+created: 2025-11-25
+updated: 2025-12-01
 ---
 
 # Xentri UX Design Specification (System Constitution)
@@ -575,6 +579,76 @@ To avoid "card-on-card" ambiguity:
 2. **One bordered Surface panel** for the content canvas
 3. **Cards inside** sit directly on Surface (no extra border, or very subtle)
 4. **Modals/sheets** use Surface+ with shadow
+
+### 8.6 Spacing System
+
+**Base Unit:** 4px
+
+All spacing derives from this base unit, creating visual rhythm and consistency across the interface.
+
+**Spacing Scale:**
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--space-0` | 0px | Reset, no spacing |
+| `--space-1` | 4px | Tight inline spacing (icon-text gap) |
+| `--space-2` | 8px | Default inline spacing, input padding |
+| `--space-3` | 12px | Compact component padding |
+| `--space-4` | 16px | Default component padding, form gaps |
+| `--space-5` | 20px | Card padding (compact) |
+| `--space-6` | 24px | Card padding (default), section gaps |
+| `--space-8` | 32px | Large section gaps |
+| `--space-10` | 40px | Page section separation |
+| `--space-12` | 48px | Major layout gaps |
+| `--space-16` | 64px | Hero/feature spacing |
+
+**Layout Grid:**
+
+| Breakpoint | Columns | Gutter | Margin |
+|------------|---------|--------|--------|
+| Mobile (<768px) | 4 | 16px | 16px |
+| Tablet (768-1023px) | 8 | 24px | 24px |
+| Desktop (≥1024px) | 12 | 24px | 32px |
+
+**Usage Guidelines:**
+
+| Context | Recommended Spacing |
+|---------|---------------------|
+| Button padding (horizontal) | `--space-4` to `--space-6` |
+| Button padding (vertical) | `--space-2` to `--space-3` |
+| Card padding | `--space-5` (compact) or `--space-6` (default) |
+| Form field gap | `--space-4` |
+| Section gap (within card) | `--space-6` |
+| Section gap (page level) | `--space-10` or `--space-12` |
+| Inline icon-text | `--space-1` or `--space-2` |
+
+**Density Adjustments:**
+
+| Theme | Spacing Multiplier | Effect |
+|-------|-------------------|--------|
+| Modern | 1.0x (default) | Comfortable, breathing room |
+| Power | 0.75x | Tighter, more information density |
+
+```css
+/* Spacing tokens */
+:root {
+  --space-unit: 4px;
+  --space-1: calc(var(--space-unit) * 1);   /* 4px */
+  --space-2: calc(var(--space-unit) * 2);   /* 8px */
+  --space-3: calc(var(--space-unit) * 3);   /* 12px */
+  --space-4: calc(var(--space-unit) * 4);   /* 16px */
+  --space-5: calc(var(--space-unit) * 5);   /* 20px */
+  --space-6: calc(var(--space-unit) * 6);   /* 24px */
+  --space-8: calc(var(--space-unit) * 8);   /* 32px */
+  --space-10: calc(var(--space-unit) * 10); /* 40px */
+  --space-12: calc(var(--space-unit) * 12); /* 48px */
+  --space-16: calc(var(--space-unit) * 16); /* 64px */
+}
+
+[data-theme*="power"] {
+  --space-unit: 3px; /* 0.75x density */
+}
+```
 
 ---
 
@@ -1300,6 +1374,94 @@ Open Chronicle → Read "Since Yesterday" → Handle exceptions → Check Story 
 | Session bridge | "Welcome back. Here's what developed while you were away." |
 | Story arc label | "Ongoing threads" or "Active arcs" |
 | Copilot inline | 💬 prefix, conversational tone |
+
+---
+
+## 13. Inheritance Guidelines
+
+This section defines what child entities (Infrastructure Modules, Strategic Containers, Coordination Units, Business Modules) can and cannot customize when implementing UX for their scope.
+
+### 13.1 Immutable (Cannot Override)
+
+These elements are system-wide constants. Child entities MUST use them exactly as specified:
+
+| Element | Rationale |
+|---------|-----------|
+| **Color System** | Brand consistency, accessibility compliance |
+| **Typography Scale** | Visual hierarchy, readability |
+| **Font Families** | Brand identity, performance (font loading) |
+| **Spacing Base Unit** (4px) | Visual rhythm, component alignment |
+| **Accessibility Standards** | Legal/ethical compliance (WCAG 2.1 AA) |
+| **Focus Indicators** | Accessibility, consistency |
+| **Toast Pattern** | Undo-first philosophy, user expectation |
+| **Modal Behavior** | Accessibility, focus management |
+| **Button Hierarchy** | Action clarity, consistency |
+| **Confirmation Pattern** | Preventing destructive errors |
+
+### 13.2 Constrained (Can Extend, Cannot Contradict)
+
+These elements can be extended with domain-specific additions, but the base definitions must remain intact:
+
+| Element | What Children Can Do | What They Cannot Do |
+|---------|---------------------|---------------------|
+| **Exception Card Statuses** | Add domain-specific statuses | Remove or rename core statuses (warning, error, success, info) |
+| **Form Validation States** | Add custom validation messages | Change validation timing or visual patterns |
+| **Search Behavior** | Add domain-specific result types | Change keyboard navigation or result grouping pattern |
+| **Date/Time Formats** | Add domain-specific formats | Override relative time thresholds |
+| **Microcopy Voice** | Adapt terminology to domain | Contradict narrative-first tone |
+
+### 13.3 Customizable (Full Child Control)
+
+These elements are expected to vary by domain and are fully customizable within the constraints:
+
+| Element | Customization Scope |
+|---------|---------------------|
+| **Story Arc Types** | Define domain-specific arcs (deals, projects, goals) |
+| **Empty State Content** | Domain-specific messaging and CTAs |
+| **Notification Content** | Domain-specific event descriptions |
+| **Chronicle Greeting** | Domain-contextualized welcome messages |
+| **Copilot Suggestions** | Domain-specific inline comments |
+| **Quick Actions** | Domain-specific action buttons |
+| **Data Visualizations** | Domain-specific charts, metrics, graphs |
+
+### 13.4 Extension Points
+
+Child entities can introduce new patterns not covered by this Constitution, provided they:
+
+1. **Follow the Design System** — Use shadcn/ui components as base
+2. **Respect Spacing/Typography** — Use defined tokens
+3. **Meet Accessibility** — Maintain WCAG 2.1 AA compliance
+4. **Document Thoroughly** — Add to their module's `ux-design.md`
+5. **Avoid Conflicts** — Not contradict any immutable or constrained element
+
+**Extension Registration:**
+
+When a child entity creates a new pattern that could benefit siblings, they should:
+1. Document it in their `ux-design.md`
+2. Flag it to the Constitution maintainer for potential promotion
+3. If promoted, it becomes part of the Constitution and applies system-wide
+
+### 13.5 Theme Customization
+
+| What Children Can Do | What They Cannot Do |
+|----------------------|---------------------|
+| Use any defined theme (Modern, Power) | Create new themes |
+| Set default theme for their module | Override user's global preference |
+| Suggest theme based on domain | Force a specific theme |
+
+### 13.6 Inheritance Chain
+
+```
+Constitution (this document)
+    ↓ INHERITS
+Infrastructure Module / Strategic Container
+    ↓ INHERITS
+Coordination Unit (for Strategic Containers only)
+    ↓ INHERITS
+Business Module
+```
+
+Each level can ADD but never CONTRADICT its parent. When in doubt, the parent wins.
 
 ---
 
