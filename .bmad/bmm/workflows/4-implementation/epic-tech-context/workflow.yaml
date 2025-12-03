@@ -9,50 +9,58 @@ user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 date: system-generated
 
-# Module isolation variables (Phase 2)
-# Inherited from agent session - agents prompt for module selection at startup
+# Federated entity detection (Five Entity Types model)
+# Uses detect-entity-type task to resolve paths for any entity depth
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
 manifest_file: "{project-root}/docs/manifest.yaml"
-current_category: "" # Inherited from agent session (e.g., "platform")
-current_module: "" # Inherited from agent session (e.g., "core-api")
 
-# Module-scoped output paths
-output_folder: "{base_output_folder}/{{current_category}}/{{current_module}}"
-sprint_artifacts: "{output_folder}/sprint-artifacts"
+# Entity-resolved paths (populated by detect-entity-type task)
+# Supports: Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module
+entity_type: "" # Detected: constitution, infrastructure_module, strategic_container, coordination_unit, business_module
+output_folder_resolved: "" # e.g., "docs/platform/core-api/" or "docs/strategy/pulse/dashboard/"
+parent_output_folder: "" # Parent entity path for parent-level context
+
+# Sprint artifacts at entity level
+sprint_artifacts: "{output_folder_resolved}sprint-artifacts"
 sprint_status: "{sprint_artifacts}/sprint-status.yaml"
 
 # Smart input file references - handles both whole docs and sharded docs
 # Priority: Whole document first, then sharded version
 # Strategy: SELECTIVE LOAD - only load the specific epic needed (epic_num from context)
+# Uses output_folder_resolved from detect-entity-type task (Five Entity Types model)
 input_file_patterns:
   prd:
     description: "Product requirements (optional)"
-    whole: "{output_folder}/*prd*.md"
-    sharded: "{output_folder}/*prd*/*.md"
+    whole: "{output_folder_resolved}*prd*.md"
+    sharded: "{output_folder_resolved}*prd*/*.md"
+    parent_fallback: "{parent_output_folder}*prd*.md"
     load_strategy: "FULL_LOAD"
   gdd:
     description: "Game Design Document (for game projects)"
-    whole: "{output_folder}/*gdd*.md"
-    sharded: "{output_folder}/*gdd*/*.md"
+    whole: "{output_folder_resolved}*gdd*.md"
+    sharded: "{output_folder_resolved}*gdd*/*.md"
     load_strategy: "FULL_LOAD"
   architecture:
     description: "System architecture and decisions"
-    whole: "{output_folder}/*architecture*.md"
-    sharded: "{output_folder}/*architecture*/*.md"
+    whole: "{output_folder_resolved}*architecture*.md"
+    sharded: "{output_folder_resolved}*architecture*/*.md"
+    parent_fallback: "{parent_output_folder}*architecture*.md"
     load_strategy: "FULL_LOAD"
   ux_design:
     description: "UX design specification (if UI)"
-    whole: "{output_folder}/*ux*.md"
-    sharded: "{output_folder}/*ux*/*.md"
+    whole: "{output_folder_resolved}*ux*.md"
+    sharded: "{output_folder_resolved}*ux*/*.md"
+    parent_fallback: "{parent_output_folder}*ux*.md"
     load_strategy: "FULL_LOAD"
   epics:
     description: "Specific epic for tech spec generation"
-    whole: "{output_folder}/*epic*.md"
-    sharded_index: "{output_folder}/*epic*/index.md"
-    sharded_single: "{output_folder}/*epic*/epic-{{epic_num}}.md"
+    whole: "{output_folder_resolved}*epic*.md"
+    sharded_index: "{output_folder_resolved}*epic*/index.md"
+    sharded_single: "{output_folder_resolved}*epic*/epic-{{epic_num}}.md"
     load_strategy: "SELECTIVE_LOAD"
   document_project:
     description: "Brownfield project documentation (optional)"
-    sharded: "{output_folder}/index.md"
+    sharded: "{output_folder_resolved}index.md"
     load_strategy: "INDEX_GUIDED"
 
 # Workflow components

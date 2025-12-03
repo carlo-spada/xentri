@@ -1,4 +1,7 @@
-# Create UX Design Workflow Instructions
+# Create# UX Design Workshop (Legacy)
+
+<workflow>
+Instructions
 
 <workflow name="create-ux-design">
 

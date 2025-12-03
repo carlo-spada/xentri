@@ -3,7 +3,7 @@
 > **Purpose:** Comprehensive audit and upgrade plan for all BMM workflows to support the Federated Requirements Model with Five Entity Types.
 >
 > **Date:** 2025-12-02
-> **Status:** Phase 3 Complete - Ready for Phase 4
+> **Status:** Phase 5 Complete - All Federated Workflows Upgraded
 > **Reviewed By:** Party Mode Session (Full Agent Team)
 
 ---
@@ -572,25 +572,32 @@ Each checklist shares a base structure with entity-type-specific sections:
 
 **Completed:** 2025-12-02
 
-### Phase 4: UX
+### Phase 4: UX ✅ COMPLETE
 
-| # | Task | Description |
-|---|------|-------------|
-| 4.1 | Create system UX workflow | `create-system-ux/` |
-| 4.2 | Create domain UX workflow | `create-domain-ux/` |
-| 4.3 | Create UX router | `create-ux/` |
-| 4.4 | Create UX validation workflows | Both system and domain |
-| 4.5 | Create UX amendment workflows | Both system and domain |
-| 4.6 | Create UX checklists | 5 entity-type checklists |
-| 4.7 | Update UX Designer agent menu | Add new commands |
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 4.1 | Create system UX workflow | `create-system-ux/` | ✅ Done |
+| 4.2 | Create domain UX workflow | `create-domain-ux/` | ✅ Done |
+| 4.3 | Create UX router | `create-ux/` | ✅ Done |
+| 4.4 | Create UX validation workflows | Both system and domain | ✅ Done |
+| 4.5 | Create UX amendment workflows | Both system and domain | ✅ Done |
+| 4.6 | Create UX checklists | 5 entity-type checklists (auto-generated) | ✅ Done |
+| 4.7 | Update UX Designer agent menu | Add new commands | ✅ Done |
 
-### Phase 5: Implementation Workflows
+**Completed:** 2025-12-02
 
-| # | Task | Description |
-|---|------|-------------|
-| 5.1 | Update create-story paths | Use `{output_folder_resolved}` |
-| 5.2 | Update sprint-planning | Hierarchical status files |
-| 5.3 | Audit other Phase 4 workflows | dev-story, story-context, etc. |
+### Phase 5: Implementation Workflows ✅ COMPLETE
+
+| # | Task | Description | Status |
+|---|------|-------------|--------|
+| 5.1 | Update create-story paths | Use `{output_folder_resolved}` + parent fallbacks | ✅ Done |
+| 5.2 | Update sprint-planning | Hierarchical status files (entity → parent → system) | ✅ Done |
+| 5.3 | Update dev-story | Entity-aware paths with parent fallback | ✅ Done |
+| 5.4 | Update story-context | Parent-level search + constitution fallback | ✅ Done |
+| 5.5 | Update code-review | Entity-aware paths with parent chain | ✅ Done |
+| 5.6 | Update epic-tech-context | Entity-aware paths with parent fallback | ✅ Done |
+
+**Completed:** 2025-12-02
 
 ---
 
@@ -794,3 +801,6 @@ steps:
 | 2025-12-02 | **Phase 1 Complete** - PRD workflows (create/validate/amend × system/domain), router, 5 checklists, PM agent menu | Claude Code |
 | 2025-12-02 | **Phase 2 Complete** - Architecture workflows (create/validate/amend × system/domain), router, 5 checklists, Architect agent menu | Claude Code |
 | 2025-12-02 | **Phase 3 Complete** - Epics workflows (create/validate/amend × system/domain), router, 5 checklists; cascading ID support, traceability validation | Claude Code |
+| 2025-12-02 | **Phase 1.5 Complete** - Composable checklist system with primitives, entity-specific, and doc-specific fragments; generator script for all 20 checklists | Claude Code |
+| 2025-12-02 | **Phase 4 Complete** - UX workflows (create/validate/amend × system/domain), routers, 5 checklists (auto-generated); UX Designer agent menu | Claude Code |
+| 2025-12-02 | **Phase 5 Complete** - Implementation workflows updated to Five Entity Types: create-story, sprint-planning, dev-story, story-context, code-review, epic-tech-context; parent fallback chains, hierarchical status files | Claude Code |

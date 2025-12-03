@@ -4,20 +4,24 @@ author: "BMad"
 
 # Critical variables from config
 config_source: "{project-root}/.bmad/bmm/config.yaml"
-output_folder: "{config_source}:output_folder"
+base_output_folder: "{config_source}:output_folder"
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
 date: system-generated
 
-# Module isolation variables (Phase 1)
-# These enable module-scoped story creation and cross-module dependency tracking
+# Federated entity detection (Five Entity Types model)
+# Uses detect-entity-type task to resolve paths for any entity depth
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
 manifest_file: "{project-root}/docs/manifest.yaml"
-module: "" # Will be elicited from user or inherited from agent session (format: category/module-name)
+
+# Entity-resolved paths (populated by detect-entity-type task)
+# Supports: Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module
+entity_type: "" # Detected: constitution, infrastructure_module, strategic_container, coordination_unit, business_module
+output_folder_resolved: "" # e.g., "docs/platform/core-api/" or "docs/strategy/pulse/dashboard/"
 module_code_path: "" # Resolved from manifest.yaml based on module (e.g., "services/core-api")
 
-# Module-scoped sprint artifacts (federated per-module)
-# Format: docs/{category}/{module}/sprint-artifacts/
-sprint_artifacts: "{output_folder}/{{current_category}}/{{current_module}}/sprint-artifacts"
+# Sprint artifacts at entity level
+sprint_artifacts: "{output_folder_resolved}sprint-artifacts"
 story_dir: "{sprint_artifacts}"
 
 # Workflow components
@@ -28,16 +32,26 @@ validation: "{installed_path}/checklist.md"
 
 # Variables and inputs
 variables:
-  sprint_status: "{sprint_artifacts}/sprint-status.yaml || {output_folder}/sprint-status.yaml" # Primary source for story tracking
-  epics_file: "{output_folder}/epics.md" # Preferred source for epic/story breakdown
-  prd_file: "{output_folder}/PRD.md" # Fallback for requirements
-  architecture_file: "{output_folder}/architecture.md" # Optional architecture context
-  tech_spec_file: "" # Will be auto-discovered from docs as tech-spec-epic-{{epic_num}}-*.md
-  tech_spec_search_dir: "{project-root}/docs"
+  # Sprint status with federated fallback chain (entity → parent → system)
+  sprint_status: "{sprint_artifacts}/sprint-status.yaml"
+  sprint_status_fallback: "{parent_output_folder}sprint-artifacts/sprint-status.yaml"
+  sprint_status_system: "{base_output_folder}/platform/sprint-artifacts/sprint-status.yaml"
+
+  # Entity-scoped document paths
+  epics_file: "{output_folder_resolved}epics.md"
+  prd_file: "{output_folder_resolved}prd.md"
+  architecture_file: "{output_folder_resolved}architecture.md"
+
+  # Tech spec discovery
+  tech_spec_file: "" # Will be auto-discovered
+  tech_spec_search_dir: "{output_folder_resolved}"
   tech_spec_glob_template: "tech-spec-epic-{{epic_num}}*.md"
+
+  # Architecture docs search (entity + parent chain)
   arch_docs_search_dirs: |
-    - "{project-root}/docs"
-    - "{output_folder}"
+    - "{output_folder_resolved}"
+    - "{parent_output_folder}"
+    - "{base_output_folder}/platform/"
   arch_docs_file_names: |
     - *architecture*.md
   story_title: "" # Will be elicited if not derivable
@@ -47,34 +61,38 @@ default_output_file: "{story_dir}/{{story_key}}.md"
 # Smart input file references - handles both whole docs and sharded docs
 # Priority: Whole document first, then sharded version
 # Strategy: SELECTIVE LOAD - only load the specific epic needed for this story
+# Uses output_folder_resolved from detect-entity-type task (Five Entity Types model)
 input_file_patterns:
   prd:
     description: "Product requirements (optional)"
-    whole: "{output_folder}/*prd*.md"
-    sharded: "{output_folder}/*prd*/*.md"
+    whole: "{output_folder_resolved}*prd*.md"
+    sharded: "{output_folder_resolved}*prd*/*.md"
+    parent_fallback: "{parent_output_folder}*prd*.md"
     load_strategy: "FULL_LOAD"
   tech_spec:
     description: "Technical specification (Quick Flow track)"
-    whole: "{output_folder}/tech-spec.md"
+    whole: "{output_folder_resolved}tech-spec.md"
     load_strategy: "FULL_LOAD"
   architecture:
     description: "System architecture and decisions"
-    whole: "{output_folder}/*architecture*.md"
-    sharded: "{output_folder}/*architecture*/*.md"
+    whole: "{output_folder_resolved}*architecture*.md"
+    sharded: "{output_folder_resolved}*architecture*/*.md"
+    parent_fallback: "{parent_output_folder}*architecture*.md"
     load_strategy: "FULL_LOAD"
   ux_design:
     description: "UX design specification (if UI)"
-    whole: "{output_folder}/*ux*.md"
-    sharded: "{output_folder}/*ux*/*.md"
+    whole: "{output_folder_resolved}*ux*.md"
+    sharded: "{output_folder_resolved}*ux*/*.md"
+    parent_fallback: "{parent_output_folder}*ux*.md"
     load_strategy: "FULL_LOAD"
   epics:
     description: "Epic containing this story"
-    whole: "{output_folder}/*epic*.md"
-    sharded_index: "{output_folder}/*epic*/index.md"
-    sharded_single: "{output_folder}/*epic*/epic-{{epic_num}}.md"
+    whole: "{output_folder_resolved}*epic*.md"
+    sharded_index: "{output_folder_resolved}*epic*/index.md"
+    sharded_single: "{output_folder_resolved}*epic*/epic-{{epic_num}}.md"
     load_strategy: "SELECTIVE_LOAD"
   document_project:
-    sharded: "{output_folder}/index.md"
+    sharded: "{output_folder_resolved}index.md"
     load_strategy: "INDEX_GUIDED"
 
 standalone: true
