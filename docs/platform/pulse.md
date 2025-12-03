@@ -21,7 +21,7 @@
 
 | Module | Stories | Status | Blockers |
 |--------|---------|--------|----------|
-| orchestration | 1-1, 1-7 | 1-1 done, 1-7 in review | None |
+| platform (DevOps) | 1-1, 1-7 | 1-1 done, 1-7 in review | None |
 | core-api | 1-2, 1-3, 1-4, 1-6 | All done | None |
 | shell | 1-5 | Done | None |
 | ts-schema | - | Supporting | None |
@@ -37,7 +37,7 @@
 
 | Module | Latest Activity | Next Action | Owner |
 |--------|-----------------|-------------|-------|
-| **orchestration** | Story 1-7 submitted for review | Complete review, merge | Carlo |
+| **platform** | Story 1-7 submitted for review | Complete review, merge | Carlo |
 | **core-api** | API deployed to Railway | Begin Epic 2 planning | - |
 | **shell** | Navigation working | Await Strategy SPA | - |
 | **ts-schema** | Contracts stable | Add Strategy types | - |
@@ -91,7 +91,7 @@
 
 ### Build Sequence Adherence
 
-Following [ADR-005 (SPA + Copilot First)](./platform/orchestration/architecture/adr-005-spa-copilot-first.md):
+Following ADR-005 (SPA + Copilot First) in [Architecture](./architecture.md):
 
 | Phase | Category | SPA | Copilot | Status |
 |-------|----------|-----|---------|--------|
@@ -117,9 +117,9 @@ Following [ADR-005 (SPA + Copilot First)](./platform/orchestration/architecture/
 
 | Date | Decision | Impact | Reference |
 |------|----------|--------|-----------|
-| 2025-11-28 | SPA + Copilot First strategy | Build order for all categories | [ADR-005](./platform/orchestration/architecture/adr-005-spa-copilot-first.md) |
-| 2025-11-27 | Module Isolation Plan | Cross-module coordination | [Plan](./platform/orchestration/module-isolation-plan.md) |
-| 2025-11-26 | Railway Bootstrap | Deploy to Railway before K8s | [ADR-004](./platform/orchestration/architecture/adr-004-railway-bootstrap.md) |
+| 2025-11-28 | SPA + Copilot First strategy | Build order for all categories | [Architecture](./architecture.md) ADR-005 |
+| 2025-11-27 | Module Isolation Plan | Cross-module coordination | [Architecture](./architecture.md) |
+| 2025-11-26 | Railway Bootstrap | Deploy to Railway before K8s | [Architecture](./architecture.md) ADR-004 |
 
 ---
 
@@ -146,7 +146,7 @@ See [Issue #TBD] for automation implementation.
 ## Contact
 
 - **Product Owner:** Carlo
-- **Architecture Questions:** See [Architecture](./platform/orchestration/architecture.md)
+- **Architecture Questions:** See [Architecture](./architecture.md)
 - **Cross-Module Requests:** Create [GitHub Issue](https://github.com/your-org/xentri/issues/new?template=cross-module-request.yml)
 
 ---

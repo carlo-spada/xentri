@@ -3,10 +3,10 @@ entity_type: constitution
 document_type: epics
 title: "Xentri System Epics"
 description: "System-wide epic structure based on Understanding + Action framework. Category/Module epics emerge organically."
-version: "2.0.0"
-status: draft
+version: "2.1.0"
+status: in_review
 created: "2025-11-28"
-updated: "2025-12-02"
+updated: "2025-12-03"
 ---
 
 # Xentri - System Epics (Constitution)
@@ -101,7 +101,7 @@ Each epic must prove this loop works for its scope.
 
 | Epic | Title | Goal | Understanding | Action | Status |
 |------|-------|------|---------------|--------|--------|
-| 1 | Foundation (v1) | Secure multi-tenant infrastructure | — | Infrastructure runs | 55% Complete |
+| 1 | Foundation (v1) | Secure multi-tenant infrastructure | — | Infrastructure runs | ✅ Ready for Review |
 | 1.5 | Infrastructure Migration | Bridge v1 to v2 architecture | — | v2 infrastructure ready | Planned |
 | 2 | Soul System | Xentri understands "who you are" | Identity + Offerings | First Copilot operational | Planned |
 | 3 | Tool Framework | Any module can integrate with Soul | Configuration patterns | Modules auto-personalize | Planned |
@@ -113,7 +113,7 @@ Each epic must prove this loop works for its scope.
 
 **Goal:** Establish the secure, multi-tenant shell, event backbone, and complete user access flow.
 
-**Status:** 55% Complete (weighted by v2 requirements)
+**Status:** ✅ Ready for Review (all v1 stories complete; v2 gaps addressed in Epic 1.5)
 
 **Scope:**
 - Platform Requirements: PR-001, PR-002 (partial), PR-003, PR-005 (partial), PR-007
@@ -141,7 +141,7 @@ Each epic must prove this loop works for its scope.
 #### Story 1.1: Project Initialization & Infrastructure
 
 **Traces to:** PR-001
-**Coordinates:** orchestration, core-api, shell
+**Coordinates:** core-api, shell
 
 **Acceptance Criteria:**
 - Fresh clone runs with `pnpm install && pnpm run dev`
@@ -232,7 +232,7 @@ Each epic must prove this loop works for its scope.
 #### Story 1.7: DevOps, Observability, and Test Readiness
 
 **Traces to:** PR-006
-**Coordinates:** orchestration
+**Coordinates:** platform (DevOps)
 
 **Acceptance Criteria:**
 - CI runs lint + unit tests + type checks on PRs
@@ -254,7 +254,7 @@ Each epic must prove this loop works for its scope.
 **Scope:**
 - Platform Requirements: PR-002 (complete), PR-005 (complete)
 - Integration Contracts: IC-002 (complete), IC-007
-- Infrastructure Modules: orchestration, core-api, ts-schema
+- Infrastructure Modules: core-api, ts-schema
 
 **Dependencies:** Epic 1 (foundation exists)
 
@@ -263,7 +263,7 @@ Each epic must prove this loop works for its scope.
 #### Story 1.5.1: Redis Streams + Dual-Write Pattern
 
 **Traces to:** PR-002, IC-002
-**Coordinates:** core-api, orchestration
+**Coordinates:** core-api
 
 **Acceptance Criteria:**
 - Redis service added to docker-compose.yaml
@@ -281,7 +281,7 @@ Each epic must prove this loop works for its scope.
 #### Story 1.5.2: Python Service Scaffold
 
 **Traces to:** ADR-008
-**Coordinates:** orchestration, ts-schema
+**Coordinates:** ts-schema
 
 **Acceptance Criteria:**
 - Python service template at `services/strategy-copilot/`
@@ -335,7 +335,7 @@ Each epic must prove this loop works for its scope.
 #### Story 1.5.5: GKE Deployment Foundation
 
 **Traces to:** ADR-004
-**Coordinates:** orchestration
+**Coordinates:** platform (DevOps)
 
 **Acceptance Criteria:**
 - Helm chart scaffold at `infra/helm/`
@@ -354,7 +354,7 @@ Each epic must prove this loop works for its scope.
 #### Story 1.5.6: Contract Testing Pipeline
 
 **Traces to:** ADR-009
-**Coordinates:** ts-schema, orchestration
+**Coordinates:** ts-schema
 
 **Acceptance Criteria:**
 - JSON Schema diff runs in CI on ts-schema changes
@@ -661,13 +661,13 @@ Each epic must prove this loop works for its scope.
 
 ### Infrastructure Module Coordination
 
-| Epic | shell | ui | core-api | ts-schema | orchestration | strategy-copilot |
-|------|-------|-----|----------|-----------|---------------|------------------|
-| 1 | Primary | Support | Primary | Support | Primary | — |
-| 1.5 | — | — | Primary | Primary | Primary | Setup |
-| 2 | — | Support | Primary | Primary | — | Primary |
-| 3 | Primary | Primary | Primary | Primary | — | Support |
-| 4 | Primary | Primary | Support | Support | — | Primary |
+| Epic | shell | ui | core-api | ts-schema | strategy-copilot |
+|------|-------|-----|----------|-----------|------------------|
+| 1 | Primary | Support | Primary | Support | — |
+| 1.5 | — | — | Primary | Primary | Setup |
+| 2 | — | Support | Primary | Primary | Primary |
+| 3 | Primary | Primary | Primary | Primary | Support |
+| 4 | Primary | Primary | Support | Support | Primary |
 
 **Legend:** Primary = major changes, Support = minor changes, — = no changes
 

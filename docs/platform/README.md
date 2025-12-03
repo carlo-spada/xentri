@@ -2,13 +2,12 @@
 
 > Core infrastructure that powers all Xentri capabilities.
 
-The Platform category (meta) contains foundational sub-categories that are always present and required for Xentri to function. These handle authentication, data persistence, event processing, UI components, and system-wide orchestration.
+The Platform category (meta) contains foundational sub-categories that are always present and required for Xentri to function. These handle authentication, data persistence, event processing, and UI components.
 
 ## Sub-categories & Modules
 
 | Sub-category | Module | Purpose | Package | Status |
 |--------------|--------|---------|---------|--------|
-| [orchestration](./orchestration/) | - | Cross-cutting concerns, big picture | - | Active |
 | [frontend](./frontend/) | [shell](./frontend/shell/) | Astro app shell, routing, islands | `apps/shell` | Active |
 | | [ui](./frontend/ui/) | Design system, shared components | `packages/ui` | Active |
 | [backend](./backend/) | [core-api](./backend/core-api/) | Auth, events, organizations | `services/core-api` | Active |
@@ -53,4 +52,4 @@ Platform modules have no external category dependencies - they ARE the foundatio
 
 ---
 
-*See [orchestration/architecture.md](./orchestration/architecture.md) for detailed technical decisions.*
+*See [architecture.md](./architecture.md) for detailed technical decisions.*

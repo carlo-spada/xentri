@@ -119,7 +119,7 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 
 ## Product Brief Reference
 
-**Path:** `docs/platform/orchestration/product-brief.md`
+**Path:** `docs/platform/product-brief.md`
 
 ### Key Elements Carried Forward
 
@@ -911,7 +911,6 @@ To prevent context bloat, Episodic Memory is recursively summarized ("folded") i
 | PRD Location | What It Contains |
 |--------------|------------------|
 | `platform/prd.md` | Constitution - system-wide rules, interfaces, integration contracts (this document) |
-| `platform/orchestration/prd.md` | Cross-cutting coordination, deployment, DevOps |
 | `platform/core-api/prd.md` | Core API endpoints, service architecture |
 | `platform/shell/prd.md` | Shell implementation, routing, islands |
 | `platform/ui/prd.md` | UI component specs, design system |

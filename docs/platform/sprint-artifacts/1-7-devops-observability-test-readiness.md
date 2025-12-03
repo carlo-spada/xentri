@@ -330,7 +330,7 @@ CLAUDE.md                                  (add deployment and observability com
 - services/core-api/src/server.ts
 - services/core-api/src/routes/metrics.ts
 - services/core-api/vitest.config.ts
-- docs/platform/orchestration/observability.md
+- docs/platform/architecture.md (Observability section)
 
 ---
 

@@ -1770,11 +1770,11 @@ Each level can ADD but never CONTRADICT its parent. When in doubt, the parent wi
 
 | Artifact | Path | Contents |
 |----------|------|----------|
-| **MVP Themes** | [ux-themes-mvp.html](./orchestration/ux/ux-themes-mvp.html) | Modern + Power themes in dark/light (interactive) |
-| **Design Directions** | [ux-design-directions.html](./orchestration/ux/ux-design-directions.html) | 7 visual direction explorations |
-| Color Themes | [ux-color-themes-v2.html](./orchestration/ux/ux-color-themes-v2.html) | Blue options on Dusk base |
-| Daily Loop Wireframes | [ux-daily-loop-wireframes-v2.html](./orchestration/ux/ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |
-| First-Time User Journey | [ux-journey-1-ftu.html](./orchestration/ux/ux-journey-1-ftu.html) | Complete FTU flow |
+| **MVP Themes** | [ux-themes-mvp.html](./ux/ux-themes-mvp.html) | Modern + Power themes in dark/light (interactive) |
+| **Design Directions** | [ux-design-directions.html](./ux/ux-design-directions.html) | 7 visual direction explorations |
+| Color Themes | [ux-color-themes-v2.html](./ux/ux-color-themes-v2.html) | Blue options on Dusk base |
+| Daily Loop Wireframes | [ux-daily-loop-wireframes-v2.html](./ux/ux-daily-loop-wireframes-v2.html) | 4-layer system + 6 specs |
+| First-Time User Journey | [ux-journey-1-ftu.html](./ux/ux-journey-1-ftu.html) | Complete FTU flow |
 
 ### Design Decisions Log
 

@@ -109,19 +109,6 @@ platform:
       consumers: [core-api, shell]
       status: active
 
-    - name: orchestration
-      purpose: "Platform coordination and cross-cutting concerns"
-      entity_type: infrastructure_module
-      location: "docs/platform/orchestration/"
-      package: null  # No code package, just docs
-      team_label: "team:orchestration"
-      status: active
-      key_files:
-        - deployment-plan.md
-        - incident-response.md
-        - module_matrix.md
-        - pulse.md
-
     # Planned Infrastructure Modules
     - name: events
       purpose: "Event Spine and Operational Pulse"
