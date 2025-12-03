@@ -60,13 +60,17 @@ pnpm run dev --filter apps/shell
 ```
 docs/platform/shell/
 ├── README.md           # This file
-├── architecture.md     # Shell-specific decisions (TODO)
-├── routing.md          # Navigation patterns (TODO)
-├── islands.md          # React island documentation (TODO)
+├── architecture.md     # Shell architecture and patterns
+├── routing.md          # File-based routing documentation
+├── islands.md          # React island documentation
 └── sprint-artifacts/
     └── sprint-status.yaml
 ```
 
 ---
 
-*Module documentation to be expanded as development continues.*
+## Related Documents
+
+- [Architecture](./architecture.md) — Shell design and patterns
+- [Routing](./routing.md) — Navigation and route protection
+- [Islands](./islands.md) — React island hydration strategies

@@ -21,7 +21,7 @@ These documents define system-wide rules that ALL entities must follow. Located 
 
 | Document | Purpose |
 |----------|---------|
-| [Product Brief](./platform/product-brief.md) | Foundational vision — all work traces here |
+| [Product Soul](./platform/product-soul.md) | Foundational vision — all work traces here |
 | [PRD](./platform/prd.md) | Platform Requirements (PR-xxx), Integration Contracts (IC-xxx) |
 | [Architecture](./platform/architecture.md) | System-wide technology decisions and patterns |
 | [UX Design](./platform/ux-design.md) | System-wide UX principles and design system |

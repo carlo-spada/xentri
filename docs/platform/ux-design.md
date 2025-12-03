@@ -3,10 +3,10 @@ entity_type: constitution
 document_type: ux-design
 title: "Xentri System UX Design"
 description: "System-wide UX principles, design system foundations, and interaction patterns that all categories must follow."
-version: "2.2.0"
+version: "2.2"
 status: approved
 created: 2025-11-25
-updated: 2025-12-02
+updated: 2025-12-03
 ---
 
 # Xentri UX Design Specification (System Constitution)
@@ -45,7 +45,7 @@ Xentri is a **Fractal Business Operating System** orchestrated by AI agents. The
 | **No-Scroll** | Full-screen experience; everything visible without scrolling |
 | **Chronicle Default** | Journal-like view is primary; efficiency mode is toggle |
 | **Human-in-the-Loop** | Copilot is a colleague in the narrative, not a chatbot |
-| **Brief-Aware** | Deep personalization — structure adapts, not just labels |
+| **Soul-Aware** | Deep personalization — structure adapts, not just labels |
 
 ### 1.2 The Fractal Mental Model
 
@@ -174,7 +174,7 @@ When user returns after absence:
 > **Resolved:** Invoice #247 was paid
 > **Developed:** Acme Corp wants to proceed
 > **New:** Two leads came in, one looks strong
-> **Brewing:** Strategy Brief suggests revisiting pricing"
+> **Brewing:** Strategy Soul suggests revisiting pricing"
 
 ### 2.6 Copilot as Human-in-the-Loop
 
@@ -377,7 +377,7 @@ Aesthetics drive initial adoption. Different users prefer different visual style
 
 - Theme preference stored per user (not per org)
 - Default: Modern Dark
-- Brief-aware suggestion: Copilot can recommend theme based on business type
+- Soul-aware suggestion: Copilot can recommend theme based on business type
 - Toggle available in Settings
 
 ---
@@ -427,11 +427,11 @@ All actions follow the pattern: **Do → Toast → Undo window**
 
 ---
 
-## 7. Brief-Aware Personalization
+## 7. Soul-Aware Personalization
 
 ### 7.1 Deep Personalization
 
-Copilots don't just change labels — they **structurally configure** the system based on the Universal Brief:
+Copilots don't just change labels — they **structurally configure** the system based on the Universal Soul:
 
 | What Copilots Configure | Example |
 |-------------------------|---------|
@@ -445,7 +445,7 @@ Copilots don't just change labels — they **structurally configure** the system
 
 Instead of asking users to configure everything:
 
-> *"Based on your Brief, I've set up your CRM with these stages: Inquiry → Consultation → Treatment Plan → Ongoing Care. Does this match how you work?"*
+> *"Based on your Soul, I've set up your CRM with these stages: Inquiry → Consultation → Treatment Plan → Ongoing Care. Does this match how you work?"*
 
 The system proposes intelligent defaults; the user adjusts.
 
@@ -1619,7 +1619,7 @@ Notifications inform users of events, updates, and actions that occurred. This p
 
 **Flow:**
 ```
-Sign Up → Strategy Co-pilot → Build Brief → Autopilot Setup → Training Wheels → Chronicle
+Sign Up → Strategy Co-pilot → Build Soul → Autopilot Setup → Training Wheels → Chronicle
 ```
 
 **Training Wheels Mode:**
@@ -1762,7 +1762,7 @@ Each level can ADD but never CONTRADICT its parent. When in doubt, the parent wi
 ### Related Documents
 
 - Product Requirements: [prd.md](./prd.md)
-- Product Brief: [product-brief.md](./product-brief.md)
+- Product Soul: [product-soul.md](./product-soul.md)
 - Epics: [epics.md](./epics.md)
 - Architecture: [architecture.md](./architecture.md)
 
@@ -1799,7 +1799,7 @@ Each level can ADD but never CONTRADICT its parent. When in doubt, the parent wi
 | 2025-11-25 | 1.1 | Tightened specs for Notification Hell prevention | UX Designer + PM |
 | 2025-11-26 | 1.2 | Changed default preset to Balanced; confirmed shadcn/ui | Carlo + Winston |
 | 2025-11-28 | 1.3 | Marked Journey 3 deferred; fixed paths | Carlo |
-| 2025-12-01 | **2.0** | **Major revision:** Narrative Continuity philosophy, Chronicle-first default, Hierarchical Pulse, Story Arcs, Theme Architecture (Modern/Power/Traditional), No-scroll constraint, CEO mental model, Copilot as human-in-the-loop, Brief-aware deep personalization | Carlo + Sally (UX Designer) |
+| 2025-12-01 | **2.0** | **Major revision:** Narrative Continuity philosophy, Chronicle-first default, Hierarchical Pulse, Story Arcs, Theme Architecture (Modern/Power/Traditional), No-scroll constraint, CEO mental model, Copilot as human-in-the-loop, Soul-aware deep personalization | Carlo + Sally (UX Designer) |
 | 2025-12-01 | **2.1** | **Implementation readiness:** Added complete Typography system (fonts, scale, weights, line heights), Component Inventory with shadcn/ui version, Button Hierarchy, Form Patterns, Modal Pattern, Search Pattern, Confirmation Pattern, Date/Time Pattern, expanded Accessibility section (focus management, keyboard nav, screen reader support, alt text strategy, form a11y, testing strategy), full component state specifications (Exception Cards, Toast, Autonomy Badge, Policy Sliders) | Carlo + Sally (UX Designer) |
 | 2025-12-02 | **2.2** | **Validation compliance:** Fixed frontmatter (entity_type, version, status, dates), added complete Spacing System (4px base, 11-token scale, layout grid), added Inheritance Guidelines (immutable/constrained/customizable rules, extension points), fixed visual artifact paths, added Empty State Pattern (5 types, components, guidelines), added Notification Pattern (types, badge, notification center), added concrete Color Palette values (4 themes with hex values, semantic colors, CSS implementation) | Carlo + Sally (UX Designer) |
 

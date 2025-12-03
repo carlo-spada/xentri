@@ -63,10 +63,14 @@ pnpm --filter @xentri/ts-schema run test
 ```
 docs/platform/ts-schema/
 ├── README.md              # This file
-├── contracts.md           # Schema documentation (TODO)
+├── contracts.md           # Schema documentation
 └── sprint-artifacts/
     └── sprint-status.yaml
 ```
+
+## Related Documents
+
+- [Contracts](./contracts.md) — Full schema documentation with usage examples
 
 ## Schema Change Protocol
 

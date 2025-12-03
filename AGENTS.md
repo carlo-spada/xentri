@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-**Xentri** is a modular Business OS that starts with conversation, not configuration. A **Strategy Co-pilot** generates a **Universal Brief** (the DNA of a business), which powers tools organized into 7 capability categories.
+**Xentri** is a modular Business OS that starts with conversation, not configuration. A **Strategy Co-pilot** generates a **Universal Soul** (the living DNA of a business), which powers tools organized into 7 capability categories.
 
 ## Documentation Structure
 
@@ -25,7 +25,7 @@ docs/
 ├── index.md                    # Navigation hub
 ├── manifest.yaml               # SINGLE SOURCE OF TRUTH
 ├── platform/                   # Constitution + Infrastructure
-│   ├── prd.md, architecture.md, ux-design.md, epics.md, product-brief.md
+│   ├── prd.md, architecture.md, ux-design.md, epics.md, product-soul.md
 │   ├── shell/, ui/, core-api/, ts-schema/
 │   ├── ux/                     # UX artifacts (HTML mockups)
 │   └── sprint-artifacts/       # Constitution-level sprint tracking
@@ -92,7 +92,7 @@ Workflows tracked **per entity** (not project-wide). Each entity type has its ow
 
 | Phase | Workflows | Status |
 |-------|-----------|--------|
-| **Discovery** | brainstorm-project, research, product-brief | Optional |
+| **Discovery** | brainstorm-project, research, product-soul | Optional |
 | **Planning** | prd, validate-prd | Required + Recommended |
 | **Design** | create-ux, validate-ux | Conditional (if_has_ui) |
 | **Solutioning** | architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness | Required + Recommended |
@@ -102,7 +102,7 @@ Workflows tracked **per entity** (not project-wide). Each entity type has its ow
 
 | Entity Type | Key Differences |
 |-------------|-----------------|
-| **Constitution** | Full stack, product-brief, system-wide epics |
+| **Constitution** | Full stack, product-soul, system-wide epics |
 | **Infrastructure Module** | Inherits Constitution, module-specific PRD |
 | **Strategic Container** | Strategic PRD, no epics (children handle) |
 | **Coordination Unit** | Coordination PRD, no epics (children handle) |
@@ -119,7 +119,7 @@ Workflows tracked **per entity** (not project-wide). Each entity type has its ow
 ## Governance
 
 ### Constitution Changes
-Protected documents (`docs/platform/*.md`): prd, architecture, ux-design, epics, product-brief
+Protected documents (`docs/platform/*.md`): prd, architecture, ux-design, epics, product-soul
 
 When modifying: **Flag change → Provide rationale → Include in commit message**
 

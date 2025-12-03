@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Pre-commit hook for Xentri
+# Validates documentation consistency before commit
+#
+# Installation:
+#   ln -sf ../../scripts/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+
+set -e
+
+echo "🔍 Running pre-commit checks..."
+echo ""
+
+# Check if docs files are staged
+STAGED_DOCS=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$|\.yaml$' || true)
+
+if [ -z "$STAGED_DOCS" ]; then
+  echo "✅ No documentation changes staged"
+  exit 0
+fi
+
+echo "📝 Documentation changes detected:"
+echo "$STAGED_DOCS" | sed 's/^/   /'
+echo ""
+
+# Run link validation on staged docs
+echo "🔗 Validating links..."
+if ! node scripts/validation/validate-links.js 2>/dev/null; then
+  echo ""
+  echo "❌ Link validation failed. Fix broken links before committing."
+  echo "   Run: pnpm run validate:links"
+  exit 1
+fi
+
+# Run frontmatter validation if Constitution docs changed
+CONSTITUTION_CHANGED=$(echo "$STAGED_DOCS" | grep -E '^docs/platform/(prd|architecture|ux-design|epics|product-soul)\.md$' || true)
+
+if [ -n "$CONSTITUTION_CHANGED" ]; then
+  echo ""
+  echo "📋 Constitution documents changed, validating frontmatter..."
+  if ! node scripts/validation/validate-docs.js 2>/dev/null; then
+    echo ""
+    echo "❌ Frontmatter validation failed. Fix issues before committing."
+    echo "   Run: pnpm run validate:docs"
+    exit 1
+  fi
+fi
+
+echo ""
+echo "✅ All pre-commit checks passed!"

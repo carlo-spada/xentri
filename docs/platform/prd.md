@@ -3,16 +3,16 @@ entity_type: constitution
 document_type: prd
 title: "Xentri System PRD (Constitution)"
 description: "System-wide product requirements, platform requirements (PR-xxx), and integration contracts (IC-xxx) that all categories must follow."
-version: "2.2.2"
-status: approved
+version: "2.2"
+status: draft
 created: "2025-11-25"
-updated: "2025-12-02"
+updated: "2025-12-03"
 ---
 
 # Xentri - Product Requirements Document (System Constitution)
 
 **Author:** Carlo
-**Date:** 2025-12-02
+**Date:** 2025-12-03
 **Version:** 2.2
 **Level:** System (applies to ALL categories)
 
@@ -32,13 +32,13 @@ Xentri is an **agent-orchestrated Fractal Business Operating System** that elimi
 
 Seven AI copilots — **Strategy, Marketing, Sales, Finance, Operations, Team, and Legal** — form a **fractal agent network** that reasons across domains with shared context:
 
-- **Strategy Copilot (Orchestrator):** Reads all category briefs, writes only to the Universal Brief. Synthesizes cross-domain patterns into strategic insight.
-- **Category Copilots (7):** Each owns its domain brief. Reads the Universal Brief for alignment. Manages specialized knowledge and tools.
+- **Strategy Copilot (Orchestrator):** Reads all category souls, writes only to the Universal Soul. Synthesizes cross-domain patterns into strategic insight.
+- **Category Copilots (7):** Each owns its domain soul. Reads the Universal Soul for alignment. Manages specialized knowledge and tools.
 - **Module Sub-agents:** Specialized in specific integrations (OAuth, MCP, APIs) within their parent category.
 
 The copilots don't just collect information in silos or display it in dashboards. They **connect the dots**:
 
-> *"Invoice #247 is 30 days overdue. This client is 40% of your revenue. Your strategy brief says reduce client concentration risk. You have a new lead in a different vertical. **Recommendation:** Follow up on the invoice, but prioritize the new lead — you're over-indexed on this client anyway."*
+> *"Invoice #247 is 30 days overdue. This client is 40% of your revenue. Your strategy soul says reduce client concentration risk. You have a new lead in a different vertical. **Recommendation:** Follow up on the invoice, but prioritize the new lead — you're over-indexed on this client anyway."*
 
 That's cross-domain reasoning. Not a feature. Not a workflow. An architecture.
 
@@ -50,7 +50,7 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 
 ### What Makes This Special
 
-**Agent-orchestrated, not AI-augmented.** The copilots aren't features — they're the foundation. The Universal Brief isn't a document — it's the business's living memory. The automation isn't magical — it's explainable.
+**Agent-orchestrated, not AI-augmented.** The copilots aren't features — they're the foundation. The Universal Soul isn't a document — it's the business's living memory. The automation isn't magical — it's explainable.
 
 **The positioning:**
 
@@ -71,11 +71,11 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 | **PR-001** | All database tables MUST include `org_id` column with RLS policy | [Security Requirements](#security-requirements) |
 | **PR-002** | All mutations MUST emit events to Event Spine with standard envelope | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
 | **PR-003** | All API endpoints MUST require authentication except health checks | [Security Requirements](#security-requirements) |
-| **PR-004** | All modules MUST read Brief through standard API, never write directly | [Brief Access Patterns](#brief-access-patterns) |
+| **PR-004** | All modules MUST read Soul through standard API, never write directly | [Soul Access Patterns](#soul-access-patterns) |
 | **PR-005** | All user actions MUST respect permission primitives (view/edit/approve/configure) | [Permission Model](#permission-model) |
 | **PR-006** | All automated actions MUST be logged with human-readable explanation | [Observability Requirements](#observability-requirements) |
 | **PR-007** | All modules MUST fail gracefully; never crash the shell | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
-| **PR-008** | All copilots MUST adapt vocabulary to Brief-indicated business type | [Context-Aware Interaction](#context-aware-interaction) |
+| **PR-008** | All copilots MUST adapt vocabulary to Soul-indicated business type | [Context-Aware Interaction](#context-aware-interaction) |
 
 ### Integration Contracts (IC-xxx)
 
@@ -84,8 +84,8 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 | **IC-001** | Event Envelope Schema — `SystemEvent` interface definition | v1.0 | [Event Schema Requirements](#event-schema-requirements) |
 | **IC-002** | Event Naming Convention — `xentri.{category}.{entity}.{action}.{version}` | v1.0 | [Event Schema Requirements](#event-schema-requirements) |
 | **IC-003** | Module Registration Manifest — Format for registering modules with shell | v1.0 | [Sub-category Integration Contracts](#sub-category-integration-contracts) |
-| **IC-004** | Brief Access API — `GET /api/v1/brief/{section}` | v1.0 | [Brief Access Patterns](#brief-access-patterns) |
-| **IC-005** | Recommendation Submission Protocol — How modules submit recommendations | v1.0 | [Brief Access Patterns](#brief-access-patterns) |
+| **IC-004** | Soul Access API — `GET /api/v1/soul/{section}` | v1.0 | [Soul Access Patterns](#soul-access-patterns) |
+| **IC-005** | Recommendation Submission Protocol — How modules submit recommendations | v1.0 | [Soul Access Patterns](#soul-access-patterns) |
 | **IC-006** | Notification Delivery Contract — How notifications are delivered to users | v1.0 | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
 | **IC-007** | Permission Check Protocol — Permission primitives definition | v1.0 | [Permission Model](#permission-model) |
 
@@ -117,22 +117,22 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 
 ---
 
-## Product Brief Reference
+## Product Soul Reference
 
-**Path:** `docs/platform/product-brief.md`
+**Path:** `docs/platform/product-soul.md`
 
 ### Key Elements Carried Forward
 
-| Element | From Brief |
+| Element | From Soul |
 |---------|------------|
 | **Vision** | Modular Business OS — conversation first, not configuration |
 | **Target Users** | Service businesses, founders, agencies, creators, SMB owners |
-| **Entry Point** | Free Strategy Co-pilot + Universal Brief |
+| **Entry Point** | Free Strategy Co-pilot + Universal Soul |
 | **Pricing Model** | 5-tier personalized system ($0 → $10 → $30 → $90 → $270) + $5/module à la carte |
 | **North Star** | Weekly Active Revenue Events per Organization |
 | **Key Differentiators** | Clarity-first, visible automation, modular growth, personalized recommendations |
 
-### Domain Brief
+### Domain Soul
 
 **Path:** N/A — General SMB domain, no specialized compliance requirements at platform level.
 
@@ -158,7 +158,7 @@ Xentri processes business information through three layers, applied fractally at
 |-------|---------|---------------------|--------|
 | **Event Spine** | Real-time | "What happened?" | Raw, immutable, complete — every action logged |
 | **Operational Pulse** | User-scheduled | "What needs attention now?" | Synthesized, actionable — the calm daily view |
-| **Strategic Brief** | Nightly | "Who are we becoming?" | Distilled patterns — the business DNA |
+| **Strategic Soul** | Nightly | "Who are we becoming?" | Distilled patterns — the business DNA |
 
 **User experience:** These layers are invisible infrastructure. The user experiences one calm system that knows when to interrupt, when to summarize, when to act, and when to wait.
 
@@ -206,7 +206,7 @@ At any given level, the Agent must balance three distinct inputs to decide how t
 
 2. **Superior Intent (The Strategy):**
     - *Source:* The Parent (Agent) (e.g., Owner → Orchestrator → Executive → Manager → Specialist).
-    - *Content:* The relevant section of the Brief and Pulse. "We are focusing on growth this quarter."
+    - *Content:* The relevant section of the Soul and Pulse. "We are focusing on growth this quarter."
     - *Editable by:* **Parent Agent.**
 
 3. **User Reality (The Supervision):**
@@ -240,7 +240,7 @@ How do we prevent noise? **Hierarchical Filtering.**
 
 4. **Strategy Level (Strategic Context):**
     - The Strategy Copilot reviews the Strategy Pulse.
-    - It makes the final decision based on the *Universal Brief* (e.g., "Ignore the invoice, call the client to save the relationship").
+    - It makes the final decision based on the *Universal Soul* (e.g., "Ignore the invoice, call the client to save the relationship").
 
 **Result:** The Owner sees only what survives four layers of intelligent filtering (unless they choose to dig deeper, because the rest of the information is still there, it just might have a lower priority and wasn't able to surface to a higher level filter).
 
@@ -310,22 +310,22 @@ A dedicated collaboration space where all category copilots are "present" — re
 
 **Closing the loop:** War Room sessions generate a report distributed to all agents. During nightly synthesis, agents update their briefs based on decisions made. This is how cross-cutting decisions change the business DNA.
 
-### Brief Governance
+### Soul Governance
 
-The Universal Brief contains two types of sections:
+The Universal Soul contains two types of sections:
 
 | Section Type | Who Can Modify | Examples |
 |--------------|----------------|----------|
 | **AI-Updateable** | Strategy Copilot (auto) | Revenue model, client mix, operational metrics |
 | **Human-Sovereign** | User only (explicit approval) | Vision, values, identity, strategic direction |
 
-**Recommendation flow:** Category copilots cannot write to the Universal Brief. They emit recommendation events that Strategy evaluates during nightly synthesis. High-impact or low-confidence recommendations are flagged for human decision.
+**Recommendation flow:** Category copilots cannot write to the Universal Soul. They emit recommendation events that Strategy evaluates during nightly synthesis. High-impact or low-confidence recommendations are flagged for human decision.
 
 **Safeguards identified via pre-mortem analysis:**
 
-- **Against Silent Drift:** Brief is versioned; users can diff any two versions to see evolution
+- **Against Silent Drift:** Soul is versioned; users can diff any two versions to see evolution
 - **Against Recommendation Flood:** Confidence thresholds, decay on flagged items, backpressure signals
-- **Tracking:** Brief Stability Index measures change velocity to detect over-reactivity
+- **Tracking:** Soul Stability Index measures change velocity to detect over-reactivity
 
 ---
 
@@ -342,7 +342,7 @@ Before external customers, Xentri must prove the architecture works on a real bu
 | Criterion | Validation |
 |-----------|------------|
 | Xentri's operations run on Xentri | The team uses the product daily for actual work |
-| Strategy Brief describes the Xentri business | Complete, current, actively referenced |
+| Strategy Soul describes the Xentri business | Complete, current, actively referenced |
 | Operational Pulse surfaces action items | Team receives and acts on system-generated insights |
 | All categories have active modules | At least one module per category (beyond copilots) in regular use |
 
@@ -417,7 +417,7 @@ Shell (Astro)
 - Full 4-Level Hierarchy operational (Strategy → Category → Sub-Category → Module)
 - **Deep Validation:** One vertical fully implemented to Level 4 (Marketing → Website → Builder)
 - **Wide Validation:** A second category active to Level 2/4 (Sales → CRM) to prove cross-category orchestration.
-- Three-layer architecture functional (Event Spine → Operational Pulse → Strategic Brief) in all four levels
+- Three-layer architecture functional (Event Spine → Operational Pulse → Strategic Soul) in all four levels
 - War Room operational for cross-domain collaboration
 
 **Example MVP Modules (The "Fractal Spike"):**
@@ -495,11 +495,11 @@ This "Soul" ensures the agent remains a professional employee, not just a compli
 | Pattern | Flow | State |
 |---------|------|-------|
 | **Traditional AI** | User → Query → AI → Response | Stateless — each conversation starts from zero |
-| **Xentri Copilots** | User ↔ Copilot ↔ Brief ↔ Other Copilots | Stateful — memory accumulates and propagates |
+| **Xentri Copilots** | User ↔ Copilot ↔ Soul ↔ Other Copilots | Stateful — memory accumulates and propagates |
 
 Most AI tools are one-directional: you ask, they answer. Xentri's copilots read AND write to a shared memory structure. That's agent orchestration, not chatbot augmentation.
 
-The Brief isn't a database. It's a shared consciousness that agents both consume and shape.
+The Soul isn't a database. It's a shared consciousness that agents both consume and shape.
 
 ### The BMAD Validation
 
@@ -534,7 +534,7 @@ The innovation is in how these tools *connect and reason together* — not in th
 The architecture enables a compounding advantage:
 
 ```text
-More usage → Richer Brief → Better copilot performance → More usage
+More usage → Richer Soul → Better copilot performance → More usage
 ```
 
 Competitors can copy the architecture. They cannot copy accumulated business context. The flywheel is the moat.
@@ -559,17 +559,17 @@ A young doctor's practice, a boutique hotel, and a tech startup all need a "CRM"
 
 They share one thing: they all need intelligent orchestration to run their business better.
 
-### Xentri's Approach: Brief-Aware Modules
+### Xentri's Approach: Soul-Aware Modules
 
 **Modules configure themselves based on business context.**
 
 ```text
-User completes Brief → Copilot reads Brief → Copilot configures module → User confirms or adjusts
+User completes Soul → Copilot reads Soul → Copilot configures module → User confirms or adjusts
 ```
 
 The user's first experience isn't "fill out this form to configure your CRM." It's:
 
-> *"Based on your Brief, I've set up your CRM with these stages: Inquiry → Consultation → Treatment Plan → Ongoing Care. Does this match how you work?"*
+> *"Based on your Soul, I've set up your CRM with these stages: Inquiry → Consultation → Treatment Plan → Ongoing Care. Does this match how you work?"*
 
 **One question, not fifty.**
 
@@ -580,21 +580,21 @@ If it's wrong, they adjust. But the default is *intelligent*, not generic.
 | Aspect | Traditional SaaS | Xentri |
 |--------|------------------|--------|
 | **Schema** | Fixed tables, fixed columns | Flexible — adapts to business type |
-| **Pipelines** | Generic stages everyone shares | Brief-informed stages based on business model |
+| **Pipelines** | Generic stages everyone shares | Soul-informed stages based on business model |
 | **Fields** | Same for everyone | Copilot-configured based on context |
-| **Onboarding** | "Choose your industry" dropdown | Brief already knows — auto-configures |
+| **Onboarding** | "Choose your industry" dropdown | Soul already knows — auto-configures |
 | **Customization** | User builds from scratch | User confirms or adjusts intelligent defaults |
 
 **Technical approach:**
 
 - Flexible entity schemas (JSON columns, configurable fields)
 - Template system for module configurations
-- Brief → Module Config mapping driven by copilots
+- Soul → Module Config mapping driven by copilots
 - User override always available — intelligent defaults, not locked constraints
 
 ### What Copilots Can Configure
 
-Copilots don't just change labels — they **structurally configure** the system based on the Brief.
+Copilots don't just change labels — they **structurally configure** the system based on the Soul.
 
 | Configuration | What It Means | Examples |
 |---------------|---------------|----------|
@@ -610,8 +610,8 @@ Copilots don't just change labels — they **structurally configure** the system
 **The Experience:**
 
 ```
-User completes Brief
-    → Copilot reads Brief
+User completes Soul
+    → Copilot reads Soul
     → Copilot configures module (pipeline, fields, settings)
     → User sees: "I've set up your CRM with these stages: [stages]. Does this match how you work?"
     → User confirms, adjusts, or asks for alternatives
@@ -625,15 +625,15 @@ User completes Brief
 
 > *"The CRM that already knows your business."*
 
-Every other tool makes you configure it. Xentri's tools configure themselves because they read your Brief. This requires the entire **Fractal Brief Architecture** to work — it's not a feature you can bolt on.
+Every other tool makes you configure it. Xentri's tools configure themselves because they read your Soul. This requires the entire **Fractal Soul Architecture** to work — it's not a feature you can bolt on.
 
 ### Design Mandate
 
-**Every module must be Brief-aware.**
+**Every module must be Soul-aware.**
 
 When designing any module, ask:
 
-1. What does the Brief tell us about how this business works?
+1. What does the Soul tell us about how this business works?
 2. How can the copilot configure intelligent defaults?
 3. What's the one question we ask instead of fifty?
 4. How does the user adjust if we got it wrong?
@@ -687,26 +687,26 @@ Even solo operators get the architecture that supports growth. When they're read
 | Sales Lead | all above + approve discounts, view team metrics |
 | Founder | full access + configure roles, manage billing |
 
-**Brief-aware defaults:** When a new user is invited, the copilot suggests an appropriate role based on the Brief and the inviter's description of their responsibilities.
+**Soul-aware defaults:** When a new user is invited, the copilot suggests an appropriate role based on the Soul and the inviter's description of their responsibilities.
 
 ### Subscription Model
 
-**Decision:** Brief-informed recommendations primary. À la carte as escape hatch. Never a generic pricing grid.
+**Decision:** Soul-informed recommendations primary. À la carte as escape hatch. Never a generic pricing grid.
 
 **The flow:**
 
 ```text
-User completes Brief
+User completes Soul
     → Copilot analyzes business needs
-    → "Based on your Brief, you need Marketing and Finance modules. That's Light Ops at $60/mo."
+    → "Based on your Soul, you need Marketing and Finance modules. That's Light Ops at $60/mo."
     → User accepts, adjusts, or explores à la carte
 ```
 
-**Tier structure (from Product Brief):**
+**Tier structure (from Product Soul):**
 
 | Tier | Price | Nature |
 |------|-------|--------|
-| **Free** | $0/mo | Strategy Copilot + Brief — prove value before asking for money |
+| **Free** | $0/mo | Strategy Copilot + Soul — prove value before asking for money |
 | **Presencia** | $20/mo | Personalized ~3 module bundle |
 | **Light Ops** | $60/mo | Personalized ~8 module bundle |
 | **Professional** | $180/mo | Personalized ~24 module bundle |
@@ -714,7 +714,7 @@ User completes Brief
 
 | **À la carte** | $5/module/mo | Any module individually |
 
-**Key principle:** The tier recommendation comes from the Brief, not a comparison table. Users see "here's what you need" not "here are your options."
+**Key principle:** The tier recommendation comes from the Soul, not a comparison table. Users see "here's what you need" not "here are your options."
 
 **Billing activation:** Billing infrastructure built for v1.0 (Growth phase). Client Zero (v0.1–v0.9) operates without payment processing.
 
@@ -725,7 +725,7 @@ User completes Brief
 | Aspect | Approach |
 |--------|----------|
 | **Data export** | Always available, always complete. Users can leave anytime. |
-| **Context lock-in** | The Brief, the copilot understanding, the configured modules — this can't be exported. |
+| **Context lock-in** | The Soul, the copilot understanding, the configured modules — this can't be exported. |
 | **Trust equation** | The easier it is to leave, the more confident they are to stay. |
 
 Competitors can import your contacts. They can't import the understanding that "this client represents 40% of revenue and your strategy says reduce concentration risk."
@@ -816,7 +816,7 @@ From foundation to polish:
 
 ### Context-Aware Interaction
 
-The Brief doesn't just configure modules — it configures *language*.
+The Soul doesn't just configure modules — it configures *language*.
 
 | Business Type | Instead of... | The copilot says... |
 |---------------|---------------|---------------------|
@@ -857,7 +857,7 @@ The "magic" depends on memory and continuously improving context engineering.
 | Requirement | What It Means |
 |-------------|---------------|
 | **Session memory** | Conversation history persisted and retrievable |
-| **Brief context** | Cached and loaded on every interaction |
+| **Soul context** | Cached and loaded on every interaction |
 | **Event awareness** | Recent events summarized and available |
 | **Pattern recognition** | Historical analysis for "they typically take 3 days" |
 | **Long-term synthesis** | RAG or similar for retrieving relevant past context |
@@ -871,10 +871,10 @@ The "magic" depends on memory and continuously improving context engineering.
 
 To support "Narrative Continuity" without clogging context windows, Xentri employs a **Tri-State Memory System** with **Temporal Compression**:
 
-1. **Semantic Memory (The Brief):**
+1. **Semantic Memory (The Soul):**
     - *What it is:* Structured business facts.
     - *Example:* "Client X is a VIP." "Strategy is Growth."
-    - *Storage:* Relational DB (The Universal Brief).
+    - *Storage:* Relational DB (The Universal Soul).
     - *Usage:* Cached and loaded on every interaction.
 
 2. **Episodic Memory (The Journal):**
@@ -936,7 +936,7 @@ Each sub-category PRD inherits from this constitution and adds specific implemen
 | **Register with Shell** | Expose manifest with routes, navigation, permissions required |
 | **Emit events** | All state changes emit to Event Spine with standard envelope |
 | **Consume events** | Subscribe only to declared event types; handle gracefully if unavailable |
-| **PR-004: Read Brief** | Access Brief through standard API; never write directly (use recommendation events) |
+| **PR-004: Read Soul** | Access Soul through standard API; never write directly (use recommendation events) |
 | **Respect permissions** | Check user permissions before every action; fail closed if unclear |
 | **Authenticate users** | Use platform auth; never implement custom auth flows |
 
@@ -961,7 +961,7 @@ events_emitted:
   - "xentri.sales.deal.created"
   - "xentri.sales.deal.updated"
 events_consumed:
-  - "xentri.brief.updated"
+  - "xentri.soul.updated"
 brief_fields_read:
   - "business_type"
   - "sales_cycle_length"
@@ -974,7 +974,7 @@ brief_fields_read:
 | Communication Pattern | API Type | Use Case | Example |
 |-----------------------|----------|----------|---------|
 | **CRUD operations** | REST | Standard data operations, module APIs | `GET /api/v1/deals` |
-| **Complex internal services** | gRPC | High-throughput, typed service-to-service | Copilot ↔ Brief service |
+| **Complex internal services** | gRPC | High-throughput, typed service-to-service | Copilot ↔ Soul service |
 | **Real-time updates** | WebSocket | Chat, live collaboration, presence | War Room, co-editing |
 | **Event streaming** | Server-Sent Events (SSE) | Notifications, activity feeds | Operational Pulse delivery |
 | **Flexible querying** | GraphQL | Client-driven data needs | Consider for v2.0+ |
@@ -992,7 +992,7 @@ brief_fields_read:
 | **PR-002: Event emission** | All mutations emit events with standard envelope (see Event Schema below) |
 | **PR-005: Permission checks** | Verify primitives (`view`, `edit`, `approve`, `configure`) before actions |
 | **PR-006: Audit logging** | Log who did what when; include `trace_id` for correlation |
-| **Brief awareness** | Read Brief on init; reconfigure on `xentri.brief.updated` events |
+| **Soul awareness** | Read Soul on init; reconfigure on `xentri.soul.updated` events |
 | **PR-007: Error boundaries** | Fail gracefully; never crash the shell; show meaningful error states |
 
 **IC-006: Notification delivery contract (v1.0):**
@@ -1032,7 +1032,7 @@ All copilots must:
 - Offer conversational path first
 - Provide form/structured fallback on request
 - Explain every automated action
-- PR-008: Adapt vocabulary to Brief-indicated business type
+- PR-008: Adapt vocabulary to Soul-indicated business type
 
 ### Event Schema Requirements
 
@@ -1082,27 +1082,27 @@ Examples:
 
 - `xentri.sales.deal.created.v1`
 - `xentri.finance.invoice.paid.v1`
-- `xentri.brief.recommendation.submitted.v1`
+- `xentri.soul.recommendation.submitted.v1`
 
-### Brief Access Patterns
+### Soul Access Patterns
 
-**IC-004: Reading the Brief:**
+**IC-004: Reading the Soul:**
 
 | Access Type | Method | Use Case |
 |-------------|--------|----------|
-| **Full Brief** | `GET /api/v1/brief` | Initial module configuration |
-| **Specific section** | `GET /api/v1/brief/{section}` | Targeted reads (e.g., `business_type`) |
-| **Subscribe to changes** | SSE `/api/v1/brief/stream` | React to Brief updates in real-time |
+| **Full Soul** | `GET /api/v1/soul` | Initial module configuration |
+| **Specific section** | `GET /api/v1/soul/{section}` | Targeted reads (e.g., `business_type`) |
+| **Subscribe to changes** | SSE `/api/v1/soul/stream` | React to Soul updates in real-time |
 
-**Writing to the Brief:**
+**Writing to the Soul:**
 
 **IC-005: Recommendation Protocol (v1.0)**
-Sub-categories **never write directly** to the Brief. Instead:
+Sub-categories **never write directly** to the Soul. Instead:
 
-1. Emit `xentri.brief.recommendation.submitted.v1` event
+1. Emit `xentri.soul.recommendation.submitted.v1` event
 2. Include `target_section`, `recommendation`, `evidence`, `confidence`, `protocol_version: "1.0"`
 3. Strategy Copilot evaluates during synthesis
-4. If approved, Brief updates and `xentri.brief.updated.v1` emitted
+4. If approved, Soul updates and `xentri.soul.updated.v1` emitted
 
 **Exception:** War Room sessions can approve recommendations in real-time with human present.
 
@@ -1122,7 +1122,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 |------------|--------|-----------------|
 | **Instant** | < 100ms | No perception of delay |
 | **Fast** | 100–300ms | Acknowledged, not annoying |
-| **Acceptable** | 300ms–1s | Brief wait, loading indicator shown |
+| **Acceptable** | 300ms–1s | Brief wait (acceptable), loading indicator shown |
 | **Slow** | 1–3s | Progress indication required |
 | **Broken** | > 3s without feedback | **Defect** — unacceptable |
 
@@ -1135,7 +1135,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Search queries | Fast (< 300ms) | < 1s |
 | Copilot initial response | Acceptable (< 1s to first token) | Streaming required |
 | Complex copilot operations | Slow with progress | Must show activity |
-| Brief context loading | Instant (cached) | < 200ms from cache |
+| Soul context loading | Instant (cached) | < 200ms from cache |
 
 **Hard limits (defects):**
 
@@ -1185,7 +1185,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Organizations | 1 (Client Zero) | Single-tenant behavior, multi-tenant architecture |
 | Users per org | 10 | Foundation for team features |
 | Events per day | 1,000 | Light operational load |
-| Brief size | 100KB | Generous for single business |
+| Soul size | 100KB | Generous for single business |
 | Concurrent copilot sessions | 5 | One per active user |
 
 **Growth capacity (v1.0+):**
@@ -1195,7 +1195,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Organizations | 1,000 | At 500 |
 | Users per org | 50 | At 30 average |
 | Events per day | 100,000 | At 50,000 |
-| Brief size | 500KB | At 200KB average |
+| Soul size | 500KB | At 200KB average |
 | Concurrent copilot sessions | 500 | At 250 |
 
 **Scaling triggers (revisit architecture when):**
@@ -1213,7 +1213,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 | Tier | Features | Target | Phase |
 |------|----------|--------|-------|
-| **Critical** | Auth, Brief read, core navigation | 99.9% | MVP |
+| **Critical** | Auth, Soul read, core navigation | 99.9% | MVP |
 | **High** | CRUD operations, event emission | 99.5% | MVP |
 | **Standard** | Copilot conversations, synthesis | 99% | Growth |
 | **Best-effort** | Background jobs, analytics | 95% | Growth |
@@ -1222,7 +1222,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 | Data Type | Durability | Recovery |
 |-----------|------------|----------|
-| Brief | 99.999% | Point-in-time recovery, versioned |
+| Soul | 99.999% | Point-in-time recovery, versioned |
 | Events | 99.99% | Immutable, replayable |
 | User data | 99.99% | Daily backups, 30-day retention |
 | Session/cache | Best-effort | Reconstructable from source |
@@ -1238,7 +1238,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 **Hard limits:**
 
-- Brief data loss = critical incident
+- Soul data loss = critical incident
 - Auth failure allowing unauthorized access = critical incident
 - Cross-tenant data leak = critical incident + immediate disclosure
 
@@ -1333,7 +1333,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 |-----------|----------------|
 | Full export | All user data exportable in standard formats (JSON, CSV) |
 | No hostage data | Export always available, regardless of subscription status |
-| Brief portability | Brief exportable in documented schema |
+| Soul portability | Soul exportable in documented schema |
 
 **The trust equation:** Easy export builds confidence to stay. Data hostage tactics erode trust.
 
@@ -1347,18 +1347,18 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 | Risk | Impact | Likelihood | Mitigation | Phase |
 |------|--------|------------|------------|-------|
-| **Silent Drift** — Brief becomes generic, loses value | High | Medium | Version diffs, Brief Stability Index, human-sovereign sections | MVP |
+| **Silent Drift** — Soul becomes generic, loses value | High | Medium | Version diffs, Soul Stability Index, human-sovereign sections | MVP |
 | **Recommendation Flood** — Users ignore system, trust erodes | Medium | Medium | Confidence thresholds, decay, backpressure | MVP |
 | **Context Latency** — "Magic" becomes frustration | High | High | Aggressive caching, pre-computation, warm context | MVP |
 | **Copilot Dependency** — AI cost spike or degradation breaks UX | Medium | Medium | Fallback forms, graceful degradation, model abstraction | MVP |
-| **Agent Coherence** — Different copilots give contradictory advice | High | Medium | Shared Brief as single source of truth, War Room for conflicts, orchestration synthesis | MVP |
+| **Agent Coherence** — Different copilots give contradictory advice | High | Medium | Shared Soul as single source of truth, War Room for conflicts, orchestration synthesis | MVP |
 
 ### Product Risks
 
 | Risk | Impact | Likelihood | Mitigation | Phase |
 |------|--------|------------|------------|-------|
 | **Client Zero Bias** — Modules fit software, not diverse SMBs | High | High | Early Growth validation with 3+ diverse business types | Growth |
-| **Onboarding Cliff** — Users bounce before seeing value | High | High | Progressive Brief, "first 5 minutes" design focus | MVP |
+| **Onboarding Cliff** — Users bounce before seeing value | High | High | Progressive Soul, "first 5 minutes" design focus | MVP |
 | **Feature Creep** — Scope expands, MVP never ships | High | High | Strict "Xentri runs Xentri" scope, Client Zero validation before Growth features | MVP |
 | **Hierarchy Complexity** — Category/Sub-category/Module confuses users | Low | Low | Clear navigation, copilot guides, never expose internal structure | MVP |
 
@@ -1367,7 +1367,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Risk | Impact | Likelihood | Mitigation | Phase |
 |------|--------|------------|------------|-------|
 | **Market Timing** — Too early = educate for competitors; too late = second mover | High | Medium | Client Zero validates fast, Growth phase tests market | Growth |
-| **Commoditization** — Big players copy Brief concept | Medium | Medium | Data flywheel moat, first-mover context accumulation, personalization depth | Growth |
+| **Commoditization** — Big players copy Soul concept | Medium | Medium | Data flywheel moat, first-mover context accumulation, personalization depth | Growth |
 
 ---
 
@@ -1390,7 +1390,7 @@ Sub-categories **never write directly** to the Brief. Instead:
 | Question | Owner | Notes |
 |----------|-------|-------|
 | Tech stack validation | Architect | Decide when revising architecture.md |
-| Brief structure — sections, AI-updateable vs human-sovereign | Infrastructure team | Core architectural decision |
+| Soul structure — sections, AI-updateable vs human-sovereign | Infrastructure team | Core architectural decision |
 
 **Decide During Epic 2:**
 
@@ -1431,7 +1431,7 @@ The following documents are protected under constitutional governance:
 | System Architecture | `docs/platform/architecture.md` | Technology decisions, patterns, ADRs |
 | System UX Design | `docs/platform/ux-design.md` | UX principles, design system foundations |
 | System Epics | `docs/platform/epics.md` | Cross-cutting initiatives, traceability matrix |
-| Product Brief | `docs/platform/product-brief.md` | Foundational vision, business DNA |
+| Product Soul | `docs/platform/product-soul.md` | Foundational vision, business DNA |
 
 ### Change Process
 
@@ -1498,7 +1498,7 @@ Before proposing a constitutional change, assess:
 
 - Create infrastructure sub-category PRD (events, auth, billing, brief)
 - Validate tech stack against revised vision
-- Begin Brief system design
+- Begin Soul system design
 
 **Frontend track:**
 
@@ -1510,14 +1510,14 @@ Before proposing a constitutional change, assess:
 
 - Create Strategy sub-category PRD
 - Define MVP modules for Strategy Copilot
-- Brief Creation UX Prototype
+- Soul Creation UX Prototype
 
 ### Medium-term (MVP Phase)
 
 | Milestone | Description |
 |-----------|-------------|
 | **Copilot MVP** | Strategy Copilot operational and in use |
-| **Brief system live** | Users can create and maintain Briefs |
+| **Soul system live** | Users can create and maintain Souls |
 | **Module development** | Continue implementing modules across categories |
 | **Client Zero active** | Xentri actually runs on Xentri |
 
@@ -1526,7 +1526,7 @@ Before proposing a constitutional change, assess:
 | Initiative | Priority | Risk Addressed |
 |------------|----------|----------------|
 | **First 5 Minutes Design Sprint** | Critical | Onboarding Cliff |
-| **Brief Creation UX Prototype** | High | "How does a user go from 'I have a business' to 'I have a Brief'?" — must feel organic - never an 'aha' moment|
+| **Soul Creation UX Prototype** | High | "How does a user go from 'I have a business' to 'I have a Soul'?" — must feel organic - never an 'aha' moment|
 | **Navigation Pattern Specs** | Medium | Hierarchy Complexity — improve on previous version |
 
 ---
@@ -1537,7 +1537,7 @@ Before proposing a constitutional change, assess:
 |---------|------|--------|---------|
 | 1.0 | 2025-11-25 | Carlo + AI | Initial PRD (superseded) |
 | 2.0 | 2025-11-28 | Carlo + BMAD Team | Complete rewrite with party mode collaboration |
-| 2.1 | 2025-12-01 | Carlo + Winston | Integrated UX review: hierarchical Pulse views, no-scroll constraint, copilot widget, sidebar behavior, expanded Brief-aware personalization |
+| 2.1 | 2025-12-01 | Carlo + Winston | Integrated UX review: hierarchical Pulse views, no-scroll constraint, copilot widget, sidebar behavior, expanded Soul-aware personalization |
 | 2.2 | 2025-12-02 | Carlo + BMad Builder | Added Platform Requirements Index (PR-001 to PR-008, IC-001 to IC-007) — consolidated from scattered references per Federated Workflows Phase 6 |
 | 2.2.1 | 2025-12-02 | Carlo + John (PM) | Validation fixes: standardized frontmatter (entity_type, version, status, dates), added formal Governance section with change process, approval requirements, and version numbering |
 | 2.2.2 | 2025-12-02 | Carlo + John (PM) | Added explicit versioning (v1.0) to all Integration Contracts (IC-003, IC-005, IC-006, IC-007), updated IC index table with Version column |
@@ -1565,16 +1565,16 @@ This PRD was created through multi-agent collaboration using the BMAD method:
 
 | Term | Definition |
 |------|------------|
-| **Universal Brief** | The living document describing a business's identity, strategy, and current state — the "DNA" that all copilots read |
+| **Universal Soul** | The living document describing a business's identity, strategy, and current state — the "DNA" that all copilots read |
 | **Category Copilot** | AI agent specialized in one of the seven business categories (Strategy, Marketing, Sales, Finance, Operations, Team, Legal) |
 | **Event Spine** | Real-time log of all business events — the raw truth of what happened |
 | **Operational Pulse** | Synthesized view of what needs attention — delivered on user's schedule |
-| **Strategic Brief** | Nightly synthesis of patterns into business DNA — the "who are we becoming" layer |
+| **Strategic Soul** | Nightly synthesis of patterns into business DNA — the "who are we becoming" layer |
 | **War Room** | Collaboration space where all copilots are present for cross-domain decisions |
 | **Client Zero** | Xentri itself — the first customer, validating the architecture on a real business |
-| **Brief-aware** | Modules that configure themselves based on business context from the Brief |
-| **Human-sovereign** | Brief sections that only the user can modify (vision, values, identity) |
-| **AI-updateable** | Brief sections that Strategy Copilot can modify automatically (operational metrics) |
+| **Soul-aware** | Modules that configure themselves based on business context from the Soul |
+| **Human-sovereign** | Soul sections that only the user can modify (vision, values, identity) |
+| **AI-updateable** | Soul sections that Strategy Copilot can modify automatically (operational metrics) |
 
 ---
 

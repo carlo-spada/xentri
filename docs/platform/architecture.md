@@ -3,22 +3,22 @@ entity_type: constitution
 document_type: architecture
 title: "Xentri System Architecture"
 description: "System-wide architectural decisions, technology stack, and patterns that all categories must follow."
-version: "2.4.0"
-status: draft
+version: "2.2"
+status: approved
 created: "2025-11-25"
-updated: "2025-12-02"
+updated: "2025-12-03"
 ---
 
 # Xentri Architecture (System Constitution)
 
-> **Status:** Draft
-> **Version:** 2.4.0
-> **Last Updated:** 2025-12-02
+> **Status:** Approved
+> **Version:** 2.2
+> **Last Updated:** 2025-12-03
 > **Level:** System (applies to ALL categories)
 
 ## 1. Executive Summary
 
-Xentri is a **Fractal Business Operating System** orchestrated by a hierarchical network of autonomous AI agents. It starts with a Strategy Co-pilot conversation generating a Strategy Brief (the DNA of the business), which then guides downstream agents (Marketing, Sales, Finance) who manage their own specialized categories, sub-categories and individual modules/tools. The architecture employs a Turborepo monorepo with an Astro Shell at the core, hosting React SPAs, and a **Hybrid Backend** (Node.js for Tools, Python for Agents, to start with).
+Xentri is a **Fractal Business Operating System** orchestrated by a hierarchical network of autonomous AI agents. It starts with a Strategy Co-pilot conversation generating a Strategy Soul (the DNA of the business), which then guides downstream agents (Marketing, Sales, Finance) who manage their own specialized categories, sub-categories and individual modules/tools. The architecture employs a Turborepo monorepo with an Astro Shell at the core, hosting React SPAs, and a **Hybrid Backend** (Node.js for Tools, Python for Agents, to start with).
 
 ### Core Architectural Principles
 
@@ -85,21 +85,21 @@ graph TD
 
     subgraph "Frontend (Browser)"
         Shell -->|Loads| Sidebar[Nano Store UI State]
-        Shell -->|Lazy Loads| Brand[React Brand App]
+        Shell -->|Lazy Loads| Marketing[React Marketing App]
         Shell -->|Lazy Loads| Sales[React Sales App]
     end
 
     subgraph "Backend (Kubernetes Cluster)"
-        Brand -->|API JSON| APIG[API Gateway]
+        Marketing -->|API JSON| APIG[API Gateway]
         Sales -->|API JSON| APIG
         
-        APIG -->|Route: /api/brand| Svc1[Brand Service Node]
+        APIG -->|Route: /api/marketing| Svc1[Marketing Service Node]
         APIG -->|Route: /api/sales| Svc2[Sales Service Node]
         APIG -->|Route: /api/ai| Svc3[AI Co-pilot Service Python]
     end
 
     subgraph "The Nervous System (Async)"
-        Svc3 -->|Event: xentri.brief.updated| Redis[Redis Streams]
+        Svc3 -->|Event: xentri.soul.updated| Redis[Redis Streams]
         Redis -->|Trigger| Svc1
         Redis -->|Trigger| Svc2
     end
@@ -109,19 +109,19 @@ graph TD
 
 ## 3. Architecture Decision Records (ADRs)
 
-### ADR-001: Universal Brief Orchestration (Knowledge Hierarchy)
+### ADR-001: Universal Soul Orchestration (Knowledge Hierarchy)
 
 **Status:** Accepted
 
-**Context:** How do we ensure the "Universal Brief" effectively powers diverse downstream modules without creating a tight coupling or a "god object"?
+**Context:** How do we ensure the "Universal Soul" effectively powers diverse downstream modules without creating a tight coupling or a "god object"?
 
 **Decision:** We adopt a **Knowledge Hierarchy** pattern.
 
-1. **Universal Brief:** The shared source of truth (Identity, Offerings, Goals). Accessible by all Category Agents.
-2. **Category Context:** Domain-specific rules derived from the Brief (e.g., Brand Voice, Sales Pipeline). Managed by Category Agents.
+1. **Universal Soul:** The shared source of truth (Identity, Offerings, Goals). Accessible by all Category Agents.
+2. **Category Context:** Domain-specific rules derived from the Soul (e.g., Brand Voice, Sales Pipeline). Managed by Category Agents.
 3. **Module Context:** Specific configurations (e.g., Website Pages, Quote Templates). Managed by Subagents.
 
-**Implication:** Agents must first consult the Universal Brief, then their Category Context, before taking action.
+**Implication:** Agents must first consult the Universal Soul, then their Category Context, before taking action.
 
 ### ADR-002: Event Envelope & Schema
 
@@ -136,7 +136,7 @@ type ISO8601 = string;
 
 interface SystemEvent<TPayload = unknown> {
   id: string;                        // UUID (immutable)
-  type: string;                      // e.g., "xentri.brief.updated"
+  type: string;                      // e.g., "xentri.soul.updated"
   occurred_at: ISO8601;              // Business time
   
   org_id: string;                    // Tenant Context
@@ -207,7 +207,7 @@ USING (
 
 **Decision:** We implement a **Tri-State Memory System**:
 
-1. **Semantic Memory (The Brief):**
+1. **Semantic Memory (The Soul):**
     * **What:** Structured facts about the business (Identity, Offerings, Goals).
     * **Storage:** Postgres (JSONB) + Redis Cache.
     * **Access:** Read-Heavy. Every Agent reads this before acting.
@@ -244,7 +244,7 @@ USING (
 * **Layer 2: The Category Context:** Domain expertise (e.g., "I am a Strategist"). Shared by Category Agents.
 * **Layer 3: The Agent Role:** Specific job (e.g., "I analyze KPIs"). Unique to the Agent.
 
-**Composition:** `Final Prompt = Global Soul + Category Context + Agent Role + Universal Brief`.
+**Composition:** `Final Prompt = Global Soul + Category Context + Agent Role + Universal Soul`.
 
 ---
 
@@ -435,7 +435,7 @@ interface CopilotContext {
 // Resolution order:
 // 1. Current route → extract scope
 // 2. Load copilot for that scope
-// 3. Pass current Brief section + recent events as context
+// 3. Pass current Soul section + recent events as context
 ```
 
 **Widget State Persistence:**
@@ -480,7 +480,7 @@ Badge shows count of:
 
 * **Story Arcs:** New data entity to track long-running threads (e.g., "Deal Negotiation - Day 3").
 * **Session Bridging:** System must detect absence duration and generate a "Recap" narrative on return.
-* **Brief-Aware Config:** Copilots configure the system (roles, pipeline stages) based on the Universal Brief.
+* **Soul-Aware Config:** Copilots configure the system (roles, pipeline stages) based on the Universal Soul.
 
 **Story Arc Data Structure (ts-schema):**
 
@@ -656,11 +656,11 @@ events_emitted:
   - type: "xentri.sales.deal.updated.v1"
     schema: "deal.updated@1.0"
 events_consumed:
-  - type: "xentri.brief.updated.v1"
-    handler: "onBriefUpdated"
+  - type: "xentri.soul.updated.v1"
+    handler: "onSoulUpdated"
 
-# Brief integration
-brief_fields_read:
+# Soul integration
+soul_fields_read:
   - "business_type"
   - "sales_cycle_length"
   - "pipeline_stages"
@@ -832,25 +832,25 @@ $$ LANGUAGE sql SECURITY DEFINER;
 
 **Implication:** All three layers must be implemented for any protected resource. UI gating alone is insufficient—API and DB layers are mandatory.
 
-### ADR-016: Brief Access Architecture (IC-004, IC-005)
+### ADR-016: Soul Access Architecture (IC-004, IC-005)
 
 **Status:** Accepted
 
-**Context:** Modules need to read Brief data for configuration (IC-004) and submit recommendations for Brief updates (IC-005). We need patterns that enforce read-only access while enabling the recommendation flow.
+**Context:** Modules need to read Soul data for configuration (IC-004) and submit recommendations for Soul updates (IC-005). We need patterns that enforce read-only access while enabling the recommendation flow.
 
-**Decision:** We implement a **Brief Gateway Service** that mediates all Brief access.
+**Decision:** We implement a **Soul Gateway Service** that mediates all Soul access.
 
-**IC-004: Brief Access API (v1.0)**
+**IC-004: Soul Access API (v1.0)**
 
 ```typescript
 // API Endpoints
-GET  /api/v1/brief                    // Full Brief (cached, ETag)
-GET  /api/v1/brief/{section}          // Specific section
-GET  /api/v1/brief/stream             // SSE for real-time updates
+GET  /api/v1/soul                    // Full Soul (cached, ETag)
+GET  /api/v1/soul/{section}          // Specific section
+GET  /api/v1/soul/stream             // SSE for real-time updates
 
 // Response shape
-interface BriefResponse {
-  version: string;                     // Brief version (for cache invalidation)
+interface SoulResponse {
+  version: string;                     // Soul version (for cache invalidation)
   updated_at: string;                  // ISO8601
   etag: string;                        // For conditional requests
   sections: {
@@ -863,7 +863,7 @@ interface BriefResponse {
 }
 
 // Caching strategy
-// - Redis: 5-minute TTL, invalidated on xentri.brief.updated.v1
+// - Redis: 5-minute TTL, invalidated on xentri.soul.updated.v1
 // - HTTP: Cache-Control with ETag validation
 // - Client: Stale-while-revalidate pattern
 ```
@@ -872,7 +872,7 @@ interface BriefResponse {
 
 ```typescript
 // Recommendation event shape
-interface BriefRecommendation {
+interface SoulRecommendation {
   id: string;                          // UUID
   org_id: string;
   source_module: string;               // e.g., "sales.pipeline"
@@ -900,7 +900,7 @@ interface BriefRecommendation {
 }
 
 // Submission endpoint
-POST /api/v1/brief/recommendations
+POST /api/v1/soul/recommendations
 {
   "target_section": "operational.client_concentration",
   "recommendation_type": "update",
@@ -928,16 +928,16 @@ POST /api/v1/brief/recommendations
 
 **Recommendation Processing:**
 
-1. Module emits `xentri.brief.recommendation.submitted.v1`
+1. Module emits `xentri.soul.recommendation.submitted.v1`
 2. Strategy Copilot queues for next synthesis cycle (nightly by default)
 3. High-confidence (>0.9) + low-impact = auto-approve
 4. Low-confidence or high-impact = flag for human review
-5. Approved → Brief updated → `xentri.brief.updated.v1` emitted
-6. Rejected → `xentri.brief.recommendation.rejected.v1` with reason
+5. Approved → Soul updated → `xentri.soul.updated.v1` emitted
+6. Rejected → `xentri.soul.recommendation.rejected.v1` with reason
 
 **Exception:** War Room sessions can approve recommendations immediately with human present.
 
-**Implication:** Modules can influence Brief but never write directly. This maintains Brief integrity while enabling organic evolution.
+**Implication:** Modules can influence Soul but never write directly. This maintains Soul integrity while enabling organic evolution.
 
 ### ADR-017: Notification Delivery Architecture (IC-006)
 
@@ -1102,13 +1102,13 @@ interface ExplainableAction {
       "Invoice is 30 days overdue",
       "Acme Corp has a good payment history (avg 15 days)",
       "No previous reminder sent for this invoice",
-      "Brief indicates 'maintain relationship' priority for this client"
+      "Soul indicates 'maintain relationship' priority for this client"
     ],
     "inputs_considered": [
       "Invoice age: 30 days",
       "Client payment history: 15 days average",
       "Client importance: 40% of revenue",
-      "Brief relationship strategy: maintain"
+      "Soul relationship strategy: maintain"
     ],
     "alternatives_rejected": [
       {
@@ -1141,14 +1141,14 @@ interface ExplainableAction {
 
 **Status:** Accepted
 
-**Context:** PR-008 mandates that "all copilots MUST adapt vocabulary to Brief-indicated business type." We need an architectural pattern for how vocabulary adapts based on business context.
+**Context:** PR-008 mandates that "all copilots MUST adapt vocabulary to Soul-indicated business type." We need an architectural pattern for how vocabulary adapts based on business context.
 
-**Decision:** We implement a **Context-Aware Vocabulary System** with Brief-driven term mapping.
+**Decision:** We implement a **Context-Aware Vocabulary System** with Soul-driven term mapping.
 
 **Vocabulary Mapping Schema:**
 
 ```typescript
-// In Brief: business_type and industry fields drive vocabulary
+// In Soul: business_type and industry fields drive vocabulary
 interface VocabularyContext {
   business_type: "service" | "product" | "hybrid";
   industry: string;                    // e.g., "healthcare", "hospitality", "tech"
@@ -1219,7 +1219,7 @@ Apply this vocabulary consistently in all responses.
 ```typescript
 // packages/ui/src/hooks/useVocabulary.ts
 function useVocabulary() {
-  const { brief } = useBrief();
+  const { brief } = useSoul();
 
   const term = (key: string): string => {
     return brief?.custom_terms?.[key]
@@ -1258,7 +1258,7 @@ function adaptVocabulary(response: ApiResponse, vocabContext: VocabularyContext)
 Users can override any term in Settings:
 
 ```yaml
-# Stored in Brief.custom_terms
+# Stored in Soul.custom_terms
 custom_terms:
   customer: "member"        # Gym business
   invoice: "dues statement"
@@ -1287,11 +1287,11 @@ custom_terms:
 │   │   │   └── /api         # (Fast)API routes
 │   │   ├── /tests
 │   │   └── pyproject.toml
-│   └── /brand-copilot       # [NEW] Python: Brand Agent
+│   └── /marketing-copilot   # [NEW] Python: Marketing Agent
 └── /docs                    # Documentation
 ```
 
-Future services (brand-engine, sales-engine, ai-service) follow the same pattern.
+Future services (marketing-engine, sales-engine, ai-service) follow the same pattern.
 
 ### Contract Source of Truth
 
@@ -1459,7 +1459,7 @@ We standardize on **Google Cloud Platform (GCP)** for the "Client Zero" implemen
 
 **Mock Patterns:**
 
-* Use factory functions for test data: `createMockBrief()`, `createMockUser()`
+* Use factory functions for test data: `createMockSoul()`, `createMockUser()`
 * Factories live in `src/test/factories/`
 * Use `vi.mock()` for module mocks, prefer dependency injection where possible
 
@@ -1576,7 +1576,7 @@ We prioritize **Indirect Communication** (Stigmergy/Events) to decouple the 175+
 * **Pattern:** Communication via State.
 * **Transport:** Database + Events.
 * **Use Case:** Collaboration.
-* **Example:** `Strategy` updates the Brief. `Marketing` sees the update and acts. They never "talk" directly.
+* **Example:** `Strategy` updates the Soul. `Marketing` sees the update and acts. They never "talk" directly.
 
 ### D. API & Error Conventions
 
@@ -1593,8 +1593,8 @@ We prioritize **Indirect Communication** (Stigmergy/Events) to decouple the 175+
 
 ### F. Naming & Location Patterns
 
-* **API routes:** `/api/v1/{service}/{resource}` (plural nouns). Example: `/api/v1/brand/sites`.
-* **Events:** `xentri.{boundedContext}.{action}.{version}` e.g., `xentri.brief.updated.v1`.
+* **API routes:** `/api/v1/{service}/{resource}` (plural nouns). Example: `/api/v1/marketing/sites`.
+* **Events:** `xentri.{boundedContext}.{action}.{version}` e.g., `xentri.soul.updated.v1`.
 * **Database tables:** `snake_case`, always include `org_id`, `id` UUID primary key, `created_at`, `updated_at`.
 * **Files:**
   * Apps: `apps/shell/src/routes/...`, `apps/shell/src/components/...`
@@ -1616,7 +1616,7 @@ We prioritize **Indirect Communication** (Stigmergy/Events) to decouple the 175+
 
 | Can Edit Offline | Requires Connectivity |
 |------------------|----------------------|
-| Brief drafts (in progress) | Brief approval/publish |
+| Soul drafts (in progress) | Soul approval/publish |
 | Form data (leads, invoices in progress) | Payment processing |
 | Notes and comments | Cross-module operations (e.g., invoice from quote) |
 | Local settings/preferences | User/org management |
@@ -1661,7 +1661,7 @@ When conflict detected:
 2. User chooses: "Keep mine" / "Keep server" / "Merge manually"
 3. Decision logged in event spine for audit
 
-**Rationale:** For Brief drafts and form data, this is acceptable. We're not building real-time collaboration (no CRDT needed).
+**Rationale:** For Soul drafts and form data, this is acceptable. We're not building real-time collaboration (no CRDT needed).
 
 #### Implementation
 
@@ -1837,7 +1837,7 @@ redis-cli XADD jobs:work MAXLEN ~10000 * [fields from DLQ message]
 **Dashboard:** Grafana panel showing DLQ depth per stream, replay success rate, and poison message patterns.
 
 * **Cache/Invalidation Map:**
-  * Brief: key `brief:{org_id}` in Redis; invalidated on `xentri.brief.updated.v1`; projections downstream rehydrate.
+  * Soul: key `soul:{org_id}` in Redis; invalidated on `xentri.soul.updated.v1`; projections downstream rehydrate.
   * Site: key `site:{org_id}:{site_id}` and CDN path `/sites/{site_id}`; purge on `xentri.website.published.v1` or `xentri.page.updated.v1`.
   * Leads: key `leads:list:{org_id}` with cursor; bust on `xentri.lead.created.v1` and `xentri.lead.updated.v1`; entity cache `lead:{org_id}:{lead_id}` updated in write path.
 
@@ -1906,7 +1906,7 @@ Bring in a human specialist (contractor) when:
 
 ## 10. State Machines for Complex Flows
 
-### Brief Generation Flow
+### Soul Generation Flow
 
 ```mermaid
 stateDiagram-v2
@@ -1914,11 +1914,11 @@ stateDiagram-v2
     Initiated --> Conversing: Co-pilot asks questions
     Conversing --> Conversing: User answers, Co-pilot refines
     Conversing --> Drafting: User confirms ready
-    Drafting --> ReviewPending: AI generates Brief draft
+    Drafting --> ReviewPending: AI generates Soul draft
     ReviewPending --> Editing: User requests changes
     Editing --> ReviewPending: User re-submits
-    ReviewPending --> Approved: User approves Brief
-    Approved --> [*]: xentri.brief.created.v1 emitted
+    ReviewPending --> Approved: User approves Soul
+    Approved --> [*]: xentri.soul.created.v1 emitted
 ```
 
 **States:**
@@ -2068,8 +2068,8 @@ Before building any secondary modules, each category MUST have:
 | 6 | Strategy | **strategy-copilot** | Copilot | Planned | Epic 2 |
 | 7 | Finance | **finance-app** | SPA | Planned | Epic 3 |
 | 8 | Finance | **finance-copilot** | Copilot | Planned | Epic 3 |
-| 9 | Brand | **brand-app** | SPA | Planned | Epic 4 |
-| 10 | Brand | **brand-copilot** | Copilot | Planned | Epic 4 |
+| 9 | Marketing | **marketing-app** | SPA | Planned | Epic 4 |
+| 10 | Marketing | **marketing-copilot** | Copilot | Planned | Epic 4 |
 | 11 | Sales | **sales-app** | SPA | Future | TBD |
 | 12 | Sales | **sales-copilot** | Copilot | Future | TBD |
 | 13 | Operations | **operations-app** | SPA | Future | TBD |
@@ -2096,9 +2096,9 @@ Phase 3: Finance
 ├── finance-app
 └── finance-copilot
 
-Phase 4: Brand
-├── brand-app
-└── brand-copilot
+Phase 4: Marketing
+├── marketing-app
+└── marketing-copilot
 
 Phase 5+: Sales → Operations → Team → Legal
 ```
@@ -2114,7 +2114,7 @@ graph LR
     subgraph "Core Value"
         S[Strategy]
         F[Finance]
-        B[Brand]
+        M[Marketing]
     end
 
     subgraph "Growth"
@@ -2129,9 +2129,9 @@ graph LR
 
     P --> S
     S --> F
-    S --> B
+    S --> M
     F --> Sa
-    B --> Sa
+    M --> Sa
     Sa --> O
     O --> T
     T --> L
@@ -2141,10 +2141,10 @@ graph LR
 
 | Category | Rationale |
 |----------|-----------|
-| **Strategy** | Universal Brief is the DNA—all other categories read from it |
+| **Strategy** | Universal Soul is the DNA—all other categories read from it |
 | **Finance** | Revenue capture (invoicing) proves immediate value and validates event backbone |
-| **Brand** | Visible output (website) users can show to others |
-| **Sales** | Connects leads → quotes → invoices (depends on Finance + Brand) |
+| **Marketing** | Visible output (website) users can show to others |
+| **Sales** | Connects leads → quotes → invoices (depends on Finance + Marketing) |
 | **Operations** | Job/project management builds on Sales + Finance data |
 | **Team** | HR and roles require established org structure |
 | **Legal** | Contracts and compliance—lowest urgency for beachhead segments |
@@ -2153,9 +2153,9 @@ graph LR
 
 | Category | SPA Features | Copilot Capabilities |
 |----------|--------------|---------------------|
-| **Strategy** | Universal Brief editor, Goals/OKRs, War Room, Decision log | Brief generation, Goal recommendations, Strategic analysis |
+| **Strategy** | Universal Soul editor, Goals/OKRs, War Room, Decision log | Soul generation, Goal recommendations, Strategic analysis |
 | **Finance** | Invoicing, Payment tracking, Expenses, Reports | Revenue analysis, Overdue flagging, Pricing suggestions |
-| **Brand** | Website builder, CMS, Lead capture, SEO | Copy generation, Content suggestions, Brand voice |
+| **Marketing** | Website builder, CMS, Lead capture, SEO | Copy generation, Content suggestions, Brand voice |
 | **Sales** | CRM, Quote builder, Pipeline, Follow-ups | Lead qualification, Follow-up drafting, Deal recommendations |
 | **Operations** | Jobs/Projects, Scheduling, Resources, Delivery | Workflow optimization, Scheduling, Bottleneck detection |
 | **Team** | Roles, Permissions, SOPs, Onboarding | Role recommendations, SOP generation, Training suggestions |
@@ -2169,7 +2169,7 @@ Once a category's SPA + Copilot are complete, secondary modules can be built:
 |----------|--------------------------|
 | Strategy | North Star tracker, Idea inbox, Decision journal |
 | Finance | Tax pack export, Recurring invoices, Multi-currency |
-| Brand | Email campaigns, Social scheduler, Reputation manager |
+| Marketing | Email campaigns, Social scheduler, Reputation manager |
 | Sales | WhatsApp bridge, Quote templates, Win/loss analysis |
 | Operations | Calendar sync, Dispatch view, Quality checklists |
 | Team | Payroll integration, Time tracking, Performance reviews |
@@ -2212,7 +2212,7 @@ import StrategyApp from '@xentri/strategy-app';
 
 1. **Check category readiness** — Is the SPA + Copilot complete?
 2. **Create GitHub Issue** — Use the cross-module request template
-3. **Link to Brief/PRD** — How does this serve the product vision?
+3. **Link to Soul/PRD** — How does this serve the product vision?
 4. **Estimate dependencies** — What other modules does it need?
 5. **Get approval** — ADR required for new foundational modules
 

@@ -79,9 +79,9 @@ curl http://localhost:3000/health/ready
 ```
 docs/platform/core-api/
 ├── README.md              # This file
-├── architecture.md        # Service-specific decisions (TODO)
-├── api-reference.md       # Detailed API docs (TODO)
-├── events.md              # Event schemas (TODO)
+├── architecture.md        # Service architecture and patterns
+├── api-reference.md       # API endpoint documentation
+├── events.md              # Event schemas and contracts
 └── sprint-artifacts/
     ├── sprint-status.yaml
     └── {story-files}.md
@@ -89,4 +89,8 @@ docs/platform/core-api/
 
 ---
 
-*Module documentation to be expanded as development continues.*
+## Related Documents
+
+- [Architecture](./architecture.md) — Service design and patterns
+- [API Reference](./api-reference.md) — Endpoint documentation
+- [Events](./events.md) — Event schemas (IC-001, IC-002)

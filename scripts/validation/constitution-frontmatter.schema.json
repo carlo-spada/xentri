@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "constitution-frontmatter",
+  "title": "Constitution Document Frontmatter",
+  "description": "Schema for validating Constitution-level document frontmatter in docs/platform/",
+  "type": "object",
+  "required": ["entity_type", "document_type", "title", "description", "version", "status", "created", "updated"],
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "const": "constitution",
+      "description": "Must be 'constitution' for platform-level docs"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": ["prd", "architecture", "ux-design", "epics", "product_soul"],
+      "description": "Type of Constitution document"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable document title"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Brief description of document purpose"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$",
+      "description": "Semantic version (e.g., '2.2' or '2.2.0')"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "in_review", "approved", "deprecated"],
+      "description": "Document lifecycle status"
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Creation date in YYYY-MM-DD format"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Last update date in YYYY-MM-DD format"
+    }
+  },
+  "additionalProperties": false
+}

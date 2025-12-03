@@ -1,7 +1,7 @@
 # Xentri Pulse
 
 > **Cross-team coordination and system-wide progress**
-> Last Updated: 2025-11-28
+> Last Updated: 2025-12-03
 
 ---
 
@@ -49,8 +49,8 @@
 |----------|--------|----------------|
 | strategy | Not started | Epic 2: Strategy SPA + Copilot |
 | finance | Not started | After Strategy foundation |
-| brand | Not started | After Finance foundation |
-| sales | Not started | After Brand foundation |
+| marketing | Not started | After Finance foundation |
+| sales | Not started | After Marketing foundation |
 | operations | Not started | Future |
 | team | Not started | Future |
 | legal | Not started | Future |
@@ -71,7 +71,7 @@
 |----|--------|--------|---------|------------|
 | - | - | - | No recent resolutions | - |
 
-*Track cross-module requests via [GitHub Issues](https://github.com/your-org/xentri/issues?q=label%3Across-module)*
+*Track cross-module requests via GitHub Issues with the `cross-module` label.*
 
 ---
 
@@ -86,7 +86,7 @@
 - [x] Multi-tenant RLS enforced
 - [x] User authentication working
 - [x] Organization provisioning working
-- [ ] Universal Brief generation (Epic 2)
+- [ ] Universal Soul generation (Epic 2)
 - [ ] Invoicing module (Epic 3+)
 
 ### Build Sequence Adherence
@@ -98,7 +98,7 @@ Following ADR-005 (SPA + Copilot First) in [Architecture](./architecture.md):
 | 1 | Platform | shell (done) | N/A | **Complete** |
 | 2 | Strategy | strategy-app | strategy-copilot | Next |
 | 3 | Finance | finance-app | finance-copilot | Planned |
-| 4 | Brand | brand-app | brand-copilot | Planned |
+| 4 | Marketing | marketing-app | marketing-copilot | Planned |
 
 ---
 
@@ -147,7 +147,7 @@ See [Issue #TBD] for automation implementation.
 
 - **Product Owner:** Carlo
 - **Architecture Questions:** See [Architecture](./architecture.md)
-- **Cross-Module Requests:** Create [GitHub Issue](https://github.com/your-org/xentri/issues/new?template=cross-module-request.yml)
+- **Cross-Module Requests:** Create a GitHub Issue with the `cross-module` label
 
 ---
 

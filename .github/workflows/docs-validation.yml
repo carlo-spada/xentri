@@ -1,0 +1,81 @@
+name: Documentation Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'scripts/validation/**'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'scripts/validation/**'
+
+jobs:
+  validate-docs:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.23.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Links
+        run: pnpm run validate:links
+
+      - name: Validate Frontmatter
+        run: pnpm run validate:docs
+
+  check-constitution-changes:
+    name: Constitution Change Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for Constitution changes
+        id: constitution
+        run: |
+          CONSTITUTION_FILES="docs/platform/prd.md docs/platform/architecture.md docs/platform/ux-design.md docs/platform/epics.md docs/platform/product-soul.md"
+
+          CHANGED=""
+          for file in $CONSTITUTION_FILES; do
+            if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "^$file$"; then
+              CHANGED="$CHANGED $file"
+            fi
+          done
+
+          if [ -n "$CHANGED" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "files=$CHANGED" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Flag Constitution changes
+        if: steps.constitution.outputs.changed == 'true'
+        run: |
+          echo "⚠️ Constitution documents modified:"
+          echo "${{ steps.constitution.outputs.files }}"
+          echo ""
+          echo "Please ensure:"
+          echo "1. PR title starts with 'docs(constitution):'"
+          echo "2. Change rationale is documented"
+          echo "3. All stakeholders are notified"

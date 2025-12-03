@@ -71,12 +71,15 @@ The UI package supports theming via CSS variables:
 ```
 docs/platform/ui/
 ├── README.md              # This file
-├── components.md          # Component catalog (TODO)
-├── theming.md             # Theme customization (TODO)
+├── components.md          # Component catalog
+├── theming.md             # Theme customization guide
 └── sprint-artifacts/
     └── sprint-status.yaml
 ```
 
 ---
 
-*Module documentation to be expanded as development continues.*
+## Related Documents
+
+- [Components](./components.md) — Full component catalog with usage examples
+- [Theming](./theming.md) — Theme architecture and customization

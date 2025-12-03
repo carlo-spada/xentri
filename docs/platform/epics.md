@@ -3,8 +3,8 @@ entity_type: constitution
 document_type: epics
 title: "Xentri System Epics"
 description: "System-wide epic structure based on Understanding + Action framework. Category/Module epics emerge organically."
-version: "2.1.0"
-status: in_review
+version: "2.2"
+status: approved
 created: "2025-11-28"
 updated: "2025-12-03"
 ---
@@ -41,9 +41,9 @@ Running Costs < Revenue < Value Delivered
 
 ## Epic Philosophy
 
-### The Soul, Not The Brief
+### The Soul Concept
 
-What we previously called "Brief" is actually a **living understanding** — the Soul of the business. It's not a document users create once; it's a relationship that grows with every interaction.
+What we call the "Soul" is a **living understanding** — the Soul of the business. It's not a document users create once; it's a relationship that grows with every interaction.
 
 **Tri-State Memory Architecture:**
 1. **Semantic Memory:** Structured facts (identity, offerings, goals)
@@ -68,32 +68,34 @@ Each epic must prove this loop works for its scope.
 
 ---
 
-## Requirements Inventory
+## Requirements Traceability
 
-### Platform Requirements (PR-xxx)
+> **Single Source of Truth:** Platform Requirements (PR-xxx) and Integration Contracts (IC-xxx) are defined in [PRD §Platform Requirements Index](./prd.md#platform-requirements-index). This section tracks epic coverage and implementation status only.
 
-| ID | Requirement | Epic Coverage | Status |
-|----|-------------|---------------|--------|
-| PR-001 | All database tables MUST include `org_id` column with RLS policy | Epic 1 | Complete |
-| PR-002 | All mutations MUST emit events to Event Spine with standard envelope | Epic 1 → Epic 1.5 | Partial |
-| PR-003 | All API endpoints MUST require authentication except health checks | Epic 1 | Complete |
-| PR-004 | All modules MUST read Soul through standard API, never write directly | Epic 2 | Planned |
-| PR-005 | All user actions MUST respect permission primitives | Epic 1 → Epic 1.5 | Partial |
-| PR-006 | All automated actions MUST be logged with human-readable explanation | Epic 2 | Planned |
-| PR-007 | All modules MUST fail gracefully; never crash the shell | Epic 1 | Complete |
-| PR-008 | All copilots MUST adapt vocabulary to Soul-indicated business type | Epic 3 | Planned |
+### Platform Requirements Coverage
 
-### Integration Contracts (IC-xxx)
+| ID | Epic Coverage | Status |
+|----|---------------|--------|
+| PR-001 | Epic 1 | Complete |
+| PR-002 | Epic 1 → Epic 1.5 | Partial |
+| PR-003 | Epic 1 | Complete |
+| PR-004 | Epic 2 | Planned |
+| PR-005 | Epic 1 → Epic 1.5 | Partial |
+| PR-006 | Epic 2 | Planned |
+| PR-007 | Epic 1 | Complete |
+| PR-008 | Epic 3 | Planned |
 
-| ID | Contract | Version | Epic Coverage | Status |
-|----|----------|---------|---------------|--------|
-| IC-001 | Event Envelope Schema (`SystemEvent` interface) | v1.0 | Epic 1 | Complete |
-| IC-002 | Event Naming Convention (`xentri.{cat}.{entity}.{action}.{ver}`) | v1.0 | Epic 1 → Epic 1.5 | Partial |
-| IC-003 | Module Registration Manifest | v1.0 | Epic 3 | Planned |
-| IC-004 | Soul Access API (`GET /api/v1/soul/{section}`) | v1.0 | Epic 2 | Planned |
-| IC-005 | Recommendation Submission Protocol | v1.0 | Epic 2 | Planned |
-| IC-006 | Notification Delivery Contract | v1.0 | Epic 3 | Planned |
-| IC-007 | Permission Check Protocol (3-layer enforcement) | v1.0 | Epic 1.5 | Planned |
+### Integration Contracts Coverage
+
+| ID | Epic Coverage | Status |
+|----|---------------|--------|
+| IC-001 | Epic 1 | Complete |
+| IC-002 | Epic 1 → Epic 1.5 | Partial |
+| IC-003 | Epic 3 | Planned |
+| IC-004 | Epic 2 | Planned |
+| IC-005 | Epic 2 | Planned |
+| IC-006 | Epic 3 | Planned |
+| IC-007 | Epic 1.5 | Planned |
 
 ---
 
@@ -131,7 +133,7 @@ Each epic must prove this loop works for its scope.
 | 1.3 User Auth | Complete | 80% Valid | Missing Clerk Organizations |
 | 1.4 Org Provisioning | Complete | 50% Valid | Missing permission primitives |
 | 1.5 Shell & Nav | Complete | 60% Valid | Missing Pulse/Copilot architecture |
-| 1.6 Thin Slice | Complete | 20% Valid | Soul concept replaces Brief |
+| 1.6 Thin Slice | Complete | 20% Valid | Soul concept established |
 | 1.7 DevOps | Complete | 30% Valid | Railway → GKE migration |
 
 **Decision:** Keep Epic 1 as historical foundation. Gaps addressed in Epic 1.5.
@@ -220,12 +222,12 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** shell, core-api
 
 **Acceptance Criteria:**
-- User can sign up, land in shell, open Strategy, create Brief draft
-- `brief_created` event visible via org-scoped query
-- Shell shows Brief summary tile
+- User can sign up, land in shell, open Strategy, create Soul draft
+- `soul_created` event visible via org-scoped query
+- Shell shows Soul summary tile
 - Works in dev and CI with production-like RLS
 
-**Status:** Obsolete (Brief → Soul paradigm shift)
+**Status:** Obsolete (incorporated into Soul paradigm)
 
 ---
 
@@ -237,7 +239,7 @@ Each epic must prove this loop works for its scope.
 **Acceptance Criteria:**
 - CI runs lint + unit tests + type checks on PRs
 - Structured JSON logging with correlation IDs
-- Smoke test script for shell/Brief slice
+- Smoke test script for shell/Soul slice
 - Zero-downtime deploy pipeline with rollback plan
 
 **Status:** Partial (Railway → GKE migration required)
@@ -385,6 +387,47 @@ Each epic must prove this loop works for its scope.
 
 ### Stories
 
+#### Story 2.0: Brief→Soul Code Refactoring
+
+**Traces to:** Terminology alignment with Constitution documents
+**Coordinates:** core-api, ts-schema, shell
+
+**Rationale:** The Constitution documents (PRD, Architecture, UX Design, Epics) now use "Soul" terminology consistently. The existing codebase from Epic 1 still uses "Brief" naming. This story aligns the implementation with the evolved terminology before building new Soul features.
+
+**Acceptance Criteria:**
+- [ ] Rename `packages/ts-schema/src/brief.ts` → `packages/ts-schema/src/soul.ts`
+- [ ] Update all Zod schemas: `BriefSchema` → `SoulSchema`, `BriefSectionSchema` → `SoulSectionSchema`
+- [ ] Rename `services/core-api/src/domain/briefs/` → `services/core-api/src/domain/souls/`
+- [ ] Rename `BriefService.ts` → `SoulService.ts`, update class name
+- [ ] Rename `services/core-api/src/routes/briefs.ts` → `services/core-api/src/routes/souls.ts`
+- [ ] Update API routes: `/api/v1/briefs/*` → `/api/v1/souls/*`
+- [ ] Rename `apps/shell/src/stores/brief.ts` → `apps/shell/src/stores/soul.ts`
+- [ ] Update event names: `xentri.brief.*` → `xentri.soul.*`
+- [ ] Update database table if exists: `briefs` → `souls`
+- [ ] Update all imports across codebase
+- [ ] All existing tests pass after refactoring
+- [ ] TypeScript compiles without errors
+
+**Files to Modify:**
+```
+packages/ts-schema/src/brief.ts → soul.ts
+packages/ts-schema/src/index.ts (update exports)
+services/core-api/src/domain/briefs/ → souls/
+services/core-api/src/routes/briefs.ts → souls.ts
+services/core-api/src/routes/briefs.test.ts → souls.test.ts
+services/core-api/src/routes/index.ts (update imports)
+apps/shell/src/stores/brief.ts → soul.ts
+```
+
+**Migration Notes:**
+- No database migration needed if table doesn't exist in production yet
+- If `briefs` table exists, create migration: `ALTER TABLE briefs RENAME TO souls`
+- Event schema version stays v1; the event type name changes
+
+**Status:** Not Started
+
+---
+
 #### Story 2.1: Tri-State Memory Foundation
 
 **Traces to:** ADR-006
@@ -400,7 +443,7 @@ Each epic must prove this loop works for its scope.
 
 **Technical Notes:**
 - ADR-006: Tri-State Memory Architecture
-- ADR-016: Brief Access Architecture (now Soul Access)
+- ADR-016: Soul Access Architecture
 
 ---
 
@@ -418,7 +461,7 @@ Each epic must prove this loop works for its scope.
 - Conversation history stored in Episodic Memory
 
 **Technical Notes:**
-- State Machine §10: Brief Generation Flow (adapted for Soul)
+- State Machine §10: Soul Generation Flow
 - ADR-007: Federated Soul Registry (Global Soul + Category Context + Agent Role)
 
 ---
@@ -733,7 +776,7 @@ Until this gate passes, we're not sustainable. Features don't matter; unit econo
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2025-11-28 | Carlo + AI | Initial epic structure |
-| 2.0 | 2025-12-02 | Carlo + BMAD Team | Complete restructure: Understanding + Action framework, Soul replaces Brief, Epic 1 audit, Epic 1.5 migration, organic growth model |
+| 2.0 | 2025-12-02 | Carlo + BMAD Team | Complete restructure: Understanding + Action framework, Soul concept introduced, Epic 1 audit, Epic 1.5 migration, organic growth model |
 
 ---
 

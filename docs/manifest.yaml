@@ -37,8 +37,8 @@ constitution:
     - file: epics.md
       type: epics
       purpose: "Cross-cutting initiatives and system-level roadmap"
-    - file: product-brief.md
-      type: product-brief
+    - file: product-soul.md
+      type: product-soul
       purpose: "Foundational vision - all work traces to this"
   governance:
     changes_require: "Explicit flagging and rationale"
@@ -717,7 +717,7 @@ categories:
 # ├── architecture.md        # System architecture
 # ├── ux-design.md           # System UX principles
 # ├── epics.md               # Cross-cutting epics
-# ├── product-brief.md       # Foundational vision
+# ├── product-soul.md        # Foundational vision
 # ├── README.md              # Platform overview
 # └── {module}/              # Infrastructure modules (flat)
 #
@@ -768,6 +768,6 @@ categories:
 # Documents use frontmatter to declare their entity type:
 #   ---
 #   entity_type: constitution | infrastructure_module | strategic_container | coordination_unit | business_module
-#   document_type: prd | architecture | epics | ux-design | product-brief
+#   document_type: prd | architecture | epics | ux-design | product-soul
 #   parent: path/to/parent/prd.md (for non-constitution entities)
 #   ---

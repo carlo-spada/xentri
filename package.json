@@ -15,9 +15,12 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "db:migrate": "pnpm --filter services/core-api run db:migrate",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "validate:docs": "node scripts/validation/validate-docs.js",
+    "validate:links": "node scripts/validation/validate-links.js"
   },
   "devDependencies": {
+    "ajv": "^8.17.1",
     "@playwright/test": "^1.50.0",
     "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.0.1",
@@ -29,6 +32,7 @@
     "tsx": "^4.19.0",
     "turbo": "^2.6.1",
     "typescript": "^5.8.3",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "yaml": "^2.7.0"
   }
 }

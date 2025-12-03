@@ -1,13 +1,17 @@
 ---
-level: system
-document_type: product-brief
-title: "Xentri Product Brief"
-description: "The foundational vision document for Xentri. All category and module work traces back to this brief."
+entity_type: constitution
+document_type: product_soul
+title: "Xentri Product Soul"
+description: "The foundational vision document for Xentri. All category and module work traces back to this soul."
+version: "2.1"
+status: approved
+created: "2025-11-28"
+updated: "2025-12-03"
 ---
 
-# Product Brief: Xentri (System Vision)
+# Product Soul: Xentri (System Vision)
 
-**Date:** 2025-11-28 (revised)
+**Date:** 2025-11-28 (revised 2025-12-03)
 **Author:** Carlo
 **Context:** Enterprise Greenfield
 **Level:** System (foundational vision)
@@ -44,7 +48,7 @@ Every category, sub-category, and module is an **autonomous agent** (not just a 
 2.  **Superior Intent:** The context from their parent agent (from You).
 3.  **User Reality:** Your direct feedback and commands.
 
-You start with a free conversation. The Strategy co-pilot learns your business, generates your Brief (the living DNA of your company), and recommends exactly which categories you should tackle next.
+You start with a free conversation. The Strategy co-pilot learns your business, generates your Soul (the living DNA of your company), and recommends exactly which categories you should tackle next.
 
 Every automated action is logged and explainable. One daily view surfaces what needs your attention today. No notification flood, no 40-tab cockpit.
 
@@ -54,10 +58,10 @@ Every automated action is logged and explainable. One daily view surfaces what n
 
 | Tier | Price | Modules | Focus |
 |------|-------|---------|-------|
-| **Free** | $0 | 1 | Strategy co-pilot + Brief |
+| **Free** | $0 | 1 | Strategy co-pilot + Soul |
 | **Presencia** | $20/mo | ~3 | Get visible (website, leads) |
 | **Light Ops** | $60/mo | ~8 | Run daily ops (CRM, quotes) |
-| **Proffessional** | $180/mo | ~24 | Full flow (invoicing, payments) |
+| **Professional** | $180/mo | ~24 | Full flow (invoicing, payments) |
 | **Business in Motion** | $540/mo | ~72 | Scale team (roles, permissions) |
 | **Enterprise** | $1200+/mo | ~156+ | Enterprise-grade features |
 
@@ -70,7 +74,7 @@ Plus $5/module à la carte.
 - **Free co-pilot from day zero** — Clarity before tools, no credit card required
 - **Fractal Agency** — Every module is an employee that *thinks* and *acts*, not just a tool that *runs*
 - **Real Memory** — Remembers what you said last week (Episodic) and who you are (Semantic)
-- **Clarity-first, not tool-first** — Brief informs everything else (and is informed by everything else: single source of truth)
+- **Clarity-first, not tool-first** — Soul informs everything else (and is informed by everything else: single source of truth)
 - **Calm, not noisy** — 7 categories, clean hierarchy, never more than you need on screen
 - **Visible, not magical** — Every automation logged and explainable
 - **Modular growth** — Add what you need, skip what you don't
@@ -104,11 +108,11 @@ If money is flowing through Xentri, users are getting real value.
 | Risk | Mitigation |
 |------|------------|
 | Co-pilot quality / hallucination | **Triangulation Architecture** (Soul + Strategy + User) ensures alignment. Graceful fallback to guided forms. |
-| Low free → paid conversion | Brief completion triggers personalized upgrade prompts |
+| Low free → paid conversion | Soul completion triggers personalized upgrade prompts |
 | Multi-tenant data leaks | RLS enforced, every query includes `org_id`, paranoid testing |
 
 > **Note:** For co-pilot quality we MUST learn from how the BMAD method handles things, make it our own and improve upon it.
 
 ---
 
-_This Product Brief captures the vision for Xentri. For detailed requirements, see [PRD](./prd.md). For technical architecture, see [Architecture](./architecture.md). For market + research, see [research/](./research/)._
+_This Product Soul captures the vision for Xentri. For detailed requirements, see [PRD](./prd.md). For technical architecture, see [Architecture](./architecture.md). For market + research, see [research/](./research/)._
