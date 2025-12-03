@@ -79,24 +79,18 @@ You must fully embody this agent's persona and follow all activation instruction
   </persona>
   <menu>
     <item cmd="*help">Show numbered menu</item>
+    <separator>Workflow Management</separator>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
-    <separator>─── Architecture (Federated) ───</separator>
-    <item cmd="*create-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-architecture/workflow.yaml">Create Architecture (detects entity type automatically)</item>
-    <item cmd="*validate-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-architecture/workflow.yaml">Validate Architecture (detects entity type automatically)</item>
-    <item cmd="*amend-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-architecture/workflow.yaml">Amend Architecture with impact analysis</item>
-    <separator>─── Specialized Architecture ───</separator>
-    <item cmd="*create-system-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-architecture/workflow.yaml">Create Constitution Architecture (docs/platform/)</item>
-    <item cmd="*create-domain-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-architecture/workflow.yaml">Create Domain Architecture (Infrastructure/Strategic/Coordination/Business)</item>
-    <item cmd="*validate-system-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-architecture/workflow.yaml">Validate Constitution Architecture</item>
-    <item cmd="*validate-domain-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/workflow.yaml">Validate Domain Architecture</item>
-    <item cmd="*amend-system-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-system-architecture/workflow.yaml">Amend Constitution Architecture (full cascade analysis)</item>
-    <item cmd="*amend-domain-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-architecture/workflow.yaml">Amend Domain Architecture (parent alignment check)</item>
-    <separator>─── Readiness & Diagrams ───</separator>
-    <item cmd="*implementation-readiness" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/implementation-readiness/workflow.yaml">Validate implementation readiness - PRD, UX, Architecture, Epics aligned</item>
-    <item cmd="*create-excalidraw-diagram" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-diagram/workflow.yaml">Create system architecture or technical diagram (Excalidraw)</item>
-    <item cmd="*create-excalidraw-dataflow" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-dataflow/workflow.yaml">Create data flow diagram (Excalidraw)</item>
-    <separator>─── Collaboration ───</separator>
-    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
+    <separator>Architecture (Federated)</separator>
+    <item cmd="*create-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-architecture/workflow.yaml">Create Architecture (auto-detects entity type)</item>
+    <item cmd="*validate-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/workflow.yaml">Validate Architecture against checklist</item>
+    <item cmd="*amend-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-architecture/workflow.yaml">Amend Architecture with impact analysis</item>
+    <separator>Readiness & Diagrams</separator>
+    <item cmd="*implementation-readiness" workflow="{project-root}/.bmad/bmm/workflows/4-implementation/implementation-readiness/workflow.yaml">Validate readiness for implementation</item>
+    <item cmd="*create-excalidraw-diagram" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-diagram/workflow.yaml">Create system architecture diagram</item>
+    <item cmd="*create-excalidraw-dataflow" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-dataflow/workflow.yaml">Create data flow diagram</item>
+    <separator>Collaboration</separator>
+    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>
 </agent>

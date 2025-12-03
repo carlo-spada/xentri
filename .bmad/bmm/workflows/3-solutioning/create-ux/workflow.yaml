@@ -1,31 +1,57 @@
-# Create UX Design Router Workflow
+# UX Design Creation Workflow (Unified)
 name: create-ux
-description: "Router workflow that detects entity type and dispatches to create-system-ux or create-domain-ux as appropriate."
+description: "Create UX Design document for ANY entity type (Constitution, Infrastructure, Strategic, Coordination, Business)."
 author: "BMad"
 
 # Critical variables from config
 config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
-
-# Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-
-# Target workflows
-system_ux_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-ux/workflow.yaml"
-domain_ux_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-ux/workflow.yaml"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
+date: system-generated
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-ux"
+instructions: "{installed_path}/instructions.md"
+
+# Templates
+ux_template: "{installed_path}/ux-template.md"
+constitution_template: "{installed_path}/constitution-ux-template.md"
+domain_template: "{installed_path}/domain-ux-template.md"
+
+# Checklists
+constitution_checklist: "{project-root}/.bmad/bmm/checklists/constitution-ux-checklist.md"
+domain_checklist: "{project-root}/.bmad/bmm/checklists/domain-ux-checklist.md"
+checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md"
+checklist_business: "{project-root}/.bmad/bmm/checklists/business-ux-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+
+# Input file patterns
+input_file_patterns:
+  constitution_prd:
+    description: "System PRD (Constitution)"
+    whole: "{project-root}/docs/platform/prd.md"
+    load_strategy: "FULL_LOAD"
+
+  constitution_ux:
+    description: "System UX (Parent)"
+    whole: "{project-root}/docs/platform/ux-design.md"
+    load_strategy: "FULL_LOAD"
+
+  entity_prd:
+    description: "Entity PRD"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+default_output_file: "{output_folder_resolved}ux-design.md"
 
 standalone: true
-
-# Router logic (executed by workflow engine)
-router:
-  detect_task: "{detect_entity_task}"
-  routes:
-    constitution: "{system_ux_workflow}"
-    infrastructure_module: "{domain_ux_workflow}"
-    strategic_container: "{domain_ux_workflow}"
-    coordination_unit: "{domain_ux_workflow}"
-    business_module: "{domain_ux_workflow}"

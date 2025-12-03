@@ -1,8 +1,12 @@
 ---
-level: system
-doc_type: constitution
+entity_type: constitution
+document_type: prd
 title: "Xentri System PRD (Constitution)"
 description: "System-wide product requirements, platform requirements (PR-xxx), and integration contracts (IC-xxx) that all categories must follow."
+version: "2.2.2"
+status: approved
+created: "2025-11-25"
+updated: "2025-12-02"
 ---
 
 # Xentri - Product Requirements Document (System Constitution)
@@ -75,15 +79,15 @@ Not *"I hope nothing is dropping."* But *"I know nothing is dropping — because
 
 ### Integration Contracts (IC-xxx)
 
-| ID | Contract | Section Reference |
-|----|----------|-------------------|
-| **IC-001** | Event Envelope Schema — `SystemEvent` interface definition | [Event Schema Requirements](#event-schema-requirements) |
-| **IC-002** | Event Naming Convention — `xentri.{category}.{entity}.{action}.{version}` | [Event Schema Requirements](#event-schema-requirements) |
-| **IC-003** | Module Registration Manifest — Format for registering modules with shell | [Sub-category Integration Contracts](#sub-category-integration-contracts) |
-| **IC-004** | Brief Access API — `GET /api/v1/brief/{section}` | [Brief Access Patterns](#brief-access-patterns) |
-| **IC-005** | Recommendation Submission Protocol — How modules submit recommendations | [Brief Access Patterns](#brief-access-patterns) |
-| **IC-006** | Notification Delivery Contract — How notifications are delivered to users | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
-| **IC-007** | Permission Check Protocol — Permission primitives definition | [Permission Model](#permission-model) |
+| ID | Contract | Version | Section Reference |
+|----|----------|---------|-------------------|
+| **IC-001** | Event Envelope Schema — `SystemEvent` interface definition | v1.0 | [Event Schema Requirements](#event-schema-requirements) |
+| **IC-002** | Event Naming Convention — `xentri.{category}.{entity}.{action}.{version}` | v1.0 | [Event Schema Requirements](#event-schema-requirements) |
+| **IC-003** | Module Registration Manifest — Format for registering modules with shell | v1.0 | [Sub-category Integration Contracts](#sub-category-integration-contracts) |
+| **IC-004** | Brief Access API — `GET /api/v1/brief/{section}` | v1.0 | [Brief Access Patterns](#brief-access-patterns) |
+| **IC-005** | Recommendation Submission Protocol — How modules submit recommendations | v1.0 | [Brief Access Patterns](#brief-access-patterns) |
+| **IC-006** | Notification Delivery Contract — How notifications are delivered to users | v1.0 | [Cross-cutting Capabilities](#cross-cutting-capability-requirements) |
+| **IC-007** | Permission Check Protocol — Permission primitives definition | v1.0 | [Permission Model](#permission-model) |
 
 ---
 
@@ -658,7 +662,7 @@ Even solo operators get the architecture that supports growth. When they're read
 
 **Decision:** Primitives + owner-defined roles. No generic global roles.
 
-**IC-007: Permission primitives:**
+**IC-007: Permission primitives (v1.0):**
 
 | Primitive | Meaning |
 |-----------|---------|
@@ -666,6 +670,8 @@ Even solo operators get the architecture that supports growth. When they're read
 | `edit` | Modify records and content |
 | `approve` | Sign off on actions (refunds, discounts, publishes) |
 | `configure` | Change module settings and workflows |
+
+*Permission protocol version: 1.0 — all permission checks MUST include `permission_version: "1.0"` for forward compatibility.*
 
 **Owner-defined roles:** Each organization composes primitives into roles that match *their* business.
 
@@ -935,10 +941,11 @@ Each sub-category PRD inherits from this constitution and adds specific implemen
 | **Respect permissions** | Check user permissions before every action; fail closed if unclear |
 | **Authenticate users** | Use platform auth; never implement custom auth flows |
 
-**IC-003: Module registration manifest:**
+**IC-003: Module registration manifest (v1.0):**
 
 ```yaml
 # Example: What a sub-category provides to the shell
+manifest_version: "1.0"
 name: "sales-crm"
 category: "sales"
 subcategory: "pipeline"
@@ -989,13 +996,13 @@ brief_fields_read:
 | **Brief awareness** | Read Brief on init; reconfigure on `xentri.brief.updated` events |
 | **PR-007: Error boundaries** | Fail gracefully; never crash the shell; show meaningful error states |
 
-**IC-006: Notification delivery contract:**
+**IC-006: Notification delivery contract (v1.0):**
 
 | Mode | Sub-category Responsibility | Infrastructure Responsibility |
 |------|----------------------------|-------------------------------|
-| **Critical** | Emit event with `priority: "critical"` | Deliver immediately via push |
-| **Digest** | Emit event with `priority: "high"` or `"medium"` | Batch for scheduled delivery |
-| **Dashboard** | Emit all events with `attention: true` | Display in Attention Dashboard |
+| **Critical** | Emit event with `priority: "critical"`, `notification_version: "1.0"` | Deliver immediately via push |
+| **Digest** | Emit event with `priority: "high"` or `"medium"`, `notification_version: "1.0"` | Batch for scheduled delivery |
+| **Dashboard** | Emit all events with `attention: true`, `notification_version: "1.0"` | Display in Attention Dashboard |
 
 **Search indexing:**
 
@@ -1090,13 +1097,13 @@ Examples:
 
 **Writing to the Brief:**
 
-**IC-005: Recommendation Protocol**
+**IC-005: Recommendation Protocol (v1.0)**
 Sub-categories **never write directly** to the Brief. Instead:
 
-1. Emit `xentri.brief.recommendation.submitted` event
-2. Include `target_section`, `recommendation`, `evidence`, `confidence`
+1. Emit `xentri.brief.recommendation.submitted.v1` event
+2. Include `target_section`, `recommendation`, `evidence`, `confidence`, `protocol_version: "1.0"`
 3. Strategy Copilot evaluates during synthesis
-4. If approved, Brief updates and `xentri.brief.updated` emitted
+4. If approved, Brief updates and `xentri.brief.updated.v1` emitted
 
 **Exception:** War Room sessions can approve recommendations in real-time with human present.
 
@@ -1411,6 +1418,69 @@ Sub-categories **never write directly** to the Brief. Instead:
 
 ---
 
+## Governance
+
+> **This section defines how constitutional documents can be changed. All changes to this PRD require adherence to this process.**
+
+### Protected Documents
+
+The following documents are protected under constitutional governance:
+
+| Document | Location | Purpose |
+|----------|----------|---------|
+| System PRD | `docs/platform/prd.md` | Platform Requirements (PR-xxx), Integration Contracts (IC-xxx) |
+| System Architecture | `docs/platform/architecture.md` | Technology decisions, patterns, ADRs |
+| System UX Design | `docs/platform/ux-design.md` | UX principles, design system foundations |
+| System Epics | `docs/platform/epics.md` | Cross-cutting initiatives, traceability matrix |
+| Product Brief | `docs/platform/product-brief.md` | Foundational vision, business DNA |
+
+### Change Process
+
+1. **Propose** — Create a PR with the proposed change and explicit rationale
+2. **Flag** — Mark the change as constitutional in the PR title: `docs(constitution): <description>`
+3. **Review** — Required reviewers must approve before merge
+4. **Document** — Update Document History section with version bump and change summary
+
+### Approval Requirements
+
+| Change Type | Required Reviewers | Notes |
+|-------------|-------------------|-------|
+| New PR-xxx or IC-xxx | PM + Architect | Must include rationale and enforcement mechanism |
+| Modify existing PR/IC | PM + Architect + affected module owners | Breaking changes require migration plan |
+| Governance changes | Carlo (Owner) | Meta-constitutional changes |
+| Clarifications / typos | Any reviewer | No version bump required |
+
+### Commit Message Format
+
+```
+docs(constitution): <short description>
+
+<detailed explanation of what changed>
+
+Rationale: <why this change is necessary>
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+### Impact Assessment
+
+Before proposing a constitutional change, assess:
+
+1. **Downstream Impact** — Which modules/PRDs inherit from this document?
+2. **Breaking Changes** — Does this contradict existing implementations?
+3. **Migration Path** — How will existing code/docs be updated?
+4. **Traceability** — Update `epics.md` traceability matrix if adding/removing PR/IC
+
+### Version Numbering
+
+- **MAJOR** (X.0.0) — Breaking changes to PR/IC contracts
+- **MINOR** (2.X.0) — New requirements or contracts added
+- **PATCH** (2.2.X) — Clarifications, typo fixes, non-breaking updates
+
+---
+
 ## Next Steps
 
 **Critical insight:** We've reached a point where multiple teams can work in parallel. Strategy team getting stuck doesn't block Marketing or Sales. This is the power of the constitution model — teams can move independently as long as they follow the contracts defined here.
@@ -1470,6 +1540,8 @@ Sub-categories **never write directly** to the Brief. Instead:
 | 2.0 | 2025-11-28 | Carlo + BMAD Team | Complete rewrite with party mode collaboration |
 | 2.1 | 2025-12-01 | Carlo + Winston | Integrated UX review: hierarchical Pulse views, no-scroll constraint, copilot widget, sidebar behavior, expanded Brief-aware personalization |
 | 2.2 | 2025-12-02 | Carlo + BMad Builder | Added Platform Requirements Index (PR-001 to PR-008, IC-001 to IC-007) — consolidated from scattered references per Federated Workflows Phase 6 |
+| 2.2.1 | 2025-12-02 | Carlo + John (PM) | Validation fixes: standardized frontmatter (entity_type, version, status, dates), added formal Governance section with change process, approval requirements, and version numbering |
+| 2.2.2 | 2025-12-02 | Carlo + John (PM) | Added explicit versioning (v1.0) to all Integration Contracts (IC-003, IC-005, IC-006, IC-007), updated IC index table with Version column |
 
 ### Contributors
 

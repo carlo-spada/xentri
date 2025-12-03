@@ -1,24 +1,56 @@
-# Epics Creation Router Workflow
+# Epics Creation Workflow (Unified)
 name: create-epics
-description: "Smart router that detects entity type and dispatches to the appropriate epics creation workflow (create-system-epics or create-domain-epics)."
+description: "Create Epics document for ANY entity type (Constitution, Infrastructure, Strategic, Coordination, Business)."
 author: "BMad"
 
 # Critical variables from config
 config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
 date: system-generated
-
-# Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-
-# Target workflows
-system_epics_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-epics/workflow.yaml"
-domain_epics_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-epics/workflow.yaml"
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics"
 instructions: "{installed_path}/instructions.md"
 
-template: false
+# Templates
+epics_template: "{installed_path}/epics-template.md"
+constitution_template: "{installed_path}/constitution-epics-template.md"
+domain_template: "{installed_path}/domain-epics-template.md"
+
+# Checklists
+constitution_checklist: "{project-root}/.bmad/bmm/checklists/constitution-epics-checklist.md"
+domain_checklist: "{project-root}/.bmad/bmm/checklists/domain-epics-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+
+# Input file patterns
+input_file_patterns:
+  constitution_prd:
+    description: "System PRD (Constitution)"
+    whole: "{project-root}/docs/platform/prd.md"
+    load_strategy: "FULL_LOAD"
+
+  constitution_epics:
+    description: "Constitution Epics (Parent)"
+    whole: "{project-root}/docs/platform/epics.md"
+    load_strategy: "FULL_LOAD"
+
+  entity_prd:
+    description: "Entity PRD"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+default_output_file: "{output_folder_resolved}epics.md"
+
 standalone: true

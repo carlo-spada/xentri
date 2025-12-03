@@ -79,20 +79,24 @@ You must fully embody this agent's persona and follow all activation instruction
   </persona>
   <menu>
     <item cmd="*help">Show numbered menu</item>
-    <item cmd="*document-project" workflow="{project-root}/.bmad/bmm/workflows/document-project/workflow.yaml">Comprehensive project documentation (brownfield analysis, architecture scanning)</item>
-    <item cmd="*create-api-docs" workflow="todo">Create API documentation with OpenAPI/Swagger standards</item>
-    <item cmd="*create-architecture-docs" workflow="todo">Create architecture documentation with diagrams and ADRs</item>
-    <item cmd="*create-user-guide" workflow="todo">Create user-facing guides and tutorials</item>
-    <item cmd="*audit-docs" workflow="todo">Review documentation quality and suggest improvements</item>
-    <item cmd="*generate-mermaid" action="Create a Mermaid diagram based on user description. Ask for diagram type (flowchart, sequence, class, ER, state, git) and content, then generate properly formatted Mermaid syntax following CommonMark fenced code block standards.">Generate Mermaid diagrams (architecture, sequence, flow, ER, class, state)</item>
-    <item cmd="*create-excalidraw-flowchart" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-flowchart/workflow.yaml">Create Excalidraw flowchart for processes and logic flows</item>
-    <item cmd="*create-excalidraw-diagram" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-diagram/workflow.yaml">Create Excalidraw system architecture or technical diagram</item>
-    <item cmd="*create-excalidraw-dataflow" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-dataflow/workflow.yaml">Create Excalidraw data flow diagram</item>
-    <item cmd="*validate-doc" action="Review the specified document against CommonMark standards, technical writing best practices, and style guide compliance. Provide specific, actionable improvement suggestions organized by priority.">Validate documentation against standards and best practices</item>
-    <item cmd="*improve-readme" action="Analyze the current README file and suggest improvements for clarity, completeness, and structure. Follow task-oriented writing principles and ensure all essential sections are present (Overview, Getting Started, Usage, Contributing, License).">Review and improve README files</item>
-    <item cmd="*explain-concept" action="Create a clear technical explanation with examples and diagrams for a complex concept. Break it down into digestible sections using task-oriented approach. Include code examples and Mermaid diagrams where helpful.">Create clear technical explanations with examples</item>
-    <item cmd="*standards-guide" action="Display the complete documentation standards from {project-root}/.bmadbmm/workflows/techdoc/documentation-standards.md in a clear, formatted way for the user.">Show BMAD documentation standards reference (CommonMark, Mermaid, OpenAPI)</item>
-    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
+    <separator>Documentation</separator>
+    <item cmd="*document-project" workflow="{project-root}/.bmad/bmm/workflows/document-project/workflow.yaml">Comprehensive project documentation</item>
+    <item cmd="*create-api-docs" workflow="todo">Create API documentation</item>
+    <item cmd="*create-architecture-docs" workflow="todo">Create architecture documentation</item>
+    <item cmd="*create-user-guide" workflow="todo">Create user-facing guides</item>
+    <item cmd="*audit-docs" workflow="todo">Review documentation quality</item>
+    <separator>Diagrams & Visuals</separator>
+    <item cmd="*generate-mermaid" action="Create a Mermaid diagram based on user description. Ask for diagram type (flowchart, sequence, class, ER, state, git) and content, then generate properly formatted Mermaid syntax following CommonMark fenced code block standards.">Generate Mermaid diagrams</item>
+    <item cmd="*create-excalidraw-flowchart" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-flowchart/workflow.yaml">Create Excalidraw flowchart</item>
+    <item cmd="*create-excalidraw-diagram" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-diagram/workflow.yaml">Create Excalidraw system diagram</item>
+    <item cmd="*create-excalidraw-dataflow" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-dataflow/workflow.yaml">Create Excalidraw data flow</item>
+    <separator>Support & Standards</separator>
+    <item cmd="*validate-doc" action="Review the specified document against CommonMark standards, technical writing best practices, and style guide compliance. Provide specific, actionable improvement suggestions organized by priority.">Validate documentation</item>
+    <item cmd="*improve-readme" action="Analyze the current README file and suggest improvements for clarity, completeness, and structure. Follow task-oriented writing principles and ensure all essential sections are present (Overview, Getting Started, Usage, Contributing, License).">Review and improve README</item>
+    <item cmd="*explain-concept" action="Create a clear technical explanation with examples and diagrams for a complex concept. Break it down into digestible sections using task-oriented approach. Include code examples and Mermaid diagrams where helpful.">Create technical explanations</item>
+    <item cmd="*standards-guide" action="Display the complete documentation standards from {project-root}/.bmadbmm/workflows/techdoc/documentation-standards.md in a clear, formatted way for the user.">Show BMAD documentation standards</item>
+    <separator>Collaboration</separator>
+    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>
 </agent>

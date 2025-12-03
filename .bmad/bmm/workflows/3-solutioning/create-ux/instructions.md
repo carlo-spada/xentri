@@ -1,116 +1,195 @@
-# UX Design Creation Router
+# UX Design Creation Workflow (Unified)
 
-<critical>This is a ROUTER workflow - it detects entity type and dispatches to the correct implementation</critical>
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
-<critical>Communicate in {communication_language}</critical>
+<critical>You MUST have already loaded and processed: {installed_path}/workflow.yaml</critical>
+<critical>This creates UX DESIGN for ANY entity type (Constitution, Infrastructure, Strategic, Coordination, Business)</critical>
+<critical>Communicate all responses in {communication_language}</critical>
+<critical>Generate all documents in {document_output_language}</critical>
+<critical>NO TIME ESTIMATES - NEVER mention hours, days, weeks, or any time-based predictions</critical>
+<critical>CHECKPOINT PROTOCOL: Use save-with-checkpoint task after each major section</critical>
+
+<shared-tasks>
+  <task name="save-with-checkpoint" path="{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml" />
+  <task name="generate-frontmatter" path="{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+  <task name="validate-inheritance" path="{project-root}/.bmad/bmm/tasks/validate-inheritance.xml" />
+</shared-tasks>
 
 <workflow>
 
-<step n="1" goal="Welcome and Context Detection">
-<action>Welcome {user_name} to the UX Design creation workflow</action>
+<step n="0" goal="Determine Entity Type and Load Context">
+<check if="entity_type is not set or empty">
+  <invoke-task name="detect-entity-type">
+    <param name="prompt_user">true</param>
+  </invoke-task>
+</check>
 
 <output>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎨 UX DESIGN CREATION WORKFLOW
+🎨 UX DESIGN CREATION WORKFLOW (Unified)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-This workflow helps you create a UX Design Specification
-at the appropriate level in your federated documentation
-hierarchy.
+Entity Type:        {entity_type_display}
+Output Path:        {output_folder_resolved}ux-design.md
+Constitution UX:    docs/platform/ux-design.md
+Parent UX:          {parent_ux_path}
 
-Let's determine where this UX Design should live.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-
-<action>Check for context clues:
-1. Current working directory (if in a docs/ subfolder)
-2. Recent workflow context (workflow-status.yaml)
-3. User's stated intent
-</action>
-
-<check if="context suggests specific path">
-  <output>Based on context, it looks like you want to create UX Design at:
-  **Path:** {detected_path}
-  </output>
-  <ask>Is this correct? (y/n)</ask>
-  <check if="response == 'y'">
-    <action>Use detected_path for entity detection</action>
-    <goto step="2">Detect entity type</goto>
-  </check>
-</check>
-</step>
-
-<step n="2" goal="Detect Entity Type">
-<invoke-task name="detect-entity-type">
-  <param name="path">{target_path or prompt_user}</param>
-</invoke-task>
-
-<action>Store all returned variables:
-- entity_type
-- entity_type_display
-- output_folder_resolved
-- parent_prd_path
-- constitution_path
-</action>
-
-<output>
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Entity Type Detected
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type:           {entity_type_display}
-Output Path:    {output_folder_resolved}ux-design.md
-Parent UX:      {parent_ux_path or "N/A (Constitution)"}
+This workflow creates the UX Design document for your entity.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </output>
 
-<ask>Proceed with this location? (y/n/change)</ask>
-<check if="response == 'change'">
-  <action>Clear detected values</action>
-  <goto step="2">Re-detect with new path</goto>
-</check>
-<check if="response == 'n'">
-  <action>Exit workflow</action>
-</check>
-</step>
+<invoke-protocol name="discover_inputs" />
 
-<step n="3" goal="Route to Appropriate Workflow">
 <check if="entity_type == 'constitution'">
-  <output>
-🏛️ **Constitution UX Design**
-Routing to System UX workflow...
-This will create/update: docs/platform/ux-design.md
-  </output>
-  <invoke-workflow path="{system_ux_workflow}">
-    <pass-through>All context variables</pass-through>
-  </invoke-workflow>
+  <action>Load Constitution Context:
+  - PRD: docs/platform/prd.md
+  - Product Brief: docs/platform/product-brief.md
+  - Architecture: docs/platform/architecture.md
+  </action>
 </check>
 
 <check if="entity_type != 'constitution'">
-  <output>
-🎨 **{entity_type_display} UX Design**
-Routing to Domain UX workflow...
-This will create: {output_folder_resolved}ux-design.md
-  </output>
-  <invoke-workflow path="{domain_ux_workflow}">
-    <param name="entity_type">{entity_type}</param>
-    <param name="entity_type_display">{entity_type_display}</param>
-    <param name="output_folder_resolved">{output_folder_resolved}</param>
-    <param name="parent_prd_path">{parent_prd_path}</param>
-    <param name="constitution_path">{constitution_path}</param>
-  </invoke-workflow>
+  <action>Extract inherited UX context:
+  1. From Constitution (docs/platform/ux-design.md):
+     - Design System Foundation
+     - Color System
+     - UX Patterns
+     - Accessibility Requirements
+  2. From Parent ({parent_ux_path}):
+     - Parent Design Direction
+     - Scope Boundaries
+  </action>
 </check>
 </step>
 
+<step n="1" goal="UX Vision and Purpose">
+<action>Define UX Vision/Purpose:</action>
+
+<check if="entity_type == 'constitution'">
+  <action>Constitution Vision:
+  - Platform-wide UX Principles (5-7 core principles)
+  - Design System Selection (Material, Shadcn, etc.)
+  - Visual Foundation (Colors, Typography, Spacing)
+  </action>
+</check>
+
+<check if="entity_type != 'constitution'">
+  <action>Entity Purpose:
+  - Specific UX focus for this entity
+  - User Personas (if applicable)
+  - Alignment with Parent Vision
+  </action>
+</check>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{ux_vision}</param>
+  <param name="section_name">UX Vision</param>
+</invoke-task>
+</step>
+
+<step n="2" goal="Core Design Decisions">
+<action>Define core design decisions:</action>
+
+<check if="entity_type == 'constitution'">
+  <action>Define System Standards:
+  - Platform-Wide UX Patterns (Buttons, Forms, Modals)
+  - Accessibility Strategy (WCAG Level)
+  - Responsive Strategy (Breakpoints)
+  </action>
+</check>
+
+<check if="entity_type != 'constitution'">
+  <action>Define Entity Patterns:
+  - User Flows & Screens
+  - Entity-Specific Components
+  - States & Interactions (Loading, Error, Empty)
+  </action>
+</check>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{core_decisions}</param>
+  <param name="section_name">Core Decisions</param>
+</invoke-task>
+</step>
+
+<step n="3" goal="Detailed Design Specification" if="entity_type != 'constitution'">
+<check if="entity_type == 'business_module'">
+  <action>Business Module Details:
+  - Detailed Component Specs
+  - Visual Mockup Directions (HTML generation)
+  </action>
+</check>
+
+<check if="entity_type == 'infrastructure_module'">
+  <action>Infrastructure Details:
+  - Exposed UI Components
+  - Developer Experience UX
+  </action>
+</check>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{detailed_design}</param>
+  <param name="section_name">Detailed Design</param>
+</invoke-task>
+</step>
+
+<step n="4" goal="Accessibility & Responsive Implementation">
+<action>Document implementation details:</action>
+
+<check if="entity_type == 'constitution'">
+  <action>Define Requirements:
+  - Keyboard Navigation Standards
+  - Focus Management Rules
+  - Touch Target Minimums
+  </action>
+</check>
+
+<check if="entity_type != 'constitution'">
+  <action>Apply Requirements:
+  - How this entity meets accessibility goals
+  - Specific responsive adaptations
+  </action>
+</check>
+
+<invoke-task name="save-with-checkpoint">
+  <param name="file_path">{default_output_file}</param>
+  <param name="content">{implementation_details}</param>
+  <param name="section_name">Implementation Details</param>
+</invoke-task>
+</step>
+
+<step n="5" goal="Validate and Finalize">
+<check if="entity_type != 'constitution'">
+  <invoke-task name="validate-inheritance">
+    <param name="document_content">{generated_content}</param>
+    <param name="document_type">ux-design</param>
+    <param name="entity_type">{entity_type}</param>
+    <param name="parent_path">{parent_ux_path}</param>
+    <param name="constitution_path">{constitution_ux_path}</param>
+  </invoke-task>
+
+  <check if="validation.is_valid == false">
+    <output>⚠️ UX violates constraints: {validation.violations}</output>
+    <action>Resolve violations</action>
+  </check>
+</check>
+
+<invoke-task name="generate-frontmatter">
+  <param name="entity_type">{entity_type}</param>
+  <param name="document_type">ux-design</param>
+  <param name="title">{entity_name} UX Design</param>
+</invoke-task>
+
+<output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ UX DESIGN COMPLETE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Created: {output_folder_resolved}ux-design.md
+Entity:  {entity_type_display}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</output>
+</step>
+
 </workflow>
-
-<notes>
-This router provides a unified entry point for UX Design creation.
-Users can call `create-ux` without knowing whether they need
-the system or domain variant - the router figures it out.
-
-The Five Entity Types:
-1. Constitution → create-system-ux
-2. Infrastructure Module → create-domain-ux
-3. Strategic Container → create-domain-ux
-4. Coordination Unit → create-domain-ux
-5. Business Module → create-domain-ux
-</notes>

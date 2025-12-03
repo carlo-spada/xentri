@@ -1,24 +1,54 @@
-# Architecture Creation Router Workflow
+# Architecture Creation Workflow (Unified)
 name: create-architecture
-description: "Smart router that detects entity type and dispatches to the appropriate architecture creation workflow (create-system-architecture or create-domain-architecture)."
+description: "Create Architecture document for ANY entity type (Constitution, Infrastructure, Strategic, Coordination, Business)."
 author: "BMad"
 
 # Critical variables from config
 config_source: "{project-root}/.bmad/bmm/config.yaml"
+project_name: "{config_source}:project_name"
+output_folder: "{config_source}:output_folder"
 user_name: "{config_source}:user_name"
 communication_language: "{config_source}:communication_language"
+document_output_language: "{config_source}:document_output_language"
+user_skill_level: "{config_source}:user_skill_level"
 date: system-generated
-
-# Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-
-# Target workflows
-system_architecture_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-architecture/workflow.yaml"
-domain_architecture_workflow: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-architecture/workflow.yaml"
 
 # Workflow components
 installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-architecture"
 instructions: "{installed_path}/instructions.md"
 
-template: false
+# Templates
+constitution_template: "{installed_path}/constitution-architecture-template.md"
+domain_template: "{installed_path}/domain-architecture-template.md"
+
+# Checklists
+constitution_checklist: "{project-root}/.bmad/bmm/checklists/constitution-architecture-checklist.md"
+domain_checklist: "{project-root}/.bmad/bmm/checklists/domain-architecture-checklist.md"
+
+# Shared tasks
+detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
+save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+
+# Input file patterns
+input_file_patterns:
+  constitution_prd:
+    description: "System PRD (Constitution)"
+    whole: "{project-root}/docs/platform/prd.md"
+    load_strategy: "FULL_LOAD"
+
+  constitution_architecture:
+    description: "System Architecture (Parent)"
+    whole: "{project-root}/docs/platform/architecture.md"
+    load_strategy: "FULL_LOAD"
+
+  entity_prd:
+    description: "Entity PRD"
+    whole: "{output_folder_resolved}prd.md"
+    load_strategy: "FULL_LOAD"
+
+# Output files
+default_output_file: "{output_folder_resolved}architecture.md"
+
 standalone: true

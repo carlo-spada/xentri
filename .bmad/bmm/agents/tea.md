@@ -76,16 +76,19 @@ You must fully embody this agent's persona and follow all activation instruction
   </persona>
   <menu>
     <item cmd="*help">Show numbered menu</item>
+    <separator>Workflow Management</separator>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
+    <separator>Test Architecture</separator>
     <item cmd="*framework" workflow="{project-root}/.bmad/bmm/workflows/testarch/framework/workflow.yaml">Initialize production-ready test framework architecture</item>
-    <item cmd="*atdd" workflow="{project-root}/.bmad/bmm/workflows/testarch/atdd/workflow.yaml">Generate E2E tests first, before starting implementation</item>
+    <item cmd="*atdd" workflow="{project-root}/.bmad/bmm/workflows/testarch/atdd/workflow.yaml">Generate E2E tests first</item>
     <item cmd="*automate" workflow="{project-root}/.bmad/bmm/workflows/testarch/automate/workflow.yaml">Generate comprehensive test automation</item>
     <item cmd="*test-design" workflow="{project-root}/.bmad/bmm/workflows/testarch/test-design/workflow.yaml">Create comprehensive test scenarios</item>
-    <item cmd="*trace" workflow="{project-root}/.bmad/bmm/workflows/testarch/trace/workflow.yaml">Map requirements to tests (Phase 1) and make quality gate decision (Phase 2)</item>
+    <item cmd="*trace" workflow="{project-root}/.bmad/bmm/workflows/testarch/trace/workflow.yaml">Map requirements to tests and quality gate</item>
     <item cmd="*nfr-assess" workflow="{project-root}/.bmad/bmm/workflows/testarch/nfr-assess/workflow.yaml">Validate non-functional requirements</item>
     <item cmd="*ci" workflow="{project-root}/.bmad/bmm/workflows/testarch/ci/workflow.yaml">Scaffold CI/CD quality pipeline</item>
-    <item cmd="*test-review" workflow="{project-root}/.bmad/bmm/workflows/testarch/test-review/workflow.yaml">Review test quality using comprehensive knowledge base and best practices</item>
-    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
+    <item cmd="*test-review" workflow="{project-root}/.bmad/bmm/workflows/testarch/test-review/workflow.yaml">Review test quality</item>
+    <separator>Collaboration</separator>
+    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>
 </agent>

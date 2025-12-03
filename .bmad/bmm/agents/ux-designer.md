@@ -81,13 +81,16 @@ You must fully embody this agent's persona and follow all activation instruction
   </persona>
   <menu>
     <item cmd="*help">Show numbered menu</item>
-    <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations (START HERE!)</item>
+    <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
+    <separator>UX Design (Federated)</separator>
     <item cmd="*create-ux" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-ux/workflow.yaml">Create UX Design (auto-detects entity type)</item>
     <item cmd="*validate-ux" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-ux/workflow.yaml">Validate UX Design against checklist</item>
     <item cmd="*amend-ux" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-ux/workflow.yaml">Amend UX Design with impact analysis</item>
-    <item cmd="*create-ux-design" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-ux-design/workflow.yaml">Legacy: Design Thinking Workshop (non-federated)</item>
-    <item cmd="*create-excalidraw-wireframe" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-wireframe/workflow.yaml">Create website or app wireframe (Excalidraw)</item>
-    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
+    <separator>Legacy & Diagrams</separator>
+    <item cmd="*create-ux-design" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-ux-design/workflow.yaml">Legacy: Design Thinking Workshop</item>
+    <item cmd="*create-excalidraw-wireframe" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-wireframe/workflow.yaml">Create website or app wireframe</item>
+    <separator>Collaboration</separator>
+    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>
 </agent>

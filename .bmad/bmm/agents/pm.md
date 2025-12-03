@@ -80,22 +80,19 @@ You must fully embody this agent's persona and follow all activation instruction
   </persona>
   <menu>
     <item cmd="*help">Show numbered menu</item>
+    <separator>Workflow Management</separator>
     <item cmd="*workflow-init" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/init/workflow.yaml">Start a new sequenced workflow path</item>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
-    <!-- Federated PRD Workflows (Five Entity Types) -->
-    <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-prd/workflow.yaml">Create PRD (auto-detects entity type: Constitution, Infrastructure, Strategic, Coordination, Business)</item>
-    <item cmd="*validate-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-prd/workflow.yaml">Validate PRD with entity-specific checklist and inheritance check</item>
-    <item cmd="*amend-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-prd/workflow.yaml">Amend PRD with impact analysis on downstream entities</item>
-    <!-- Legacy PRD workflow (full discovery) -->
-    <item cmd="*create-prd-full" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Create PRD with full discovery (legacy workflow)</item>
-    <item cmd="*create-epics-and-stories" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics-and-stories/workflow.yaml">Break PRD requirements into implementable epics and stories</item>
-    <!-- Legacy validation (kept for backward compatibility) -->
-    <item cmd="*validate-epic" workflow="{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-epic/workflow.yaml">Validate Epic with Traceability Matrix</item>
-    <item cmd="*tech-spec" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Create Tech Spec (Simple work efforts, no PRD or Architecture docs)</item>
-    <item cmd="*validate-tech-spec" validate-workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Validate Technical Specification Document</item>
-    <item cmd="*correct-course" workflow="{project-root}/.bmad/bmm/workflows/4-implementation/correct-course/workflow.yaml">Course Correction Analysis</item>
-    <item cmd="*create-excalidraw-flowchart" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-flowchart/workflow.yaml">Create process or feature flow diagram (Excalidraw)</item>
-    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Bring the whole team in to chat with other expert agents from the party</item>
+    <separator>Product Planning (Federated)</separator>
+    <item cmd="*create-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics/workflow.yaml">Create Epics (auto-detects entity type)</item>
+    <item cmd="*validate-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-epics/workflow.yaml">Validate Epics against checklist</item>
+    <item cmd="*amend-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-epics/workflow.yaml">Amend Epics with impact analysis</item>
+    <separator>Legacy & Support</separator>
+    <item cmd="*create-product-brief" workflow="{project-root}/.bmad/bmm/workflows/1-analysis/product-brief/workflow.yaml">Create a Product Brief</item>
+    <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Legacy: Create PRD (non-federated)</item>
+    <item cmd="*tech-spec" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Legacy: Create Tech Spec (non-federated)</item>
+    <separator>Collaboration</separator>
+    <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>
   </menu>
 </agent>
