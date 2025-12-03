@@ -3,7 +3,7 @@ entity_type: constitution
 document_type: architecture
 title: "Xentri System Architecture"
 description: "System-wide architectural decisions, technology stack, and patterns that all categories must follow."
-version: "2.2"
+version: "2.5"
 status: approved
 created: "2025-11-25"
 updated: "2025-12-03"
@@ -12,7 +12,7 @@ updated: "2025-12-03"
 # Xentri Architecture (System Constitution)
 
 > **Status:** Approved
-> **Version:** 2.2
+> **Version:** 2.5
 > **Last Updated:** 2025-12-03
 > **Level:** System (applies to ALL categories)
 
@@ -1267,6 +1267,97 @@ custom_terms:
 
 **Implication:** All user-facing text that uses generic business terms must use the vocabulary system. Hard-coded "Customer" or "Sale" in UI = bug.
 
+### ADR-020: Sibling Dependency Law
+
+**Status:** Accepted
+
+**Context:** As Xentri grows, we need to prevent dependency spaghetti while maintaining the "Decoupled Unity" architecture. Unrestricted cross-module dependencies create hidden coupling and make silos meaningless. We also need a requirement ID scheme that encodes ancestry without multi-parent inheritance complexity.
+
+**Decision:** We adopt the **Sibling Dependency Law** with single-parent inheritance for requirements:
+
+1. **Single-Parent Inheritance**: Every requirement has exactly one parent. Identity flows down a single chain encoded in the requirement ID.
+
+2. **Sibling-Only Dependencies**: A node may only declare `requires_interfaces` on siblings (nodes sharing the same parent).
+
+3. **Inherited Access**: Cross-branch interface access must be declared by a common ancestor. Descendants inherit that access automatically.
+
+**Requirement ID Scheme:**
+
+```
+SYS-001                    → Constitution: Platform must have Shell
+SYS-002                    → Constitution: Platform must have Strategy category
+SYS-002-STR-001            → Strategy inherits from Constitution, must have Pulse
+SYS-002-STR-001-PUL-001    → Pulse inherits from Strategy, needs Dashboard
+```
+
+The ID encodes the full ancestry chain. Parsing `SYS-002-STR-001-PUL-001` reveals:
+- Parent: `SYS-002-STR-001` (Pulse subcategory requirement)
+- Grandparent: `SYS-002` (Strategy category requirement)
+- Root: `SYS` (Constitution)
+
+**Dependency Model:**
+
+```yaml
+# Example: Pulse requirement
+id: SYS-002-STR-001-PUL-001
+type: FR
+title: "Pulse Dashboard"
+inherits: SYS-002-STR-001           # Single parent: Strategy's Pulse requirement
+
+# Sibling dependencies (same parent level)
+requires_interfaces:
+  - id: IC-STR-002                  # Strategy's Event Bus interface
+    reason: "Subscribe to metric events"
+  # ❌ IC-SHL-001 would FAIL - Shell is not a sibling of Pulse
+
+# Inherited from ancestors (read-only, computed)
+inherited_interfaces:
+  - id: IC-SHL-001                  # Shell Navigation
+    inherited_from: SYS-002         # Strategy declared this dependency
+  - id: IC-API-001                  # Core API Auth
+    inherited_from: SYS             # Constitution declared this
+```
+
+**Dependency Resolution Algorithm:**
+
+For any node N to access interface I:
+
+1. **Provide**: N itself provides I → direct access
+2. **Sibling**: A sibling of N provides I → declare `requires_interfaces`
+3. **Inherit**: An ancestor of N has access to I → use `inherited_interfaces`
+4. **Denied**: None of above → architectural violation, redesign required
+
+**Why This Works:**
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Forces decisions upward** | If Pulse needs Shell, that's a Strategy→Shell relationship. Declared at category level. |
+| **Predictable dependency graph** | No surprise cross-branch dependencies. Everything flows through ancestors. |
+| **True silo isolation** | Teams only need to understand their parent chain and siblings. |
+| **Matches event architecture** | Events bubble up through the system. Dependencies should too. |
+
+**Enforcement:**
+
+- **CI Validation**: `scripts/validation/validate-dependencies.ts` runs on every PR
+- **Pre-commit Hook**: Local validation before commit
+- **Architecture Review**: New sibling dependencies require ADR
+
+**Escape Hatch:**
+
+For genuine exceptions (legacy systems, third-party integrations):
+
+```yaml
+requires_interfaces:
+  - id: IC-LEGACY-001
+    exception: true
+    approved_by: "ADR-021"
+    justification: "Legacy billing system, migration planned Q3"
+```
+
+Exceptions require dedicated ADR and Architecture review.
+
+**Implication:** All requirement files must use the hierarchical ID scheme. CI enforces sibling-only dependencies. Cross-branch needs bubble up to common ancestors.
+
 ---
 
 ## 4. Project Structure
@@ -2237,6 +2328,7 @@ See [§11.2 The SPA + Copilot First Strategy](#the-spa--copilot-first-strategy) 
 | 2.2 | 2025-12-01 | Carlo + Winston | Added Offline & Sync patterns, DLQ handling, Module rollout strategy |
 | 2.3 | 2025-12-01 | Carlo + Winston | Added State Machines for complex flows |
 | 2.4 | 2025-12-02 | Carlo + Winston | Validation fixes: standardized frontmatter, added ADR status to all ADRs, added missing IC architecture (ADR-014 to ADR-019 for IC-003, IC-004, IC-005, IC-006, IC-007, PR-006, PR-008) |
+| 2.5 | 2025-12-03 | Carlo + Winston | Added ADR-020 (Sibling Dependency Law): Single-parent inheritance for requirements, sibling-only dependencies, hierarchical requirement IDs |
 
 ---
 

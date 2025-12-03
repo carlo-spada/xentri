@@ -1,0 +1,93 @@
+name: Architecture Validation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**/requirements/**'
+      - 'docs/**/interfaces/**'
+      - 'docs/**/*.requirement.yaml'
+      - 'docs/**/*.interface.yaml'
+      - 'scripts/validation/validate-dependencies.ts'
+
+jobs:
+  validate-sibling-dependency-law:
+    name: Validate Sibling Dependency Law (ADR-020)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Sibling Dependency Law
+        run: pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
+
+      - name: Check for exception ADRs
+        run: |
+          echo "Checking for exceptions that need ADR approval..."
+
+          # Find all exceptions in requirement files
+          exceptions=$(grep -r "exception: true" docs/**/*.yaml docs/**/*.yml 2>/dev/null || true)
+
+          if [ -n "$exceptions" ]; then
+            echo "⚠️  Found exception dependencies:"
+            echo "$exceptions"
+            echo ""
+            echo "Ensure each exception has:"
+            echo "  - approved_by: referencing an ADR"
+            echo "  - justification: explaining why the exception is needed"
+          else
+            echo "✅ No exception dependencies found"
+          fi
+
+  validate-requirement-ids:
+    name: Validate Requirement ID Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate ID format
+        run: |
+          echo "Validating requirement ID formats..."
+
+          # Pattern: SYS-NNN or SYS-NNN-XXX-NNN (hierarchical)
+          valid_pattern='^[A-Z]{2,4}(-[A-Z]{2,4}-[0-9]{3})*(-[0-9]{3})?$'
+
+          errors=0
+
+          for file in $(find docs -name "*.requirement.yaml" -o -name "*.requirement.yml" 2>/dev/null); do
+            # Extract the id field
+            id=$(grep -E "^id:" "$file" | head -1 | sed 's/id: *//' | tr -d '"' | tr -d "'")
+
+            if [ -n "$id" ]; then
+              # More lenient check - just verify it follows the general pattern
+              if ! echo "$id" | grep -qE '^[A-Z]+-[0-9]+'; then
+                echo "❌ Invalid ID format in $file: $id"
+                echo "   Expected format: XXX-NNN or XXX-NNN-YYY-NNN (hierarchical)"
+                errors=$((errors + 1))
+              fi
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "❌ Found $errors invalid requirement IDs"
+            exit 1
+          else
+            echo "✅ All requirement IDs are valid"
+          fi

@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://xentri.com/schemas/requirement.schema.json",
+  "title": "Xentri Requirement Schema",
+  "description": "Schema for requirement files following ADR-020 Sibling Dependency Law",
+  "type": "object",
+  "required": ["id", "type", "title", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Hierarchical requirement ID encoding ancestry chain",
+      "pattern": "^[A-Z]{2,4}(-[0-9]{3})?(-[A-Z]{2,4}-[0-9]{3})*$",
+      "examples": [
+        "SYS-001",
+        "SYS-002",
+        "SYS-002-STR-001",
+        "SYS-002-STR-001-PUL-001"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of requirement",
+      "enum": ["PR", "FR", "IC", "ADR", "NFR"],
+      "enumDescriptions": {
+        "PR": "Platform Requirement (Constitution level)",
+        "FR": "Functional Requirement",
+        "IC": "Interface Contract",
+        "ADR": "Architecture Decision Record",
+        "NFR": "Non-Functional Requirement"
+      }
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title for the requirement",
+      "minLength": 5,
+      "maxLength": 120
+    },
+    "status": {
+      "type": "string",
+      "description": "Current status of the requirement",
+      "enum": ["draft", "approved", "implemented", "deprecated"],
+      "default": "draft"
+    },
+    "parent": {
+      "type": "string",
+      "description": "Immediate parent requirement ID (derived from id, explicit for clarity)",
+      "pattern": "^[A-Z]{2,4}(-[0-9]{3})?(-[A-Z]{2,4}-[0-9]{3})*$"
+    },
+    "ancestry": {
+      "type": "array",
+      "description": "Full ancestry chain from root to parent (auto-generated from ID parsing)",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z]{2,4}(-[0-9]{3})?(-[A-Z]{2,4}-[0-9]{3})*$"
+      }
+    },
+    "requires_interfaces": {
+      "type": "array",
+      "description": "Interfaces this requirement depends on. MUST be siblings (same parent) unless exception is true.",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Interface ID (e.g., IC-SHL-001)",
+            "pattern": "^IC-[A-Z]{2,4}-[0-9]{3}$"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this interface is needed"
+          },
+          "exception": {
+            "type": "boolean",
+            "description": "Set to true if this is an approved exception to the sibling rule",
+            "default": false
+          },
+          "approved_by": {
+            "type": "string",
+            "description": "ADR that approved this exception (required if exception is true)",
+            "pattern": "^ADR-[0-9]{3}$"
+          },
+          "justification": {
+            "type": "string",
+            "description": "Explanation of why this exception is needed (required if exception is true)"
+          }
+        },
+        "if": {
+          "properties": {
+            "exception": { "const": true }
+          },
+          "required": ["exception"]
+        },
+        "then": {
+          "required": ["approved_by", "justification"]
+        }
+      }
+    },
+    "inherited_interfaces": {
+      "type": "array",
+      "description": "Interfaces accessible through ancestor declarations (read-only, computed)",
+      "items": {
+        "type": "object",
+        "required": ["id", "inherited_from"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Interface ID",
+            "pattern": "^IC-[A-Z]{2,4}-[0-9]{3}$"
+          },
+          "inherited_from": {
+            "type": "string",
+            "description": "Ancestor requirement ID that declared this dependency",
+            "pattern": "^[A-Z]{2,4}(-[0-9]{3})?(-[A-Z]{2,4}-[0-9]{3})*$"
+          }
+        }
+      }
+    },
+    "provides_interfaces": {
+      "type": "array",
+      "description": "Interfaces provided by this requirement",
+      "items": {
+        "type": "string",
+        "pattern": "^IC-[A-Z]{2,4}-[0-9]{3}$"
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the requirement"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "description": "List of acceptance criteria for this requirement",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the requirement was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the requirement was last updated"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author or team responsible for this requirement"
+    }
+  },
+  "additionalProperties": true
+}
