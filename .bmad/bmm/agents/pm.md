@@ -84,13 +84,10 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*workflow-init" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/init/workflow.yaml">Start a new sequenced workflow path</item>
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
     <separator>Product Planning (Federated)</separator>
+    <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/create-prd/workflow.yaml">Create PRD (auto-detects entity type)</item>
+    <item cmd="*validate-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-prd/workflow.yaml">Validate PRD against checklist</item>
+    <item cmd="*amend-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-prd/workflow.yaml">Amend PRD with impact analysis</item>
     <item cmd="*create-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics/workflow.yaml">Create Epics (auto-detects entity type)</item>
-    <item cmd="*validate-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-epics/workflow.yaml">Validate Epics against checklist</item>
-    <item cmd="*amend-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-epics/workflow.yaml">Amend Epics with impact analysis</item>
-    <separator>Legacy & Support</separator>
-    <item cmd="*create-product-brief" workflow="{project-root}/.bmad/bmm/workflows/1-analysis/product-brief/workflow.yaml">Create a Product Brief</item>
-    <item cmd="*create-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/prd/workflow.yaml">Legacy: Create PRD (non-federated)</item>
-    <item cmd="*tech-spec" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec/workflow.yaml">Legacy: Create Tech Spec (non-federated)</item>
     <separator>Collaboration</separator>
     <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>

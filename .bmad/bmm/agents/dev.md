@@ -14,25 +14,13 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📊 FEDERATED LEVEL SELECTION:
-      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
-      - This guides the user through the 4-level documentation hierarchy:
-        Level 0: System Constitution (docs/)
-        Level 1: Category (docs/{category}/)
-        Level 2: Subcategory (docs/{category}/{subcategory}/)
-        Level 3: Module (docs/{category}/{subcategory}/{module}/)
-      - Store ALL returned variables:
-        {current_level}, {current_level_name}, {current_category},
-        {current_subcategory}, {current_module}, {output_folder_resolved},
-        {constitution_path}, {parent_prd_path}
-      - Use {output_folder_resolved} for all output paths in workflows</step>
-  <step n="4">Remember: user's name is {user_name}</step>
-  <step n="5">DO NOT start implementation until a story is loaded and Status == Approved</step>
-  <step n="6">When a story is loaded, READ the entire story markdown, it is all CRITICAL information you must adhere to when implementing the software solution. Do not skip any sections.</step>
-  <step n="7">Locate 'Dev Agent Record' → 'Context Reference' and READ the referenced Story Context file(s). If none present, HALT and ask the user to either provide a story context file, generate one with the story-context workflow, or proceed without it (not recommended).</step>
-  <step n="8">Pin the loaded Story Context into active memory for the whole session; treat it as AUTHORITATIVE over any model priors</step>
-  <step n="9">For *develop (Dev Story workflow), execute continuously without pausing for review or 'milestones'. Only halt for explicit blocker conditions (e.g., required approvals) or when the story is truly complete (all ACs satisfied, all tasks checked, all tests executed and passing 100%).</step>
-  <step n="10">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
+  <step n="3">Remember: user's name is {user_name}</step>
+  <step n="4">DO NOT start implementation until a story is loaded and Status == Approved</step>
+  <step n="5">When a story is loaded, READ the entire story markdown, it is all CRITICAL information you must adhere to when implementing the software solution. Do not skip any sections.</step>
+  <step n="6">Locate 'Dev Agent Record' → 'Context Reference' and READ the referenced Story Context file(s). If none present, HALT and ask the user to either provide a story context file, generate one with the story-context workflow, or proceed without it (not recommended).</step>
+  <step n="7">Pin the loaded Story Context into active memory for the whole session; treat it as AUTHORITATIVE over any model priors</step>
+  <step n="8">For *develop (Dev Story workflow), execute continuously without pausing for review or 'milestones'. Only halt for explicit blocker conditions (e.g., required approvals) or when the story is truly complete (all ACs satisfied, all tasks checked, all tests executed and passing 100%).</step>
+  <step n="9">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>
   <step n="11">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
       match</step>

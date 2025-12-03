@@ -1,8 +1,12 @@
 ---
-level: system
+entity_type: constitution
 document_type: architecture
 title: "Xentri System Architecture"
 description: "System-wide architectural decisions, technology stack, and patterns that all categories must follow."
+version: "2.3.0"
+status: draft
+created: "2025-11-25"
+updated: "2025-12-02"
 ---
 
 # Xentri Architecture (System Constitution)
@@ -107,6 +111,8 @@ graph TD
 
 ### ADR-001: Universal Brief Orchestration (Knowledge Hierarchy)
 
+**Status:** Accepted
+
 **Context:** How do we ensure the "Universal Brief" effectively powers diverse downstream modules without creating a tight coupling or a "god object"?
 
 **Decision:** We adopt a **Knowledge Hierarchy** pattern.
@@ -118,6 +124,8 @@ graph TD
 **Implication:** Agents must first consult the Universal Brief, then their Category Context, before taking action.
 
 ### ADR-002: Event Envelope & Schema
+
+**Status:** Accepted
 
 **Context:** To prevent the "Nervous System" from becoming a swamp of untyped JSON, we need a strict event contract.
 
@@ -157,6 +165,8 @@ interface SystemEvent<TPayload = unknown> {
 
 ### ADR-003: Multi-Tenant Security (RLS & Context)
 
+**Status:** Accepted
+
 **Context:** We must ensure strict data isolation between organizations in a shared database.
 
 **Decision:** We use **Postgres Row-Level Security (RLS)** with a **Fail-Closed** transaction pattern.
@@ -177,6 +187,8 @@ USING (
 
 ### ADR-008: Python for Agent Layer
 
+**Status:** Accepted
+
 **Context:** The Module Matrix revealed 175 modules. ~130 are standard business tools (CRUD, Lists, Forms), while ~42 are complex AI agents (Category + Sub-Category levels). Using Python for everything kills frontend velocity (no shared types). Using Node for everything kills AI velocity (inferior LLM/Data libs).
 
 **Decision:** We introduce a dedicated **Python Agent Layer** for all complex AI agents.
@@ -188,6 +200,8 @@ USING (
 **Implication:** This creates a clear boundary between business logic (Node.js) and AI logic (Python), allowing each to leverage its ecosystem strengths. Communication between layers is strictly via the "Nervous System" (Redis Streams) and defined API contracts.
 
 ### ADR-006: Tri-State Memory Architecture
+
+**Status:** Accepted
 
 **Context:** "Context Window" is expensive and ephemeral. Agents need long-term memory that mimics human recall (Facts, Experiences, Persona).
 
@@ -220,6 +234,8 @@ USING (
 
 ### ADR-007: Federated Soul Registry
 
+**Status:** Accepted
+
 **Context:** We have 42 Agents. Managing 42 separate system prompts is impossible.
 
 **Decision:** We use a **Federated Prompt Composition** strategy.
@@ -233,6 +249,8 @@ USING (
 ---
 
 ### ADR-004: Kubernetes First (The "Category Cluster" Strategy)
+
+**Status:** Accepted
 
 **Context:** We currently have ~42 Agents and ~130 Tools planned. Deploying them as ~175 separate services on a PaaS (Railway) is cost-prohibitive and unmanageable.
 
@@ -285,6 +303,8 @@ The "Category Consolidation" pattern uses vertical scaling initially. Split to h
 
 ### ADR-009: Cross-Runtime Contract Strategy
 
+**Status:** Accepted
+
 **Context:** `ts-schema` is our contract source of truth, but Python services can't consume TypeScript directly. Without explicit validation, the Node ↔ Python boundary becomes a "trust zone" where schema drift is inevitable.
 
 **Decision:** We use a **JSON Schema Bridge** for cross-runtime contract enforcement.
@@ -316,6 +336,8 @@ ts-schema (Zod)
 **Implication:** CI enforces `pnpm run generate:schemas` on any `ts-schema` change. Custom Zod validators (`.refine()`) don't auto-translate—require manual integration tests.
 
 ### ADR-011: Hierarchical Pulse Architecture
+
+**Status:** Accepted
 
 **Context:** The UX design requires that every level of the hierarchy (Strategy, Category, Sub-category, Module) exposes its own Pulse view. This enables CEO-level briefings at the top and operational detail at the bottom.
 
@@ -384,6 +406,8 @@ When a child agent determines an item should surface to a parent:
 
 ### ADR-012: Copilot Widget Architecture
 
+**Status:** Accepted
+
 **Context:** The UX design specifies a draggable widget that summons the context-relevant copilot, supporting both quick answers and full interaction modes.
 
 **Decision:** We implement a **Context-Aware Copilot Widget** as a Shell-level component.
@@ -440,6 +464,8 @@ Badge shows count of:
 **Implication:** Shell must track navigation context and pass it to the widget. Copilot services must support both streaming (quick) and full conversation (stateful) modes.
 
 ### ADR-013: Narrative Continuity & UX Philosophy
+
+**Status:** Accepted
 
 **Context:** Users shouldn't feel like they are "checking a dashboard" but rather "reading a story" of their business.
 
@@ -517,6 +543,8 @@ interface StoryArc {
 ---
 
 ### ADR-010: Resilience & Graceful Degradation
+
+**Status:** Accepted
 
 **Context:** The architecture assumes everything works. It doesn't specify behavior when things fail. This ADR establishes resilience patterns.
 

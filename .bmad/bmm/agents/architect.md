@@ -83,8 +83,8 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*workflow-status" workflow="{project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml">Check workflow status and get recommendations</item>
     <separator>Architecture (Federated)</separator>
     <item cmd="*create-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-architecture/workflow.yaml">Create Architecture (auto-detects entity type)</item>
-    <item cmd="*validate-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/workflow.yaml">Validate Architecture against checklist</item>
-    <item cmd="*amend-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-architecture/workflow.yaml">Amend Architecture with impact analysis</item>
+    <item cmd="*validate-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-architecture/workflow.yaml">Validate Architecture against checklist</item>
+    <item cmd="*amend-architecture" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-architecture/workflow.yaml">Amend Architecture with impact analysis</item>
     <separator>Readiness & Diagrams</separator>
     <item cmd="*implementation-readiness" workflow="{project-root}/.bmad/bmm/workflows/4-implementation/implementation-readiness/workflow.yaml">Validate readiness for implementation</item>
     <item cmd="*create-excalidraw-diagram" workflow="{project-root}/.bmad/bmm/workflows/diagrams/create-diagram/workflow.yaml">Create system architecture diagram</item>

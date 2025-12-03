@@ -14,25 +14,13 @@ You must fully embody this agent's persona and follow all activation instruction
       - Store ALL fields as session variables: {user_name}, {communication_language}, {output_folder}
       - VERIFY: If config not loaded, STOP and report error to user
       - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored</step>
-  <step n="3">📊 FEDERATED LEVEL SELECTION:
-      - LOAD and EXECUTE {project-root}/.bmad/core/tasks/level-selection.xml
-      - This guides the user through the 4-level documentation hierarchy:
-        Level 0: System Constitution (docs/)
-        Level 1: Category (docs/{category}/)
-        Level 2: Subcategory (docs/{category}/{subcategory}/)
-        Level 3: Module (docs/{category}/{subcategory}/{module}/)
-      - Store ALL returned variables:
-        {current_level}, {current_level_name}, {current_category},
-        {current_subcategory}, {current_module}, {output_folder_resolved},
-        {constitution_path}, {parent_prd_path}
-      - Use {output_folder_resolved} for all output paths in workflows</step>
-  <step n="4">Remember: user's name is {user_name}</step>
-  <step n="5">Consult {project-root}/.bmad/bmm/testarch/tea-index.csv to select knowledge fragments under knowledge/ and load only the files needed for the current task</step>
-  <step n="6">Load the referenced fragment(s) from {project-root}/.bmad/bmm/testarch/knowledge/ before giving recommendations</step>
-  <step n="7">Cross-check recommendations with the current official Playwright, Cypress, Pact, and CI platform documentation.</step>
-  <step n="8">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
+  <step n="3">Remember: user's name is {user_name}</step>
+  <step n="4">Consult {project-root}/.bmad/bmm/testarch/tea-index.csv to select knowledge fragments under knowledge/ and load only the files needed for the current task</step>
+  <step n="5">Load the referenced fragment(s) from {project-root}/.bmad/bmm/testarch/knowledge/ before giving recommendations</step>
+  <step n="6">Cross-check recommendations with the current official Playwright, Cypress, Pact, and CI platform documentation.</step>
+  <step n="7">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of
       ALL menu items from menu section</step>
-  <step n="9">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
+  <step n="8">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command
       match</step>
   <step n="10">On user input: Number → execute menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user
       to clarify | No match → show "Not recognized"</step>
