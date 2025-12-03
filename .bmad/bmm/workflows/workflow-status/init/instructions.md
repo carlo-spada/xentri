@@ -1,333 +1,227 @@
-# Workflow Init - Project Setup Instructions
+# Workflow Init - Entity-Based Project Setup
 
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
 <critical>You MUST have already loaded and processed: workflow-init/workflow.yaml</critical>
 <critical>Communicate in {communication_language} with {user_name}</critical>
-<critical>This workflow handles BOTH new projects AND legacy projects being migrated to BMad Method</critical>
+<critical>This workflow uses the FEDERATED entity system - no more project types or levels!</critical>
+
+<shared-tasks>
+  <task name="select-entity" path="{project-root}/.bmad/bmm/tasks/select-entity.xml" />
+  <task name="detect-entity-type" path="{project-root}/.bmad/bmm/tasks/detect-entity-type.xml" />
+</shared-tasks>
 
 <workflow>
 
-<step n="1" goal="Scan for existing work">
+<step n="1" goal="Welcome and check for existing status">
 <output>Welcome to BMad Method, {user_name}!</output>
 
-<action>Perform comprehensive scan for existing work:
+<action>Check if {output_folder}/bmm-workflow-status.yaml already exists</action>
 
-- BMM artifacts: PRD, tech-spec, epics, architecture, UX, brief, research, brainstorm
-- Implementation: stories, sprint-status, workflow-status
-- Codebase: source directories, package files, git repo
-- Check both {output_folder} and {sprint_artifacts} locations
-  </action>
+<check if="status file exists">
+  <action>Read existing status file</action>
+  <output>
+Found existing workflow tracking:
+- Entity: {{entity_type_display}}
+- Path: {{entity_path}}
+- Progress: {{completion_summary}}
 
-<action>Categorize into one of these states:
+To check progress: /bmad:bmm:workflows:workflow-status
+  </output>
+  <ask>Would you like to:
+1. **View status** - Check progress on this entity
+2. **New entity** - Initialize workflow for a different entity
+3. **Reset** - Archive and start fresh for this entity
 
-- CLEAN: No artifacts or code (or scaffold only)
-- PLANNING: Has PRD/spec but no implementation
-- ACTIVE: Has stories or sprint status
-- LEGACY: Has code but no BMM artifacts
-- UNCLEAR: Mixed state needs clarification
-  </action>
+Choice [1/2/3]:</ask>
 
-<ask>What's your project called? {{#if project_name}}(Config shows: {{project_name}}){{/if}}</ask>
-<action>Store project_name</action>
-<template-output>project_name</template-output>
+  <check if="choice == 1">
+    <output>Run: /bmad:bmm:workflows:workflow-status</output>
+    <action>Exit workflow</action>
+  </check>
+
+  <check if="choice == 2">
+    <action>Continue to step 2</action>
+  </check>
+
+  <check if="choice == 3">
+    <action>Archive existing status file to {output_folder}/archive/</action>
+    <output>Archived existing status. Ready for fresh start!</output>
+    <action>Continue to step 2</action>
+  </check>
+</check>
+
+<check if="status file not found">
+  <output>No existing workflow tracking found. Let's set one up!</output>
+  <action>Continue to step 2</action>
+</check>
 </step>
 
-<step n="2" goal="Choose setup path">
-<check if="state == CLEAN">
-  <output>Perfect! Fresh start detected.</output>
-  <action>Continue to step 3</action>
-</check>
+<step n="2" goal="Select target entity">
+<output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ENTITY SELECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The BMad Method tracks progress per ENTITY.
 
-<check if="state == ACTIVE AND workflow_status exists">
-  <output>✅ You already have workflow tracking at: {{workflow_status_path}}
+What is an Entity?
+- Constitution: System-wide rules (docs/platform/*.md)
+- Infrastructure Module: Platform components (shell, ui, core-api, etc.)
+- Strategic Container: Business categories (strategy, marketing, etc.)
+- Coordination Unit: Subcategories within categories
+- Business Module: Feature modules within subcategories
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</output>
 
-To check progress: Load any BMM agent and run /bmad:bmm:workflows:workflow-status
+<invoke-task name="select-entity">
+  <param name="prompt_user">true</param>
+</invoke-task>
 
-Happy building! 🚀</output>
-<action>Exit workflow (already initialized)</action>
-</check>
+<output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Entity Selected
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Type:           {entity_type_display}
+Path:           {entity_path}
+FR Prefix:      {fr_prefix}
+Parent PRD:     {parent_prd_path}
+Constitution:   {constitution_path}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</output>
 
-<check if="state != CLEAN">
-  <output>Found existing work:
-{{summary_of_findings}}</output>
+<template-output>entity_type</template-output>
+<template-output>entity_type_display</template-output>
+<template-output>entity_path</template-output>
+<template-output>entity_code</template-output>
+<template-output>fr_prefix</template-output>
+<template-output>parent_prd_path</template-output>
+<template-output>constitution_path</template-output>
+</step>
 
-<ask>How would you like to proceed?
+<step n="3" goal="Scan for existing work">
+<action>Scan {entity_path} for existing BMM artifacts:
+- PRD (prd.md)
+- Architecture (architecture.md or architecture/)
+- UX Design (ux-design.md or ux-design/)
+- Epics (epics.md or epics/)
+- Stories folder
+- Any other documentation
+</action>
 
-a) **Continue** - Work with existing artifacts
-b) **Archive & Start Fresh** - Move old work to archive
-c) **Express Setup** - I know exactly what I need
-d) **Guided Setup** - Walk me through options
-
-Choice [a/b/c/d]:</ask>
-
-  <check if="choice == a">
-    <action>Set continuing_existing = true</action>
-    <action>Store found artifacts</action>
-    <action>Continue to step 7 (detect track from artifacts)</action>
-  </check>
-
-  <check if="choice == b">
-    <ask>Archive existing work? (y/n)</ask>
-    <action if="y">Move artifacts to {output_folder}/archive/</action>
-    <output>Ready for fresh start!</output>
-    <action>Continue to step 3</action>
-  </check>
-
-  <check if="choice == c">
-    <action>Jump to step 3 (express path)</action>
-  </check>
-
-  <check if="choice == d">
-    <action>Continue to step 4 (guided path)</action>
-  </check>
-</check>
-
-<check if="state == CLEAN">
-  <ask>Setup approach:
-
-a) **Express** - I know what I need
-b) **Guided** - Show me the options
+<check if="artifacts found">
+  <output>
+Found existing work at {entity_path}:
+{{artifact_summary}}
+  </output>
+  <ask>Would you like to:
+a) **Continue** - Build on existing artifacts
+b) **Archive** - Move to archive and start fresh
 
 Choice [a/b]:</ask>
 
-  <check if="choice == a">
-    <action>Continue to step 3 (express)</action>
-  </check>
-
   <check if="choice == b">
-    <action>Continue to step 4 (guided)</action>
+    <action>Archive existing artifacts to {entity_path}/archive/</action>
+    <output>Archived existing work. Fresh start!</output>
   </check>
 </check>
-</step>
 
-<step n="3" goal="Express setup path">
-<ask>Is this for:
-1) **New project** (greenfield)
-2) **Existing codebase** (brownfield)
-
-Choice [1/2]:</ask>
-<action>Set field_type based on choice</action>
-
-<ask>Planning approach:
-
-1. **Quick Flow** - Minimal planning, fast to code
-2. **BMad Method** - Full planning for complex projects
-3. **Enterprise Method** - Extended planning with security/DevOps
-
-Choice [1/2/3]:</ask>
-<action>Map to selected_track: quick-flow/method/enterprise</action>
-
-<template-output>field_type</template-output>
-<template-output>selected_track</template-output>
-<action>Jump to step 6 (discovery options)</action>
-</step>
-
-<step n="4" goal="Guided setup - understand project">
-<ask>Tell me about what you're working on. What's the goal?</ask>
-<action>Store user_description</action>
-
-<action>Analyze for field type indicators:
-
-- Brownfield: "existing", "current", "enhance", "modify"
-- Greenfield: "new", "build", "create", "from scratch"
-- If codebase exists, default to brownfield unless user indicates scaffold
-  </action>
-
-<check if="field_type unclear AND codebase exists">
-  <ask>I see existing code. Are you:
-1) **Modifying** existing codebase (brownfield)
-2) **Starting fresh** - code is just scaffold (greenfield)
-
-Choice [1/2]:</ask>
-<action>Set field_type based on answer</action>
+<check if="no artifacts found">
+  <output>No existing BMM artifacts found at {entity_path}. Fresh start!</output>
 </check>
 
-<action if="field_type not set">Set based on codebase presence</action>
-
-<action>Check for game development keywords</action>
-<check if="game_detected">
-<output>🎮 **GAME DEVELOPMENT DETECTED**
-
-For game development, install the BMGD module:
-
-```bash
-bmad install bmgd
-```
-
-Continue with software workflows? (y/n)</output>
-<ask>Choice:</ask>
-<action if="n">Exit workflow</action>
-</check>
-
-<template-output>user_description</template-output>
-<template-output>field_type</template-output>
-<action>Continue to step 5</action>
+<template-output>existing_artifacts</template-output>
 </step>
 
-<step n="5" goal="Guided setup - select track">
-<output>Based on your project, here are your planning options:
+<step n="4" goal="Optional discovery workflows">
+<action>Load entity-workflows.yaml to get workflow sequence for {entity_type}</action>
+<action>Check if discovery phase is available for this entity type</action>
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<check if="discovery phase available">
+  <output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 DISCOVERY OPTIONS (Optional)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Before diving into planning, you can optionally explore:
+  </output>
 
-**1. Quick Flow** 🚀
-
-- Minimal planning, straight to code
-- Best for: Simple features, bug fixes
-- Risk: Potential rework if complexity emerges
-
-**2. BMad Method** 🎯 {{#if recommended}}(RECOMMENDED){{/if}}
-
-- Full planning: PRD + UX + Architecture
-- Best for: Products, platforms, complex features
-- Benefit: AI agents have complete context for better results
-
-**3. Enterprise Method** 🏢
-
-- Extended: Method + Security + DevOps + Testing
-- Best for: Enterprise, compliance, mission-critical
-- Benefit: Comprehensive planning for complex systems
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-{{#if brownfield}}
-💡 Architecture creates focused solution design from your codebase, keeping AI agents on track.
-{{/if}}</output>
-
-<ask>Which approach fits best?
-
-1. Quick Flow
-2. BMad Method {{#if recommended}}(recommended){{/if}}
-3. Enterprise Method
-4. Help me decide
-
-Choice [1/2/3/4]:</ask>
-
-<check if="choice == 4">
-  <ask>What concerns you about choosing?</ask>
-  <action>Provide tailored guidance based on concerns</action>
-  <action>Loop back to choice</action>
-</check>
-
-<action>Map choice to selected_track</action>
-<template-output>selected_track</template-output>
-</step>
-
-<step n="6" goal="Discovery workflows selection (unified)">
-<action>Determine available discovery workflows based on:
-- field_type (greenfield gets product-brief option)
-- selected_track (quick-flow skips product-brief)
-</action>
-
-<check if="field_type == greenfield AND selected_track in [method, enterprise]">
-  <output>Optional discovery workflows can help clarify your vision:</output>
-  <ask>Select any you'd like to include:
+  <check if="entity_type == constitution OR entity_type == strategic_container">
+    <ask>Select any discovery workflows to include:
 
 1. 🧠 **Brainstorm** - Creative exploration and ideation
-2. 🔍 **Research** - Technical/competitive analysis
-3. 📋 **Product Brief** - Strategic product planning (recommended)
+2. 🔍 **Research** - Domain/competitive/technical analysis
 
-Enter numbers (e.g., "1,3" or "all" or "none"): </ask>
-</check>
+Enter numbers (e.g., "1,2" or "all" or "none"):</ask>
+  </check>
 
-<check if="field_type == brownfield OR selected_track == quick-flow">
-  <output>Optional discovery workflows:</output>
-  <ask>Include any of these?
+  <check if="entity_type != constitution AND entity_type != strategic_container">
+    <ask>Include discovery research?
 
-1. 🧠 **Brainstorm** - Creative exploration
-2. 🔍 **Research** - Domain analysis
+1. 🔍 **Research** - Domain/technical analysis
 
-Enter numbers (e.g., "1,2" or "none"): </ask>
-</check>
+Enter "1" or "none":</ask>
+  </check>
 
-<action>Parse selections and set:
-
+  <action>Parse selections and set:
 - brainstorm_requested
 - research_requested
-- product_brief_requested (if applicable)
   </action>
+</check>
 
 <template-output>brainstorm_requested</template-output>
 <template-output>research_requested</template-output>
-<template-output>product_brief_requested</template-output>
-
-<check if="brownfield AND selected_track != quick-flow">
-  <output>💡 **Note:** For brownfield projects, run document-project workflow first to analyze your codebase.</output>
-</check>
 </step>
 
-<step n="7" goal="Detect track from artifacts" if="continuing_existing OR migrating_legacy">
-<action>Analyze artifacts to detect track:
-- Has PRD → BMad Method
-- Has tech-spec only → Quick Flow
-- Has Security/DevOps → Enterprise Method
+<step n="5" goal="Generate workflow sequence">
+<action>Load {installed_path}/../entity-workflows.yaml</action>
+<action>Get workflow sequence for {entity_type}</action>
+<action>Build workflow_items list with appropriate statuses:
+- Mark discovery workflows based on user selection
+- Mark standard workflows as required/optional/conditional per entity type
+- Mark completed workflows if artifacts found in step 3
 </action>
 
-<output>Detected: **{{detected_track}}** based on {{found_artifacts}}</output>
-<ask>Correct? (y/n)</ask>
-
-<ask if="n">Which track instead?
-
-1. Quick Flow
-2. BMad Method
-3. Enterprise Method
-
-Choice:</ask>
-
-<action>Set selected_track</action>
-<template-output>selected_track</template-output>
-</step>
-
-<step n="8" goal="Generate workflow path">
-<action>Load path file: {path_files}/{{selected_track}}-{{field_type}}.yaml</action>
-<action>Build workflow_items from path file</action>
-<action>Scan for existing completed work and update statuses</action>
-<action>Set generated date</action>
-
-<template-output>generated</template-output>
-<template-output>workflow_path_file</template-output>
 <template-output>workflow_items</template-output>
 </step>
 
-<step n="9" goal="Create tracking file">
-<output>Your BMad workflow path:
+<step n="6" goal="Preview and create status file">
+<output>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 WORKFLOW PATH FOR {entity_type_display}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Entity: {entity_path}
+Code: {entity_code}
 
-**Track:** {{selected_track}}
-**Type:** {{field_type}}
-**Project:** {{project_name}}
-
-{{#if brownfield}}Prerequisites: document-project{{/if}}
-{{#if has_discovery}}Discovery: {{list_selected_discovery}}{{/if}}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-{{workflow_path_summary}}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</output>
+{{workflow_path_preview}}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</output>
 
 <ask>Create workflow tracking file? (y/n)</ask>
 
 <check if="y">
   <action>Generate YAML from template with all variables</action>
   <action>Save to {output_folder}/bmm-workflow-status.yaml</action>
-  <action>Identify next workflow and agent</action>
 
-<output>✅ **Created:** {output_folder}/bmm-workflow-status.yaml
+  <action>Identify first non-completed workflow as next_workflow</action>
+  <action>Look up agent for next_workflow</action>
 
-**Next:** {{next_workflow_name}}
+  <output>
+✅ **Created:** {output_folder}/bmm-workflow-status.yaml
+
+**Next Workflow:** {{next_workflow_name}}
 **Agent:** {{next_agent}}
 **Command:** /bmad:bmm:workflows:{{next_workflow_id}}
 
-{{#if next_agent not in [analyst, pm]}}
-💡 Start new chat with **{{next_agent}}** agent first.
+{{#if parent_prd_path}}
+💡 **Tip:** Load parent PRD ({parent_prd_path}) for context before starting.
 {{/if}}
 
 To check progress: /bmad:bmm:workflows:workflow-status
 
-Happy building! 🚀</output>
+Happy building! 🚀
+  </output>
 </check>
 
 <check if="n">
-  <output>No problem! Run workflow-init again when ready.</output>
+  <output>No problem! Run /bmad:bmm:workflows:workflow-init again when ready.</output>
 </check>
 </step>
 

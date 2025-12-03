@@ -1,55 +1,39 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with code in this repository.
 
 ## Project Overview
 
-**Xentri** is a modular Business OS that starts with conversation, not configuration. It uses a **Strategy Co-pilot** to generate a **Universal Brief** (the DNA of a business), which then powers a curated set of tools (Website, CRM, Invoicing) organized into 7 capability categories.
-
-**Status:** Epic 1 Foundation complete (Story 1.7 in review). Live API deployed on Railway.
-
-**Live API:** https://core-api-production-8016.up.railway.app
+**Xentri** is a modular Business OS that starts with conversation, not configuration. It uses a **Strategy Co-pilot** to generate a **Universal Brief** (the DNA of a business), which powers tools organized into 7 capability categories.
 
 ## Documentation Navigation
 
-Documentation follows a **Five Entity Types** model (not levels):
+Documentation follows a **Five Entity Types** model:
 
-| Entity Type | Location | Contains | Example |
-|-------------|----------|----------|---------|
-| **Constitution** | `docs/platform/` | PR-xxx, IC-xxx, system-wide rules | `docs/platform/prd.md` |
-| **Infrastructure Module** | `docs/platform/{module}/` | Exposed/consumed interfaces | `docs/platform/core-api/prd.md` |
-| **Strategic Container** | `docs/{category}/` | Strategic alignment, child coordination | `docs/strategy/prd.md` |
-| **Coordination Unit** | `docs/{category}/{subcat}/` | Subcategory scope, module orchestration | `docs/strategy/pulse/prd.md` |
-| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | Feature FRs, implementation | `docs/strategy/pulse/god-view/prd.md` |
+| Entity Type | Location | Contains |
+|-------------|----------|----------|
+| **Constitution** | `docs/platform/*.md` | PR-xxx, IC-xxx, system-wide rules |
+| **Infrastructure Module** | `docs/platform/{module}/` | Exposed/consumed interfaces |
+| **Strategic Container** | `docs/{category}/` | Strategic alignment, child coordination |
+| **Coordination Unit** | `docs/{category}/{subcat}/` | Subcategory scope, module orchestration |
+| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | Feature FRs, implementation |
 
-### First: Determine Your Entity Type
-
-When starting a session, ask the user which area they're working on:
+### Entity Type Detection
 
 ```
-Entity Type Detection (by path pattern):
-  docs/platform/*.md              → Constitution
-  docs/platform/{module}/         → Infrastructure Module
-  docs/{category}/                → Strategic Container
-  docs/{category}/{subcat}/       → Coordination Unit
-  docs/{cat}/{subcat}/{module}/   → Business Module
-
-Infrastructure Modules (platform):
-  - shell, ui, core-api, ts-schema, orchestration (active)
-  - events, auth, billing, brief (planned)
-
-Strategic Containers (user-facing categories):
-  - strategy, marketing, sales, finance, operations, team, legal
+docs/platform/*.md              → Constitution
+docs/platform/{module}/         → Infrastructure Module
+docs/{category}/                → Strategic Container
+docs/{category}/{subcat}/       → Coordination Unit
+docs/{cat}/{subcat}/{module}/   → Business Module
 ```
-
-Store the selection as `{entity_type}/{path}` and resolve all doc paths accordingly.
 
 ### Documentation Structure
 
 ```
 docs/
 ├── index.md                    # Navigation hub
-├── manifest.yaml               # Machine-readable registry (v4.0)
+├── manifest.yaml               # Machine-readable registry (SINGLE SOURCE OF TRUTH)
 │
 ├── platform/                   # META CONTAINER (Constitution + Infrastructure)
 │   ├── prd.md                  # CONSTITUTION: System PRD (PR-xxx, IC-xxx)
@@ -58,58 +42,39 @@ docs/
 │   ├── epics.md                # CONSTITUTION: Cross-cutting Epics
 │   ├── product-brief.md        # CONSTITUTION: Foundational Vision
 │   │
-│   ├── shell/                  # INFRASTRUCTURE MODULE (apps/shell)
-│   ├── ui/                     # INFRASTRUCTURE MODULE (packages/ui)
-│   ├── core-api/               # INFRASTRUCTURE MODULE (services/core-api)
-│   ├── ts-schema/              # INFRASTRUCTURE MODULE (packages/ts-schema)
-│   └── orchestration/          # INFRASTRUCTURE MODULE (cross-cutting)
+│   ├── shell/                  # INFRASTRUCTURE MODULE
+│   ├── ui/                     # INFRASTRUCTURE MODULE
+│   ├── core-api/               # INFRASTRUCTURE MODULE
+│   ├── ts-schema/              # INFRASTRUCTURE MODULE
+│   └── orchestration/          # INFRASTRUCTURE MODULE
 │
-├── strategy/                   # STRATEGIC CONTAINER (planned)
-│   └── pulse/                  # COORDINATION UNIT
-│       └── god-view/           # BUSINESS MODULE
-├── marketing/                  # STRATEGIC CONTAINER (planned)
-└── ...                         # Other categories (sales, finance, operations, team, legal)
+├── strategy/                   # STRATEGIC CONTAINER
+│   └── {subcat}/               # COORDINATION UNIT
+│       └── {module}/           # BUSINESS MODULE
+└── {category}/                 # Other strategic containers
 ```
 
-### Key Documentation
-
-| Document | Location | Entity Type |
-|----------|----------|-------------|
-| Documentation Hub | `docs/index.md` | — |
-| Module Manifest | `docs/manifest.yaml` | — |
-| **System PRD** | `docs/platform/prd.md` | Constitution |
-| **System Architecture** | `docs/platform/architecture.md` | Constitution |
-| **System UX Design** | `docs/platform/ux-design.md` | Constitution |
-| **System Epics** | `docs/platform/epics.md` | Constitution |
-| **Product Brief** | `docs/platform/product-brief.md` | Constitution |
-| Platform Deployment | `docs/platform/orchestration/deployment-plan.md` | Infrastructure |
-| Incident Response | `docs/platform/orchestration/incident-response.md` | Infrastructure |
-
-### Module Management (IMPORTANT)
+### Module Management
 
 **NEVER manually edit `docs/manifest.yaml` or create/delete module folders.**
 
-Use the provided scripts to manage the hierarchy:
-
 ```bash
-# Platform Infrastructure Modules (flat structure - no subcategories)
-./scripts/add-module.sh platform events        # Adds docs/platform/events/
-./scripts/remove-module.sh platform events
+# Platform Infrastructure Modules
+./scripts/add-module.sh platform {module}
+./scripts/remove-module.sh platform {module}
 
-# Strategic Containers (categories)
-./scripts/add-category.sh analytics "Business Intelligence"
-./scripts/remove-category.sh analytics
+# Strategic Containers
+./scripts/add-category.sh {category} "Description"
+./scripts/remove-category.sh {category}
 
-# Coordination Units (subcategories within strategic containers)
-./scripts/add-subcategory.sh strategy copilot "AI strategy conversations"
-./scripts/remove-subcategory.sh strategy copilot
+# Coordination Units
+./scripts/add-subcategory.sh {category} {subcat} "Description"
+./scripts/remove-subcategory.sh {category} {subcat}
 
-# Business Modules (within coordination units)
-./scripts/add-module.sh strategy copilot advisor  # Adds docs/strategy/copilot/advisor/
-./scripts/remove-module.sh strategy copilot advisor
+# Business Modules
+./scripts/add-module.sh {category} {subcat} {module}
+./scripts/remove-module.sh {category} {subcat} {module}
 ```
-
-These scripts update `docs/manifest.yaml` (the single source of truth), create/delete folder structures, and manage GitHub labels. All BMM agents read from the manifest dynamically.
 
 ## Architecture Philosophy: "Decoupled Unity"
 
@@ -117,12 +82,11 @@ The user sees one calm workspace; under the hood, each capability is an isolated
 
 | Layer | Technology | Role |
 |-------|------------|------|
-| **Shell** | Astro | Stable container (header + sidebar), handles routing and auth |
-| **Micro-Apps** | React Islands | Interactive SPAs lazy-loaded into the Shell |
-| **Backend** | Node.js (Docker) | Microservices per domain (core-api, sales-engine, finance-engine) |
-| **AI Service** | Python | Co-pilot Swarm host (Strategy, Marketing, Sales, Finance agents) |
-| **Data** | Postgres | Single cluster, schema-per-service, RLS for multi-tenancy |
-| **Events** | Redis Streams → n8n | "Nervous System" for async event transport and workflow orchestration |
+| **Shell** | Astro | Container (header + sidebar), routing, auth |
+| **Micro-Apps** | React Islands | Interactive SPAs lazy-loaded into Shell |
+| **Backend** | Node.js (Fastify) | Microservices per domain |
+| **Data** | PostgreSQL | Schema-per-service, RLS for multi-tenancy |
+| **Events** | Redis Streams | Async event transport |
 
 **Non-negotiables:**
 - Multi-tenant from day zero: every table has `org_id` with Row-Level Security
@@ -130,18 +94,18 @@ The user sees one calm workspace; under the hood, each capability is an isolated
 - Visible automation: every automated action logged with human-readable explanation
 - Services communicate via events, not direct calls
 
-## Repository Structure (Turborepo Monorepo)
+## Repository Structure
 
 ```
 /xentri
 ├── apps/
-│   └── shell/                # Astro 5.16.0 Shell with React islands
+│   └── shell/                # Astro Shell with React islands
 ├── packages/
-│   ├── ui/                   # Shared Design System (Tailwind v4, shadcn/ui)
+│   ├── ui/                   # Shared Design System
 │   └── ts-schema/            # Shared Types & Zod Schemas (the "Contract")
 ├── services/
-│   └── core-api/             # Fastify 5.6.2 + Prisma 7.0.1, RLS
-├── docs/                     # Hierarchical documentation (see above)
+│   └── core-api/             # Core API with Prisma, RLS
+├── docs/                     # Hierarchical documentation
 ├── .bmad/                    # BMAD framework
 └── .claude/commands/         # Slash commands (/bmad:*)
 ```
@@ -151,31 +115,22 @@ The user sees one calm workspace; under the hood, each capability is an isolated
 ```bash
 # Setup
 pnpm install                           # Install all workspace dependencies
-docker compose up -d postgres redis    # Start Postgres 16.11 + Redis 8.0
+docker compose up -d postgres redis    # Start infrastructure
 pnpm run db:migrate                    # Apply Prisma migrations with RLS
 
 # Development
-pnpm run dev                           # Start all services (Astro + Core API)
-pnpm run dev --filter apps/shell       # Start shell only (port 4321)
-pnpm run dev --filter services/core-api # Start API only (port 3000)
+pnpm run dev                           # Start all services
+pnpm run dev --filter apps/shell       # Shell only
+pnpm run dev --filter services/core-api # API only
 
-# Testing
-pnpm run test                          # Run all unit tests
-pnpm run test -- --coverage            # Run tests with coverage report
+# Quality
+pnpm run test                          # Run tests
 pnpm run typecheck                     # TypeScript validation
-
-# Build & Quality
 pnpm run build                         # Build all packages
 pnpm run lint                          # Run ESLint
-
-# Health Checks
-curl http://localhost:3000/health       # API liveness
-curl http://localhost:3000/health/ready # API readiness with DB check
 ```
 
 ## BMAD Framework
-
-This project uses BMAD for AI-assisted development workflows:
 
 | Directory | Purpose |
 |-----------|---------|
@@ -185,11 +140,36 @@ This project uses BMAD for AI-assisted development workflows:
 | `.bmad/core/` | Core utilities and brainstorming |
 | `.claude/commands/` | Slash commands available via `/bmad:*` |
 
-Key workflows:
-- `/bmad:bmm:workflows:prd` - Create PRD from Product Brief
-- `/bmad:bmm:workflows:architecture` - Technical architecture decisions
-- `/bmad:bmm:workflows:create-story` - Create user stories
-- `/bmad:bmm:workflows:dev-story` - Implement stories
+### Federated Workflow System
+
+Workflows are tracked **per entity**, not project-wide. Each entity type has its own workflow sequence.
+
+```bash
+/bmad:bmm:workflows:workflow-init   # Select entity, create status file
+/bmad:bmm:workflows:workflow-status  # View progress, get next steps
+```
+
+### Workflow Phases
+
+| Phase | Workflows | Status |
+|-------|-----------|--------|
+| **Discovery** | brainstorm-project, research, product-brief | Optional |
+| **Planning** | prd, validate-prd | Required + Recommended |
+| **Design** | create-ux, validate-ux | Conditional (if_has_ui) |
+| **Solutioning** | architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness | Required + Recommended |
+| **Implementation** | sprint-planning | Required |
+
+**Validation workflows are RECOMMENDED** to ensure quality gates.
+
+### Workflow Sequence by Entity Type
+
+| Entity Type | Key Differences |
+|-------------|-----------------|
+| **Constitution** | Full stack including product-brief, system-wide epics |
+| **Infrastructure Module** | Inherits from Constitution, module-specific PRD |
+| **Strategic Container** | Strategic PRD, no epics (children handle) |
+| **Coordination Unit** | Coordination PRD, no epics (children handle) |
+| **Business Module** | Full stack with implementation-ready requirements |
 
 ## Design Principles
 
@@ -198,19 +178,6 @@ Key workflows:
 3. **Visible, Not Magical** - Every automation logged with explanation
 4. **Modular Growth** - Start free, add modules, grow to bundles
 5. **Works With Reality** - WhatsApp copy-paste flows, not rigid forms
-
-## Current Phase
-
-**Epic 1 - Foundation (Complete, Story 1.7 in Review):**
-- ✅ Story 1.1: Project initialization & infrastructure (orchestration)
-- ✅ Story 1.2: Event backbone & database schema (core-api)
-- ✅ Story 1.3: User authentication (core-api)
-- ✅ Story 1.4: Organization creation & provisioning (core-api)
-- ✅ Story 1.5: Application shell & navigation (shell)
-- ✅ Story 1.6: Thin vertical slice (core-api)
-- 🔄 Story 1.7: DevOps, observability, test readiness (orchestration)
-
-**Next:** Epic 2 - Strategy & Clarity Engine (Universal Brief, Strategy Co-pilot)
 
 ## Governance Rules
 
@@ -226,30 +193,15 @@ Protected documents (in `docs/platform/`):
 - `product-brief.md` — Foundational Vision
 
 When modifying these files:
-1. **Flag the change** in your response to the user
-2. **Provide rationale** explaining why the change is necessary
-3. **Include rationale in commit message** when committing
-
-Example commit message:
-```
-docs(constitution): Update architecture with caching strategy
-
-Rationale: New caching layer needed for performance targets.
-See ADR-006 for full decision record.
-```
-
-This governance ensures system-wide decisions are traceable and intentional.
+1. **Flag the change** in your response
+2. **Provide rationale** explaining why
+3. **Include rationale in commit message**
 
 ### Zero-Trust Inheritance
 
 All entities inherit from their **direct parent only** (no skip-level):
 - Children expose work upward, parents curate what's shared
-- Business Module → Coordination Unit PRD
-- Coordination Unit → Strategic Container PRD
-- Strategic Container → Constitution
-- Infrastructure Module → Constitution
-
-Each level can ADD requirements but NEVER CONTRADICT parent.
+- Each level can ADD requirements but NEVER CONTRADICT parent
 
 ### Requirement ID Syntax
 
@@ -262,27 +214,10 @@ TYPE:
   FR = Functional Requirement (all other entity types)
 
 PATH (for FR only):
-  Variable depth, max 3 letters per segment, hyphen-separated
-
   Infrastructure Module:    {MOD}               → FR-SHL-001
   Strategic Container:      {CAT}               → FR-STR-001
   Coordination Unit:        {CAT}-{SUB}         → FR-STR-PUL-001
   Business Module:          {CAT}-{SUB}-{MOD}   → FR-STR-PUL-DAS-001
-
-NUMBER:
-  Three digits (001-999)
 ```
 
 **Uniqueness Rule:** Within any parent, no two children may share the same 3-letter code.
-
-**Canonical Abbreviations (from manifest.yaml):**
-
-| Entity | Code | Entity | Code |
-|--------|------|--------|------|
-| shell | SHL | strategy | STR |
-| ui | UIC | marketing | MKT |
-| core-api | API | sales | SAL |
-| ts-schema | TSS | finance | FIN |
-| orchestration | ORC | operations | OPS |
-| — | — | team | TEA |
-| — | — | legal | LEG |

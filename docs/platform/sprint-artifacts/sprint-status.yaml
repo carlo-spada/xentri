@@ -1,0 +1,91 @@
+# generated: 2025-12-03
+# project: Xentri
+# project_key: xentri
+# tracking_system: file-system
+# story_location: docs/platform/sprint-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic exists in epic file but not contexted
+#   - contexted: Epic tech context created (required before drafting stories)
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - drafted: Story file created in stories folder by *create-story
+#   - ready-for-dev: Draft approved and story context created by *story-ready
+#   - in-progress: Developer actively working on implementation by *dev-story
+#   - review: Implementation complete, ready for review by *code-review
+#   - done: Story completed by *story-done
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - completed: Retrospective has been done by *retrospective
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epics should be 'contexted' before stories can be 'drafted'
+# - SM typically drafts next story ONLY after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', dev reviews, then Dev moves to 'done'
+
+generated: 2025-12-03
+project: Xentri
+project_key: xentri
+tracking_system: file-system
+story_location: docs/platform/sprint-artifacts
+
+development_status:
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # EPIC 1: Foundation (v1) - 55% Complete
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  epic-1: contexted
+  1-1-project-initialization-infrastructure: done
+  1-2-event-backbone-database-schema: done
+  1-3-user-authentication-signup: done
+  1-4-organization-creation-provisioning: done
+  1-5-application-shell-navigation: done
+  1-6-thin-vertical-slice: done
+  1-7-devops-observability-test-readiness: review
+  epic-1-retrospective: optional
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # EPIC 1.5: Infrastructure Migration (v1 → v2)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  epic-1-5: backlog
+  1-5-1-redis-streams-dual-write-pattern: backlog
+  1-5-2-python-service-scaffold: backlog
+  1-5-3-permission-primitives-ic007: backlog
+  1-5-4-clerk-organizations-sync: backlog
+  1-5-5-gke-deployment-foundation: backlog
+  1-5-6-contract-testing-pipeline: backlog
+  epic-1-5-retrospective: optional
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # EPIC 2: Soul System
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  epic-2: backlog
+  2-1-tri-state-memory-foundation: backlog
+  2-2-strategy-copilot-mvp: backlog
+  2-3-recommendation-protocol: backlog
+  2-4-soul-learning-loop: backlog
+  epic-2-retrospective: optional
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # EPIC 3: Tool Framework
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  epic-3: backlog
+  3-1-module-manifest-v2: backlog
+  3-2-soul-aware-configuration: backlog
+  3-3-vocabulary-adaptation: backlog
+  3-4-notification-delivery: backlog
+  epic-3-retrospective: optional
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # EPIC 4: Fractal Proof
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  epic-4: backlog
+  4-1-need-detection-you-need-visibility: backlog
+  4-2-website-builder-mvp: backlog
+  4-3-tool-soul-feedback: backlog
+  4-4-cross-domain-trigger: backlog
+  epic-4-retrospective: optional

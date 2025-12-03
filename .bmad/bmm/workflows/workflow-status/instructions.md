@@ -1,10 +1,10 @@
-# Workflow Status Check - Multi-Mode Service
+# Workflow Status Check - Entity-Based Multi-Mode Service
 
 <critical>The workflow execution engine is governed by: {project-root}/.bmad/core/tasks/workflow.xml</critical>
 <critical>You MUST have already loaded and processed: {project-root}/.bmad/bmm/workflows/workflow-status/workflow.yaml</critical>
 <critical>This workflow operates in multiple modes: interactive (default), validate, data, init-check, update</critical>
 <critical>Other workflows can call this as a service to avoid duplicating status logic</critical>
-<critical>⚠️ ABSOLUTELY NO TIME ESTIMATES - NEVER mention hours, days, weeks, months, or ANY time-based predictions. AI has fundamentally changed development speed - what once took teams weeks/months can now be done by one person in hours. DO NOT give ANY time estimates whatsoever.</critical>
+<critical>Uses FEDERATED entity system - tracks progress per entity, not project-wide</critical>
 
 <workflow>
 
@@ -39,9 +39,9 @@
 <check if="no status file found">
   <output>No workflow status found. To get started:
 
-Load analyst agent and run: `workflow-init`
+Run: /bmad:bmm:workflows:workflow-init
 
-This will guide you through project setup and create your workflow path.</output>
+This will guide you through entity selection and create your workflow path.</output>
 <action>Exit workflow</action>
 </check>
 
@@ -52,15 +52,16 @@ This will guide you through project setup and create your workflow path.</output
 
 <step n="2" goal="Read and parse status">
 <action>Read bmm-workflow-status.yaml</action>
-<action>Parse YAML file and extract metadata from comments and fields:</action>
+<action>Parse YAML file and extract entity context:</action>
 
-Parse these fields from YAML comments and metadata:
-
-- project (from YAML field)
-- project_type (from YAML field)
-- project_level (from YAML field)
-- field_type (from YAML field)
-- workflow_path (from YAML field)
+Parse these fields:
+- entity_type
+- entity_type_display
+- entity_path
+- entity_code
+- fr_prefix
+- parent_prd_path
+- constitution_path
 
 <action>Parse workflow_status section:</action>
 
@@ -71,59 +72,59 @@ Parse these fields from YAML comments and metadata:
 
 <action>Determine current state:</action>
 
-- Find first workflow with status != file path and != skipped
+- Find first workflow with status != file path and != skipped and != n/a
 - This is the NEXT workflow to work on
-- Look up agent and command from workflow path file
-  </step>
+- Look up agent from entity-workflows.yaml
+</step>
 
 <step n="3" goal="Display current status and options">
-<action>Load workflow path file based on workflow_path field</action>
+<action>Load entity-workflows.yaml to get phase information</action>
 <action>Identify current phase from next workflow to be done</action>
 <action>Build list of completed, pending, and optional workflows</action>
-<action>For each workflow, look up its agent from the path file</action>
+<action>For each workflow, look up its agent from entity-workflows.yaml</action>
 
 <output>
 ## 📊 Current Status
 
-**Project:** {{project}} (Level {{project_level}} {{project_type}})
-
-**Path:** {{workflow_path}}
+**Entity:** {{entity_type_display}}
+**Path:** {{entity_path}}
+**Code:** {{entity_code}}
 
 **Progress:**
 
 {{#each phases}}
-{{phase_name}}:
+### {{phase_name}}
 {{#each workflows_in_phase}}
-
 - {{workflow_name}} ({{agent}}): {{status_display}}
-  {{/each}}
-  {{/each}}
+{{/each}}
+{{/each}}
 
 ## 🎯 Next Steps
 
 **Next Workflow:** {{next_workflow_name}}
-
 **Agent:** {{next_agent}}
-
 **Command:** /bmad:bmm:workflows:{{next_workflow_id}}
 
 {{#if optional_workflows_available}}
 **Optional Workflows Available:**
 {{#each optional_workflows}}
-
 - {{workflow_name}} ({{agent}}) - {{status}}
-  {{/each}}
-  {{/if}}
-  </output>
-  </step>
+{{/each}}
+{{/if}}
+
+{{#if parent_prd_path}}
+💡 **Context:** Parent PRD at {{parent_prd_path}}
+{{/if}}
+</output>
+</step>
 
 <step n="4" goal="Offer actions">
 <ask>What would you like to do?
 
 1. **Start next workflow** - {{next_workflow_name}} ({{next_agent}})
-   {{#if optional_workflows_available}}
+{{#if optional_workflows_available}}
 2. **Run optional workflow** - Choose from available options
-   {{/if}}
+{{/if}}
 3. **View full status YAML** - See complete status file
 4. **Update workflow status** - Mark a workflow as completed or skipped
 5. **Exit** - Return to agent
@@ -168,8 +169,8 @@ Your choice:</ask>
 Your choice:</ask>
 
   <check if="update_choice == 1">
-    <ask>Which workflow? (Enter workflow ID like 'prd' or 'create-architecture')</ask>
-    <ask>File path created? (e.g., docs/prd.md)</ask>
+    <ask>Which workflow? (Enter workflow ID like 'prd' or 'architecture')</ask>
+    <ask>File path created? (e.g., {{entity_path}}prd.md)</ask>
     <critical>ONLY write the file path as the status value - no other text, notes, or metadata</critical>
     <action>Update workflow_status in YAML file: {{workflow_id}}: {{file_path}}</action>
     <action>Save updated YAML file preserving ALL structure and comments</action>
@@ -201,15 +202,15 @@ Your choice:</ask>
 </check>
 
 <check if="status file found">
-  <action>Parse YAML file to extract project metadata and workflow_status</action>
-  <action>Load workflow path file from workflow_path field</action>
+  <action>Parse YAML file to extract entity context and workflow_status</action>
+  <action>Load entity-workflows.yaml for workflow sequence</action>
   <action>Find first non-completed workflow in workflow_status (next workflow)</action>
   <action>Check if {{calling_workflow}} matches next workflow or is in the workflow list</action>
 
 <template-output>status_exists = true</template-output>
-<template-output>project_level = {{project_level}}</template-output>
-<template-output>project_type = {{project_type}}</template-output>
-<template-output>field_type = {{field_type}}</template-output>
+<template-output>entity_type = {{entity_type}}</template-output>
+<template-output>entity_path = {{entity_path}}</template-output>
+<template-output>entity_code = {{entity_code}}</template-output>
 <template-output>next_workflow = {{next_workflow_id}}</template-output>
 
   <check if="calling_workflow == next_workflow">
@@ -243,8 +244,8 @@ Your choice:</ask>
 
   <check if="calling_workflow NOT in workflow_status list">
     <template-output>should_proceed = true</template-output>
-    <template-output>warning = "⚠️ Unknown workflow: {{calling_workflow}} not in workflow path"</template-output>
-    <template-output>suggestion = "This workflow is not part of the defined path for this project"</template-output>
+    <template-output>warning = "⚠️ Unknown workflow: {{calling_workflow}} not in entity workflow path"</template-output>
+    <template-output>suggestion = "This workflow is not part of the defined path for this entity type"</template-output>
   </check>
 
 <template-output>status_file_path = {{path to bmm-workflow-status.yaml}}</template-output>
@@ -266,12 +267,14 @@ Your choice:</ask>
   <action>Parse YAML file completely</action>
   <template-output>status_exists = true</template-output>
 
-  <check if="data_request == project_config">
-    <template-output>project_name = {{project}}</template-output>
-    <template-output>project_type = {{project_type}}</template-output>
-    <template-output>project_level = {{project_level}}</template-output>
-    <template-output>field_type = {{field_type}}</template-output>
-    <template-output>workflow_path = {{workflow_path}}</template-output>
+  <check if="data_request == entity_config">
+    <template-output>entity_type = {{entity_type}}</template-output>
+    <template-output>entity_type_display = {{entity_type_display}}</template-output>
+    <template-output>entity_path = {{entity_path}}</template-output>
+    <template-output>entity_code = {{entity_code}}</template-output>
+    <template-output>fr_prefix = {{fr_prefix}}</template-output>
+    <template-output>parent_prd_path = {{parent_prd_path}}</template-output>
+    <template-output>constitution_path = {{constitution_path}}</template-output>
   </check>
 
   <check if="data_request == workflow_status">
@@ -286,11 +289,13 @@ Your choice:</ask>
 
   <check if="data_request == all">
     <action>Return all parsed fields as template outputs</action>
-    <template-output>project = {{project}}</template-output>
-    <template-output>project_type = {{project_type}}</template-output>
-    <template-output>project_level = {{project_level}}</template-output>
-    <template-output>field_type = {{field_type}}</template-output>
-    <template-output>workflow_path = {{workflow_path}}</template-output>
+    <template-output>entity_type = {{entity_type}}</template-output>
+    <template-output>entity_type_display = {{entity_type_display}}</template-output>
+    <template-output>entity_path = {{entity_path}}</template-output>
+    <template-output>entity_code = {{entity_code}}</template-output>
+    <template-output>fr_prefix = {{fr_prefix}}</template-output>
+    <template-output>parent_prd_path = {{parent_prd_path}}</template-output>
+    <template-output>constitution_path = {{constitution_path}}</template-output>
     <template-output>workflow_status = {{workflow_status_object}}</template-output>
     <template-output>generated = {{generated}}</template-output>
   </check>
@@ -328,7 +333,7 @@ Your choice:</ask>
 
 <check if="status file found">
   <action>Parse YAML file completely</action>
-  <action>Load workflow path file from workflow_path field</action>
+  <action>Load entity-workflows.yaml for workflow sequence</action>
   <action>Check {{action}} parameter to determine update type</action>
 
   <!-- ============================================= -->
@@ -342,15 +347,15 @@ Your choice:</ask>
     <action>Update workflow status in YAML:</action>
     - In workflow_status section, update: {{workflow_id}}: {{output_file}}
 
-    <action>Find {{workflow_id}} in loaded path YAML</action>
-    <action>Determine next workflow from path sequence</action>
+    <action>Find {{workflow_id}} in entity-workflows.yaml</action>
+    <action>Determine next workflow from sequence</action>
     <action>Find first workflow in workflow_status with status != file path and != skipped</action>
 
     <action>Save updated YAML file preserving ALL structure and comments</action>
 
     <template-output>success = true</template-output>
     <template-output>next_workflow = {{determined next workflow}}</template-output>
-    <template-output>next_agent = {{determined next agent from path file}}</template-output>
+    <template-output>next_agent = {{determined next agent from entity-workflows.yaml}}</template-output>
     <template-output>completed_workflow = {{workflow_id}}</template-output>
     <template-output>output_file = {{output_file}}</template-output>
 

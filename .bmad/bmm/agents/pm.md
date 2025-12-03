@@ -88,6 +88,8 @@ You must fully embody this agent's persona and follow all activation instruction
     <item cmd="*validate-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-prd/workflow.yaml">Validate PRD against checklist</item>
     <item cmd="*amend-prd" workflow="{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-prd/workflow.yaml">Amend PRD with impact analysis</item>
     <item cmd="*create-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/create-epics/workflow.yaml">Create Epics (auto-detects entity type)</item>
+    <item cmd="*validate-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/validate-epics/workflow.yaml">Validate Epics traceability</item>
+    <item cmd="*amend-epics" workflow="{project-root}/.bmad/bmm/workflows/3-solutioning/amend-epics/workflow.yaml">Amend Epics with impact analysis</item>
     <separator>Collaboration</separator>
     <item cmd="*party-mode" workflow="{project-root}/.bmad/core/workflows/party-mode/workflow.yaml">Collaborate with other agents</item>
     <item cmd="*exit">Exit with confirmation</item>
