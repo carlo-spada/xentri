@@ -6,21 +6,22 @@
 
 ## Document Governance
 
-| Attribute        | Value                                                                                           |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| **Version**      | 6.3                                                                                             |
-| **Status**       | In Progress — Phase 0 COMPLETE, Phase 1 COMPLETE (all 8 micro-phases), Phase 2.01-2.02 COMPLETE |
-| **Owner**        | Platform Team                                                                                   |
-| **DRI**          | BMad Builder (Phase 0), Architect (Phase 2), Analyst (Phases 3-6) ([Glossary](#2-glossary))     |
-| **Created**      | 2025-12-03                                                                                      |
-| **Last Updated** | 2025-12-04                                                                                      |
-| **Review Cycle** | After each micro-phase completion                                                               |
-| **Approval**     | Phase 0 Gate PASSED, Phase 1 Gate PASSED — all validation scripts pass                          |
+| Attribute        | Value                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| **Version**      | 6.4                                                                                         |
+| **Status**       | In Progress — Phase 0 COMPLETE, Phase 1 COMPLETE, Phase 2.01-2.03 COMPLETE                  |
+| **Owner**        | Platform Team                                                                               |
+| **DRI**          | BMad Builder (Phase 0), Architect (Phase 2), Analyst (Phases 3-6) ([Glossary](#2-glossary)) |
+| **Created**      | 2025-12-03                                                                                  |
+| **Last Updated** | 2025-12-04                                                                                  |
+| **Review Cycle** | After each micro-phase completion                                                           |
+| **Approval**     | Phase 0 Gate PASSED, Phase 1 Gate PASSED — all validation scripts pass                      |
 
 ### Change Log
 
 | Version | Date       | Author       | Changes                                                                                                                                                                                                      |
 | ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 6.4     | 2025-12-04 | Architect    | Phase 2.03 COMPLETE. Extracted 18 ADRs to atoms (SYS.017-SYS.034). Updated architecture.md with ADR Index table. 35 total atoms, all validations pass.                                                       |
 | 6.3     | 2025-12-04 | BMad Builder | Phase 1.08 COMPLETE. Context + Research workflows: 8 NEW (validate/amend for tech-spec, epic-tech-context, story-context, research). Phase 1 now fully complete with 107 total workflows.                    |
 | 6.2     | 2025-12-04 | Architect    | Phase 2.02 COMPLETE. Extracted 7 IC contracts to atoms (SYS.010-SYS.016). Updated Constitution PRD IC table + atom index. 17 total atoms, all validations pass.                                              |
 | 6.1     | 2025-12-04 | PM           | Phase 2.01 COMPLETE. Extracted 8 PR requirements to atoms (SYS.002-SYS.009). Updated Constitution PRD + Epics with atom references. All validations pass.                                                    |
@@ -1179,7 +1180,7 @@ This phase completes the validation and amendment workflows for context and rese
 | ---- | -------------------- | ----------------------- | ----------- |
 | 2.01 | Extract PR-xxx       | All PR atoms extracted  | ✅ COMPLETE |
 | 2.02 | Extract IC-xxx       | All IC atoms extracted  | ✅ COMPLETE |
-| 2.03 | Extract ADR-xxx      | All ADR atoms extracted | Pending     |
+| 2.03 | Extract ADR-xxx      | All ADR atoms extracted | ✅ COMPLETE |
 | 2.04 | Update References    | All docs link to atoms  | Pending     |
 | 2.05 | Migration Validation | Zero broken refs        | Pending     |
 
@@ -1234,6 +1235,44 @@ This phase completes the validation and amendment workflows for context and rese
 ```
 ✅ pnpm run validate:atoms — 17 atoms, 0 errors
 ✅ pnpm run validate:links — 96 links, 72 files
+```
+
+**Phase 2.03 Completion Notes (2025-12-04):**
+
+| Deliverable | Location                 | Notes                                              |
+| ----------- | ------------------------ | -------------------------------------------------- |
+| SYS.017     | `docs/_atoms/SYS.017.md` | ADR-001: Universal Soul Orchestration              |
+| SYS.018     | `docs/_atoms/SYS.018.md` | ADR-002: Event Envelope & Schema                   |
+| SYS.019     | `docs/_atoms/SYS.019.md` | ADR-003: Multi-Tenant Security (RLS)               |
+| SYS.020     | `docs/_atoms/SYS.020.md` | ADR-004: Kubernetes First (Category Cluster)       |
+| SYS.021     | `docs/_atoms/SYS.021.md` | ADR-006: Tri-State Memory Architecture             |
+| SYS.022     | `docs/_atoms/SYS.022.md` | ADR-007: Federated Soul Registry                   |
+| SYS.023     | `docs/_atoms/SYS.023.md` | ADR-008: Python for Agent Layer                    |
+| SYS.024     | `docs/_atoms/SYS.024.md` | ADR-009: Cross-Runtime Contract Strategy           |
+| SYS.025     | `docs/_atoms/SYS.025.md` | ADR-010: Resilience & Graceful Degradation         |
+| SYS.026     | `docs/_atoms/SYS.026.md` | ADR-011: Hierarchical Pulse Architecture           |
+| SYS.027     | `docs/_atoms/SYS.027.md` | ADR-012: Copilot Widget Architecture               |
+| SYS.028     | `docs/_atoms/SYS.028.md` | ADR-013: Narrative Continuity & UX Philosophy      |
+| SYS.029     | `docs/_atoms/SYS.029.md` | ADR-014: Module Registration Architecture (IC-003) |
+| SYS.030     | `docs/_atoms/SYS.030.md` | ADR-015: Permission Enforcement Architecture       |
+| SYS.031     | `docs/_atoms/SYS.031.md` | ADR-016: Soul Access Architecture (IC-004, IC-005) |
+| SYS.032     | `docs/_atoms/SYS.032.md` | ADR-017: Notification Delivery Architecture        |
+| SYS.033     | `docs/_atoms/SYS.033.md` | ADR-018: Automated Action Explanation Pattern      |
+| SYS.034     | `docs/_atoms/SYS.034.md` | ADR-020: Sibling Dependency Law                    |
+
+> **Note:** ADR-005 and ADR-019 are reserved for future use.
+
+**Documents Updated:**
+
+| Document                        | Changes                                                 |
+| ------------------------------- | ------------------------------------------------------- |
+| `docs/platform/architecture.md` | Added ADR Index table with atom links before ADR detail |
+| `docs/_atoms/_index.md`         | Auto-regenerated with 35 total atoms                    |
+
+**Validation Results:**
+
+```
+✅ pnpm run validate:atoms — 35 atoms, 0 errors
 ```
 
 ### 11.5 Phases 3-6: Audit Groups

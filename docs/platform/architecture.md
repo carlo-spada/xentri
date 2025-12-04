@@ -99,6 +99,39 @@ graph TD
 ## 3. Architecture Decision Records (ADRs)
 
 > **Format:** Each ADR contains Context, Decision, and Implication. Implementation details are delegated to Infrastructure Module documents.
+>
+> **SSOT:** Authoritative content for each ADR lives in [`docs/_atoms/`](../_atoms/_index.md). This table provides a quick reference with links to the atom files.
+
+### ADR Index
+
+| Legacy ID   | Atom ID                           | Decision                                           | Status   |
+| ----------- | --------------------------------- | -------------------------------------------------- | -------- |
+| **ADR-001** | [`SYS.017`](../_atoms/SYS.017.md) | Universal Soul Orchestration (Knowledge Hierarchy) | Approved |
+| **ADR-002** | [`SYS.018`](../_atoms/SYS.018.md) | Event Envelope & Schema                            | Approved |
+| **ADR-003** | [`SYS.019`](../_atoms/SYS.019.md) | Multi-Tenant Security (RLS & Context)              | Approved |
+| **ADR-004** | [`SYS.020`](../_atoms/SYS.020.md) | Kubernetes First (Category Cluster Strategy)       | Approved |
+| **ADR-006** | [`SYS.021`](../_atoms/SYS.021.md) | Tri-State Memory Architecture                      | Approved |
+| **ADR-007** | [`SYS.022`](../_atoms/SYS.022.md) | Federated Soul Registry                            | Approved |
+| **ADR-008** | [`SYS.023`](../_atoms/SYS.023.md) | Python for Agent Layer                             | Approved |
+| **ADR-009** | [`SYS.024`](../_atoms/SYS.024.md) | Cross-Runtime Contract Strategy                    | Approved |
+| **ADR-010** | [`SYS.025`](../_atoms/SYS.025.md) | Resilience & Graceful Degradation                  | Approved |
+| **ADR-011** | [`SYS.026`](../_atoms/SYS.026.md) | Hierarchical Pulse Architecture                    | Approved |
+| **ADR-012** | [`SYS.027`](../_atoms/SYS.027.md) | Copilot Widget Architecture                        | Approved |
+| **ADR-013** | [`SYS.028`](../_atoms/SYS.028.md) | Narrative Continuity & UX Philosophy               | Approved |
+| **ADR-014** | [`SYS.029`](../_atoms/SYS.029.md) | Module Registration Architecture (IC-003)          | Approved |
+| **ADR-015** | [`SYS.030`](../_atoms/SYS.030.md) | Permission Enforcement Architecture (IC-007)       | Approved |
+| **ADR-016** | [`SYS.031`](../_atoms/SYS.031.md) | Soul Access Architecture (IC-004, IC-005)          | Approved |
+| **ADR-017** | [`SYS.032`](../_atoms/SYS.032.md) | Notification Delivery Architecture (IC-006)        | Approved |
+| **ADR-018** | [`SYS.033`](../_atoms/SYS.033.md) | Automated Action Explanation Pattern (PR-006)      | Approved |
+| **ADR-020** | [`SYS.034`](../_atoms/SYS.034.md) | Sibling Dependency Law (Entity Document Structure) | Approved |
+
+> **Note:** ADR-005 and ADR-019 are reserved for future use.
+
+---
+
+### ADR Details
+
+> The following sections provide inline summaries for quick reference. For authoritative content, consult the linked atom files above.
 
 ### ADR-001: Universal Soul Orchestration (Knowledge Hierarchy)
 
