@@ -3,7 +3,7 @@
 > A clarity-first Business OS that starts with conversation, not configuration.
 
 **Current Phase:** Epic 1 Foundation (Story 1.7 in review)
-**Live API:** https://core-api-production-8016.up.railway.app
+**Live API:** <https://core-api-production-8016.up.railway.app>
 
 ---
 
@@ -21,7 +21,7 @@ These documents define system-wide rules that ALL entities must follow. Located 
 
 | Document                                   | Purpose                                                        |
 | ------------------------------------------ | -------------------------------------------------------------- |
-| [Product Soul](./platform/product-soul.md) | Foundational vision — all work traces here                     |
+| [Product Soul](./product-soul.md)          | Foundational vision — all work traces here                     |
 | [PRD](./platform/prd.md)                   | Platform Requirements (PR-xxx), Integration Contracts (IC-xxx) |
 | [Architecture](./platform/architecture.md) | System-wide technology decisions and patterns                  |
 | [UX Design](./platform/ux-design.md)       | System-wide UX principles and design system                    |

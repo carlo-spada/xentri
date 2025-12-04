@@ -45,9 +45,9 @@ Xentri organizes everything a business needs into seven categories: **Strategy, 
 **The Fractal Difference:**
 Every category, sub-category, and module is an **autonomous agent** (not just a tool). They operate using **Triangulation Logic**:
 
-1.  **Immutable Soul:** The unchangeable professional standards (from Xentri).
-2.  **Superior Intent:** The context from their parent agent (from You).
-3.  **User Reality:** Your direct feedback and commands.
+1. **Immutable Soul:** The unchangeable professional standards (from Xentri).
+2. **Superior Intent:** The context from their parent agent (from You).
+3. **User Reality:** Your direct feedback and commands.
 
 You start with a free conversation. The Strategy co-pilot learns your business, generates your Soul (the living DNA of your company), and recommends exactly which categories you should tackle next.
 
@@ -116,4 +116,4 @@ If money is flowing through Xentri, users are getting real value.
 
 ---
 
-_This Product Soul captures the vision for Xentri. For detailed requirements, see [PRD](./prd.md). For technical architecture, see [Architecture](./architecture.md). For market + research, see [research/](./research/)._
+_This Product Soul captures the vision for Xentri. For detailed requirements, see [PRD](./platform/prd.md). For technical architecture, see [Architecture](./platform/architecture.md). For market + research, see [research/](./platform/research/)._
