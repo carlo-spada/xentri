@@ -3,7 +3,7 @@ entity_type: constitution
 document_type: architecture
 title: 'Xentri System Architecture'
 description: 'System-wide architectural decisions, technology stack, and patterns that all entities must follow.'
-version: '3.0'
+version: '4.0'
 status: approved
 created: '2025-11-25'
 updated: '2025-12-03'
@@ -26,12 +26,12 @@ Xentri is a **Fractal Business Operating System** orchestrated by a hierarchical
 
 ### Core Architectural Principles
 
-| Principle | Description |
-|-----------|-------------|
-| **Decoupled Unity** | Unified Shell (Astro) for seamless UX; isolated Micro-Apps (React), Tool Services (Node.js), and Agent Services (Python) for technical independence |
-| **Event-Driven Backbone** | Services communicate via immutable events through Redis—no direct coupling; new modules integrate without rewrites |
-| **Multi-Tenancy by Design** | Single Postgres cluster with RLS enforces "Client Zero" data isolation from day one |
-| **Reality-In Data** | Ingest messy inputs (voice, text) and progressively structure them—no rigid forms upfront |
+| Principle                   | Description                                                                                                                                         |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Decoupled Unity**         | Unified Shell (Astro) for seamless UX; isolated Micro-Apps (React), Tool Services (Node.js), and Agent Services (Python) for technical independence |
+| **Event-Driven Backbone**   | Services communicate via immutable events through Redis—no direct coupling; new modules integrate without rewrites                                  |
+| **Multi-Tenancy by Design** | Single Postgres cluster with RLS enforces "Client Zero" data isolation from day one                                                                 |
+| **Reality-In Data**         | Ingest messy inputs (voice, text) and progressively structure them—no rigid forms upfront                                                           |
 
 ---
 
@@ -41,27 +41,27 @@ We employ a **Monorepo** structure managed by **Turborepo**.
 
 ### The Stack
 
-| Layer | Technology | Role |
-|:------|:-----------|:-----|
-| **Shell** | **Astro** | The container application. Handles routing, auth, layout, and "Islands" orchestration. |
-| **Micro-Apps** | **React** | Interactive capabilities (CRM, CMS, etc.) loaded as "Islands" within the Shell. |
-| **Backend** | **Node.js** | Dockerized microservices for business logic (Sales, Finance, etc.). |
-| **Agent Layer** | **Python** | Reasoning & Intelligence. Powers the ~42 complex Agents (7 Category Co-pilots + 35 Sub-Category Agents). |
-| **Data** | **Postgres** | Single cluster with RLS for multi-tenancy. |
-| **Events** | **Redis** | The "Nervous System" transport layer for high-volume synchronization. |
+| Layer           | Technology   | Role                                                                                                     |
+| :-------------- | :----------- | :------------------------------------------------------------------------------------------------------- |
+| **Shell**       | **Astro**    | The container application. Handles routing, auth, layout, and "Islands" orchestration.                   |
+| **Micro-Apps**  | **React**    | Interactive capabilities (CRM, CMS, etc.) loaded as "Islands" within the Shell.                          |
+| **Backend**     | **Node.js**  | Dockerized microservices for business logic (Sales, Finance, etc.).                                      |
+| **Agent Layer** | **Python**   | Reasoning & Intelligence. Powers the ~42 complex Agents (7 Category Co-pilots + 35 Sub-Category Agents). |
+| **Data**        | **Postgres** | Single cluster with RLS for multi-tenancy.                                                               |
+| **Events**      | **Redis**    | The "Nervous System" transport layer for high-volume synchronization.                                    |
 
 ### Decision Summary Table
 
-| Category | Decision | Version | Rationale |
-|:---------|:---------|:--------|:----------|
-| Shell | Astro shell with React islands | Astro 5.x / React 19.x | Hybrid SSR/SSG with island hydration; stable React ecosystem for micro-apps. |
-| Monorepo Tooling | Turborepo + pnpm workspaces | Turbo 2.x / pnpm 10.x | Fast incremental builds and deterministic installs. |
-| Backend Runtime & API | Node.js + Fastify REST APIs | Node 24.x LTS / Fastify 5.x | Current LTS for runtime security; schema-first, high-performance JSON APIs. |
-| Database & ORM | Postgres with Prisma | Postgres 16.x / Prisma 7.x | Typed queries with RLS support. |
-| AuthN/AuthZ | Clerk + JWT cookies | @clerk/* packages | Native Organizations support; multi-tenant JWT claims (org_id, role). |
-| Events & Transport | Postgres `system_events` + Redis Streams | Upstash Redis (managed) | Durable source-of-truth log with pay-per-request streaming. |
-| Deployment Target | Managed Kubernetes | k8s 1.31+ | Standardized runtime for services, HPA-ready. |
-| Observability | OpenTelemetry + Pino JSON logs | OTel SDK 1.x / Pino 10.x | Trace propagation across shell/services. |
+| Category              | Decision                                 | Version                     | Rationale                                                                    |
+| :-------------------- | :--------------------------------------- | :-------------------------- | :--------------------------------------------------------------------------- |
+| Shell                 | Astro shell with React islands           | Astro 5.x / React 19.x      | Hybrid SSR/SSG with island hydration; stable React ecosystem for micro-apps. |
+| Monorepo Tooling      | Turborepo + pnpm workspaces              | Turbo 2.x / pnpm 10.x       | Fast incremental builds and deterministic installs.                          |
+| Backend Runtime & API | Node.js + Fastify REST APIs              | Node 24.x LTS / Fastify 5.x | Current LTS for runtime security; schema-first, high-performance JSON APIs.  |
+| Database & ORM        | Postgres with Prisma                     | Postgres 16.x / Prisma 7.x  | Typed queries with RLS support.                                              |
+| AuthN/AuthZ           | Clerk + JWT cookies                      | @clerk/\* packages          | Native Organizations support; multi-tenant JWT claims (org_id, role).        |
+| Events & Transport    | Postgres `system_events` + Redis Streams | Upstash Redis (managed)     | Durable source-of-truth log with pay-per-request streaming.                  |
+| Deployment Target     | Managed Kubernetes                       | k8s 1.31+                   | Standardized runtime for services, HPA-ready.                                |
+| Observability         | OpenTelemetry + Pino JSON logs           | OTel SDK 1.x / Pino 10.x    | Trace propagation across shell/services.                                     |
 
 **Version Management:** Re-verify versions with WebSearch before releases. See module PRDs for specific version requirements.
 
@@ -233,6 +233,7 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 ```
 
 **Schema Versioning Protocol:**
+
 1. Bump version on breaking changes
 2. N-1 support during migration window
 3. 30 days deprecation notice
@@ -267,12 +268,12 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 
 **Decision:** We implement a **Fractal Pulse System** where each level produces and consumes Pulse data.
 
-| Level | Pulse View | Audience |
-|-------|------------|----------|
-| **Strategy** | What survived all 4 layers of filtering | Owner/Founder |
-| **Category** | What's happening in that category | Category managers |
-| **Sub-category** | What's happening in that sub-category | Team leads |
-| **Module** | What's happening in that module | Module users |
+| Level            | Pulse View                              | Audience          |
+| ---------------- | --------------------------------------- | ----------------- |
+| **Strategy**     | What survived all 4 layers of filtering | Owner/Founder     |
+| **Category**     | What's happening in that category       | Category managers |
+| **Sub-category** | What's happening in that sub-category   | Team leads        |
+| **Module**       | What's happening in that module         | Module users      |
 
 **Implication:** Each agent level must implement Pulse output generation.
 
@@ -288,11 +289,11 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 
 **Decision:** We implement a **Context-Aware Copilot Widget** as a Shell-level component.
 
-| State | Appearance | Behavior |
-|-------|------------|----------|
-| **Collapsed** | Small icon + badge | User-positionable |
-| **Panel** | Right or bottom panel | Shares screen with SPA |
-| **Full** | Replaces main section | Full copilot focus |
+| State         | Appearance            | Behavior               |
+| ------------- | --------------------- | ---------------------- |
+| **Collapsed** | Small icon + badge    | User-positionable      |
+| **Panel**     | Right or bottom panel | Shares screen with SPA |
+| **Full**      | Replaces main section | Full copilot focus     |
 
 **Implication:** Shell must track navigation context and pass it to the widget.
 
@@ -328,6 +329,7 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 **Decision:** We implement a **Declarative Module Manifest** system where each module exposes a YAML manifest at build time.
 
 **Manifest includes:**
+
 - Module identity (id, name, category)
 - Routes and navigation
 - Permissions required
@@ -348,11 +350,11 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 
 **Decision:** We implement a **3-Layer Permission Enforcement** pattern:
 
-| Layer | Responsibility | Enforcement Point |
-|-------|----------------|-------------------|
-| **Shell (UI)** | Hide/disable UI elements | Component render |
-| **API Gateway** | Block unauthorized requests | Middleware |
-| **Database (RLS)** | Prevent data access | Query execution |
+| Layer              | Responsibility              | Enforcement Point |
+| ------------------ | --------------------------- | ----------------- |
+| **Shell (UI)**     | Hide/disable UI elements    | Component render  |
+| **API Gateway**    | Block unauthorized requests | Middleware        |
+| **Database (RLS)** | Prevent data access         | Query execution   |
 
 **Fail-Closed Principle:** Missing permission context = deny.
 
@@ -387,12 +389,12 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 
 **Decision:** We implement a **Priority-Based Notification Router**:
 
-| Priority | Delivery | Channel |
-|----------|----------|---------|
-| **critical** | Immediate | Push + Email + In-app |
-| **high** | Digest | Email digest + In-app |
-| **medium** | Digest | Email digest + In-app |
-| **low** | In-app only | Dashboard only |
+| Priority     | Delivery    | Channel               |
+| ------------ | ----------- | --------------------- |
+| **critical** | Immediate   | Push + Email + In-app |
+| **high**     | Digest      | Email digest + In-app |
+| **medium**   | Digest      | Email digest + In-app |
+| **low**      | In-app only | Dashboard only        |
 
 **Implication:** Modules emit events with notification metadata. Infrastructure handles routing.
 
@@ -429,7 +431,8 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 4. **Siblings can depend on each other's published interfaces**
 
 **Entity Types:**
-- **Constitution:** System-wide rules (docs/platform/*.md)
+
+- **Constitution:** System-wide rules (docs/platform/\*.md)
 - **Infrastructure Module:** Platform services (docs/platform/{module}/)
 - **Strategic Container:** User-facing categories (docs/{category}/)
 - **Coordination Unit:** Subcategory scope (docs/{category}/{subcat}/)
@@ -441,44 +444,173 @@ ts-schema (Zod) → zod-to-json-schema → schemas/*.json → datamodel-codegen 
 
 ## 4. Version Compatibility Notes
 
-| Technology | Compatibility Consideration |
-|------------|----------------------------|
+| Technology           | Compatibility Consideration                                              |
+| -------------------- | ------------------------------------------------------------------------ |
 | **Node 24.x → 26.x** | Watch for ESM-only changes; test `--experimental-*` flags before upgrade |
-| **Prisma 7.x** | New migration format from v6; run `prisma migrate diff` before upgrading |
-| **Astro 5.x → 6.x** | Island hydration API may change; audit `client:*` directives |
-| **React 19.x** | Concurrent features stable; Actions API replaces some form patterns |
-| **Fastify 5.x** | Plugin API stable; watch for hook signature changes |
-| **Redis 8.x** | Streams API stable; ACL syntax changed from v7 |
+| **Prisma 7.x**       | New migration format from v6; run `prisma migrate diff` before upgrading |
+| **Astro 5.x → 6.x**  | Island hydration API may change; audit `client:*` directives             |
+| **React 19.x**       | Concurrent features stable; Actions API replaces some form patterns      |
+| **Fastify 5.x**      | Plugin API stable; watch for hook signature changes                      |
+| **Redis 8.x**        | Streams API stable; ACL syntax changed from v7                           |
 
 **Upgrade Protocol:** Before any major version bump:
+
 1. Check release notes for breaking changes
 2. Run full test suite in staging
 3. Update `ts-schema` contracts if API shapes change
 
 ---
 
-## 5. Document Structure
+## 5. Infrastructure & Deployment
+
+### Kubernetes Topology
+
+We deploy to **Managed Kubernetes** with a **Category Consolidation** pattern (see ADR-004):
+
+```mermaid
+graph TD
+    User -->|HTTPS| Ingress[NGINX Ingress]
+
+    subgraph "K8s Cluster"
+        Ingress --> Shell[Astro Shell]
+
+        subgraph "Category Plane"
+            Ingress -->|/api/strategy| ToolStrat[Node: Tool Service]
+            ToolStrat -.->|Events| Redis
+            Redis -.->|Trigger| AgentStrat[Python: Agent Service]
+        end
+
+        subgraph "Shared Infra"
+            Redis[Redis Streams]
+            Postgres[Postgres RLS]
+        end
+    end
+```
+
+### Service Count
+
+| Service Type            | Count              | Scaling  |
+| ----------------------- | ------------------ | -------- |
+| Shell                   | 1                  | HPA      |
+| Tool Services (Node)    | 7 (1 per category) | HPA      |
+| Agent Services (Python) | 7 (1 per category) | Vertical |
+| **Total**               | ~15                | —        |
+
+### Deployment Target (GCP)
+
+- **Compute:** GKE Autopilot (serverless K8s)
+- **Database:** Cloud SQL for PostgreSQL (HA)
+- **Events/Cache:** Cloud Memorystore for Redis
+- **Storage:** Google Cloud Storage (GCS)
+
+> **Implementation details:** See `docs/platform/core-api/architecture.md` for testing strategy, health endpoints, and observability.
+
+---
+
+## 6. Operational Model: Solo Visionary + AI Agent Army
+
+### Development Philosophy
+
+This project is built using **AI-first development** via the BMAD Method. One human visionary (Carlo) directs an army of AI agents who handle implementation.
+
+### Why This Architecture Suits AI-First Development
+
+| Architectural Choice           | AI Agent Benefit                                                              |
+| ------------------------------ | ----------------------------------------------------------------------------- |
+| **Service boundaries**         | Agents work on isolated services without merge conflicts                      |
+| **`ts-schema` contracts**      | Explicit types prevent agents from "guessing" data shapes                     |
+| **Event-driven communication** | Services don't call each other directly—agents can't introduce tight coupling |
+| **ADRs with implications**     | Agents have clear guidance on architectural intent                            |
+| **Naming conventions**         | Deterministic patterns produce consistent code across sessions                |
+| **Co-located tests**           | Agents write and run tests in the same context                                |
+
+### Supervisor Responsibilities (Human)
+
+| Area                        | Responsibility                                                               |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| **Vision & Strategy**       | Define product direction, prioritize epics, approve PRD/architecture changes |
+| **Quality Gates**           | Review AI-generated code before merge; run validation workflows              |
+| **Architectural Decisions** | Make trade-off decisions; approve ADR changes                                |
+| **Security Review**         | Audit auth flows, RLS policies, secrets handling before production           |
+| **External Integrations**   | Configure third-party services (Clerk, cloud providers)                      |
+| **Production Operations**   | Monitor alerts, handle incidents, approve deployments                        |
+
+### AI Agent Boundaries
+
+| Scope                      | Agents Can Independently                        | Requires Human Review                 |
+| -------------------------- | ----------------------------------------------- | ------------------------------------- |
+| **Feature implementation** | Write code following established patterns       | New patterns or architectural changes |
+| **Tests**                  | Write unit/integration tests, fix failing tests | E2E test strategy changes             |
+| **Bug fixes**              | Fix bugs within existing service boundaries     | Fixes requiring cross-service changes |
+| **Documentation**          | Update inline docs, README sections             | Architecture docs, ADRs               |
+| **Dependencies**           | Update patch versions                           | Major version upgrades                |
+
+### Scaling Triggers
+
+| Trigger                    | Action                                                         |
+| -------------------------- | -------------------------------------------------------------- |
+| **> 100 concurrent users** | Increase HPA min replicas; review Redis connection pooling     |
+| **> 1,000 orgs**           | Consider Postgres read replicas; review RLS policy performance |
+| **> 10,000 events/hour**   | Scale Redis cluster; add background worker pods                |
+| **Revenue > $10k MRR**     | Security audit; consider managed k8s support contract          |
+
+---
+
+## 7. Module Composition Strategy
+
+### Module Status Progression
+
+| Status           | Badge  | User Message              | Behavior                         |
+| ---------------- | ------ | ------------------------- | -------------------------------- |
+| `planned`        | Gray   | "On our radar"            | No interaction                   |
+| `coming_soon`    | Blue   | "Coming soon"             | Vote button, waitlist signup     |
+| `in_development` | Purple | "Coming within the month" | Vote count shown                 |
+| `beta`           | Yellow | "Beta — Try it now"       | Full access with feedback prompt |
+| `active`         | None   | (No badge)                | Normal module access             |
+
+### Organic Growth Model
+
+Constitution Epics (1-4) define the **platform that builds modules**. Category/Module Epics emerge **organically** when the Soul identifies the next need.
+
+```
+Soul Analysis → Copilot Recommendation → New Module Epic
+```
+
+**We don't pre-plan 170+ modules.** They emerge when the Soul says they're needed:
+
+| Soul Observation                          | Copilot Recommendation  | Emergent Epic                  |
+| ----------------------------------------- | ----------------------- | ------------------------------ |
+| "User has leads but no sales tracking"    | "Let's set up your CRM" | Sales → CRM Module             |
+| "User closing deals but not getting paid" | "Time to invoice"       | Finance → Invoicing Module     |
+| "User overwhelmed by manual work"         | "Let's automate"        | Operations → Automation Module |
+
+---
+
+## 8. Document Structure
 
 This Constitution Architecture document defines WHAT we decided and WHY. For HOW to implement:
 
-| Topic | See Document |
-|-------|--------------|
-| Event schemas | `docs/platform/ts-schema/prd.md` |
-| RLS implementation | `docs/platform/core-api/prd.md` |
-| Shell layout | `docs/platform/shell/ux-design.md` |
-| Component specs | `docs/platform/ui/ux-design.md` |
-| Module stories | Each module's `epics.md` |
+| Topic                                                   | See Document                             |
+| ------------------------------------------------------- | ---------------------------------------- |
+| Communication patterns, API conventions, state machines | `docs/platform/core-api/architecture.md` |
+| Offline sync, settings, i18n                            | `docs/platform/shell/architecture.md`    |
+| Event schemas                                           | `docs/platform/ts-schema/prd.md`         |
+| RLS implementation                                      | `docs/platform/core-api/prd.md`          |
+| Shell layout                                            | `docs/platform/shell/ux-design.md`       |
+| Component specs                                         | `docs/platform/ui/ux-design.md`          |
+| Module stories                                          | Each module's `epics.md`                 |
 
 ---
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 3.0 | 2025-12-03 | Winston (Architect) | Refactored: removed implementation details, delegated to module docs |
-| 2.5 | 2025-12-03 | — | Added ADR-020, entity document structure |
-| 2.0 | 2025-11-25 | — | Major revision with all ADRs |
+| Version | Date       | Author              | Changes                                                                                                                 |
+| ------- | ---------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 4.0     | 2025-12-03 | Winston (Architect) | Restored Infrastructure, Operational Model, Module Composition sections; migrated implementation details to module docs |
+| 3.0     | 2025-12-03 | Winston (Architect) | Refactored: removed implementation details, delegated to module docs                                                    |
+| 2.5     | 2025-12-03 | —                   | Added ADR-020, entity document structure                                                                                |
+| 2.0     | 2025-11-25 | —                   | Major revision with all ADRs                                                                                            |
 
 ---
 
-_This is a Constitution document. Changes require explicit rationale and governance review. Implementation details belong in Infrastructure Module documents._
+_This is a Constitution document. Changes require explicit rationale and governance review. Implementation details belong in Infrastructure Module documents (core-api/architecture.md, shell/architecture.md)._

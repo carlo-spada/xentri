@@ -3,11 +3,26 @@ entity_type: constitution
 document_type: epics
 title: 'Xentri System Epics'
 description: 'System-wide epic structure based on Understanding + Action framework. Category/Module epics emerge organically.'
-version: '2.2'
+version: '3.0'
 status: approved
 created: '2025-11-28'
 updated: '2025-12-03'
 ---
+
+<!--
+CONSTITUTION DOCUMENT
+
+This document defines SYSTEM-LEVEL epic outcomes that coordinate multiple Infrastructure Modules.
+Stories here specify WHAT the system achieves; module epics specify HOW each module contributes.
+
+For module-specific implementation stories:
+- Shell: docs/platform/shell/epics.md (FR-SHL-xxx stories)
+- Core API: docs/platform/core-api/epics.md (FR-API-xxx stories)
+- UI: docs/platform/ui/epics.md (FR-UI-xxx stories)
+- TS Schema: docs/platform/ts-schema/epics.md (FR-TSS-xxx stories)
+
+Module stories INHERIT from Constitution epics and trace to both PR-xxx/IC-xxx and module FRs.
+-->
 
 # Xentri - System Epics (Constitution)
 
@@ -831,7 +846,8 @@ Until this gate passes, we're not sustainable. Features don't matter; unit econo
 | ------- | ---------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | 1.0     | 2025-11-28 | Carlo + AI        | Initial epic structure                                                                                                                  |
 | 2.0     | 2025-12-02 | Carlo + BMAD Team | Complete restructure: Understanding + Action framework, Soul concept introduced, Epic 1 audit, Epic 1.5 migration, organic growth model |
+| 3.0     | 2025-12-03 | Carlo + Winston   | Constitutional Review: Added header clarifying Constitution vs module epic roles, references to module-specific implementation stories  |
 
 ---
 
-_This is the Constitution-level epic structure. Infrastructure Module epics must inherit from and align with this document. Category/Module epics emerge organically based on Soul recommendations._
+_This is the Constitution-level epic structure. Infrastructure Module epics inherit from this document and define module-specific implementation stories. See header comment for module epic locations._
