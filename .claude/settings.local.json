@@ -194,7 +194,8 @@
       "Bash(comm:*)",
       "WebFetch(domain:github.com)",
       "SlashCommand(/bmad:core:workflows:brainstorming)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git -C:*)"
     ],
     "deny": [],
     "ask": []

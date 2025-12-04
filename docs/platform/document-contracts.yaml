@@ -9,10 +9,13 @@
 # GOVERNANCE RULE: Before adding content to any document, consult this file.
 # If the content type is owned by another document, REFERENCE it instead of duplicating.
 #
-# Version: 1.1
+# Version: 1.2
 # Created: 2025-12-03
-# Updated: 2025-12-03
+# Updated: 2025-12-04
 # Status: Active
+#
+# NAVIGATION POLICY: NO README.md or index.md files in docs/ except docs/index.md
+# All navigation is centralized in docs/index.md
 
 # =============================================================================
 # ENTITY DOCUMENT STRUCTURE
@@ -29,7 +32,7 @@
 
 entity_documents:
   # ---------------------------------------------------------------------------
-  # Constitution (docs/platform/)
+  # Constitution (docs/platform/ + docs/product-soul.md)
   # ---------------------------------------------------------------------------
   constitution:
     path_pattern: 'docs/platform/'
@@ -38,7 +41,8 @@ entity_documents:
       - architecture.md
       - ux-design.md
       - epics.md
-      - product-soul.md
+    root_documents:
+      - docs/product-soul.md # Lives at docs/ root, not docs/platform/
     content_scope:
       requirements: 'PR-xxx (Platform Requirements)'
       interfaces: 'IC-xxx (Integration Contracts)'
@@ -58,12 +62,12 @@ entity_documents:
   infrastructure_module:
     path_pattern: 'docs/platform/{module}/'
     has_documents:
-      - README.md # Module overview (replaces separate docs in small modules)
-      - prd.md # Or section in README for small modules
-      - architecture.md # Or section in README for small modules
+      - prd.md
+      - architecture.md
       - ux-design.md # If module has UI
       - epics.md # Module implementation stories
       - product-soul.md # Recommended: module identity
+    # NOTE: NO README.md - use prd.md for overview
     content_scope:
       requirements: 'FR-{MOD}-xxx (e.g., FR-SHL-001, FR-API-001)'
       interfaces: 'Module-specific interfaces that siblings can depend on'
@@ -88,12 +92,12 @@ entity_documents:
   strategic_container:
     path_pattern: 'docs/{category}/'
     has_documents:
-      - README.md
       - prd.md
       - architecture.md
       - ux-design.md
       - epics.md
       - product-soul.md # Recommended: category identity/voice
+    # NOTE: NO README.md - use prd.md for overview
     content_scope:
       requirements: 'FR-{CAT}-xxx (e.g., FR-STR-001, FR-FIN-001)'
       interfaces: 'Category-level interfaces'
@@ -121,12 +125,12 @@ entity_documents:
   coordination_unit:
     path_pattern: 'docs/{category}/{subcategory}/'
     has_documents:
-      - README.md
       - prd.md
       - architecture.md
       - ux-design.md
       - epics.md
       - product-soul.md # Recommended
+    # NOTE: NO README.md - use prd.md for overview
     content_scope:
       requirements: 'FR-{CAT}-{SUB}-xxx (e.g., FR-STR-PUL-001)'
       interfaces: 'Subcategory interfaces'
@@ -151,12 +155,12 @@ entity_documents:
   business_module:
     path_pattern: 'docs/{category}/{subcategory}/{module}/'
     has_documents:
-      - README.md
       - prd.md
       - architecture.md
       - ux-design.md
       - epics.md
       - product-soul.md # Recommended
+    # NOTE: NO README.md - use prd.md for overview
     content_scope:
       requirements: 'FR-{CAT}-{SUB}-{MOD}-xxx'
       interfaces: 'Module interfaces (available to siblings per ADR-020)'

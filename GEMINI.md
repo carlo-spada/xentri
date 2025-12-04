@@ -130,6 +130,22 @@ When modifying: **Flag change → Provide rationale → Include in commit messag
 
 Entities inherit from **direct parent only**. Can ADD requirements, never CONTRADICT parent.
 
+### Sibling Dependency Law (ADR-020)
+
+**Critical architectural constraint** — entities can only declare dependencies on **siblings** (same parent):
+
+- **Single-parent inheritance**: Every requirement has exactly one parent, encoded in its ID
+- **Sibling-only dependencies**: `requires_interfaces` can only reference siblings
+- **Inherited access**: Cross-branch dependencies must be declared at the common ancestor level
+- **Violation = architectural redesign required**, not a workaround
+
+```bash
+# Validate before committing
+pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
+```
+
+Full details: `docs/platform/architecture/adr-020-sibling-dependency-law.md`
+
 ### Requirement IDs
 
 ```

@@ -2,38 +2,66 @@
 
 > **Purpose:** Comprehensive audit and remediation of all documentation artifacts to ensure alignment with the redesigned Federated Workflow System, Five Entity Types model, Zero-Trust Inheritance rules, and **SSOT Atom Architecture**.
 
-**Generated:** 2025-12-03
-**Version:** 2.0
-**Status:** Ready for Execution
-**Updated:** Merged with SSOT Specification (Sessions 1-5) — adds Phase 0 atom infrastructure
+---
+
+## Document Governance
+
+| Attribute        | Value                                                                  |
+| ---------------- | ---------------------------------------------------------------------- |
+| **Version**      | 5.1                                                                    |
+| **Status**       | Draft — Pending Implementation                                         |
+| **Owner**        | Platform Team                                                          |
+| **DRI**          | BMad Builder (Phase 0), Analyst (Phases 1-6) ([Glossary](#2-glossary)) |
+| **Created**      | 2025-12-03                                                             |
+| **Last Updated** | 2025-12-04                                                             |
+| **Review Cycle** | After each micro-phase completion                                      |
+| **Approval**     | Pending — requires validation of Phase 0 deliverables                  |
+
+### Change Log
+
+| Version | Date       | Author       | Changes                                                                                                                                                      |
+| ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                           |
+| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location |
+| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                          |
+| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                      |
+| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                     |
+| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                             |
+| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                  |
 
 > **Related Documents:**
 >
-> - `docs/ssot-specification-draft.md` — Complete SSOT technical specification
-> - `docs/brainstorming-session-results-2025-12-03.md` — Architecture decisions transcript
+> - `docs/platform/document-contracts.yaml` — Ownership rules (SSOT authority)
+> - `docs/manifest.yaml` — Single source of truth for documentation structure
+> - `CLAUDE.md` — Project context and coding standards
 
 ---
 
 ## Table of Contents
 
 1. [Executive Summary](#1-executive-summary)
-2. [Scope & Objectives](#2-scope--objectives)
-3. [Agent Assignment Matrix](#3-agent-assignment-matrix)
-4. [Work Streams by Agent Persona](#4-work-streams-by-agent-persona)
-5. [**Phase 0: SSOT Foundation**](#5-phase-0-ssot-foundation) ← NEW
-6. [Parallel Execution Groups](#6-parallel-execution-groups)
-7. [Dependencies & Sequencing](#7-dependencies--sequencing)
-8. [Validation Criteria](#8-validation-criteria)
-9. [Execution Checklist](#9-execution-checklist)
+2. [Glossary](#2-glossary)
+3. [Conventions](#3-conventions)
+4. [Planned Remediation](#4-planned-remediation)
+5. [Scope & Objectives](#5-scope--objectives)
+6. [Risk Assessment & Mitigation](#6-risk-assessment--mitigation)
+7. [Agent Assignment Matrix](#7-agent-assignment-matrix)
+8. [Agent Coordination Protocol](#8-agent-coordination-protocol)
+9. [Work Streams by Agent Persona](#9-work-streams-by-agent-persona)
+10. [SSOT Atom System Specification](#10-ssot-atom-system-specification)
+11. [Execution Plan](#11-execution-plan)
+12. [Validation Criteria](#12-validation-criteria)
+13. [Execution Checklist](#13-execution-checklist)
 
 **Appendices:**
 
 - [A: Files Flagged for Immediate Attention](#appendix-a-files-flagged-for-immediate-attention)
 - [B: Agent Activation Commands](#appendix-b-agent-activation-commands)
-- [C: Validation Workflow Commands](#appendix-c-validation-workflow-commands)
-- [D: Critical Files for Recent Changes](#appendix-d-critical-files-for-recent-changes)
-- [E: Missing Workflows (Phase 0)](#appendix-e-missing-workflows-phase-0) ← NEW
-- [F: Gate Validation Rules](#appendix-f-gate-validation-rules) ← NEW
+- [C: Validation Commands](#appendix-c-validation-commands)
+- [D: Critical Files Reference](#appendix-d-critical-files-reference)
+- [E: Complete Workflow Inventory](#appendix-e-complete-workflow-inventory)
+- [F: Deferred Improvements (Tech Debt)](#appendix-f-deferred-improvements-tech-debt)
+- [G: Rollback & Recovery Procedures](#appendix-g-rollback--recovery-procedures)
 
 ---
 
@@ -51,49 +79,149 @@ The audit addresses three dimensions:
 2. **Workflow Status Alignment** — Status files reflect actual progress
 3. **Content Quality** — Documents contain required sections per entity type
 
-### Key Recent Changes to Validate Against
+### Key Changes to Validate Against
 
-| Change Area                     | Description                                                                                                                                                                                              |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Five Entity Types**           | Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module                                                                                                             |
-| **Workflow Phases**             | 1-Analysis → 2-Plan → 3-Solutioning → 4-Implementation                                                                                                                                                   |
-| **Inheritance Rules**           | Zero-Trust: Children inherit from direct parent ONLY, can ADD but never CONTRADICT. Children can only depend on SIBLING interfaces. Cross-branch dependencies must be declared at common ancestor level. |
-| **Requirement IDs**             | PR-xxx/IC-xxx (Constitution), FR-{CODE}-xxx (all others)                                                                                                                                                 |
-| **Entity Detection**            | Determined by PURPOSE, not folder depth                                                                                                                                                                  |
-| **ADR-020**                     | Sibling Dependency Law: single-parent inheritance, sibling-only dependencies                                                                                                                             |
-| **Entity Document Structure**   | ALL entities have ALL 5 document types (prd.md, architecture.md, ux-design.md, epics.md, product-soul.md)                                                                                                |
-| **Requirement/Interface Files** | New `*.requirement.yaml` and `*.interface.yaml` formats for structured contracts                                                                                                                         |
-| **document-contracts.yaml**     | Updated with `entity_documents` section defining per-level document rules                                                                                                                                |
-| **Hooks System**                | `.claude/hooks/` for automatic validation enforcement                                                                                                                                                    |
-| **Architecture v3.0**           | Refactored to decisions-only; implementation details delegated to modules                                                                                                                                |
-| **SSOT Atom System**            | NEW: Centralized atoms in `docs/_atoms/` with ID format `SYS.001-STR.001-...`                                                                                                                            |
-| **Atom Operations**             | NEW: 4 operations (create, search, amend, deprecate) with gate validation                                                                                                                                |
-| **Gate Validation**             | NEW: Hard block on invalid atoms, deprecated refs, broken links                                                                                                                                          |
-| **16 Missing Workflows**        | NEW: amend-prd, amend-architecture, validate-story, etc.                                                                                                                                                 |
+| Change Area                | Description                                                                                  |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| **Five Entity Types**      | Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module |
+| **Workflow Phases**        | 1-Analysis → 2-Plan → 3-Solutioning → 4-Implementation                                       |
+| **Zero-Trust Inheritance** | Children inherit from direct parent ONLY, can ADD but never CONTRADICT                       |
+| **Sibling Dependency Law** | ADR-020: Entities depend only on siblings; cross-branch at ancestor level                    |
+| **Entity Detection**       | Determined by PURPOSE, not folder depth                                                      |
+| **SSOT Atom System**       | Centralized atoms in `docs/_atoms/` with hierarchical IDs                                    |
+| **Gate Validation**        | Hard block on invalid atoms, deprecated refs, broken links                                   |
+| **Workflow Strategy**      | 92 existing workflows (keep all) + 15 new workflows to create = 107 total target             |
 
 ---
 
-## 2. Scope & Objectives
+## 2. Glossary
 
-### 2.1 In Scope
+| Term                       | Definition                                                                                                            |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Atom**                   | Smallest unit of authoritative content (requirement, decision, interface). Lives in `docs/_atoms/`, referenced by ID. |
+| **SSOT**                   | Single Source of Truth — each piece of information has exactly one authoritative location.                            |
+| **Constitution**           | Root entity (`docs/platform/`) containing system-wide rules (PR-xxx, IC-xxx, ADR-xxx).                                |
+| **Infrastructure Module**  | Platform-level modules (`docs/platform/{module}/`) providing foundational services.                                   |
+| **Strategic Container**    | Category-level entities (`docs/{category}/`) representing business domains.                                           |
+| **Coordination Unit**      | Subcategory-level entities (`docs/{category}/{subcategory}/`) orchestrating modules.                                  |
+| **Business Module**        | Feature-level entities (`docs/{cat}/{subcat}/{mod}/`) where functionality is implemented.                             |
+| **Zero-Trust Inheritance** | Entities inherit ONLY from direct parent, can ADD requirements but never CONTRADICT.                                  |
+| **Sibling Dependency Law** | ADR-020: Dependencies only on siblings (same parent). Cross-branch requires ancestor declaration.                     |
+| **Gate Validation**        | Hard-block rules at pre-commit/CI preventing invalid atoms, broken refs, deprecated dependencies.                     |
+| **Triad**                  | Complete set of three workflows: create, validate, amend.                                                             |
+| **DRI**                    | Directly Responsible Individual — single person accountable for a deliverable.                                        |
+| **Entity-first Detection** | Workflows determine entity type at runtime before applying type-specific templates.                                   |
 
-| Category                   | Items                                                                               |
-| -------------------------- | ----------------------------------------------------------------------------------- |
-| **Constitution**           | `docs/platform/*.md` (5 protected documents)                                        |
-| **Infrastructure Modules** | 4 active (shell, ui, core-api, ts-schema), 4 planned (events, auth, billing, brief) |
-| **Strategic Containers**   | 7 categories (strategy, marketing, sales, finance, operations, team, legal)         |
-| **Coordination Units**     | 35 subcategories across all strategic containers                                    |
-| **BMAD Workflows**         | 70+ workflow.yaml files in `.bmad/bmm/workflows/`                                   |
-| **BMAD Agents**            | 9 agents in `.bmad/bmm/agents/`                                                     |
+---
 
-### 2.2 Objectives
+## 3. Conventions
+
+### 3.1 Document Status Values
+
+| Status       | Meaning                                  |
+| ------------ | ---------------------------------------- |
+| `draft`      | Work in progress, not yet validated      |
+| `pending`    | Awaiting review or approval              |
+| `approved`   | Validated and ready for use              |
+| `deprecated` | No longer authoritative, pending removal |
+
+### 3.2 Workflow Status Values
+
+| Status        | Meaning                          |
+| ------------- | -------------------------------- |
+| `pending`     | Not yet started                  |
+| `in_progress` | Currently being executed         |
+| `completed`   | Successfully finished            |
+| `blocked`     | Cannot proceed due to dependency |
+
+### 3.3 Task ID Format
+
+All tasks use unified hierarchical IDs matching the micro-phase structure:
+
+```
+{Phase}.{Sequence}
+```
+
+| Component | Values                                                                        |
+| --------- | ----------------------------------------------------------------------------- |
+| Phase     | `0` (Foundation), `1` (Workflow), `2` (Migration), `3`-`6` (Audit Groups A-D) |
+| Sequence  | Two-digit number (01-99), sequential within phase                             |
+
+**Examples:**
+
+- `0.01` = Phase 0, Micro-phase 1 (Atom Directory Setup)
+- `3.07` = Phase 3 (Group A), Micro-phase 7
+
+### 3.4 Requirement ID Format
+
+| Scope        | Format             | Example                    |
+| ------------ | ------------------ | -------------------------- |
+| Constitution | `PR-xxx`, `IC-xxx` | PR-001, IC-004             |
+| All Others   | `FR-{CODE}-xxx`    | FR-SHL-001, FR-STR-PUL-001 |
+
+---
+
+## 4. Planned Remediation
+
+> **Status:** All items below are PENDING implementation. Nothing has been executed yet.
+
+### 4.1 Soul Terminology (Pending)
+
+- [ ] Verify `product-brief.md` → `product-soul.md` rename complete
+- [ ] IC-004: `GET /api/v1/soul/{section}` documented
+- [ ] All Constitution docs use "Soul" consistently
+
+### 4.2 Structure & Format (Pending)
+
+- [ ] Frontmatter aligned across all Constitution docs
+- [ ] "brand"/"Brand" → "Marketing" in all references
+- [ ] Create `docs/platform/validation/` directory
+- [ ] Create `docs/platform/research/` directory
+- [ ] Create/update `docs/platform/document-contracts.yaml`
+
+### 4.3 Navigation Policy (Pending)
+
+> **IMPORTANT:** Only ONE index file shall exist at `docs/index.md`. NO README.md files anywhere in `docs/`. NO index.md files in subdirectories.
+
+- [ ] DELETE all `docs/**/README.md` files
+- [ ] DELETE all `docs/**/index.md` files (except `docs/index.md`)
+- [ ] Update `docs/index.md` as single navigation hub
+
+### 4.4 Constitution Documents (Pending)
+
+> **Special Case:** Product Soul lives at `docs/product-soul.md` (root level) because it represents the foundational vision that transcends the platform. All other Constitution documents live under `docs/platform/`.
+
+| Document     | Correct Location                | Status                          |
+| ------------ | ------------------------------- | ------------------------------- |
+| Product Soul | `docs/product-soul.md`          | ✅ Exists (special: root level) |
+| PRD          | `docs/platform/prd.md`          | Verify                          |
+| Architecture | `docs/platform/architecture.md` | Verify                          |
+| UX Design    | `docs/platform/ux-design.md`    | Create if missing               |
+| Epics        | `docs/platform/epics.md`        | Verify                          |
+
+---
+
+## 5. Scope & Objectives
+
+### 5.1 In Scope
+
+| Category                   | Items                                                                   |
+| -------------------------- | ----------------------------------------------------------------------- |
+| **Constitution**           | `docs/product-soul.md` + `docs/platform/*.md` (5 protected documents)   |
+| **Infrastructure Modules** | 4 active (shell, ui, core-api, ts-schema), 4 planned                    |
+| **Strategic Containers**   | 7 categories                                                            |
+| **Coordination Units**     | 35 subcategories                                                        |
+| **BMAD Workflows**         | 92 existing (keep all, update as needed) + 15 new to create = 107 total |
+| **BMAD Agents**            | 9 agents in `.bmad/bmm/agents/`                                         |
+
+### 5.2 Objectives
 
 1. **Identify Gaps** — Missing files, broken references, orphaned documents
 2. **Flag Inconsistencies** — Entity types, frontmatter, inheritance violations
-3. **Remediate Issues** — Update/create/delete files to achieve compliance
+3. **Remediate Issues** — Update existing files, create missing files to achieve compliance
 4. **Establish Baselines** — Create workflow status files for federated tracking
 
-### 2.3 Deliverables
+### 5.3 Deliverables
 
 - [ ] Gap Analysis Report (per entity type)
 - [ ] Remediation Actions Log
@@ -103,421 +231,212 @@ The audit addresses three dimensions:
 
 ---
 
-## 3. Agent Assignment Matrix
+## 6. Risk Assessment & Mitigation
 
-| Agent                   | Persona                  | Primary Responsibility                     | Document Types                |
-| ----------------------- | ------------------------ | ------------------------------------------ | ----------------------------- |
-| **BMad Builder**        | Module/Workflow Expert   | BMAD system files, workflow.yaml, agent.md | `.bmad/**/*`                  |
-| **Analyst (Mary)**      | Requirements Expert      | Gap analysis, research, validation reports | All (read-only analysis)      |
-| **PM (John)**           | Product Strategist       | PRDs, Epics, requirement IDs               | `prd.md`, `epics.md`          |
-| **Architect (Winston)** | Technical Design Leader  | Architecture docs, ADRs, diagrams          | `architecture.md`, `adr-*.md` |
-| **UX Designer (Sally)** | User Experience          | UX design documents, wireframes            | `ux-design.md`, `ux/**/*`     |
-| **Tech Writer (Paige)** | Documentation Specialist | READMEs, formatting, cross-references      | `README.md`, `index.md`       |
-| **Dev (Amelia)**        | Implementation           | Sprint artifacts, story files              | `sprint-artifacts/**/*`       |
-| **SM**                  | Scrum Master             | Status tracking, sprint planning           | `sprint-status.yaml`          |
+### 6.1 Critical Risks
 
----
+| Risk ID | Description                  | Likelihood | Impact   | Mitigation                                                       |
+| ------- | ---------------------------- | ---------- | -------- | ---------------------------------------------------------------- |
+| R-01    | Phase 0 Foundation Failure   | Medium     | Critical | Backup before Phase 0; clear acceptance criteria                 |
+| R-02    | Parallel Execution Conflicts | High       | High     | Branch-per-category; clear file ownership; coordination protocol |
+| R-03    | Migration Data Loss          | Medium     | Critical | Full backup; validate atom count matches source                  |
+| R-04    | Broken Cross-References      | High       | Medium   | Run `validate:links` before/after each phase                     |
+| R-05    | Scope Creep                  | High       | Medium   | Document new issues in Appendix F; defer non-critical            |
 
-## 4. Work Streams by Agent Persona
+### 6.2 Success Criteria
 
-### 4.1 BMad Builder Work Stream
+| Phase          | Success Criteria                               | Validation                      |
+| -------------- | ---------------------------------------------- | ------------------------------- |
+| **Phase 0**    | Atom directory + validation scripts functional | `pnpm run validate:docs` passes |
+| **Phases 1-2** | Workflows updated/created; atoms migrated      | Zero broken refs                |
+| **Phases 3-6** | All audit tasks complete                       | All validation scripts pass     |
 
-**Focus:** BMAD system integrity and workflow compliance
+### 6.3 Rollback Triggers
 
-#### Tasks
+Rollback procedures (see [Appendix G](#appendix-g-rollback--recovery-procedures)) are triggered when:
 
-| ID    | Task                                                                               | Priority | Parallel Group |
-| ----- | ---------------------------------------------------------------------------------- | -------- | -------------- |
-| BB-01 | Audit all workflow.yaml files for proper structure                                 | HIGH     | A              |
-| BB-02 | Verify workflow phases align (1-Analysis, 2-Plan, 3-Solutioning, 4-Implementation) | HIGH     | A              |
-| BB-03 | Check archived workflows in `_archive/` for removal or migration                   | MEDIUM   | B              |
-| BB-04 | Validate agent menu items reference existing workflows                             | HIGH     | A              |
-| BB-05 | Ensure detect-entity-type task is properly integrated                              | HIGH     | A              |
-| BB-06 | Audit BMB workflows (create-workflow, create-agent, etc.)                          | MEDIUM   | B              |
-| BB-07 | Verify config.yaml settings align with manifest.yaml                               | HIGH     | A              |
-
-#### Files to Audit
-
-```
-.bmad/bmm/workflows/**/*.yaml
-.bmad/bmm/agents/*.md
-.bmad/bmm/config.yaml
-.bmad/bmb/workflows/**/*.yaml
-.bmad/core/workflows/**/*.yaml
-```
-
-#### Validation Workflow
-
-```
-/bmad:bmb:workflows:audit-workflow
-```
+| Trigger                   | Threshold                       | Action                                        |
+| ------------------------- | ------------------------------- | --------------------------------------------- |
+| `validate:docs` failures  | > 10 errors                     | Pause, investigate, rollback if unrecoverable |
+| `validate:links` failures | > 5 broken refs in single phase | Revert phase changes, forward-fix             |
+| Critical file deletion    | Any protected document deleted  | Immediate rollback from checkpoint            |
+| Merge conflict            | Unresolvable after 2 attempts   | Escalate to DRI, serialize work               |
+| CI pipeline failure       | Blocking for > 30 minutes       | Rollback to last checkpoint                   |
 
 ---
 
-### 4.2 Analyst (Mary) Work Stream
+## 7. Agent Assignment Matrix
 
-**Focus:** Gap analysis and cross-cutting validation
-
-#### Tasks
-
-| ID    | Task                                                                         | Priority | Parallel Group  |
-| ----- | ---------------------------------------------------------------------------- | -------- | --------------- |
-| AN-01 | Generate manifest.yaml vs actual structure diff report                       | HIGH     | A               |
-| AN-02 | Identify orphaned files (exist but not in manifest)                          | HIGH     | A               |
-| AN-03 | Identify missing files (in manifest but don't exist)                         | HIGH     | A               |
-| AN-04 | Validate entity_type consistency across all docs                             | HIGH     | A               |
-| AN-05 | Check requirement ID format compliance (PR-xxx, IC-xxx, FR-{CODE}-xxx)       | MEDIUM   | B               |
-| AN-06 | Audit frontmatter for required fields                                        | MEDIUM   | B               |
-| AN-07 | Validate inheritance chains (no skip-level, no contradictions)               | HIGH     | C               |
-| AN-08 | Produce consolidated Gap Analysis Report                                     | HIGH     | D (after A,B,C) |
-| AN-09 | Run validate-dependencies.ts for Sibling Dependency Law (ADR-020) compliance | HIGH     | A               |
-| AN-10 | Audit document-contracts.yaml entity_documents section compliance            | HIGH     | A               |
-| AN-11 | Verify each entity has ALL 5 document types per document-contracts.yaml      | HIGH     | C               |
-
-#### Outputs
-
-- `docs/platform/validation/gap-analysis-report.md`
-- `docs/platform/validation/orphaned-files-report.md`
-- `docs/platform/validation/inheritance-audit.md`
-- `docs/platform/validation/sibling-dependency-audit.md`
-- `docs/platform/validation/entity-documents-audit.md`
-
-#### Files to Audit
-
-```
-docs/platform/document-contracts.yaml
-scripts/validation/validate-dependencies.ts
-scripts/validation/requirement.schema.json
-docs/platform/examples/*.requirement.yaml
-docs/platform/examples/*.interface.yaml
-.claude/hooks/*.sh
-.claude/settings.local.json
-```
+| Agent                   | Primary Responsibility                 | Document Types                | File Lock Scope                     |
+| ----------------------- | -------------------------------------- | ----------------------------- | ----------------------------------- |
+| **BMad Builder**        | BMAD system files, workflow.yaml       | `.bmad/**/*`                  | `.bmad/`                            |
+| **Analyst (Mary)**      | Gap analysis, cross-cutting validation | All (read-only analysis)      | None (read-only)                    |
+| **PM (John)**           | PRDs, Epics, requirement IDs           | `prd.md`, `epics.md`          | `**/prd.md`, `**/epics.md`          |
+| **Architect (Winston)** | Architecture docs, ADRs                | `architecture.md`, `adr-*.md` | `**/architecture.md`, `**/adr-*.md` |
+| **UX Designer (Sally)** | UX design documents, wireframes        | `ux-design.md`, `ux/**/*`     | `**/ux-design.md`, `**/ux/`         |
+| **Tech Writer (Paige)** | Formatting, cross-references           | `docs/index.md`               | `docs/index.md`                     |
+| **Dev (Amelia)**        | Sprint artifacts, story files          | `sprint-artifacts/**/*`       | `**/sprint-artifacts/`              |
+| **SM (Bob)**            | Status tracking, sprint planning       | `sprint-status.yaml`          | `**/sprint-status.yaml`             |
 
 ---
 
-### 4.3 PM (John) Work Stream
+## 8. Agent Coordination Protocol
 
-**Focus:** PRD and Epic document compliance
+### 8.1 File Locking Strategy
 
-#### Tasks
+To prevent parallel execution conflicts, agents must respect file locks:
 
-| ID    | Task                                                              | Priority | Parallel Group |
-| ----- | ----------------------------------------------------------------- | -------- | -------------- |
-| PM-01 | Audit Constitution PRD (`docs/platform/prd.md`)                   | HIGH     | A              |
-| PM-02 | Audit Infrastructure Module PRDs (shell, ui, core-api, ts-schema) | HIGH     | A              |
-| PM-03 | Validate all PRDs have proper entity_type frontmatter             | HIGH     | A              |
-| PM-04 | Check requirement ID uniqueness and format                        | MEDIUM   | B              |
-| PM-05 | Audit Constitution Epics (`docs/platform/epics.md`)               | HIGH     | A              |
-| PM-06 | Audit Infrastructure Module Epics                                 | HIGH     | A              |
-| PM-07 | Validate epic-to-PRD traceability                                 | HIGH     | C              |
-| PM-08 | Remove duplicate files (`prd 2.md`, `epics 2.md`)                 | HIGH     | A              |
-| PM-09 | Create placeholder PRDs for planned Infrastructure Modules        | MEDIUM   | B              |
+1. **Exclusive Lock:** Agent announces intent in coordination channel before modifying files in their lock scope
+2. **Lock Duration:** Maximum 30 minutes per file/directory
+3. **Lock Release:** Explicit release or automatic after commit
+4. **Conflict Resolution:** First to announce gets priority; others wait or work on different files
 
-#### Files to Audit
+### 8.2 Conflict Resolution Hierarchy
 
-```
-docs/platform/prd.md
-docs/platform/epics.md
-docs/platform/*/prd.md
-docs/platform/*/epics.md
-docs/platform/**/prd\ 2.md (DELETE)
-docs/platform/**/epics\ 2.md (DELETE)
-```
+When agent tasks conflict:
 
-#### Validation Workflow
+| Conflict Type                 | Resolution                                      |
+| ----------------------------- | ----------------------------------------------- |
+| Same file, different sections | Serialize: higher phase number waits            |
+| Same file, same section       | Escalate to DRI (Analyst for Phases 1-6)        |
+| Cross-file dependency         | Complete upstream file first                    |
+| Merge conflict                | Attempt manual merge; if failed, DRI arbitrates |
+
+### 8.3 Communication Protocol
 
 ```
-/bmad:bmm:workflows:validate-prd
-/bmad:bmm:workflows:validate-epics
+1. ANNOUNCE: "Starting [Task ID] - locking [file pattern]"
+2. EXECUTE:  Perform task
+3. VALIDATE: Run relevant validation scripts
+4. COMMIT:   Commit with task ID in message
+5. RELEASE:  "Completed [Task ID] - releasing [file pattern]"
 ```
+
+### 8.4 Handoff Procedures
+
+When one agent's output is another's input:
+
+| From Agent | To Agent  | Handoff Point         | Validation Before Handoff      |
+| ---------- | --------- | --------------------- | ------------------------------ |
+| PM         | Architect | PRD approved          | `validate-prd` passes          |
+| Architect  | UX        | Architecture approved | `validate-architecture` passes |
+| UX         | Dev       | UX approved           | `validate-ux` passes           |
+| PM         | SM        | Epics created         | `validate-epics` passes        |
 
 ---
 
-### 4.4 Architect (Winston) Work Stream
+## 9. Work Streams by Agent Persona
 
-**Focus:** Architecture document compliance
+### 9.1 BMad Builder
 
-#### Tasks
+| ID   | Task                                                    | Phase |
+| ---- | ------------------------------------------------------- | ----- |
+| 0.01 | Create `docs/_atoms/` directory structure               | 0     |
+| 0.02 | Document atom ID scheme in template                     | 0     |
+| 0.03 | Create atom CRUD skills (create/search/amend/deprecate) | 0     |
+| 3.01 | Audit all workflow.yaml files for proper structure      | 3     |
+| 3.02 | Verify workflow phases align correctly                  | 3     |
+| 3.03 | Validate agent menu items reference existing workflows  | 3     |
+| 4.01 | Review archived workflows for potential restoration     | 4     |
+| 4.02 | Audit BMB workflows (create-workflow, create-agent)     | 4     |
 
-| ID    | Task                                                                 | Priority | Parallel Group |
-| ----- | -------------------------------------------------------------------- | -------- | -------------- |
-| AR-01 | Audit Constitution Architecture (`docs/platform/architecture.md`)    | HIGH     | A              |
-| AR-02 | Audit Infrastructure Module architectures                            | HIGH     | A              |
-| AR-03 | Validate ADR numbering and format (`adr-xxx-*.md`)                   | MEDIUM   | B              |
-| AR-04 | Check architecture-to-PRD traceability                               | HIGH     | C              |
-| AR-05 | Validate technology stack declarations                               | MEDIUM   | B              |
-| AR-06 | Audit Event Model documentation                                      | MEDIUM   | B              |
-| AR-07 | Verify "Decoupled Unity" principles documented                       | HIGH     | A              |
-| AR-08 | Verify ADR-020 (Sibling Dependency Law) is properly integrated       | HIGH     | A              |
-| AR-09 | Validate architecture.md v3.0 delegation to modules (decisions-only) | MEDIUM   | B              |
+### 9.2 Analyst (Mary)
 
-#### Files to Audit
+| ID   | Task                                                 | Phase |
+| ---- | ---------------------------------------------------- | ----- |
+| 0.04 | Create atom validation script (`validate-atoms.ts`)  | 0     |
+| 0.05 | Implement gate validation rules (5 rules)            | 0     |
+| 3.04 | Generate manifest.yaml vs actual structure diff      | 3     |
+| 3.05 | Identify orphaned files (exist but not in manifest)  | 3     |
+| 3.06 | Identify missing files (in manifest but don't exist) | 3     |
+| 3.07 | Validate entity_type consistency across all docs     | 3     |
+| 3.08 | Run validate-dependencies.ts for ADR-020 compliance  | 3     |
+| 4.03 | Check requirement ID format compliance               | 4     |
+| 4.04 | Audit frontmatter for required fields                | 4     |
+| 5.01 | Validate inheritance chains (no skip-level)          | 5     |
+| 5.02 | Verify entity documents per BMM patterns             | 5     |
+| 6.01 | Produce consolidated Gap Analysis Report             | 6     |
 
-```
-docs/platform/architecture.md
-docs/platform/*/architecture.md
-docs/platform/architecture/adr-*.md
-docs/platform/architecture/adr-020-sibling-dependency-law.md
-docs/platform/document-contracts.yaml
-```
+### 9.3 PM (John)
 
-#### Validation Workflow
+| ID   | Task                                              | Phase |
+| ---- | ------------------------------------------------- | ----- |
+| 3.09 | Audit Constitution PRD (`docs/platform/prd.md`)   | 3     |
+| 3.10 | Audit Infrastructure Module PRDs                  | 3     |
+| 3.11 | Audit Constitution Epics                          | 3     |
+| 3.12 | Remove duplicate files (`prd 2.md`, `epics 2.md`) | 3     |
+| 4.05 | Check requirement ID uniqueness                   | 4     |
+| 4.06 | Create placeholder PRDs for planned modules       | 4     |
+| 5.03 | Validate epic-to-PRD traceability                 | 5     |
 
-```
-/bmad:bmm:workflows:validate-architecture
-```
+### 9.4 Architect (Winston)
 
----
+| ID   | Task                                      | Phase |
+| ---- | ----------------------------------------- | ----- |
+| 3.13 | Audit Constitution Architecture           | 3     |
+| 3.14 | Audit Infrastructure Module architectures | 3     |
+| 3.15 | Verify ADR-020 is properly integrated     | 3     |
+| 4.07 | Validate ADR numbering and format         | 4     |
+| 4.08 | Audit Event Model documentation           | 4     |
+| 5.04 | Check architecture-to-PRD traceability    | 5     |
 
-### 4.5 UX Designer (Sally) Work Stream
+### 9.5 UX Designer (Sally)
 
-**Focus:** UX design document compliance
+| ID   | Task                                      | Phase |
+| ---- | ----------------------------------------- | ----- |
+| 3.16 | Audit Constitution UX Design              | 3     |
+| 3.17 | Audit Infrastructure Module UX designs    | 3     |
+| 3.18 | Remove duplicate files (`ux-design 2.md`) | 3     |
+| 4.09 | Audit `docs/platform/ux/` HTML mockups    | 4     |
+| 5.05 | Validate UX-to-PRD traceability           | 5     |
 
-#### Tasks
+### 9.6 Tech Writer (Paige)
 
-| ID    | Task                                                        | Priority | Parallel Group |
-| ----- | ----------------------------------------------------------- | -------- | -------------- |
-| UX-01 | Audit Constitution UX Design (`docs/platform/ux-design.md`) | HIGH     | A              |
-| UX-02 | Audit Infrastructure Module UX designs (shell, ui)          | HIGH     | A              |
-| UX-03 | Remove duplicate files (`ux-design 2.md`)                   | HIGH     | A              |
-| UX-04 | Validate UX-to-PRD traceability                             | HIGH     | C              |
-| UX-05 | Audit `docs/platform/ux/` HTML mockups                      | MEDIUM   | B              |
-| UX-06 | Check design system consistency                             | MEDIUM   | B              |
+| ID   | Task                                           | Phase |
+| ---- | ---------------------------------------------- | ----- |
+| 3.19 | DELETE all README.md files in docs/            | 3     |
+| 3.20 | DELETE all index.md files EXCEPT docs/index.md | 3     |
+| 3.21 | Update docs/index.md as single navigation hub  | 3     |
+| 4.10 | Check cross-reference links                    | 4     |
+| 4.11 | Validate CommonMark compliance                 | 4     |
+| 6.02 | Verify manifest.yaml path references           | 6     |
 
-#### Files to Audit
+### 9.7 Dev (Amelia)
 
-```
-docs/platform/ux-design.md
-docs/platform/*/ux-design.md
-docs/platform/ux/**/*
-docs/platform/**/ux-design\ 2.md (DELETE)
-```
+| ID   | Task                                    | Phase |
+| ---- | --------------------------------------- | ----- |
+| 3.22 | Audit sprint-artifacts folder structure | 3     |
+| 3.23 | Validate story file format compliance   | 3     |
+| 4.12 | Verify task/subtask structure           | 4     |
+| 5.06 | Check story-to-epic traceability        | 5     |
 
-#### Validation Workflow
+### 9.8 SM (Bob)
 
-```
-/bmad:bmm:workflows:validate-ux
-```
+| ID   | Task                                                  | Phase |
+| ---- | ----------------------------------------------------- | ----- |
+| 3.24 | Audit existing sprint-status.yaml files               | 3     |
+| 3.25 | Validate status enum values                           | 3     |
+| 4.13 | Create missing workflow status files for Constitution | 4     |
+| 4.14 | Create status files for Infrastructure Modules        | 4     |
+| 5.07 | Check phase progression accuracy                      | 5     |
 
----
+### 9.9 Cross-Cutting (ALL Agents)
 
-### 4.6 Tech Writer (Paige) Work Stream
-
-**Focus:** Documentation quality and formatting
-
-#### Tasks
-
-| ID    | Task                                        | Priority | Parallel Group |
-| ----- | ------------------------------------------- | -------- | -------------- |
-| TW-01 | Audit all README.md files for consistency   | HIGH     | A              |
-| TW-02 | Validate index.md navigation files          | HIGH     | A              |
-| TW-03 | Check cross-reference links (internal docs) | HIGH     | B              |
-| TW-04 | Validate CommonMark compliance              | MEDIUM   | B              |
-| TW-05 | Audit table of contents accuracy            | MEDIUM   | B              |
-| TW-06 | Check heading hierarchy consistency         | MEDIUM   | B              |
-| TW-07 | Verify manifest.yaml path references        | HIGH     | A              |
-| TW-08 | Audit research folder documentation         | LOW      | C              |
-
-#### Files to Audit
-
-```
-docs/**/README.md
-docs/**/index.md
-docs/index.md
-docs/manifest.yaml
-CLAUDE.md, GEMINI.md, AGENTS.md
-```
-
-#### Existing Scripts to Use
-
-```bash
-pnpm run validate:docs
-pnpm run validate:links
-```
-
----
-
-### 4.7 Dev (Amelia) Work Stream
-
-**Focus:** Sprint artifacts and story files
-
-#### Tasks
-
-| ID    | Task                                    | Priority | Parallel Group |
-| ----- | --------------------------------------- | -------- | -------------- |
-| DV-01 | Audit sprint-artifacts folder structure | HIGH     | A              |
-| DV-02 | Validate story file format compliance   | HIGH     | A              |
-| DV-03 | Check story-to-epic traceability        | HIGH     | C              |
-| DV-04 | Verify task/subtask structure           | MEDIUM   | B              |
-| DV-05 | Audit tech-spec documents               | MEDIUM   | B              |
-
-#### Files to Audit
-
-```
-docs/platform/sprint-artifacts/**/*
-docs/platform/*/sprint-artifacts/**/*
-```
+| ID   | Task                                                 | Phase | Assigned To         |
+| ---- | ---------------------------------------------------- | ----- | ------------------- |
+| 5.08 | Verify entity documents per BMM required/recommended | 5     | All (their domain)  |
+| 4.15 | Validate `*.requirement.yaml` files follow schema    | 4     | PM + Analyst        |
+| 4.16 | Validate `*.interface.yaml` files follow schema      | 4     | Architect + Analyst |
 
 ---
 
-### 4.8 SM (Scrum Master) Work Stream
+## 10. SSOT Atom System Specification
 
-**Focus:** Workflow status tracking
+### 10.1 Purpose
 
-#### Tasks
+The atom system provides centralized storage for authoritative content (requirements, decisions, interfaces) that must be referenced consistently across all documentation.
 
-| ID    | Task                                                            | Priority | Parallel Group |
-| ----- | --------------------------------------------------------------- | -------- | -------------- |
-| SM-01 | Audit existing sprint-status.yaml files                         | HIGH     | A              |
-| SM-02 | Create missing workflow status files for Constitution           | HIGH     | B              |
-| SM-03 | Create missing workflow status files for Infrastructure Modules | HIGH     | B              |
-| SM-04 | Validate status enum values (pending, in_progress, completed)   | MEDIUM   | A              |
-| SM-05 | Check phase progression accuracy                                | MEDIUM   | C              |
-
-#### Workflow
-
-```
-/bmad:bmm:workflows:workflow-init
-/bmad:bmm:workflows:workflow-status
-```
-
----
-
-### 4.9 Cross-Cutting Tasks (ALL Agents)
-
-**Focus:** Universal compliance checks that apply to all document types
-
-#### Tasks
-
-| ID     | Task                                                                    | Priority | Parallel Group | Assigned To                |
-| ------ | ----------------------------------------------------------------------- | -------- | -------------- | -------------------------- |
-| ALL-01 | Verify each entity has ALL 5 document types per document-contracts.yaml | HIGH     | C              | All agents in their domain |
-| ALL-02 | Validate \*.requirement.yaml files follow schema                        | HIGH     | B              | PM + Analyst               |
-| ALL-03 | Validate \*.interface.yaml files follow schema                          | HIGH     | B              | Architect + Analyst        |
-| ALL-04 | Check hooks enforcement is active for validation                        | MEDIUM   | A              | BMad Builder               |
-
-#### Rationale
-
-Per the Entity Document Structure change, **every entity level** (Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module) must have ALL 5 document types:
-
-- `prd.md`
-- `architecture.md`
-- `ux-design.md`
-- `epics.md`
-- `product-soul.md`
-
-This is a breaking change from the previous model where only Constitution had all 5.
-
----
-
-## 5. Phase 0: SSOT Foundation
-
-> **NEW SECTION** — Must complete BEFORE Groups A-D can execute effectively.
->
-> **Source:** `docs/ssot-specification-draft.md` (Sessions 1-5)
-
-Phase 0 establishes the atom infrastructure that all subsequent audit phases will use for validation.
-
-### 5.1 Why Phase 0?
-
-The audit plan's validation tasks (AN-01 through AN-11) need atom infrastructure to:
-
-- Validate references point to existing atoms
-- Check for deprecated atom references
-- Ensure atom ID format compliance
-- Enforce gate validation rules
-
-### 5.2 Phase 0 Work Streams (3-4 Claude Instances)
-
-```
-        INSTANCE 1 (Foundation)
-        ┌───────────────────┐
-        │ Atom ID scheme    │
-        │ docs/_atoms/      │
-        │ Atom skills       │
-        └────────┬──────────┘
-                 │
-        ┌────────┴────────┐
-        ▼                 ▼
-INSTANCE 2            INSTANCE 3
-┌─────────────┐      ┌─────────────┐
-│ Validation  │      │ Workflows   │
-│ scripts     │      │ updates     │
-└──────┬──────┘      └──────┬──────┘
-       │                    │
-       └────────┬───────────┘
-                ▼
-           INSTANCE 4
-        ┌─────────────┐
-        │ Migration   │
-        │ (optional)  │
-        └─────────────┘
-```
-
-### 5.3 Instance 1: Foundation (BMad Builder)
-
-| ID      | Task                               | Output                                  | Priority |
-| ------- | ---------------------------------- | --------------------------------------- | -------- |
-| P0-F-01 | Create `docs/_atoms/` directory    | Directory structure                     | HIGH     |
-| P0-F-02 | Write atom ID scheme documentation | `docs/_atoms/README.md`                 | HIGH     |
-| P0-F-03 | Create atom template               | `docs/_atoms/_template.md`              | HIGH     |
-| P0-F-04 | Create `create-atom` skill         | `.bmad/core/tasks/create-atom.xml`      | HIGH     |
-| P0-F-05 | Create `search-atom` skill         | `.bmad/core/tasks/search-atom.xml`      | MEDIUM   |
-| P0-F-06 | Create `amend-atom` skill          | `.bmad/core/tasks/amend-atom.xml`       | MEDIUM   |
-| P0-F-07 | Create `deprecate-atom` skill      | `.bmad/core/tasks/deprecate-atom.xml`   | MEDIUM   |
-| P0-F-08 | Create Product Soul template       | `docs/_atoms/_product-soul-template.md` | HIGH     |
-
-### 5.4 Instance 2: Validation (Analyst)
-
-| ID      | Task                              | Output                                  | Priority |
-| ------- | --------------------------------- | --------------------------------------- | -------- |
-| P0-V-01 | Create atom validation script     | `scripts/validation/validate-atoms.ts`  | HIGH     |
-| P0-V-02 | Implement parent-exists rule      | Gate validation                         | HIGH     |
-| P0-V-03 | Implement entity-valid rule       | Gate validation                         | HIGH     |
-| P0-V-04 | Implement ID-format rule          | Gate validation                         | HIGH     |
-| P0-V-05 | Implement refs-resolve rule       | Gate validation                         | HIGH     |
-| P0-V-06 | Implement no-deprecated-refs rule | Gate validation                         | HIGH     |
-| P0-V-07 | Create pre-commit hook            | `.husky/pre-commit`                     | MEDIUM   |
-| P0-V-08 | Create CI workflow                | `.github/workflows/atom-validation.yml` | MEDIUM   |
-
-### 5.5 Instance 3: Workflow Updates (PM + Architect)
-
-| ID      | Task                           | Output                      | Priority |
-| ------- | ------------------------------ | --------------------------- | -------- |
-| P0-W-01 | Add entity-first detection     | Updated workflow.yaml files | HIGH     |
-| P0-W-02 | Update PRD workflow            | Atom creation integrated    | HIGH     |
-| P0-W-03 | Update Architecture workflow   | Atom creation integrated    | HIGH     |
-| P0-W-04 | Update Epics workflow          | Atom referencing integrated | HIGH     |
-| P0-W-05 | Create `amend-prd`             | New workflow                | HIGH     |
-| P0-W-06 | Create `amend-architecture`    | New workflow                | HIGH     |
-| P0-W-07 | Create `amend-ux`              | New workflow                | HIGH     |
-| P0-W-08 | Create `validate-story`        | New workflow                | HIGH     |
-| P0-W-09 | Create `amend-story`           | New workflow                | HIGH     |
-| P0-W-10 | Create `validate-product-soul` | New workflow                | HIGH     |
-| P0-W-11 | Create `amend-product-soul`    | New workflow                | MEDIUM   |
-| P0-W-12 | Create `test-design`           | New workflow                | MEDIUM   |
-
-### 5.6 Instance 4: Migration (Tech Writer) — REQUIRED
-
-> **Note:** Gate validation rules (Appendix F) make migration effectively mandatory.
-> Without migrating existing PR-xxx, IC-xxx, and ADR-xxx to atoms, validation will fail.
-
-| ID      | Task                                 | Output                  | Priority |
-| ------- | ------------------------------------ | ----------------------- | -------- |
-| P0-M-01 | Extract PR-xxx from prd.md           | Individual atom files   | HIGH     |
-| P0-M-02 | Extract IC-xxx from prd.md           | Individual atom files   | HIGH     |
-| P0-M-03 | Extract ADR-xxx from architecture.md | Individual atom files   | HIGH     |
-| P0-M-04 | Update document references           | Links to `docs/_atoms/` | HIGH     |
-| P0-M-05 | Run validation                       | Zero broken refs        | HIGH     |
-
-### 5.7 Phase 0 Sync Points
-
-1. **After Instance 1 completes:** Instances 2 & 3 can start in parallel
-2. **After Instances 2 & 3 complete:** Instance 4 migration can start
-3. **After Phase 0 complete:** Groups A-D can begin with atom validation enabled
-
-### 5.8 Atom ID Format Reference
+### 10.2 Atom ID Format
 
 ```
 SYS.004-STR.001-PUL.001-DAS.001
@@ -534,287 +453,234 @@ SYS.004-STR.001-PUL.001-DAS.001
 
 **Location:** `docs/_atoms/{id}.md`
 
----
+### 10.3 Atom Operations
 
-## 6. Parallel Execution Groups
+| Operation     | Skill File                            | Purpose                 |
+| ------------- | ------------------------------------- | ----------------------- |
+| **Create**    | `.bmad/core/tasks/create-atom.xml`    | Add new atom            |
+| **Search**    | `.bmad/core/tasks/search-atom.xml`    | Find atoms by criteria  |
+| **Amend**     | `.bmad/core/tasks/amend-atom.xml`     | Modify existing atom    |
+| **Deprecate** | `.bmad/core/tasks/deprecate-atom.xml` | Mark atom as deprecated |
 
-Work can be parallelized across agents AND within agent work streams.
+### 10.4 Gate Validation Rules
 
-### Group A: Foundation Audit (No Dependencies)
+Five rules enforced at pre-commit and CI:
 
-**Can run in parallel:**
+| Rule | Name          | Description                                          | Severity |
+| ---- | ------------- | ---------------------------------------------------- | -------- |
+| 1    | Parent Exists | Atom parent ID must exist in `docs/_atoms/`          | BLOCK    |
+| 2    | Entity Valid  | Entity path in atom frontmatter must resolve         | BLOCK    |
+| 3    | ID Format     | Atom ID must match `{ENTITY}.{SEQ}(-{CHILD}.{SEQ})*` | BLOCK    |
+| 4    | Refs Resolve  | All `[text](../atoms/{id}.md)` must resolve          | BLOCK    |
+| 5    | No Deprecated | Cannot reference atoms with `status: deprecated`     | BLOCK    |
 
-| Agent        | Tasks                                     |
-| ------------ | ----------------------------------------- |
-| BMad Builder | BB-01, BB-02, BB-04, BB-05, BB-07, ALL-04 |
-| Analyst      | AN-01, AN-02, AN-03, AN-04, AN-09, AN-10  |
-| PM           | PM-01, PM-02, PM-03, PM-05, PM-06, PM-08  |
-| Architect    | AR-01, AR-02, AR-07, AR-08                |
-| UX Designer  | UX-01, UX-02, UX-03                       |
-| Tech Writer  | TW-01, TW-02, TW-07                       |
-| Dev          | DV-01, DV-02                              |
-| SM           | SM-01, SM-04                              |
+**Enforcement Layers:**
 
-**Estimated Parallel Lanes:** 8 agents working simultaneously
-
----
-
-### Group B: Secondary Audit (Group A partial dependencies)
-
-**Can run in parallel after Group A starts:**
-
-| Agent        | Tasks                              | Depends On      |
-| ------------ | ---------------------------------- | --------------- |
-| BMad Builder | BB-03, BB-06                       | BB-01 started   |
-| Analyst      | AN-05, AN-06                       | AN-01 completed |
-| PM           | PM-04, PM-09, ALL-02               | PM-01 completed |
-| Architect    | AR-03, AR-05, AR-06, AR-09, ALL-03 | AR-01 completed |
-| UX Designer  | UX-05, UX-06                       | UX-01 completed |
-| Tech Writer  | TW-03, TW-04, TW-05, TW-06         | TW-01 completed |
-| Dev          | DV-04, DV-05                       | DV-01 completed |
+1. Workflow inline validation during atom CRUD
+2. Pre-commit hook: `.husky/pre-commit`
+3. CI pipeline: `.github/workflows/atom-validation.yml`
 
 ---
 
-### Group C: Cross-Cutting Validation (Group A must complete)
+## 11. Execution Plan
 
-**Requires Group A outputs:**
+### 11.1 Phase Overview
 
-| Agent       | Tasks                            | Depends On          |
-| ----------- | -------------------------------- | ------------------- |
-| Analyst     | AN-07, AN-11                     | AN-04, AN-10, PM-03 |
-| PM          | PM-07, ALL-01 (for PRD/Epics)    | PM-05, PM-06        |
-| Architect   | AR-04, ALL-01 (for Architecture) | AR-01, PM-01        |
-| UX Designer | UX-04, ALL-01 (for UX Design)    | UX-01, PM-01        |
-| Dev         | DV-03                            | DV-02, PM-06        |
-| SM          | SM-05                            | SM-01, SM-02        |
+| Phase | Name             | Micro-Phases | Description                         |
+| ----- | ---------------- | ------------ | ----------------------------------- |
+| 0     | SSOT Foundation  | 0.01 - 0.08  | Atom infrastructure setup           |
+| 1     | Workflow Updates | 1.01 - 1.08  | Update existing, create new unified |
+| 2     | Migration        | 2.01 - 2.05  | Extract PR/IC/ADR to atoms          |
+| 3     | Audit Group A    | 3.01 - 3.25  | Primary audit tasks (parallel)      |
+| 4     | Audit Group B    | 4.01 - 4.16  | Secondary audit tasks (parallel)    |
+| 5     | Audit Group C    | 5.01 - 5.08  | Cross-cutting validation            |
+| 6     | Audit Group D    | 6.01 - 6.04  | Finalization                        |
 
----
+**Total: 70 micro-phases**
 
-### Group D: Remediation & Status Setup (Group C must complete)
+### 11.2 Phase 0: SSOT Foundation (8 micro-phases)
 
-**Final phase:**
+> **Note:** For existing infrastructure, tasks follow "create if not exist, review if exists" pattern.
 
-| Agent       | Tasks              | Depends On   |
-| ----------- | ------------------ | ------------ |
-| Analyst     | AN-08 (Gap Report) | All AN tasks |
-| SM          | SM-02, SM-03       | AN-08        |
-| Tech Writer | TW-08              | AN-08        |
+| ID   | Name                   | Owner | Action | Exit Criteria                                                                  |
+| ---- | ---------------------- | ----- | ------ | ------------------------------------------------------------------------------ |
+| 0.01 | Atom Directory Setup   | BB    | Create | `docs/_atoms/` exists with ID scheme                                           |
+| 0.02 | Atom Template Creation | BB    | Create | Template + index section                                                       |
+| 0.03 | Atom CRUD Skills       | BB    | Create | All 4 skills functional                                                        |
+| 0.04 | Validation Script      | AN    | Create | `validate-atoms.ts` validates format                                           |
+| 0.05 | Gate Validation Rules  | AN    | Create | 5 rules implemented in validate-atoms.ts                                       |
+| 0.06 | Product Soul Template  | BB    | Review | `docs/product-soul.md` follows template                                        |
+| 0.07 | Pre-commit Hook        | BB    | Review | `.husky/pre-commit` exists; add atom validation if missing                     |
+| 0.08 | CI Pipeline            | BB    | Review | `.github/workflows/docs-validation.yml` exists; add atom validation if missing |
 
----
+**Existing Infrastructure (as of 2025-12-04):**
 
-## 7. Dependencies & Sequencing
+- `.husky/pre-commit` — EXISTS (runs lint-staged + typecheck)
+- `.github/workflows/docs-validation.yml` — EXISTS (runs validate:links + validate:docs)
+- `scripts/validation/validate-docs.js` — EXISTS
+- `scripts/validation/validate-links.js` — EXISTS
+- `scripts/validation/validate-dependencies.ts` — EXISTS
+- `scripts/validation/validate-atoms.ts` — DOES NOT EXIST (create in 0.04)
+
+### 11.3 Phase 1: Workflow Updates (8 micro-phases)
+
+> **Strategy:** Keep all 92 existing workflows. Update those needing entity-first detection. Create 15 new workflows.
+
+| ID   | Name                         | Action | Exit Criteria                           |
+| ---- | ---------------------------- | ------ | --------------------------------------- |
+| 1.01 | Inventory Current Workflows  | Audit  | All 92 workflows catalogued with status |
+| 1.02 | PRD Triad Upgrade            | Update | Entity-first detection added            |
+| 1.03 | Architecture Triad Upgrade   | Update | Entity-first detection added            |
+| 1.04 | UX Triad Upgrade             | Update | Entity-first detection added            |
+| 1.05 | Epics Triad Upgrade          | Update | Entity-first detection added            |
+| 1.06 | Product-Soul Triad           | Create | 2 NEW workflows (validate + amend)      |
+| 1.07 | Story/Dev Workflows          | Mixed  | 5 NEW + update existing                 |
+| 1.08 | Context + Research Workflows | Mixed  | 8 NEW + update existing                 |
+
+### 11.4 Phase 2: Migration (5 micro-phases)
+
+| ID   | Name                 | Exit Criteria           |
+| ---- | -------------------- | ----------------------- |
+| 2.01 | Extract PR-xxx       | All PR atoms extracted  |
+| 2.02 | Extract IC-xxx       | All IC atoms extracted  |
+| 2.03 | Extract ADR-xxx      | All ADR atoms extracted |
+| 2.04 | Update References    | All docs link to atoms  |
+| 2.05 | Migration Validation | Zero broken refs        |
+
+### 11.5 Phases 3-6: Audit Groups
+
+| Phase | Group | Tasks       | Parallelism                 |
+| ----- | ----- | ----------- | --------------------------- |
+| 3     | A     | 3.01 - 3.25 | 25 tasks, parallel by agent |
+| 4     | B     | 4.01 - 4.16 | 16 tasks, parallel by agent |
+| 5     | C     | 5.01 - 5.08 | 8 tasks (requires 3+4)      |
+| 6     | D     | 6.01 - 6.04 | 4 tasks, sequential         |
+
+### 11.6 Dependencies Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          PHASE 0: SSOT FOUNDATION                   │
-│  ┌────────────┐                                                     │
-│  │ Instance 1 │  Foundation (atoms, skills)                         │
-│  └─────┬──────┘                                                     │
-│        │                                                            │
-│  ┌─────┴──────┬────────────┐                                        │
-│  ▼            ▼            │                                        │
-│  Instance 2   Instance 3   │  (parallel after Instance 1)           │
-│  Validation   Workflows    │                                        │
-│  └─────┬──────┴─────┬──────┘                                        │
-│        │            │                                               │
-│        └─────┬──────┘                                               │
-│              ▼                                                      │
-│        Instance 4 (Optional Migration)                              │
+│                    PHASE 0: SSOT FOUNDATION (0.01-0.08)             │
+│  0.01 ──► 0.02 ──► 0.03                                             │
+│  0.01 ──────────► 0.04 ──► 0.05                                     │
+│                      └──► 0.06                                      │
+│  0.05 ──► 0.07 ──► 0.08                                             │
 └─────────────────────────────────────────────────────────────────────┘
                                   │
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          PHASE 1: GROUP A                           │
-│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ │
-│  │BMad    │ │Analyst │ │PM      │ │Architect│ │UX      │ │Tech    │ │
-│  │Builder │ │        │ │        │ │        │ │Designer│ │Writer  │ │
-│  └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ └────────┘ │
-│  ┌────────┐ ┌────────┐                                              │
-│  │Dev     │ │SM      │                                              │
-│  └────────┘ └────────┘                                              │
+│              PHASE 1: WORKFLOW UPDATES (1.01-1.08)                  │
+│  1.01 ──┬──► 1.02-1.08 (parallel after inventory)                   │
 └─────────────────────────────────────────────────────────────────────┘
                                   │
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          PHASE 2: GROUP B                           │
-│  (Same agents, secondary tasks - can start as Group A progresses)   │
+│                    PHASE 2: MIGRATION (2.01-2.05)                   │
+│  2.01, 2.02, 2.03 (parallel) ──► 2.04 ──► 2.05                      │
 └─────────────────────────────────────────────────────────────────────┘
                                   │
                                   ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          PHASE 3: GROUP C                           │
-│  Cross-cutting validation requiring outputs from multiple agents    │
-└─────────────────────────────────────────────────────────────────────┘
-                                  │
-                                  ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                          PHASE 4: GROUP D                           │
-│  Final remediation, status file creation, consolidated reporting    │
+│  PHASE 3: GROUP A │ PHASE 4: GROUP B │ PHASE 5: GROUP C │ PHASE 6  │
+│   (25 parallel)   │   (16 parallel)  │  (requires 3+4)  │  (seq)   │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### Critical Path
+### 11.7 Critical Path
 
-1. **Analyst AN-01** (manifest diff) → Unlocks most remediation decisions
-2. **PM PM-08** (remove duplicates) → Required before any PRD edits
-3. **Analyst AN-08** (gap report) → Required before SM status file creation
-4. **All Group C tasks** → Required before final validation
-
----
-
-## 8. Validation Criteria
-
-### 8.1 Structural Compliance
-
-| Criterion                                           | Validation Method                                                       |
-| --------------------------------------------------- | ----------------------------------------------------------------------- |
-| All manifest.yaml paths resolve to existing files   | `pnpm run validate:docs`                                                |
-| No orphaned files outside manifest                  | Analyst AN-02                                                           |
-| Correct entity_type in frontmatter                  | Analyst AN-04                                                           |
-| Correct folder structure per entity type            | Analyst AN-01                                                           |
-| Sibling Dependency Law (ADR-020) compliance         | `pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs` |
-| Entity has ALL 5 document types                     | Analyst AN-11 + ALL-01                                                  |
-| document-contracts.yaml entity_documents compliance | Analyst AN-10                                                           |
-| \*.requirement.yaml schema compliance               | ALL-02                                                                  |
-| \*.interface.yaml schema compliance                 | ALL-03                                                                  |
-
-#### Validation Scripts
-
-```bash
-# Standard validation
-pnpm run validate:docs
-pnpm run validate:links
-
-# Sibling Dependency Law validation (ADR-020)
-pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
-
-# Document contracts validation (if script exists)
-# Checks entity_documents structure compliance
-```
-
-### 8.2 Atom System Compliance (NEW)
-
-| Criterion                                    | Validation Method                       |
-| -------------------------------------------- | --------------------------------------- |
-| `docs/_atoms/` directory exists              | Pre-flight check                        |
-| Atom ID format valid (`SYS.001-STR.001-...`) | `scripts/validation/validate-atoms.ts`  |
-| All atom parents exist                       | Gate validation (P0-V-02)               |
-| All atom references resolve                  | Gate validation (P0-V-05)               |
-| No references to deprecated atoms            | Gate validation (P0-V-06)               |
-| Pre-commit hook installed                    | `.husky/pre-commit` exists              |
-| CI workflow active                           | `.github/workflows/atom-validation.yml` |
-
-### 8.3 Workflow Status Alignment
-
-| Criterion                              | Validation Method |
-| -------------------------------------- | ----------------- |
-| Status files exist for active entities | SM SM-02, SM-03   |
-| Status enum values valid               | SM SM-04          |
-| Phase progression logical              | SM SM-05          |
-
-### 8.4 Content Quality
-
-| Criterion                                | Validation Method             |
-| ---------------------------------------- | ----------------------------- |
-| PRDs have required sections              | PM validation workflow        |
-| Architecture docs have required sections | Architect validation workflow |
-| UX docs have required sections           | UX validation workflow        |
-| Links resolve correctly                  | `pnpm run validate:links`     |
-| Frontmatter complete                     | Analyst AN-06                 |
-
-### 8.5 Inheritance Compliance
-
-| Criterion                             | Validation Method |
-| ------------------------------------- | ----------------- |
-| Children reference direct parent only | Analyst AN-07     |
-| No contradictions to parent           | Analyst AN-07     |
-| Additions clearly marked              | Analyst AN-07     |
+1. **0.08** (CI Setup) → Gate for Phase 1
+2. **1.01** (Inventory) → Gate for workflow updates
+3. **2.05** (Migration Validation) → Gate for Phase 3
+4. **5.x** (Cross-cutting) → Requires Phase 3+4 outputs
+5. **6.01** (Gap Report) → Required before final validation
 
 ---
 
-## 9. Execution Checklist
+## 12. Validation Criteria
+
+### 12.1 Structural Compliance
+
+| Criterion                          | Validation Method                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------- |
+| All manifest.yaml paths resolve    | `pnpm run validate:docs`                                                |
+| No orphaned files outside manifest | Task 3.05                                                               |
+| Correct entity_type in frontmatter | Task 3.07                                                               |
+| Sibling Dependency Law compliance  | `pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs` |
+| Entity documents per BMM patterns  | Tasks 5.02, 5.08                                                        |
+
+### 12.2 Atom System Compliance
+
+| Criterion                       | Validation Method                      |
+| ------------------------------- | -------------------------------------- |
+| `docs/_atoms/` directory exists | Pre-flight check                       |
+| Atom ID format valid            | `scripts/validation/validate-atoms.ts` |
+| All atom parents exist          | Gate validation rule 1                 |
+| All atom references resolve     | Gate validation rule 4                 |
+| No deprecated atom references   | Gate validation rule 5                 |
+
+### 12.3 Workflow Status Alignment
+
+| Criterion                       | Validation Method |
+| ------------------------------- | ----------------- |
+| Status files exist for entities | Tasks 4.13, 4.14  |
+| Status enum values valid        | Task 3.25         |
+| Phase progression logical       | Task 5.07         |
+
+---
+
+## 13. Execution Checklist
 
 ### Pre-Flight
 
-- [ ] Ensure all agents have access to `docs/manifest.yaml`
-- [ ] Verify existing validation scripts work (`pnpm run validate:docs`, `pnpm run validate:links`)
-- [ ] Verify sibling dependency validation works (`pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs`)
-- [ ] Verify `docs/platform/document-contracts.yaml` exists and has `entity_documents` section
-- [ ] Verify `.claude/hooks/` enforcement is configured
-- [ ] Create backup of current documentation state
-- [ ] Establish communication channel for cross-agent coordination
-- [ ] **NEW:** Review `docs/ssot-specification-draft.md` for Phase 0 requirements
-- [ ] **NEW:** Review `docs/brainstorming-session-results-2025-12-03.md` for architectural decisions
+- [ ] Verify `docs/manifest.yaml` accessible
+- [ ] Run `pnpm run validate:docs` — baseline check
+- [ ] Run `pnpm run validate:links` — baseline check
+- [ ] Verify `docs/platform/document-contracts.yaml` exists
+- [ ] Create backup: `git checkout -b backup/audit-$(date +%Y%m%d-%H%M%S)`
+- [ ] Confirm `docs/_atoms/` does not exist (or is empty)
 
-### Phase 0: SSOT Foundation (NEW — Must Complete First)
+### Phase 0: SSOT Foundation
 
-- [ ] **Instance 1 (BMad Builder):** Complete P0-F-01 through P0-F-08
-  - [ ] Create `docs/_atoms/` directory
-  - [ ] Write `docs/_atoms/README.md`
-  - [ ] Create `docs/_atoms/_template.md`
-  - [ ] Create 4 atom skills (create, search, amend, deprecate)
-  - [ ] Create Product Soul template (`docs/_atoms/_product-soul-template.md`)
-- [ ] **Gate:** Instance 1 complete before starting Instances 2 & 3
-- [ ] **Instance 2 (Analyst):** Complete P0-V-01 through P0-V-08
-  - [ ] Create `scripts/validation/validate-atoms.ts`
-  - [ ] Implement 5 gate validation rules
-  - [ ] Create `.husky/pre-commit` hook
-  - [ ] Create `.github/workflows/atom-validation.yml`
-- [ ] **Instance 3 (PM + Architect):** Complete P0-W-01 through P0-W-12
-  - [ ] Add entity-first detection to workflows
-  - [ ] Update PRD/Architecture/Epics workflows
-  - [ ] Create 8 HIGH-priority missing workflows
-- [ ] **Gate:** Instances 2 & 3 complete before Instance 4
-- [ ] **Instance 4 (Tech Writer):** Complete P0-M-01 through P0-M-05 (REQUIRED)
-  - [ ] Extract existing PR-xxx to atoms
-  - [ ] Extract existing IC-xxx to atoms
-  - [ ] Extract existing ADR-xxx to atoms
-  - [ ] Update all document references to atom links
-  - [ ] Run validation — zero broken refs
-- [ ] **Gate:** Phase 0 complete before Groups A-D
+- [ ] **0.01** Atom Directory Setup
+- [ ] **0.02** Atom Template Creation
+- [ ] **0.03** Atom CRUD Skills
+- [ ] **0.04** Create `validate-atoms.ts` script
+- [ ] **0.05** Gate Validation Rules
+- [ ] **0.06** Product Soul Template
+- [ ] **0.07** Pre-commit Hook Setup
+- [ ] **0.08** CI Pipeline Setup
+- [ ] **Gate:** All validation scripts pass
 
-### Phase 1: Group A (Parallel Foundation)
+### Phase 1: Workflow Updates
 
-- [ ] **BMad Builder**: Start BB-01, BB-02, BB-04, BB-05, BB-07, ALL-04
-- [ ] **Analyst**: Start AN-01, AN-02, AN-03, AN-04, AN-09, AN-10
-- [ ] **PM**: Start PM-01, PM-02, PM-03, PM-05, PM-06, PM-08
-- [ ] **Architect**: Start AR-01, AR-02, AR-07, AR-08
-- [ ] **UX Designer**: Start UX-01, UX-02, UX-03
-- [ ] **Tech Writer**: Start TW-01, TW-02, TW-07
-- [ ] **Dev**: Start DV-01, DV-02
-- [ ] **SM**: Start SM-01, SM-04
+- [ ] **1.01** Inventory all 92 current workflows
+- [ ] **1.02-1.05** Update existing triads (entity-first detection)
+- [ ] **1.06** Create 2 NEW Product-Soul workflows
+- [ ] **1.07-1.08** Create 13 NEW workflows + update existing
+- [ ] **Gate:** 92 existing + 15 new = 107 total workflows functional
 
-### Phase 2: Group B (Secondary - Staggered Start)
+### Phase 2: Migration
 
-- [ ] **All agents**: Progress to Group B tasks as Group A items complete
+- [ ] **2.01-2.03** Extract PR/IC/ADR atoms
+- [ ] **2.04** Update references
+- [ ] **2.05** Validation — zero broken refs
+- [ ] **Gate:** All atoms migrated
 
-### Phase 3: Group C (Cross-Cutting Validation)
+### Phases 3-6: Audit Groups
 
-- [ ] **Gate**: Confirm all Group A tasks completed
-- [ ] **Analyst**: Execute AN-07 (inheritance audit), AN-11 (5 doc types compliance)
-- [ ] **PM**: Execute PM-07 (epic traceability), ALL-01 (5 doc types for PRD/Epics)
-- [ ] **Architect**: Execute AR-04 (architecture traceability), ALL-01 (5 doc types for Architecture)
-- [ ] **UX Designer**: Execute UX-04 (UX traceability), ALL-01 (5 doc types for UX)
-- [ ] **Dev**: Execute DV-03 (story traceability)
-- [ ] **SM**: Execute SM-05 (phase progression)
-
-### Phase 4: Group D (Remediation & Finalization)
-
-- [ ] **Gate**: Confirm all Group C tasks completed
-- [ ] **Analyst**: Produce AN-08 (consolidated gap report)
-- [ ] **SM**: Create SM-02, SM-03 (workflow status files)
-- [ ] **All agents**: Apply remediation actions based on gap report
-- [ ] **Tech Writer**: Final documentation polish
+- [ ] **Phase 3** (Group A) — Primary audit
+- [ ] **Phase 4** (Group B) — Secondary audit
+- [ ] **Phase 5** (Group C) — Cross-cutting validation
+- [ ] **Phase 6** (Group D) — Finalization
+- [ ] **Gate:** All validation scripts pass
 
 ### Post-Flight
 
 - [ ] Run `pnpm run validate:docs` — MUST PASS
 - [ ] Run `pnpm run validate:links` — MUST PASS
-- [ ] Run `pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs` — MUST PASS (Sibling Dependency Law)
-- [ ] Verify ALL entities have ALL 5 document types
+- [ ] Run dependency validation — MUST PASS
 - [ ] Generate final validation report
-- [ ] Commit all changes with descriptive message
-- [ ] Update CLAUDE.md, GEMINI.md, AGENTS.md if needed
+- [ ] Commit with descriptive message
 
 ---
 
@@ -833,30 +699,14 @@ docs/platform/ts-schema/epics 2.md
 docs/platform/ui/prd 2.md
 docs/platform/ui/epics 2.md
 docs/platform/ui/ux-design 2.md
-docs/platform/ux-design 2.md
+docs/platform/ux/ux-design 2.md
 ```
 
-### Orphaned/Misplaced Files (REVIEW)
+### Files to DELETE (Navigation Policy)
 
 ```
-docs/brainstorming-session-results-2025-12-03.md (should be in research?)
-docs/platform/remediation-plan-2025-12-03.md (should be in validation-reports?)
-docs/platform/pulse.md (not in manifest)
-docs/platform/index.md (duplicate of README?)
-```
-
-### Missing Files (CREATE)
-
-```
-docs/strategy/README.md
-docs/strategy/prd.md
-docs/marketing/prd.md
-docs/sales/prd.md
-docs/finance/prd.md
-docs/operations/prd.md
-docs/team/prd.md
-docs/legal/prd.md
-(and subcategory PRDs)
+docs/**/README.md          # DELETE all README.md files in docs/
+docs/**/index.md           # DELETE all index.md files EXCEPT docs/index.md
 ```
 
 ---
@@ -876,124 +726,314 @@ docs/legal/prd.md
 
 ---
 
-## Appendix C: Validation Workflow Commands
+## Appendix C: Validation Commands
 
-| Validation Type | Command                                     |
-| --------------- | ------------------------------------------- |
-| PRD             | `/bmad:bmm:workflows:validate-prd`          |
-| Architecture    | `/bmad:bmm:workflows:validate-architecture` |
-| Epics           | `/bmad:bmm:workflows:validate-epics`        |
-| UX Design       | `/bmad:bmm:workflows:validate-ux`           |
-| Workflow Status | `/bmad:bmm:workflows:workflow-status`       |
-| BMAD Workflows  | `/bmad:bmb:workflows:audit-workflow`        |
-
-### Script-Based Validation Commands
+### Script-Based
 
 ```bash
-# Standard documentation validation
+# Standard validation
 pnpm run validate:docs
 pnpm run validate:links
 
-# Sibling Dependency Law (ADR-020) validation
+# Sibling Dependency Law (ADR-020)
 pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 
-# Document contracts validation (entity_documents compliance)
-# Validates that each entity has all 5 required document types
+# Atom validation (after Phase 0.04)
+pnpm exec tsx scripts/validation/validate-atoms.ts
 ```
 
----
+### Workflow-Based
 
-## Appendix D: Critical Files for Recent Changes
-
-These files contain the authoritative definitions for the recent architectural changes:
-
-| File                                                           | Purpose                              |
-| -------------------------------------------------------------- | ------------------------------------ |
-| `docs/platform/architecture/adr-020-sibling-dependency-law.md` | Sibling Dependency Law definition    |
-| `docs/platform/document-contracts.yaml`                        | Entity document structure rules      |
-| `scripts/validation/validate-dependencies.ts`                  | Dependency validation script         |
-| `scripts/validation/requirement.schema.json`                   | Schema for \*.requirement.yaml files |
-| `.claude/hooks/*.sh`                                           | Validation enforcement hooks         |
-| `.claude/settings.local.json`                                  | Hook configuration                   |
-| `docs/platform/examples/*.requirement.yaml`                    | Requirement file format examples     |
-| `docs/platform/examples/*.interface.yaml`                      | Interface file format examples       |
-
-### SSOT Atom System Files (NEW)
-
-| File                                               | Purpose                               |
-| -------------------------------------------------- | ------------------------------------- |
-| `docs/_atoms/`                                     | Centralized atom storage directory    |
-| `docs/_atoms/README.md`                            | Atom ID scheme documentation          |
-| `docs/_atoms/_template.md`                         | Template for new atom files           |
-| `docs/_atoms/_product-soul-template.md`            | Template for product-soul.md docs     |
-| `docs/ssot-specification-draft.md`                 | Complete SSOT technical specification |
-| `docs/brainstorming-session-results-2025-12-03.md` | Architecture decisions transcript     |
-| `scripts/validation/validate-atoms.ts`             | Atom validation script (Phase 0)      |
-| `scripts/validation/check-doc-duplication.ts`      | Document ownership validation         |
-| `.bmad/core/tasks/create-atom.xml`                 | Atom creation skill                   |
-| `.bmad/core/tasks/search-atom.xml`                 | Atom search skill                     |
-| `.bmad/core/tasks/amend-atom.xml`                  | Atom amendment skill                  |
-| `.bmad/core/tasks/deprecate-atom.xml`              | Atom deprecation skill                |
-| `.husky/pre-commit`                                | Gate validation hook (Phase 0)        |
-| `.github/workflows/atom-validation.yml`            | CI atom validation (Phase 0)          |
+| Type         | Command                                     |
+| ------------ | ------------------------------------------- |
+| PRD          | `/bmad:bmm:workflows:validate-prd`          |
+| Architecture | `/bmad:bmm:workflows:validate-architecture` |
+| Epics        | `/bmad:bmm:workflows:validate-epics`        |
+| UX Design    | `/bmad:bmm:workflows:validate-ux`           |
 
 ---
 
-## Appendix E: Missing Workflows (Phase 0)
+## Appendix D: Critical Files Reference
 
-These 16 workflows were identified during brainstorming as missing from the current BMAD system:
-
-### Amendment Workflows (HIGH Priority)
-
-| Workflow             | Purpose                                     | Owner       |
-| -------------------- | ------------------------------------------- | ----------- |
-| `amend-prd`          | Structured PRD amendments with traceability | PM          |
-| `amend-architecture` | Architecture updates with ADR integration   | Architect   |
-| `amend-ux`           | UX design amendments                        | UX Designer |
-| `amend-story`        | Story modifications during sprint           | Dev         |
-| `amend-product-soul` | Product soul updates                        | PM          |
-
-### Validation Workflows (HIGH Priority)
-
-| Workflow                | Purpose                                   | Owner |
-| ----------------------- | ----------------------------------------- | ----- |
-| `validate-story`        | Story completeness and traceability check | Dev   |
-| `validate-product-soul` | Product soul consistency validation       | PM    |
-
-### Design Workflows (MEDIUM Priority)
-
-| Workflow      | Purpose                             | Owner |
-| ------------- | ----------------------------------- | ----- |
-| `test-design` | Test strategy and coverage planning | Dev   |
-
-### Entity Management Workflows (to be created in Phase 0)
-
-| Workflow               | Purpose                                    | Task ID |
-| ---------------------- | ------------------------------------------ | ------- |
-| Entity-first detection | Detect entity type before workflow start   | P0-W-01 |
-| PRD atom integration   | Integrate atom creation into PRD workflow  | P0-W-02 |
-| Arch atom integration  | Integrate atom creation into Arch workflow | P0-W-03 |
-| Epic atom referencing  | Integrate atom refs into Epics workflow    | P0-W-04 |
+| File                                                           | Purpose                           |
+| -------------------------------------------------------------- | --------------------------------- |
+| `docs/platform/architecture/adr-020-sibling-dependency-law.md` | Sibling Dependency Law definition |
+| `docs/platform/document-contracts.yaml`                        | Entity document structure rules   |
+| `scripts/validation/validate-dependencies.ts`                  | Dependency validation script      |
+| `.claude/skills/validate-sibling-dependency/SKILL.md`          | Claude skill for ADR-020          |
+| `docs/manifest.yaml`                                           | Documentation structure SSOT      |
+| `docs/product-soul.md`                                         | Constitution Product Soul         |
 
 ---
 
-## Appendix F: Gate Validation Rules
+## Appendix E: Complete Workflow Inventory
 
-Five rules enforced at pre-commit and CI (Phase 0):
+### Current Workflows (92 total: 86 active, 6 archived)
 
-| Rule | Name          | Description                                          | Severity |
-| ---- | ------------- | ---------------------------------------------------- | -------- |
-| 1    | Parent Exists | Atom parent ID must exist in `docs/_atoms/`          | BLOCK    |
-| 2    | Entity Valid  | Entity path in atom frontmatter must resolve         | BLOCK    |
-| 3    | ID Format     | Atom ID must match `{ENTITY}.{SEQ}(-{CHILD}.{SEQ})*` | BLOCK    |
-| 4    | Refs Resolve  | All `[text](../atoms/{id}.md)` must resolve          | BLOCK    |
-| 5    | No Deprecated | Cannot reference atoms with `status: deprecated`     | BLOCK    |
+#### BMB Module (9 active)
 
-**Enforcement Layers:**
+| Workflow                          | Path                                                     | Status |
+| --------------------------------- | -------------------------------------------------------- | ------ |
+| audit-workflow                    | `.bmad/bmb/workflows/audit-workflow/`                    | Active |
+| convert-legacy                    | `.bmad/bmb/workflows/convert-legacy/`                    | Active |
+| create-agent                      | `.bmad/bmb/workflows/create-agent/`                      | Active |
+| create-module                     | `.bmad/bmb/workflows/create-module/`                     | Active |
+| create-workflow                   | `.bmad/bmb/workflows/create-workflow/`                   | Active |
+| create-workflow/workflow-template | `.bmad/bmb/workflows/create-workflow/workflow-template/` | Active |
+| edit-agent                        | `.bmad/bmb/workflows/edit-agent/`                        | Active |
+| edit-module                       | `.bmad/bmb/workflows/edit-module/`                       | Active |
+| edit-workflow                     | `.bmad/bmb/workflows/edit-workflow/`                     | Active |
+| module-brief                      | `.bmad/bmb/workflows/module-brief/`                      | Active |
 
-1. **Workflow inline:** Validation during atom CRUD operations
-2. **Pre-commit hook:** `.husky/pre-commit` runs `validate-atoms.ts` on ALL files
-3. **CI pipeline:** `.github/workflows/atom-validation.yml` runs on all PRs
+#### BMM Module - 1-Analysis (4 active)
+
+| Workflow           | Path                                                 | Status |
+| ------------------ | ---------------------------------------------------- | ------ |
+| brainstorm-project | `.bmad/bmm/workflows/1-analysis/brainstorm-project/` | Active |
+| domain-research    | `.bmad/bmm/workflows/1-analysis/domain-research/`    | Active |
+| product-brief      | `.bmad/bmm/workflows/1-analysis/product-brief/`      | Active |
+| research           | `.bmad/bmm/workflows/1-analysis/research/`           | Active |
+
+#### BMM Module - 2-Plan (12 active)
+
+| Workflow            | Path                                                        | Status |
+| ------------------- | ----------------------------------------------------------- | ------ |
+| amend-domain-prd    | `.bmad/bmm/workflows/2-plan-workflows/amend-domain-prd/`    | Active |
+| amend-prd           | `.bmad/bmm/workflows/2-plan-workflows/amend-prd/`           | Active |
+| amend-system-prd    | `.bmad/bmm/workflows/2-plan-workflows/amend-system-prd/`    | Active |
+| create-domain-prd   | `.bmad/bmm/workflows/2-plan-workflows/create-domain-prd/`   | Active |
+| create-prd          | `.bmad/bmm/workflows/2-plan-workflows/create-prd/`          | Active |
+| create-system-prd   | `.bmad/bmm/workflows/2-plan-workflows/create-system-prd/`   | Active |
+| create-ux-design    | `.bmad/bmm/workflows/2-plan-workflows/create-ux-design/`    | Active |
+| prd                 | `.bmad/bmm/workflows/2-plan-workflows/prd/`                 | Active |
+| tech-spec           | `.bmad/bmm/workflows/2-plan-workflows/tech-spec/`           | Active |
+| validate-domain-prd | `.bmad/bmm/workflows/2-plan-workflows/validate-domain-prd/` | Active |
+| validate-prd        | `.bmad/bmm/workflows/2-plan-workflows/validate-prd/`        | Active |
+| validate-system-prd | `.bmad/bmm/workflows/2-plan-workflows/validate-system-prd/` | Active |
+
+#### BMM Module - 3-Solutioning (24 active, 6 archived)
+
+| Workflow                             | Path                                                              | Status   |
+| ------------------------------------ | ----------------------------------------------------------------- | -------- |
+| amend-architecture                   | `.bmad/bmm/workflows/3-solutioning/amend-architecture/`           | Active   |
+| amend-domain-architecture            | `.bmad/bmm/workflows/3-solutioning/amend-domain-architecture/`    | Active   |
+| amend-domain-epics                   | `.bmad/bmm/workflows/3-solutioning/amend-domain-epics/`           | Active   |
+| amend-domain-ux                      | `.bmad/bmm/workflows/3-solutioning/amend-domain-ux/`              | Active   |
+| amend-epics                          | `.bmad/bmm/workflows/3-solutioning/amend-epics/`                  | Active   |
+| amend-system-architecture            | `.bmad/bmm/workflows/3-solutioning/amend-system-architecture/`    | Active   |
+| amend-system-epics                   | `.bmad/bmm/workflows/3-solutioning/amend-system-epics/`           | Active   |
+| amend-system-ux                      | `.bmad/bmm/workflows/3-solutioning/amend-system-ux/`              | Active   |
+| amend-ux                             | `.bmad/bmm/workflows/3-solutioning/amend-ux/`                     | Active   |
+| architecture                         | `.bmad/bmm/workflows/3-solutioning/architecture/`                 | Active   |
+| create-architecture                  | `.bmad/bmm/workflows/3-solutioning/create-architecture/`          | Active   |
+| create-epics-and-stories             | `.bmad/bmm/workflows/3-solutioning/create-epics-and-stories/`     | Active   |
+| create-epics                         | `.bmad/bmm/workflows/3-solutioning/create-epics/`                 | Active   |
+| create-ux                            | `.bmad/bmm/workflows/3-solutioning/create-ux/`                    | Active   |
+| implementation-readiness             | `.bmad/bmm/workflows/3-solutioning/implementation-readiness/`     | Active   |
+| validate-architecture                | `.bmad/bmm/workflows/3-solutioning/validate-architecture/`        | Active   |
+| validate-domain-architecture         | `.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/` | Active   |
+| validate-domain-epics                | `.bmad/bmm/workflows/3-solutioning/validate-domain-epics/`        | Active   |
+| validate-domain-ux                   | `.bmad/bmm/workflows/3-solutioning/validate-domain-ux/`           | Active   |
+| validate-epics                       | `.bmad/bmm/workflows/3-solutioning/validate-epics/`               | Active   |
+| validate-system-architecture         | `.bmad/bmm/workflows/3-solutioning/validate-system-architecture/` | Active   |
+| validate-system-epics                | `.bmad/bmm/workflows/3-solutioning/validate-system-epics/`        | Active   |
+| validate-system-ux                   | `.bmad/bmm/workflows/3-solutioning/validate-system-ux/`           | Active   |
+| validate-ux                          | `.bmad/bmm/workflows/3-solutioning/validate-ux/`                  | Active   |
+| \_archive/create-domain-architecture | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived |
+| \_archive/create-domain-epics        | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived |
+| \_archive/create-domain-ux           | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived |
+| \_archive/create-system-architecture | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived |
+| \_archive/create-system-epics        | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived |
+| \_archive/create-system-ux           | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived |
+
+#### BMM Module - 4-Implementation (11 active)
+
+| Workflow          | Path                                                      | Status |
+| ----------------- | --------------------------------------------------------- | ------ |
+| code-review       | `.bmad/bmm/workflows/4-implementation/code-review/`       | Active |
+| correct-course    | `.bmad/bmm/workflows/4-implementation/correct-course/`    | Active |
+| create-story      | `.bmad/bmm/workflows/4-implementation/create-story/`      | Active |
+| dev-story         | `.bmad/bmm/workflows/4-implementation/dev-story/`         | Active |
+| epic-tech-context | `.bmad/bmm/workflows/4-implementation/epic-tech-context/` | Active |
+| retrospective     | `.bmad/bmm/workflows/4-implementation/retrospective/`     | Active |
+| sprint-planning   | `.bmad/bmm/workflows/4-implementation/sprint-planning/`   | Active |
+| sprint-rollup     | `.bmad/bmm/workflows/4-implementation/sprint-rollup/`     | Active |
+| story-context     | `.bmad/bmm/workflows/4-implementation/story-context/`     | Active |
+| story-done        | `.bmad/bmm/workflows/4-implementation/story-done/`        | Active |
+| story-ready       | `.bmad/bmm/workflows/4-implementation/story-ready/`       | Active |
+
+#### BMM Module - Diagrams (4 active)
+
+| Workflow         | Path                                             | Status |
+| ---------------- | ------------------------------------------------ | ------ |
+| create-dataflow  | `.bmad/bmm/workflows/diagrams/create-dataflow/`  | Active |
+| create-diagram   | `.bmad/bmm/workflows/diagrams/create-diagram/`   | Active |
+| create-flowchart | `.bmad/bmm/workflows/diagrams/create-flowchart/` | Active |
+| create-wireframe | `.bmad/bmm/workflows/diagrams/create-wireframe/` | Active |
+
+#### BMM Module - Testarch (8 active)
+
+| Workflow    | Path                                        | Status |
+| ----------- | ------------------------------------------- | ------ |
+| atdd        | `.bmad/bmm/workflows/testarch/atdd/`        | Active |
+| automate    | `.bmad/bmm/workflows/testarch/automate/`    | Active |
+| ci          | `.bmad/bmm/workflows/testarch/ci/`          | Active |
+| framework   | `.bmad/bmm/workflows/testarch/framework/`   | Active |
+| nfr-assess  | `.bmad/bmm/workflows/testarch/nfr-assess/`  | Active |
+| test-design | `.bmad/bmm/workflows/testarch/test-design/` | Active |
+| test-review | `.bmad/bmm/workflows/testarch/test-review/` | Active |
+| trace       | `.bmad/bmm/workflows/testarch/trace/`       | Active |
+
+#### BMM Module - Other (4 active)
+
+| Workflow              | Path                                         | Status |
+| --------------------- | -------------------------------------------- | ------ |
+| document-project      | `.bmad/bmm/workflows/document-project/`      | Active |
+| migrate-to-federation | `.bmad/bmm/workflows/migrate-to-federation/` | Active |
+| workflow-status       | `.bmad/bmm/workflows/workflow-status/`       | Active |
+| workflow-status/init  | `.bmad/bmm/workflows/workflow-status/init/`  | Active |
+
+#### CIS Module (4 active)
+
+| Workflow            | Path                                       | Status |
+| ------------------- | ------------------------------------------ | ------ |
+| design-thinking     | `.bmad/cis/workflows/design-thinking/`     | Active |
+| innovation-strategy | `.bmad/cis/workflows/innovation-strategy/` | Active |
+| problem-solving     | `.bmad/cis/workflows/problem-solving/`     | Active |
+| storytelling        | `.bmad/cis/workflows/storytelling/`        | Active |
+
+#### Core Module (2 active)
+
+| Workflow      | Path                                  | Status |
+| ------------- | ------------------------------------- | ------ |
+| brainstorming | `.bmad/core/workflows/brainstorming/` | Active |
+| party-mode    | `.bmad/core/workflows/party-mode/`    | Active |
+
+#### Custom/Federated-Validation (3 active)
+
+| Workflow              | Path                                                                         | Status |
+| --------------------- | ---------------------------------------------------------------------------- | ------ |
+| validate-constitution | `.bmad/custom/modules/federated-validation/workflows/validate-constitution/` | Active |
+| validate-domain-prd   | `.bmad/custom/modules/federated-validation/workflows/validate-domain-prd/`   | Active |
+| validate-epic         | `.bmad/custom/modules/federated-validation/workflows/validate-epic/`         | Active |
+
+### New Workflows to Create (15)
+
+> **Strategy:** Keep all 92 existing workflows. Update those that need entity-first detection or atom integration. Create only the workflows that don't exist yet.
+
+#### Product-Soul Triad (2 NEW)
+
+| Workflow                | Action     | Notes                |
+| ----------------------- | ---------- | -------------------- |
+| `validate-product-soul` | Create NEW | No existing workflow |
+| `amend-product-soul`    | Create NEW | No existing workflow |
+
+#### Story/Dev Cycle (5 NEW)
+
+| Workflow               | Action     | Notes                |
+| ---------------------- | ---------- | -------------------- |
+| `validate-story`       | Create NEW | No existing workflow |
+| `amend-story`          | Create NEW | No existing workflow |
+| `amend-code`           | Create NEW | No existing workflow |
+| `validate-code-review` | Create NEW | No existing workflow |
+| `amend-code-review`    | Create NEW | No existing workflow |
+
+#### Other Workflows (8 NEW)
+
+| Category       | Workflows                                                                                                | Notes                |
+| -------------- | -------------------------------------------------------------------------------------------------------- | -------------------- |
+| Tech Specs (2) | `validate-tech-spec`, `amend-tech-spec`                                                                  | `tech-spec` exists   |
+| Context (4)    | `validate-epic-tech-context`, `amend-epic-tech-context`, `validate-story-context`, `amend-story-context` | Base workflows exist |
+| Research (2)   | `validate-research`, `amend-research`                                                                    | `research` exists    |
+
+#### Summary
+
+| Category                      | Count   |
+| ----------------------------- | ------- |
+| Existing workflows (keep all) | 92      |
+| New workflows to create       | 15      |
+| **Total After Audit**         | **107** |
+
+#### Existing Workflows Requiring Updates
+
+These existing workflows need entity-first detection and/or atom integration:
+
+| Workflow                                                      | Update Needed          |
+| ------------------------------------------------------------- | ---------------------- |
+| `prd`, `validate-prd`, `amend-prd`                            | Entity-first detection |
+| `architecture`, `validate-architecture`, `amend-architecture` | Entity-first detection |
+| `create-ux`, `validate-ux`, `amend-ux`                        | Entity-first detection |
+| `create-epics`, `validate-epics`, `amend-epics`               | Entity-first detection |
+| `create-story`, `dev-story`, `code-review`                    | Atom integration       |
+| `tech-spec`, `epic-tech-context`, `story-context`             | Atom integration       |
+| `workflow-init`, `workflow-status`                            | Entity-first detection |
+| `research`                                                    | Atom integration       |
+
+---
+
+## Appendix F: Deferred Improvements (Tech Debt)
+
+### Automation & Tooling
+
+| Improvement                | Effort | Tracking            |
+| -------------------------- | ------ | ------------------- |
+| YAML schema validation     | Medium | Create GitHub issue |
+| Single-source event schema | Medium | Architecture ADR    |
+
+### Content Scaffolding
+
+| Improvement                | Effort | Tracking        |
+| -------------------------- | ------ | --------------- |
+| Module doc scaffolds       | High   | Epic 2+ backlog |
+| Sprint status regeneration | Low    | Per-module      |
+
+---
+
+## Appendix G: Rollback & Recovery Procedures
+
+### Pre-Execution Backup
+
+```bash
+git checkout -b backup/audit-$(date +%Y%m%d-%H%M%S)
+git push origin backup/audit-$(date +%Y%m%d-%H%M%S)
+git checkout main
+```
+
+### Phase-Specific Rollback
+
+| Phase     | Trigger                  | Rollback Procedure                          |
+| --------- | ------------------------ | ------------------------------------------- |
+| Phase 0   | Atom validation fails    | `git reset --hard backup/audit-*`           |
+| Phase 1   | Critical workflow broken | `git checkout backup -- .bmad/`             |
+| Phase 2   | References broken        | Run `validate:links`; revert specific files |
+| Phase 3-5 | Structural issues        | Document in Gap Report; forward fix         |
+
+### Rollback Trigger Thresholds
+
+| Metric                       | Threshold                     | Action                 |
+| ---------------------------- | ----------------------------- | ---------------------- |
+| `validate:docs` errors       | > 10                          | Pause and investigate  |
+| `validate:links` broken refs | > 5 per phase                 | Revert phase           |
+| Critical file deletion       | Any                           | Immediate rollback     |
+| Merge conflicts              | Unresolvable after 2 attempts | Serialize work         |
+| CI pipeline blocked          | > 30 minutes                  | Rollback to checkpoint |
+
+### Recovery Checkpoints
+
+```bash
+# After each gate
+git tag checkpoint/phase{N}-complete
+git push origin checkpoint/phase{N}-complete
+```
+
+### Validation Before Proceeding
+
+```bash
+# Must pass ALL before marking phase complete
+pnpm run validate:docs
+pnpm run validate:links
+pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
+```
 
 ---
 
