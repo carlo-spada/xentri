@@ -20,6 +20,11 @@ entity_type: '' # Detected: constitution, infrastructure_module, strategic_conta
 output_folder_resolved: '' # e.g., "docs/platform/core-api/" or "docs/strategy/pulse/dashboard/"
 module_code_path: '' # Resolved from manifest.yaml based on module (e.g., "services/core-api")
 
+# SSOT Atom System Integration
+# Atoms provide authoritative requirements, decisions, and interfaces
+atoms_dir: '{project-root}/docs/_atoms'
+atom_search_script: '{project-root}/scripts/atoms/atom-search.ts'
+
 # Sprint artifacts at entity level
 sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
 story_dir: '{sprint_artifacts}'
@@ -55,6 +60,10 @@ variables:
   arch_docs_file_names: |
     - *architecture*.md
   story_title: '' # Will be elicited if not derivable
+  # Atom integration - reference atoms when deriving ACs
+  # Atoms are searched by entity path to find relevant requirements/decisions
+  atom_entity_filter: '' # Set to entity code (e.g., "SHL", "API") to filter atoms
+  include_atom_refs: true # Include atom references in story Dev Notes
 
 default_output_file: '{story_dir}/{{story_key}}.md'
 
@@ -94,5 +103,9 @@ input_file_patterns:
   document_project:
     sharded: '{output_folder_resolved}index.md'
     load_strategy: 'INDEX_GUIDED'
+  atoms:
+    description: 'SSOT atoms (requirements, decisions, interfaces) for this entity'
+    search_command: 'pnpm exec tsx {atom_search_script} --entity {atom_entity_filter}'
+    load_strategy: 'ON_DEMAND'
 
 standalone: true

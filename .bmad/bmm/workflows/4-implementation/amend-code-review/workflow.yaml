@@ -1,0 +1,51 @@
+# Amend Code Review Workflow
+name: amend-code-review
+description: 'Amends an existing code review. Use to add findings, update action items, change outcome, or add missing validation sections.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+base_output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated entity detection (Five Entity Types model)
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Entity-resolved paths
+entity_type: ''
+output_folder_resolved: ''
+parent_output_folder: ''
+module_code_path: ''
+
+# Sprint artifacts
+sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
+sprint_status: '{sprint_artifacts}/sprint-status.yaml'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/4-implementation/amend-code-review'
+instructions: '{installed_path}/instructions.md'
+checklist: '{installed_path}/checklist.md'
+
+# Related workflows
+code_review_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/code-review/workflow.yaml'
+validate_review_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/validate-code-review/workflow.yaml'
+
+variables:
+  story_dir: '{sprint_artifacts}'
+  story_file: '' # Story with review to amend
+
+  # Amendment options
+  amendment_type: '' # 'add_findings', 'update_outcome', 'add_coverage', 'add_action_items', 'revalidate'
+
+  # Re-validation options
+  revalidate_acs: [] # Specific ACs to re-validate
+  revalidate_tasks: [] # Specific tasks to re-verify
+
+  # Update sprint status after amendment
+  update_sprint_status: true
+
+standalone: true

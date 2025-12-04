@@ -8,8 +8,8 @@
 
 | Attribute        | Value                                                                  |
 | ---------------- | ---------------------------------------------------------------------- |
-| **Version**      | 5.8                                                                    |
-| **Status**       | In Progress — Phase 0 COMPLETE, Phases 1.01-1.05 COMPLETE              |
+| **Version**      | 6.0                                                                    |
+| **Status**       | In Progress — Phase 0 COMPLETE, Phases 1.01-1.07 COMPLETE              |
 | **Owner**        | Platform Team                                                          |
 | **DRI**          | BMad Builder (Phase 0), Analyst (Phases 1-6) ([Glossary](#2-glossary)) |
 | **Created**      | 2025-12-03                                                             |
@@ -19,22 +19,24 @@
 
 ### Change Log
 
-| Version | Date       | Author       | Changes                                                                                                                                                         |
-| ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 5.8     | 2025-12-04 | BMad Builder | Phase 1.05 COMPLETE. Epics Triad verified: entity-first detection already implemented. All 8 epics workflows have proper routing and Five Entity Types support. |
-| 5.7     | 2025-12-04 | BMad Builder | Phase 1.04 COMPLETE. UX Triad audit: entity-first detection already implemented. All 5 entity-specific UX checklists verified.                                  |
-| 5.6     | 2025-12-04 | BMad Builder | Phase 1.03 COMPLETE. Upgraded Architecture Triad: restored create-system-architecture, added entity-first detection, renamed to create-architecture.            |
-| 5.5     | 2025-12-04 | BMad Builder | Phase 1.01 COMPLETE. Verified all 92 workflows (85 active + 6 archived + 1 template). Added detailed inventory tables with status and update requirements.      |
-| 5.4     | 2025-12-04 | BMad Builder | Phase 1.02 COMPLETE. PRD Triad audit: entity-first detection already implemented. Deferred: checklist files creation, entity-menu.yaml verification.            |
-| 5.3     | 2025-12-04 | Analyst      | Phase 0 COMPLETE. Created validate-atoms.ts (0.04), implemented 5 gate rules (0.05), reviewed Product Soul (0.06), updated pre-commit (0.07) and CI (0.08).     |
-| 5.2     | 2025-12-04 | BMad Builder | Phase 0.01-0.03 complete. Changed atom CRUD from XML tasks to TypeScript scripts (scalability). Simplified atom ID (no type prefix). Auto-generated index.      |
-| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                              |
-| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location    |
-| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                             |
-| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                         |
-| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                        |
-| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                                |
-| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                     |
+| Version | Date       | Author       | Changes                                                                                                                                                                                                      |
+| ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 6.0     | 2025-12-04 | BMad Builder | Phase 1.07 COMPLETE. Story/Dev workflows: 5 NEW (validate-story, amend-story, amend-code, validate-code-review, amend-code-review) + 3 updated with atom integration (create-story, dev-story, code-review). |
+| 5.9     | 2025-12-04 | BMad Builder | Phase 1.06 COMPLETE. Product-Soul Triad created: validate-product-soul + amend-product-soul workflows. Constitution-only (no routing needed).                                                                |
+| 5.8     | 2025-12-04 | BMad Builder | Phase 1.05 COMPLETE. Epics Triad verified: entity-first detection already implemented. All 8 epics workflows have proper routing and Five Entity Types support.                                              |
+| 5.7     | 2025-12-04 | BMad Builder | Phase 1.04 COMPLETE. UX Triad audit: entity-first detection already implemented. All 5 entity-specific UX checklists verified.                                                                               |
+| 5.6     | 2025-12-04 | BMad Builder | Phase 1.03 COMPLETE. Upgraded Architecture Triad: restored create-system-architecture, added entity-first detection, renamed to create-architecture.                                                         |
+| 5.5     | 2025-12-04 | BMad Builder | Phase 1.01 COMPLETE. Verified all 92 workflows (85 active + 6 archived + 1 template). Added detailed inventory tables with status and update requirements.                                                   |
+| 5.4     | 2025-12-04 | BMad Builder | Phase 1.02 COMPLETE. PRD Triad audit: entity-first detection already implemented. Deferred: checklist files creation, entity-menu.yaml verification.                                                         |
+| 5.3     | 2025-12-04 | Analyst      | Phase 0 COMPLETE. Created validate-atoms.ts (0.04), implemented 5 gate rules (0.05), reviewed Product Soul (0.06), updated pre-commit (0.07) and CI (0.08).                                                  |
+| 5.2     | 2025-12-04 | BMad Builder | Phase 0.01-0.03 complete. Changed atom CRUD from XML tasks to TypeScript scripts (scalability). Simplified atom ID (no type prefix). Auto-generated index.                                                   |
+| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                                                                           |
+| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location                                                 |
+| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                                                                          |
+| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                                                                      |
+| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                                                                     |
+| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                                                                             |
+| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                                                                  |
 
 > **Related Documents:**
 >
@@ -611,8 +613,8 @@ Five rules enforced at pre-commit and CI:
 | 1.03 | Architecture Triad Upgrade   | Update | Entity-first detection added            | ✅ COMPLETE |
 | 1.04 | UX Triad Upgrade             | Audit  | Entity-first detection verified         | ✅ COMPLETE |
 | 1.05 | Epics Triad Upgrade          | Audit  | Entity-first detection verified         | ✅ COMPLETE |
-| 1.06 | Product-Soul Triad           | Create | 2 NEW workflows (validate + amend)      | Pending     |
-| 1.07 | Story/Dev Workflows          | Mixed  | 5 NEW + update existing                 | Pending     |
+| 1.06 | Product-Soul Triad           | Create | 2 NEW workflows (validate + amend)      | ✅ COMPLETE |
+| 1.07 | Story/Dev Workflows          | Mixed  | 5 NEW + 3 updated with atom integration | ✅ COMPLETE |
 | 1.08 | Context + Research Workflows | Mixed  | 8 NEW + update existing                 | Pending     |
 
 **Phase 1.01 Completion Notes (2025-12-04):**
@@ -1028,6 +1030,99 @@ The Epics Triad has full entity-first detection with a sophisticated three-tier 
 | Epics        | 8                 | 0 (already implemented)    | ✅     |
 | **Total**    | **34**            | **1**                      | ✅     |
 
+**Phase 1.06 Completion Notes (2025-12-04):**
+
+**Result: 2 NEW WORKFLOWS CREATED — Product-Soul Triad now complete.**
+
+Product Soul is unique among BMAD artifacts:
+
+- Lives at special root location: `docs/product-soul.md`
+- Constitution-level ONLY (no entity variants)
+- No routing workflows needed (unlike PRD/Architecture/UX/Epics)
+
+**New Workflows Created:**
+
+| Workflow                | Path                                                    | Components                                                                  |
+| ----------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `validate-product-soul` | `.bmad/bmm/workflows/1-analysis/validate-product-soul/` | workflow.yaml, instructions.md, checklist.md, validation-report-template.md |
+| `amend-product-soul`    | `.bmad/bmm/workflows/1-analysis/amend-product-soul/`    | workflow.yaml, instructions.md, amendment-log-template.md                   |
+
+**Product-Soul Triad Summary:**
+
+| Workflow                 | Purpose                                           | Status  |
+| ------------------------ | ------------------------------------------------- | ------- |
+| `product-brief` (create) | Interactive discovery → Product Soul creation     | Existed |
+| `validate-product-soul`  | Validate against BMAD standards + checklist       | **NEW** |
+| `amend-product-soul`     | Guided amendments with downstream impact analysis | **NEW** |
+
+**Key Design Decisions:**
+
+1. **No routing needed** — Product Soul is Constitution-only, so no entity detection/routing required
+2. **Downstream impact awareness** — Amendment workflow warns about PRD/Architecture/Epics/UX impact
+3. **Validation report** — Generates structured report with PASS/CONDITIONAL PASS/FAIL status
+4. **Amendment log** — Tracks all changes with before/after content and rationale
+
+**Phase 1.01-1.06 Cumulative Progress:**
+
+| Triad        | Workflows | Created | Updated | Status |
+| ------------ | --------- | ------- | ------- | ------ |
+| PRD          | 12        | 0       | 0       | ✅     |
+| Architecture | 7         | 0       | 1       | ✅     |
+| UX           | 7         | 0       | 0       | ✅     |
+| Epics        | 8         | 0       | 0       | ✅     |
+| Product-Soul | 3         | **2**   | 0       | ✅     |
+| **Total**    | **37**    | **2**   | **1**   | ✅     |
+
+**Phase 1.07 Completion Notes (2025-12-04):**
+
+**Result: 5 NEW WORKFLOWS CREATED + 3 UPDATED with SSOT Atom Integration**
+
+This phase completes the Story/Dev workflow cycle with validate/amend patterns and integrates the SSOT Atom System into the implementation phase.
+
+**New Workflows Created:**
+
+| Workflow               | Path                                                         | Purpose                                          | Components                                   |
+| ---------------------- | ------------------------------------------------------------ | ------------------------------------------------ | -------------------------------------------- |
+| `validate-story`       | `.bmad/bmm/workflows/4-implementation/validate-story/`       | Validates drafted stories meet quality standards | workflow.yaml, instructions.md, checklist.md |
+| `amend-story`          | `.bmad/bmm/workflows/4-implementation/amend-story/`          | Amends drafted stories before development        | workflow.yaml, instructions.md, checklist.md |
+| `amend-code`           | `.bmad/bmm/workflows/4-implementation/amend-code/`           | Targeted code changes (review fixes, tech debt)  | workflow.yaml, instructions.md, checklist.md |
+| `validate-code-review` | `.bmad/bmm/workflows/4-implementation/validate-code-review/` | Validates code review thoroughness               | workflow.yaml, instructions.md, checklist.md |
+| `amend-code-review`    | `.bmad/bmm/workflows/4-implementation/amend-code-review/`    | Updates/amends existing code reviews             | workflow.yaml, instructions.md, checklist.md |
+
+**Workflows Updated with Atom Integration:**
+
+| Workflow       | Changes                                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create-story` | Added atoms_dir, atom_search_script, atom_entity_filter. New step 1.6 for atom search. Dev Notes includes "SSOT Atom References" subsection.       |
+| `dev-story`    | Added atom integration variables. New step 0.6 to load atom references from story. Step 2 includes atom compliance checking during implementation. |
+| `code-review`  | Added atom integration. New step 4C.5 for SSOT Atom Compliance Validation. Review report includes "SSOT Atom Compliance" section.                  |
+
+**Story/Dev Workflow Lifecycle (Complete):**
+
+```
+create-story → validate-story → story-ready → story-context
+                    ↓                             ↓
+               amend-story              dev-story (with atoms)
+                                              ↓
+                                    code-review (with atoms)
+                                         ↓        ↓
+                              validate-code-review  amend-code-review
+                                         ↓              ↓
+                                    amend-code → story-done
+```
+
+**Phase 1.01-1.07 Cumulative Progress:**
+
+| Area         | Workflows | Created | Updated | Status |
+| ------------ | --------- | ------- | ------- | ------ |
+| PRD          | 12        | 0       | 0       | ✅     |
+| Architecture | 7         | 0       | 1       | ✅     |
+| UX           | 7         | 0       | 0       | ✅     |
+| Epics        | 8         | 0       | 0       | ✅     |
+| Product-Soul | 3         | 2       | 0       | ✅     |
+| Story/Dev    | 13        | **5**   | **3**   | ✅     |
+| **Total**    | **50**    | **7**   | **4**   | ✅     |
+
 ### 11.4 Phase 2: Migration (5 micro-phases)
 
 | ID   | Name                 | Exit Criteria           |
@@ -1145,8 +1240,8 @@ The Epics Triad has full entity-first detection with a sophisticated three-tier 
 ### Phase 1: Workflow Updates
 
 - [x] **1.01** Inventory all 92 current workflows — VERIFIED: 85 active + 6 archived + 1 template = 92 total
-- [ ] **1.02-1.05** Update existing triads (entity-first detection)
-- [ ] **1.06** Create 2 NEW Product-Soul workflows
+- [x] **1.02-1.05** Update existing triads (entity-first detection) — PRD, Architecture, UX, Epics all verified/updated
+- [x] **1.06** Create 2 NEW Product-Soul workflows — validate-product-soul + amend-product-soul CREATED
 - [ ] **1.07-1.08** Create 13 NEW workflows + update existing
 - [ ] **Gate:** 92 existing + 15 new = 107 total workflows functional
 

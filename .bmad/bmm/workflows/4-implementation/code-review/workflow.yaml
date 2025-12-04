@@ -24,6 +24,11 @@ output_folder_resolved: '' # e.g., "docs/platform/core-api/" or "docs/strategy/p
 parent_output_folder: '' # Parent entity path for parent-level context
 module_code_path: '' # Resolved from manifest.yaml (e.g., "services/core-api")
 
+# SSOT Atom System Integration
+# Atoms provide authoritative requirements, decisions, and interfaces
+atoms_dir: '{project-root}/docs/_atoms'
+atom_search_script: '{project-root}/scripts/atoms/atom-search.ts'
+
 # Sprint artifacts at entity level
 sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
 sprint_status: '{sprint_artifacts}/sprint-status.yaml'
@@ -48,6 +53,10 @@ variables:
   backlog_file: '{output_folder_resolved}backlog.md'
   update_epic_followups: true
   epic_followups_section_title: 'Post-Review Follow-ups'
+
+  # Atom integration variables
+  atom_entity_filter: '' # Set based on module (e.g., "SHL", "API")
+  validate_atom_compliance: true # Check implementation against atom constraints
 
 # Smart input file references - handles both whole docs and sharded docs
 # Priority: Whole document first, then sharded version
@@ -76,5 +85,9 @@ input_file_patterns:
     description: 'Brownfield project documentation (optional)'
     sharded: '{output_folder_resolved}index.md'
     load_strategy: 'INDEX_GUIDED'
+  atoms:
+    description: 'SSOT atoms referenced in story for compliance validation'
+    search_command: 'pnpm exec tsx {atom_search_script} --entity {atom_entity_filter}'
+    load_strategy: 'ON_DEMAND'
 
 standalone: true

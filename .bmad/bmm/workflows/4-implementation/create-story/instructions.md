@@ -76,6 +76,45 @@
     <note>After discovery, these content variables are available: {prd_content}, {tech_spec_content}, {architecture_content}, {ux_design_content}, {epics_content}, {document_project_content}</note>
   </step>
 
+  <step n="1.6" goal="Search for relevant SSOT atoms">
+    <critical>ATOM INTEGRATION: Search for authoritative requirements, decisions, and interfaces</critical>
+
+    <check if="include_atom_refs == true">
+      <action>Determine atom entity filter based on module:
+        - platform/shell → SHL
+        - platform/core-api → API
+        - platform/ui → UI
+        - platform/ts-schema → TSS
+        - Otherwise: derive from module name
+      </action>
+
+      <action>Search for atoms relevant to this entity:
+        - Run: pnpm exec tsx {{atom_search_script}} --entity {{atom_entity_filter}} --status approved
+        - Parse results to get list of atom IDs and titles
+      </action>
+
+      <action>Also search parent entity atoms (for inheritance):
+        - Constitution atoms (SYS.*) always apply
+        - Parent entity atoms if entity is nested
+      </action>
+
+      <action>Store found atoms as {{relevant_atoms}}:
+        - atom_id: e.g., "SYS.001-API.001"
+        - title: e.g., "Authentication API Contract"
+        - type: requirement | interface | decision | constraint
+        - path: e.g., "docs/_atoms/SYS.001-API.001.md"
+      </action>
+
+      <output>📚 Found {{atom_count}} relevant atoms for {{atom_entity_filter}}:
+{{atom_list_summary}}
+      </output>
+    </check>
+
+    <check if="include_atom_refs == false">
+      <action>Skip atom search</action>
+    </check>
+  </step>
+
   <step n="2" goal="Discover previous story context">
     <critical>PREVIOUS STORY CONTINUITY: Essential for maintaining context and learning from prior development</critical>
 
@@ -261,6 +300,25 @@ Will update existing story file rather than creating new one.
         - **Pending Review Items**: Rate limiting mentioned in review - consider for this story
 
         [Source: stories/{{previous_story_key}}.md#Dev-Agent-Record]
+        ```
+    </action>
+
+    <action>If {{relevant_atoms}} is not empty and include_atom_refs == true:
+      - Add "SSOT Atom References" subsection to Dev Notes
+      - List applicable atoms with their IDs and relevance
+      - Format example:
+        ```
+        ### SSOT Atom References
+
+        The following authoritative atoms apply to this story:
+
+        | Atom ID | Type | Title | Relevance |
+        |---------|------|-------|-----------|
+        | SYS.001 | requirement | Multi-tenant RLS | All data access must use org_id |
+        | SYS.001-API.002 | interface | Auth API Contract | Implement per this interface |
+        | SYS.003 | decision | Event-First Architecture | Write to system_events before domain |
+
+        [Source: docs/_atoms/]
         ```
     </action>
 

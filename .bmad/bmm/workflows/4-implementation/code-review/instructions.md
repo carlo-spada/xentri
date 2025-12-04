@@ -161,6 +161,40 @@
       <action>Cross-check epic tech-spec requirements and architecture constraints against the implementation intent in files.</action>
       <action if="critical architecture constraints are violated (e.g., layering, dependency rules)">flag as High Severity finding.</action>
 
+      <critical>Step 4C.5: SSOT ATOM COMPLIANCE VALIDATION</critical>
+      <action>Check story Dev Notes for "SSOT Atom References" subsection</action>
+
+      <check if="atom references exist and validate_atom_compliance == true">
+        <action>For each referenced atom:
+          1. Load atom file from {{atoms_dir}}/{{atom_id}}.md
+          2. Extract constraints and acceptance criteria
+          3. Validate implementation against atom requirements:
+             - Requirements: Is the requirement satisfied by the code?
+             - Interfaces: Does implementation match the contract?
+             - Decisions: Is the decision being followed?
+             - Constraints: Are there any violations?
+          4. Record compliance status with evidence
+        </action>
+
+        <action>Generate Atom Compliance table:
+```
+| Atom ID | Type | Status | Evidence |
+|---------|------|--------|----------|
+| SYS.001 | requirement | COMPLIANT | org_id present in all queries |
+| SYS.001-API.002 | interface | PARTIAL | Missing error response format |
+```
+        </action>
+
+        <check if="atom violations found">
+          <action>Flag as finding with severity based on atom type:
+            - requirement violation → HIGH severity
+            - interface violation → HIGH severity
+            - decision violation → MEDIUM severity
+            - constraint violation → HIGH severity
+          </action>
+        </check>
+      </check>
+
       <critical>Step 4D: COMPILE VALIDATION FINDINGS</critical>
       <action>Compile all validation findings into structured list:
         - Missing AC implementations (severity based on AC importance)
@@ -169,6 +203,7 @@
         - Questionable task completions (MEDIUM severity)
         - Missing tests for ACs (severity based on AC criticality)
         - Architecture violations (HIGH severity)
+        - Atom compliance violations (severity based on atom type)
       </action>
     </check>
   </step>
@@ -210,6 +245,10 @@
       7. **Architectural Alignment**:
          - Tech-spec compliance
          - Architecture violations if any
+      7.5. **SSOT Atom Compliance** (if atoms referenced):
+         - Include Atom Compliance table from Step 4C.5
+         - Show: Atom ID | Type | Status (COMPLIANT/PARTIAL/VIOLATION) | Evidence
+         - List any violations with severity
       8. **Security Notes**: Security findings if any
       9. **Best-Practices and References**: With links
       10. **Action Items**:

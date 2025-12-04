@@ -1,0 +1,65 @@
+# Amend Code Workflow
+name: amend-code
+description: 'Makes targeted code amendments during or after development. Use for fixing review findings, addressing technical debt, or implementing specific changes without running the full dev-story workflow.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+base_output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+user_skill_level: '{config_source}:user_skill_level'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated entity detection (Five Entity Types model)
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Entity-resolved paths (populated by detect-entity-type task)
+entity_type: '' # Detected: constitution, infrastructure_module, strategic_container, coordination_unit, business_module
+output_folder_resolved: '' # e.g., "docs/platform/core-api/" or "docs/strategy/pulse/dashboard/"
+parent_output_folder: '' # Parent entity path
+module_code_path: '' # Resolved from manifest.yaml (e.g., "services/core-api")
+
+# Sprint artifacts at entity level
+sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
+sprint_status: '{sprint_artifacts}/sprint-status.yaml'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/4-implementation/amend-code'
+instructions: '{installed_path}/instructions.md'
+checklist: '{installed_path}/checklist.md'
+
+variables:
+  story_dir: '{sprint_artifacts}'
+  story_file: '' # Optional: link amendment to a story
+
+  # Amendment source options
+  amendment_source: '' # 'review' = from code review, 'adhoc' = user-specified, 'story' = from story tasks
+
+  # Review-based amendment
+  review_section: '' # Path to story with review section
+  action_items_filter: 'unchecked' # 'unchecked', 'high', 'medium', 'all'
+
+  # Ad-hoc amendment
+  target_files: [] # List of files to amend
+  amendment_description: '' # What to change
+
+  # Validation
+  run_tests_after: true
+  update_story_on_complete: true
+
+# Smart input file references
+input_file_patterns:
+  architecture:
+    description: 'Architecture for context'
+    whole: '{output_folder_resolved}*architecture*.md'
+    parent_fallback: '{parent_output_folder}*architecture*.md'
+    load_strategy: 'FULL_LOAD'
+  tech_spec:
+    description: 'Tech spec for context'
+    whole: '{output_folder_resolved}tech-spec*.md'
+    load_strategy: 'SELECTIVE_LOAD'
+
+standalone: true

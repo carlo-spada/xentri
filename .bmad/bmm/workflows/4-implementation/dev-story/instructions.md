@@ -77,6 +77,34 @@ Proceeding with story file only. For better context, consider running `story-con
     <note>After discovery, these content variables are available: {architecture_content}, {tech_spec_content}, {ux_design_content}, {epics_content} (selective load), {document_project_content}</note>
   </step>
 
+  <step n="0.6" goal="Extract and load SSOT atom references from story">
+    <critical>ATOM COMPLIANCE: Implementation must adhere to authoritative atom constraints</critical>
+
+    <action>Check story Dev Notes for "SSOT Atom References" subsection</action>
+
+    <check if="atom references section exists">
+      <action>Parse atom reference table to extract:
+        - atom_ids: list of atom IDs (e.g., ["SYS.001", "SYS.001-API.002"])
+        - atom_types: corresponding types (requirement, interface, decision, constraint)
+      </action>
+
+      <action>For each referenced atom:
+        1. Load atom file from {{atoms_dir}}/{{atom_id}}.md
+        2. Extract key constraints and acceptance criteria
+        3. Store as {{atom_constraints}} for validation during implementation
+      </action>
+
+      <output>📚 Loaded {{atom_count}} SSOT atoms for compliance checking:
+{{atom_summary}}
+      </output>
+    </check>
+
+    <check if="no atom references section">
+      <action>Set {{atom_constraints}} = empty</action>
+      <note>Story was created without atom integration - proceed without atom validation</note>
+    </check>
+  </step>
+
   <step n="1.5" goal="Detect review continuation and extract review context">
     <critical>Determine if this is a fresh start or continuation after code review</critical>
 
@@ -145,6 +173,17 @@ Expected ready-for-dev or in-progress. Continuing anyway...
   <step n="2" goal="Plan and implement task">
     <action>Review acceptance criteria and dev notes for the selected task</action>
     <action>Plan implementation steps and edge cases; write down a brief plan in Dev Agent Record → Debug Log</action>
+
+    <check if="{{atom_constraints}} is not empty">
+      <action>Before implementing, review relevant atom constraints:
+        - For requirements: ensure implementation satisfies the requirement
+        - For interfaces: implement according to the contract specification
+        - For decisions: follow the architectural decision
+        - For constraints: ensure no violations
+      </action>
+      <action>Note in Debug Log: "Implementing with atom compliance: {{relevant_atom_ids}}"</action>
+    </check>
+
     <action>Implement the task COMPLETELY including all subtasks, critically following best practices, coding patterns and coding standards in this repo you have learned about from the story and context file or your own critical agent instructions</action>
     <action>Handle error conditions and edge cases appropriately</action>
     <action if="new or different than what is documented dependencies are needed">ASK user for approval before adding</action>
