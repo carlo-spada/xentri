@@ -87,20 +87,20 @@ Each epic must prove this loop works for its scope.
 
 ## Requirements Traceability
 
-> **Single Source of Truth:** Platform Requirements (PR-xxx) and Integration Contracts (IC-xxx) are defined in [PRD §Platform Requirements Index](./prd.md#platform-requirements-index). This section tracks epic coverage and implementation status only.
+> **Single Source of Truth:** Platform Requirements live in [`docs/_atoms/`](../_atoms/_index.md). Legacy PR-xxx IDs are mapped to atom IDs in [PRD §Platform Requirements Index](./prd.md#platform-requirements-index). This section tracks epic coverage and implementation status only.
 
 ### Platform Requirements Coverage
 
-| ID     | Epic Coverage     | Status   |
-| ------ | ----------------- | -------- |
-| PR-001 | Epic 1            | Complete |
-| PR-002 | Epic 1 → Epic 1.5 | Partial  |
-| PR-003 | Epic 1            | Complete |
-| PR-004 | Epic 2            | Planned  |
-| PR-005 | Epic 1 → Epic 1.5 | Partial  |
-| PR-006 | Epic 2            | Planned  |
-| PR-007 | Epic 1            | Complete |
-| PR-008 | Epic 3            | Planned  |
+| Atom ID                           | Legacy | Epic Coverage     | Status   |
+| --------------------------------- | ------ | ----------------- | -------- |
+| [`SYS.002`](../_atoms/SYS.002.md) | PR-001 | Epic 1            | Complete |
+| [`SYS.003`](../_atoms/SYS.003.md) | PR-002 | Epic 1 → Epic 1.5 | Partial  |
+| [`SYS.004`](../_atoms/SYS.004.md) | PR-003 | Epic 1            | Complete |
+| [`SYS.005`](../_atoms/SYS.005.md) | PR-004 | Epic 2            | Planned  |
+| [`SYS.006`](../_atoms/SYS.006.md) | PR-005 | Epic 1 → Epic 1.5 | Partial  |
+| [`SYS.007`](../_atoms/SYS.007.md) | PR-006 | Epic 2            | Planned  |
+| [`SYS.008`](../_atoms/SYS.008.md) | PR-007 | Epic 1            | Complete |
+| [`SYS.009`](../_atoms/SYS.009.md) | PR-008 | Epic 3            | Planned  |
 
 ### Integration Contracts Coverage
 
@@ -136,7 +136,7 @@ Each epic must prove this loop works for its scope.
 
 **Scope:**
 
-- Platform Requirements: PR-001, PR-002 (partial), PR-003, PR-005 (partial), PR-007
+- Platform Requirements: SYS.002 (PR-001), SYS.003 (PR-002, partial), SYS.004 (PR-003), SYS.006 (PR-005, partial), SYS.008 (PR-007)
 - Integration Contracts: IC-001, IC-002 (partial)
 - Infrastructure Modules: shell, core-api, ts-schema, ui
 
@@ -160,7 +160,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.1: Project Initialization & Infrastructure
 
-**Traces to:** PR-001
+**Traces to:** [SYS.002](../_atoms/SYS.002.md) (PR-001)
 **Coordinates:** core-api, shell
 
 **Acceptance Criteria:**
@@ -177,7 +177,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.2: Event Backbone & Database Schema
 
-**Traces to:** PR-002, IC-001, IC-002
+**Traces to:** [SYS.003](../_atoms/SYS.003.md) (PR-002), IC-001, IC-002
 **Coordinates:** core-api, ts-schema
 
 **Acceptance Criteria:**
@@ -193,7 +193,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.3: User Authentication & Signup
 
-**Traces to:** PR-003
+**Traces to:** [SYS.004](../_atoms/SYS.004.md) (PR-003)
 **Coordinates:** core-api, shell
 
 **Acceptance Criteria:**
@@ -209,7 +209,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.4: Organization Creation & Provisioning
 
-**Traces to:** PR-001, PR-005
+**Traces to:** [SYS.002](../_atoms/SYS.002.md) (PR-001), [SYS.006](../_atoms/SYS.006.md) (PR-005)
 **Coordinates:** core-api
 
 **Acceptance Criteria:**
@@ -224,7 +224,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.5: Application Shell & Navigation
 
-**Traces to:** PR-007
+**Traces to:** [SYS.008](../_atoms/SYS.008.md) (PR-007)
 **Coordinates:** shell, ui
 
 **Acceptance Criteria:**
@@ -241,7 +241,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.6: Thin Vertical Slice
 
-**Traces to:** PR-002
+**Traces to:** [SYS.003](../_atoms/SYS.003.md) (PR-002)
 **Coordinates:** shell, core-api
 
 **Acceptance Criteria:**
@@ -257,7 +257,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.7: DevOps, Observability, and Test Readiness
 
-**Traces to:** PR-006
+**Traces to:** [SYS.007](../_atoms/SYS.007.md) (PR-006)
 **Coordinates:** platform (DevOps)
 
 **Acceptance Criteria:**
@@ -280,7 +280,7 @@ Each epic must prove this loop works for its scope.
 
 **Scope:**
 
-- Platform Requirements: PR-002 (complete), PR-005 (complete)
+- Platform Requirements: SYS.003 (PR-002, complete), SYS.006 (PR-005, complete)
 - Integration Contracts: IC-002 (complete), IC-007
 - Infrastructure Modules: core-api, ts-schema
 
@@ -290,7 +290,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.5.1: Redis Streams + Dual-Write Pattern
 
-**Traces to:** PR-002, IC-002
+**Traces to:** [SYS.003](../_atoms/SYS.003.md) (PR-002), IC-002
 **Coordinates:** core-api
 
 **Acceptance Criteria:**
@@ -330,7 +330,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.5.3: Permission Primitives (IC-007)
 
-**Traces to:** PR-005, IC-007
+**Traces to:** [SYS.006](../_atoms/SYS.006.md) (PR-005), IC-007
 **Coordinates:** core-api, ts-schema
 
 **Acceptance Criteria:**
@@ -351,7 +351,7 @@ Each epic must prove this loop works for its scope.
 
 #### Story 1.5.4: Clerk Organizations Sync
 
-**Traces to:** PR-003, PR-005
+**Traces to:** [SYS.004](../_atoms/SYS.004.md) (PR-003), [SYS.006](../_atoms/SYS.006.md) (PR-005)
 **Coordinates:** core-api
 
 **Acceptance Criteria:**
@@ -493,7 +493,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 
 #### Story 2.2: Strategy Copilot MVP
 
-**Traces to:** PR-004, PR-008
+**Traces to:** [SYS.005](../_atoms/SYS.005.md) (PR-004), [SYS.009](../_atoms/SYS.009.md) (PR-008)
 **Coordinates:** strategy-copilot, core-api
 
 **Acceptance Criteria:**
@@ -593,7 +593,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 
 #### Story 3.2: Soul-Aware Configuration
 
-**Traces to:** PR-004
+**Traces to:** [SYS.005](../_atoms/SYS.005.md) (PR-004)
 **Coordinates:** core-api, ui
 
 **Acceptance Criteria:**
@@ -612,7 +612,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 
 #### Story 3.3: Vocabulary Adaptation
 
-**Traces to:** PR-008
+**Traces to:** [SYS.009](../_atoms/SYS.009.md) (PR-008)
 **Coordinates:** ui, ts-schema, strategy-copilot
 
 **Acceptance Criteria:**
@@ -670,7 +670,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 
 #### Story 4.1: Need Detection ("You need visibility")
 
-**Traces to:** PR-004, IC-005
+**Traces to:** [SYS.005](../_atoms/SYS.005.md) (PR-004), IC-005
 **Coordinates:** strategy-copilot
 
 **Acceptance Criteria:**

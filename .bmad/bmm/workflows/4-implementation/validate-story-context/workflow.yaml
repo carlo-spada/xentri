@@ -1,0 +1,46 @@
+# Story Context Validation Workflow
+name: validate-story-context
+description: 'Validates a story context document against BMAD standards, ensuring completeness and accuracy for development execution.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated entity detection
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+select_entity_task: '{project-root}/.bmad/bmm/tasks/select-entity.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Entity-resolved paths
+entity_type: ''
+output_folder_resolved: ''
+
+# Sprint artifacts at entity level
+sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
+
+# Story context location (parameterized)
+story_id: runtime-captured
+story_context_path: '{sprint_artifacts}/story-context-{{story_id}}.xml'
+
+# Reference source documents
+epic_tech_context_path: '{sprint_artifacts}/tech-spec-epic-{{epic_id}}.md'
+story_file_path: '{sprint_artifacts}/story-{{story_id}}.md'
+
+# Reference base workflow
+base_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/story-context'
+base_checklist: '{base_workflow}/checklist.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/4-implementation/validate-story-context'
+instructions: '{installed_path}/instructions.md'
+checklist: '{installed_path}/checklist.md'
+
+# Output configuration
+default_output_file: '{sprint_artifacts}/story-context-validation-{{story_id}}-{{date}}.md'
+
+standalone: true

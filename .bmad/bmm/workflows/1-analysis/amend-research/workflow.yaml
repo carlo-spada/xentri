@@ -1,0 +1,36 @@
+# Research Amendment Workflow
+name: amend-research
+description: 'Guided amendment workflow for research documents. Handles source updates, accuracy fixes, and content enrichment.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+current_year: system-generated
+
+# Enable web research for updates
+enable_web_research: true
+require_citations: true
+require_source_urls: true
+
+# Research document location
+research_type: runtime-captured
+research_path_pattern: '{output_folder}/research-*.md'
+
+# Related workflows
+validate_workflow: '{project-root}/.bmad/bmm/workflows/1-analysis/validate-research/workflow.yaml'
+base_workflow: '{project-root}/.bmad/bmm/workflows/1-analysis/research'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/1-analysis/amend-research'
+instructions: '{installed_path}/instructions.md'
+amendment_log_template: '{installed_path}/amendment-log-template.md'
+
+# Output configuration
+amendment_log_file: '{output_folder}/research-amendment-{{research_type}}-{{date}}.md'
+
+standalone: true

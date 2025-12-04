@@ -1,0 +1,42 @@
+# Story Context Amendment Workflow
+name: amend-story-context
+description: 'Guided amendment workflow for story context documents. Handles content updates, stale reference fixes, and context enrichment.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated entity detection
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+select_entity_task: '{project-root}/.bmad/bmm/tasks/select-entity.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Entity-resolved paths
+entity_type: ''
+output_folder_resolved: ''
+
+# Sprint artifacts at entity level
+sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
+
+# Story context location
+story_id: runtime-captured
+story_context_path: '{sprint_artifacts}/story-context-{{story_id}}.xml'
+
+# Related workflows
+validate_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/validate-story-context/workflow.yaml'
+base_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/story-context'
+context_template: '{base_workflow}/context-template.xml'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/4-implementation/amend-story-context'
+instructions: '{installed_path}/instructions.md'
+
+# Output configuration (amendments logged inline in XML)
+amendment_backup: '{sprint_artifacts}/story-context-{{story_id}}-backup-{{date}}.xml'
+
+standalone: true

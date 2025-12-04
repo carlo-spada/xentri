@@ -1,0 +1,40 @@
+# Technical Specification Amendment Workflow
+name: amend-tech-spec
+description: 'Guided amendment workflow for technical specifications. Handles validation-driven fixes, scope changes, and technical refinements while maintaining document integrity.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated hierarchy support
+output_folder_resolved: '{output_folder_resolved}'
+current_level: '{current_level}'
+current_level_name: '{current_level_name}'
+
+# Entity detection
+select_entity_task: '{project-root}/.bmad/bmm/tasks/select-entity.xml'
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Tech spec location (relative to entity)
+tech_spec_path: '{output_folder_resolved}/tech-spec.md'
+
+# Related workflows
+validate_workflow: '{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-tech-spec/workflow.yaml'
+tech_spec_workflow: '{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec'
+tech_spec_template: '{tech_spec_workflow}/tech-spec-template.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-tech-spec'
+instructions: '{installed_path}/instructions.md'
+amendment_log_template: '{installed_path}/amendment-log-template.md'
+
+# Output configuration
+amendment_log_file: '{output_folder_resolved}/tech-spec-amendment-log-{{date}}.md'
+
+standalone: true

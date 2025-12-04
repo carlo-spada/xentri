@@ -1,0 +1,35 @@
+# Research Validation Workflow
+name: validate-research
+description: 'Validates research documents against BMAD standards, ensuring source quality, citation accuracy, and actionable insights.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+current_year: system-generated
+
+# Research types supported
+# market, technical, deep-prompt, competitive, user, domain
+research_type: runtime-captured
+
+# Research document location (uses pattern matching)
+research_path_pattern: '{output_folder}/research-*.md'
+
+# Reference base workflow
+base_workflow: '{project-root}/.bmad/bmm/workflows/1-analysis/research'
+base_checklist: '{base_workflow}/checklist.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/1-analysis/validate-research'
+instructions: '{installed_path}/instructions.md'
+checklist: '{installed_path}/checklist.md'
+validation_report_template: '{installed_path}/validation-report-template.md'
+
+# Output configuration
+default_output_file: '{output_folder}/research-validation-{{research_type}}-{{date}}.md'
+
+standalone: true

@@ -1,0 +1,40 @@
+# Technical Specification Validation Workflow
+name: validate-tech-spec
+description: 'Validates a technical specification against BMAD standards, ensuring completeness, clarity, and readiness for story generation.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated hierarchy support
+output_folder_resolved: '{output_folder_resolved}'
+current_level: '{current_level}'
+current_level_name: '{current_level_name}'
+
+# Entity detection for level-aware validation
+select_entity_task: '{project-root}/.bmad/bmm/tasks/select-entity.xml'
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Tech spec location (relative to entity)
+tech_spec_path: '{output_folder_resolved}/tech-spec.md'
+
+# Reference base tech-spec workflow for checklist
+tech_spec_workflow: '{project-root}/.bmad/bmm/workflows/2-plan-workflows/tech-spec'
+tech_spec_checklist: '{tech_spec_workflow}/checklist.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/2-plan-workflows/validate-tech-spec'
+instructions: '{installed_path}/instructions.md'
+checklist: '{installed_path}/checklist.md'
+validation_report_template: '{installed_path}/validation-report-template.md'
+
+# Output configuration
+default_output_file: '{output_folder_resolved}/tech-spec-validation-report-{{date}}.md'
+
+standalone: true

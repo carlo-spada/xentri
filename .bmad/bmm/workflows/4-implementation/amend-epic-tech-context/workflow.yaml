@@ -1,0 +1,43 @@
+# Epic Tech Context Amendment Workflow
+name: amend-epic-tech-context
+description: 'Guided amendment workflow for epic technical context documents. Handles validation-driven fixes, story updates, and technical refinements.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Federated entity detection
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+select_entity_task: '{project-root}/.bmad/bmm/tasks/select-entity.xml'
+manifest_file: '{project-root}/docs/manifest.yaml'
+
+# Entity-resolved paths
+entity_type: ''
+output_folder_resolved: ''
+
+# Sprint artifacts at entity level
+sprint_artifacts: '{output_folder_resolved}sprint-artifacts'
+
+# Epic tech context location
+epic_id: runtime-captured
+epic_tech_context_path: '{sprint_artifacts}/tech-spec-epic-{{epic_id}}.md'
+
+# Related workflows
+validate_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/validate-epic-tech-context/workflow.yaml'
+base_workflow: '{project-root}/.bmad/bmm/workflows/4-implementation/epic-tech-context'
+template: '{base_workflow}/template.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/4-implementation/amend-epic-tech-context'
+instructions: '{installed_path}/instructions.md'
+amendment_log_template: '{installed_path}/amendment-log-template.md'
+
+# Output configuration
+amendment_log_file: '{sprint_artifacts}/epic-tech-context-amendment-{{epic_id}}-{{date}}.md'
+
+standalone: true
