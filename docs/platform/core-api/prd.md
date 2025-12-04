@@ -37,9 +37,9 @@ The Core API is the central backend service providing the Event Backbone, Agent 
 
 **What this module inherits (constraints):**
 
-- Event envelope schema (IC-001, IC-002) from Constitution
-- RLS pattern (PR-001, ADR-003) from Constitution Architecture
-- Permission primitives (IC-007) from Constitution
+- Event envelope schema ([SYS.010](../../_atoms/SYS.010.md) IC-001, [SYS.011](../../_atoms/SYS.011.md) IC-002) from Constitution
+- RLS pattern ([SYS.002](../../_atoms/SYS.002.md) PR-001, [SYS.019](../../_atoms/SYS.019.md) ADR-003) from Constitution Architecture
+- Permission primitives ([SYS.016](../../_atoms/SYS.016.md) IC-007) from Constitution
 - API conventions (Problem Details, versioning) from Constitution
 
 ---
@@ -50,23 +50,23 @@ The Core API is the central backend service providing the Event Backbone, Agent 
 
 ### Functional Requirements
 
-| ID         | Requirement                                                                | Priority | Status |
-| ---------- | -------------------------------------------------------------------------- | -------- | ------ |
-| FR-API-001 | Core API MUST implement system_events table with org_id and RLS            | P0       | Draft  |
-| FR-API-002 | Core API MUST emit events with SystemEvent envelope (IC-001)               | P0       | Draft  |
-| FR-API-003 | Core API MUST implement Clerk webhook handler for user/org sync            | P0       | Draft  |
-| FR-API-004 | Core API MUST set transaction-scoped org_id for RLS enforcement            | P0       | Draft  |
-| FR-API-005 | Core API MUST implement Soul Gateway endpoints (IC-004)                    | P1       | Draft  |
-| FR-API-006 | Core API MUST implement recommendation submission endpoint (IC-005)        | P1       | Draft  |
-| FR-API-007 | Core API MUST implement permission check middleware (IC-007)               | P0       | Draft  |
-| FR-API-008 | Core API MUST implement health check endpoints (/health, /health/ready)    | P0       | Draft  |
-| FR-API-009 | Core API MUST return Problem Details format for all errors                 | P1       | Draft  |
-| FR-API-010 | Core API MUST propagate trace_id across all requests                       | P1       | Draft  |
-| FR-API-011 | Core API MUST implement Redis Streams for real-time event transport        | P1       | Draft  |
-| FR-API-012 | Core API MUST implement dual-write pattern (Redis + Postgres) for events   | P1       | Draft  |
-| FR-API-013 | Core API MUST implement Pulse hierarchical filtering engine                | P1       | Draft  |
-| FR-API-014 | Core API MUST implement Soul Governance (AI-updateable vs human-sovereign) | P1       | Draft  |
-| FR-API-015 | Core API MUST implement Tri-State Memory (Semantic, Episodic, Synthetic)   | P2       | Draft  |
+| ID         | Requirement                                                                                    | Priority | Status |
+| ---------- | ---------------------------------------------------------------------------------------------- | -------- | ------ |
+| FR-API-001 | Core API MUST implement system_events table with org_id and RLS                                | P0       | Draft  |
+| FR-API-002 | Core API MUST emit events with SystemEvent envelope ([IC-001](../../_atoms/SYS.010.md))        | P0       | Draft  |
+| FR-API-003 | Core API MUST implement Clerk webhook handler for user/org sync                                | P0       | Draft  |
+| FR-API-004 | Core API MUST set transaction-scoped org_id for RLS enforcement                                | P0       | Draft  |
+| FR-API-005 | Core API MUST implement Soul Gateway endpoints ([IC-004](../../_atoms/SYS.013.md))             | P1       | Draft  |
+| FR-API-006 | Core API MUST implement recommendation submission endpoint ([IC-005](../../_atoms/SYS.014.md)) | P1       | Draft  |
+| FR-API-007 | Core API MUST implement permission check middleware ([IC-007](../../_atoms/SYS.016.md))        | P0       | Draft  |
+| FR-API-008 | Core API MUST implement health check endpoints (/health, /health/ready)                        | P0       | Draft  |
+| FR-API-009 | Core API MUST return Problem Details format for all errors                                     | P1       | Draft  |
+| FR-API-010 | Core API MUST propagate trace_id across all requests                                           | P1       | Draft  |
+| FR-API-011 | Core API MUST implement Redis Streams for real-time event transport                            | P1       | Draft  |
+| FR-API-012 | Core API MUST implement dual-write pattern (Redis + Postgres) for events                       | P1       | Draft  |
+| FR-API-013 | Core API MUST implement Pulse hierarchical filtering engine                                    | P1       | Draft  |
+| FR-API-014 | Core API MUST implement Soul Governance (AI-updateable vs human-sovereign)                     | P1       | Draft  |
+| FR-API-015 | Core API MUST implement Tri-State Memory (Semantic, Episodic, Synthetic)                       | P2       | Draft  |
 
 ---
 
@@ -252,17 +252,17 @@ To prevent context bloat, Episodic Memory is recursively summarized ("folded") i
 
 **Every sub-category service must implement:**
 
-| Capability                    | Requirement                                                               |
-| ----------------------------- | ------------------------------------------------------------------------- |
-| **PR-002: Event emission**    | All mutations emit events with standard envelope (see Event Schema below) |
-| **PR-005: Permission checks** | Verify primitives (`view`, `edit`, `approve`, `configure`) before actions |
-| **PR-006: Audit logging**     | Log who did what when; include `trace_id` for correlation                 |
-| **Soul awareness**            | Read Soul on init; reconfigure on `xentri.soul.updated` events            |
-| **PR-007: Error boundaries**  | Fail gracefully; never crash the shell; show meaningful error states      |
+| Capability                                               | Requirement                                                               |
+| -------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **[PR-002](../../_atoms/SYS.003.md): Event emission**    | All mutations emit events with standard envelope (see Event Schema below) |
+| **[PR-005](../../_atoms/SYS.006.md): Permission checks** | Verify primitives (`view`, `edit`, `approve`, `configure`) before actions |
+| **[PR-006](../../_atoms/SYS.007.md): Audit logging**     | Log who did what when; include `trace_id` for correlation                 |
+| **Soul awareness**                                       | Read Soul on init; reconfigure on `xentri.soul.updated` events            |
+| **[PR-007](../../_atoms/SYS.008.md): Error boundaries**  | Fail gracefully; never crash the shell; show meaningful error states      |
 
 ---
 
-## Notification Delivery Contract (IC-006)
+## Notification Delivery Contract ([IC-006](../../_atoms/SYS.015.md))
 
 > **Migrated back from Constitution PRD v2.x**
 
@@ -301,7 +301,7 @@ Users can configure per-category:
 
 ---
 
-## Soul Access Patterns (IC-004)
+## Soul Access Patterns ([IC-004](../../_atoms/SYS.013.md))
 
 > **Migrated from Constitution PRD §Platform Integration Requirements**
 
@@ -313,7 +313,7 @@ Users can configure per-category:
 | **Specific section**     | `GET /api/v1/soul/{section}` | Targeted reads (e.g., `business_type`) |
 | **Subscribe to changes** | SSE `/api/v1/soul/stream`    | React to Soul updates in real-time     |
 
-### Writing to the Soul (IC-005)
+### Writing to the Soul ([IC-005](../../_atoms/SYS.014.md))
 
 Sub-categories **never write directly** to the Soul. Instead:
 
@@ -326,30 +326,30 @@ Sub-categories **never write directly** to the Soul. Instead:
 
 ## Interfaces Provided
 
-> Interfaces that sibling modules can depend on (per ADR-020 Sibling Dependency Law)
+> Interfaces that sibling modules can depend on (per [ADR-020](../../_atoms/SYS.034.md) Sibling Dependency Law)
 
-| Interface         | Description                      | Consumers             |
-| ----------------- | -------------------------------- | --------------------- |
-| `EventEmitter`    | Emit events to Event Backbone    | All services          |
-| `SoulGateway`     | Read Soul sections (IC-004)      | All copilots, modules |
-| `PermissionCheck` | Verify user permissions (IC-007) | All services          |
-| `OrgContext`      | Current organization context     | shell, all services   |
-| `PulseEngine`     | Hierarchical filtering API       | shell, copilots       |
-| `AgentRegistry`   | Register and coordinate agents   | All agent services    |
+| Interface         | Description                                                 | Consumers             |
+| ----------------- | ----------------------------------------------------------- | --------------------- |
+| `EventEmitter`    | Emit events to Event Backbone                               | All services          |
+| `SoulGateway`     | Read Soul sections ([IC-004](../../_atoms/SYS.013.md))      | All copilots, modules |
+| `PermissionCheck` | Verify user permissions ([IC-007](../../_atoms/SYS.016.md)) | All services          |
+| `OrgContext`      | Current organization context                                | shell, all services   |
+| `PulseEngine`     | Hierarchical filtering API                                  | shell, copilots       |
+| `AgentRegistry`   | Register and coordinate agents                              | All agent services    |
 
 ### API Endpoints
 
-| Endpoint                            | Method | Description                | IC Reference |
-| ----------------------------------- | ------ | -------------------------- | ------------ |
-| `GET /api/v1/soul`                  | GET    | Full Soul read             | IC-004       |
-| `GET /api/v1/soul/{section}`        | GET    | Section-specific Soul read | IC-004       |
-| `SSE /api/v1/soul/stream`           | GET    | Real-time Soul updates     | IC-004       |
-| `POST /api/v1/soul/recommendations` | POST   | Submit recommendation      | IC-005       |
-| `GET /api/v1/events`                | GET    | Query events (org-scoped)  | IC-001       |
-| `GET /api/v1/pulse/{scope}`         | GET    | Get Pulse items for scope  | ADR-011      |
-| `GET /health`                       | GET    | Liveness check             | —            |
-| `GET /health/ready`                 | GET    | Readiness check (DB)       | —            |
-| `POST /webhooks/clerk`              | POST   | Clerk webhook handler      | —            |
+| Endpoint                            | Method | Description                | IC Reference                       |
+| ----------------------------------- | ------ | -------------------------- | ---------------------------------- |
+| `GET /api/v1/soul`                  | GET    | Full Soul read             | [IC-004](../../_atoms/SYS.013.md)  |
+| `GET /api/v1/soul/{section}`        | GET    | Section-specific Soul read | [IC-004](../../_atoms/SYS.013.md)  |
+| `SSE /api/v1/soul/stream`           | GET    | Real-time Soul updates     | [IC-004](../../_atoms/SYS.013.md)  |
+| `POST /api/v1/soul/recommendations` | POST   | Submit recommendation      | [IC-005](../../_atoms/SYS.014.md)  |
+| `GET /api/v1/events`                | GET    | Query events (org-scoped)  | [IC-001](../../_atoms/SYS.010.md)  |
+| `GET /api/v1/pulse/{scope}`         | GET    | Get Pulse items for scope  | [ADR-011](../../_atoms/SYS.026.md) |
+| `GET /health`                       | GET    | Liveness check             | —                                  |
+| `GET /health/ready`                 | GET    | Readiness check (DB)       | —                                  |
+| `POST /webhooks/clerk`              | POST   | Clerk webhook handler      | —                                  |
 
 ---
 
@@ -370,30 +370,30 @@ Sub-categories **never write directly** to the Soul. Instead:
 
 ### To Constitution Requirements
 
-| API Requirement | Traces To                 | Notes                              |
-| --------------- | ------------------------- | ---------------------------------- |
-| FR-API-001      | PR-001                    | All tables include org_id with RLS |
-| FR-API-002      | PR-002, IC-001, IC-002    | Events with standard envelope      |
-| FR-API-004      | PR-001, ADR-003           | Fail-closed RLS pattern            |
-| FR-API-005      | PR-004, IC-004            | Soul access through API only       |
-| FR-API-006      | IC-005                    | Recommendation protocol            |
-| FR-API-007      | PR-005, IC-007            | Permission enforcement             |
-| FR-API-009      | Constitution Architecture | Problem Details format             |
-| FR-API-010      | PR-006                    | Observability requirements         |
-| FR-API-013      | ADR-011                   | Hierarchical Pulse                 |
-| FR-API-014      | PR-004                    | Soul governance rules              |
-| FR-API-015      | ADR-006                   | Tri-State Memory                   |
+| API Requirement | Traces To                                                                                               | Notes                              |
+| --------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| FR-API-001      | [PR-001](../../_atoms/SYS.002.md)                                                                       | All tables include org_id with RLS |
+| FR-API-002      | [PR-002](../../_atoms/SYS.003.md), [IC-001](../../_atoms/SYS.010.md), [IC-002](../../_atoms/SYS.011.md) | Events with standard envelope      |
+| FR-API-004      | [PR-001](../../_atoms/SYS.002.md), [ADR-003](../../_atoms/SYS.019.md)                                   | Fail-closed RLS pattern            |
+| FR-API-005      | [PR-004](../../_atoms/SYS.005.md), [IC-004](../../_atoms/SYS.013.md)                                    | Soul access through API only       |
+| FR-API-006      | [IC-005](../../_atoms/SYS.014.md)                                                                       | Recommendation protocol            |
+| FR-API-007      | [PR-005](../../_atoms/SYS.006.md), [IC-007](../../_atoms/SYS.016.md)                                    | Permission enforcement             |
+| FR-API-009      | Constitution Architecture                                                                               | Problem Details format             |
+| FR-API-010      | [PR-006](../../_atoms/SYS.007.md)                                                                       | Observability requirements         |
+| FR-API-013      | [ADR-011](../../_atoms/SYS.026.md)                                                                      | Hierarchical Pulse                 |
+| FR-API-014      | [PR-004](../../_atoms/SYS.005.md)                                                                       | Soul governance rules              |
+| FR-API-015      | [ADR-006](../../_atoms/SYS.021.md)                                                                      | Tri-State Memory                   |
 
 ### To Constitution ADRs
 
-| API Implementation  | Implements ADR | Notes                                  |
-| ------------------- | -------------- | -------------------------------------- |
-| RLS middleware      | ADR-003        | Transaction-scoped context             |
-| Redis Streams       | ADR-002        | Event envelope with versioning         |
-| Dual-write pattern  | ADR-002        | Redis (real-time) + Postgres (durable) |
-| Pulse engine        | ADR-011        | Hierarchical filtering                 |
-| Tri-State Memory    | ADR-006        | Memory architecture                    |
-| Agent orchestration | ADR-007        | Federated Soul Registry                |
+| API Implementation  | Implements ADR                     | Notes                                  |
+| ------------------- | ---------------------------------- | -------------------------------------- |
+| RLS middleware      | [ADR-003](../../_atoms/SYS.019.md) | Transaction-scoped context             |
+| Redis Streams       | [ADR-002](../../_atoms/SYS.018.md) | Event envelope with versioning         |
+| Dual-write pattern  | [ADR-002](../../_atoms/SYS.018.md) | Redis (real-time) + Postgres (durable) |
+| Pulse engine        | [ADR-011](../../_atoms/SYS.026.md) | Hierarchical filtering                 |
+| Tri-State Memory    | [ADR-006](../../_atoms/SYS.021.md) | Memory architecture                    |
+| Agent orchestration | [ADR-007](../../_atoms/SYS.022.md) | Federated Soul Registry                |
 
 ---
 

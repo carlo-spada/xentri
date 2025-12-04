@@ -103,7 +103,7 @@ Emits a new event to the event spine.
 
 ---
 
-### Soul (IC-004)
+### Soul ([IC-004](../../_atoms/SYS.013.md))
 
 #### Get Full Soul
 

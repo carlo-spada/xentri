@@ -104,15 +104,15 @@ Each epic must prove this loop works for its scope.
 
 ### Integration Contracts Coverage
 
-| ID     | Epic Coverage     | Status   |
-| ------ | ----------------- | -------- |
-| IC-001 | Epic 1            | Complete |
-| IC-002 | Epic 1 → Epic 1.5 | Partial  |
-| IC-003 | Epic 3            | Planned  |
-| IC-004 | Epic 2            | Planned  |
-| IC-005 | Epic 2            | Planned  |
-| IC-006 | Epic 3            | Planned  |
-| IC-007 | Epic 1.5          | Planned  |
+| Atom ID                           | Legacy | Epic Coverage     | Status   |
+| --------------------------------- | ------ | ----------------- | -------- |
+| [`SYS.010`](../_atoms/SYS.010.md) | IC-001 | Epic 1            | Complete |
+| [`SYS.011`](../_atoms/SYS.011.md) | IC-002 | Epic 1 → Epic 1.5 | Partial  |
+| [`SYS.012`](../_atoms/SYS.012.md) | IC-003 | Epic 3            | Planned  |
+| [`SYS.013`](../_atoms/SYS.013.md) | IC-004 | Epic 2            | Planned  |
+| [`SYS.014`](../_atoms/SYS.014.md) | IC-005 | Epic 2            | Planned  |
+| [`SYS.015`](../_atoms/SYS.015.md) | IC-006 | Epic 3            | Planned  |
+| [`SYS.016`](../_atoms/SYS.016.md) | IC-007 | Epic 1.5          | Planned  |
 
 ---
 

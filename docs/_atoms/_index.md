@@ -193,22 +193,40 @@ pnpm exec tsx scripts/atoms/atom-deprecate.ts --id SYS.001
 
 > **Auto-generated.** Run `pnpm exec tsx scripts/validation/validate-atoms.ts` to regenerate.
 
-| ID              | Type        | Title                              | Status   | Entity               | Legacy ID |
-| --------------- | ----------- | ---------------------------------- | -------- | -------------------- | --------- |
-| SYS.001         | requirement | Shell Module Commission            | draft    | docs/platform/       | —         |
-| SYS.001-SHL.001 | requirement | Shell Navigation Component         | draft    | docs/platform/shell/ | —         |
-| SYS.002         | requirement | Multi-tenant RLS Architecture      | approved | docs/platform/       | PR-001    |
-| SYS.003         | requirement | Event Spine Integration            | approved | docs/platform/       | PR-002    |
-| SYS.004         | requirement | Authentication Required            | approved | docs/platform/       | PR-003    |
-| SYS.005         | requirement | Soul Read-Only Access              | approved | docs/platform/       | PR-004    |
-| SYS.006         | requirement | Permission Primitives              | approved | docs/platform/       | PR-005    |
-| SYS.007         | requirement | Explainable Automation             | approved | docs/platform/       | PR-006    |
-| SYS.008         | requirement | Graceful Module Failure            | approved | docs/platform/       | PR-007    |
-| SYS.009         | requirement | Soul-Aware Vocabulary              | approved | docs/platform/       | PR-008    |
-| SYS.010         | interface   | Event Envelope Schema              | approved | docs/platform/       | IC-001    |
-| SYS.011         | interface   | Event Naming Convention            | approved | docs/platform/       | IC-002    |
-| SYS.012         | interface   | Module Registration Manifest       | approved | docs/platform/       | IC-003    |
-| SYS.013         | interface   | Soul Access API                    | approved | docs/platform/       | IC-004    |
-| SYS.014         | interface   | Recommendation Submission Protocol | approved | docs/platform/       | IC-005    |
-| SYS.015         | interface   | Notification Delivery Contract     | approved | docs/platform/       | IC-006    |
-| SYS.016         | interface   | Permission Check Protocol          | approved | docs/platform/       | IC-007    |
+| ID              | Type        | Title                                  | Status   | Entity               | Legacy ID |
+| --------------- | ----------- | -------------------------------------- | -------- | -------------------- | --------- |
+| SYS.001         | requirement | Shell Module Commission                | draft    | docs/platform/       | —         |
+| SYS.001-SHL.001 | requirement | Shell Navigation Component             | draft    | docs/platform/shell/ | —         |
+| SYS.002         | requirement | Multi-tenant RLS Architecture          | approved | docs/platform/       | PR-001    |
+| SYS.003         | requirement | Event Spine Integration                | approved | docs/platform/       | PR-002    |
+| SYS.004         | requirement | Authentication Required                | approved | docs/platform/       | PR-003    |
+| SYS.005         | requirement | Soul Read-Only Access                  | approved | docs/platform/       | PR-004    |
+| SYS.006         | requirement | Permission Primitives                  | approved | docs/platform/       | PR-005    |
+| SYS.007         | requirement | Explainable Automation                 | approved | docs/platform/       | PR-006    |
+| SYS.008         | requirement | Graceful Module Failure                | approved | docs/platform/       | PR-007    |
+| SYS.009         | requirement | Soul-Aware Vocabulary                  | approved | docs/platform/       | PR-008    |
+| SYS.010         | interface   | Event Envelope Schema                  | approved | docs/platform/       | IC-001    |
+| SYS.011         | interface   | Event Naming Convention                | approved | docs/platform/       | IC-002    |
+| SYS.012         | interface   | Module Registration Manifest           | approved | docs/platform/       | IC-003    |
+| SYS.013         | interface   | Soul Access API                        | approved | docs/platform/       | IC-004    |
+| SYS.014         | interface   | Recommendation Submission Protocol     | approved | docs/platform/       | IC-005    |
+| SYS.015         | interface   | Notification Delivery Contract         | approved | docs/platform/       | IC-006    |
+| SYS.016         | interface   | Permission Check Protocol              | approved | docs/platform/       | IC-007    |
+| SYS.017         | decision    | Universal Soul Orchestration           | approved | docs/platform/       | ADR-001   |
+| SYS.018         | decision    | Event Envelope and Schema              | approved | docs/platform/       | ADR-002   |
+| SYS.019         | decision    | Multi-Tenant Security (RLS)            | approved | docs/platform/       | ADR-003   |
+| SYS.020         | decision    | Kubernetes First (Category Cluster)    | approved | docs/platform/       | ADR-004   |
+| SYS.021         | decision    | Tri-State Memory Architecture          | approved | docs/platform/       | ADR-006   |
+| SYS.022         | decision    | Federated Soul Registry                | approved | docs/platform/       | ADR-007   |
+| SYS.023         | decision    | Python for Agent Layer                 | approved | docs/platform/       | ADR-008   |
+| SYS.024         | decision    | Cross-Runtime Contract Strategy        | approved | docs/platform/       | ADR-009   |
+| SYS.025         | decision    | Resilience and Graceful Degradation    | approved | docs/platform/       | ADR-010   |
+| SYS.026         | decision    | Hierarchical Pulse Architecture        | approved | docs/platform/       | ADR-011   |
+| SYS.027         | decision    | Copilot Widget Architecture            | approved | docs/platform/       | ADR-012   |
+| SYS.028         | decision    | Narrative Continuity and UX Philosophy | approved | docs/platform/       | ADR-013   |
+| SYS.029         | decision    | Module Registration Architecture       | approved | docs/platform/       | ADR-014   |
+| SYS.030         | decision    | Permission Enforcement Architecture    | approved | docs/platform/       | ADR-015   |
+| SYS.031         | decision    | Soul Access Architecture               | approved | docs/platform/       | ADR-016   |
+| SYS.032         | decision    | Notification Delivery Architecture     | approved | docs/platform/       | ADR-017   |
+| SYS.033         | decision    | Automated Action Explanation Pattern   | approved | docs/platform/       | ADR-018   |
+| SYS.034         | decision    | Sibling Dependency Law                 | approved | docs/platform/       | ADR-020   |

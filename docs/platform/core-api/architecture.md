@@ -160,7 +160,7 @@ For mutating endpoints that can retry, require `Idempotency-Key` header and pers
 
 ---
 
-## Multi-Tenant Isolation (PR-001)
+## Multi-Tenant Isolation ([PR-001](../../_atoms/SYS.002.md))
 
 Every request includes `org_id` from JWT claims:
 
@@ -178,7 +178,7 @@ RLS policies enforce isolation at the database level as a defense-in-depth measu
 
 ---
 
-## Event-First Architecture (PR-002)
+## Event-First Architecture ([PR-002](../../_atoms/SYS.003.md))
 
 All mutations emit events before returning:
 

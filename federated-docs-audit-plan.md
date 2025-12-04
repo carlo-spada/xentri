@@ -8,39 +8,41 @@
 
 | Attribute        | Value                                                                                       |
 | ---------------- | ------------------------------------------------------------------------------------------- |
-| **Version**      | 6.4                                                                                         |
-| **Status**       | In Progress — Phase 0 COMPLETE, Phase 1 COMPLETE, Phase 2.01-2.03 COMPLETE                  |
+| **Version**      | 6.6                                                                                         |
+| **Status**       | In Progress — Phase 0 COMPLETE, Phase 1 COMPLETE, Phase 2 COMPLETE                          |
 | **Owner**        | Platform Team                                                                               |
 | **DRI**          | BMad Builder (Phase 0), Architect (Phase 2), Analyst (Phases 3-6) ([Glossary](#2-glossary)) |
 | **Created**      | 2025-12-03                                                                                  |
 | **Last Updated** | 2025-12-04                                                                                  |
 | **Review Cycle** | After each micro-phase completion                                                           |
-| **Approval**     | Phase 0 Gate PASSED, Phase 1 Gate PASSED — all validation scripts pass                      |
+| **Approval**     | Phase 0 Gate PASSED, Phase 1 Gate PASSED, Phase 2 Gate PASSED — all validation scripts pass |
 
 ### Change Log
 
-| Version | Date       | Author       | Changes                                                                                                                                                                                                      |
-| ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 6.4     | 2025-12-04 | Architect    | Phase 2.03 COMPLETE. Extracted 18 ADRs to atoms (SYS.017-SYS.034). Updated architecture.md with ADR Index table. 35 total atoms, all validations pass.                                                       |
-| 6.3     | 2025-12-04 | BMad Builder | Phase 1.08 COMPLETE. Context + Research workflows: 8 NEW (validate/amend for tech-spec, epic-tech-context, story-context, research). Phase 1 now fully complete with 107 total workflows.                    |
-| 6.2     | 2025-12-04 | Architect    | Phase 2.02 COMPLETE. Extracted 7 IC contracts to atoms (SYS.010-SYS.016). Updated Constitution PRD IC table + atom index. 17 total atoms, all validations pass.                                              |
-| 6.1     | 2025-12-04 | PM           | Phase 2.01 COMPLETE. Extracted 8 PR requirements to atoms (SYS.002-SYS.009). Updated Constitution PRD + Epics with atom references. All validations pass.                                                    |
-| 6.0     | 2025-12-04 | BMad Builder | Phase 1.07 COMPLETE. Story/Dev workflows: 5 NEW (validate-story, amend-story, amend-code, validate-code-review, amend-code-review) + 3 updated with atom integration (create-story, dev-story, code-review). |
-| 5.9     | 2025-12-04 | BMad Builder | Phase 1.06 COMPLETE. Product-Soul Triad created: validate-product-soul + amend-product-soul workflows. Constitution-only (no routing needed).                                                                |
-| 5.8     | 2025-12-04 | BMad Builder | Phase 1.05 COMPLETE. Epics Triad verified: entity-first detection already implemented. All 8 epics workflows have proper routing and Five Entity Types support.                                              |
-| 5.7     | 2025-12-04 | BMad Builder | Phase 1.04 COMPLETE. UX Triad audit: entity-first detection already implemented. All 5 entity-specific UX checklists verified.                                                                               |
-| 5.6     | 2025-12-04 | BMad Builder | Phase 1.03 COMPLETE. Upgraded Architecture Triad: restored create-system-architecture, added entity-first detection, renamed to create-architecture.                                                         |
-| 5.5     | 2025-12-04 | BMad Builder | Phase 1.01 COMPLETE. Verified all 92 workflows (85 active + 6 archived + 1 template). Added detailed inventory tables with status and update requirements.                                                   |
-| 5.4     | 2025-12-04 | BMad Builder | Phase 1.02 COMPLETE. PRD Triad audit: entity-first detection already implemented. Deferred: checklist files creation, entity-menu.yaml verification.                                                         |
-| 5.3     | 2025-12-04 | Analyst      | Phase 0 COMPLETE. Created validate-atoms.ts (0.04), implemented 5 gate rules (0.05), reviewed Product Soul (0.06), updated pre-commit (0.07) and CI (0.08).                                                  |
-| 5.2     | 2025-12-04 | BMad Builder | Phase 0.01-0.03 complete. Changed atom CRUD from XML tasks to TypeScript scripts (scalability). Simplified atom ID (no type prefix). Auto-generated index.                                                   |
-| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                                                                           |
-| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location                                                 |
-| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                                                                          |
-| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                                                                      |
-| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                                                                     |
-| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                                                                             |
-| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                                                                  |
+| Version | Date       | Author       | Changes                                                                                                                                                                                                            |
+| ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 6.6     | 2025-12-04 | Analyst      | Phase 2.05 COMPLETE. Migration Validation passed: 35 atoms valid, 198 links validated, 90 files checked, zero errors. Phase 2 (Migration) now fully complete.                                                      |
+| 6.5     | 2025-12-04 | Tech Writer  | Phase 2.04 COMPLETE. Updated all major docs to link to atoms. Constitution epics IC table, core-api PRD/architecture/events/api-reference, atom index with 35 entries. All validations pass (198 links, 90 files). |
+| 6.4     | 2025-12-04 | Architect    | Phase 2.03 COMPLETE. Extracted 18 ADRs to atoms (SYS.017-SYS.034). Updated architecture.md with ADR Index table. 35 total atoms, all validations pass.                                                             |
+| 6.3     | 2025-12-04 | BMad Builder | Phase 1.08 COMPLETE. Context + Research workflows: 8 NEW (validate/amend for tech-spec, epic-tech-context, story-context, research). Phase 1 now fully complete with 107 total workflows.                          |
+| 6.2     | 2025-12-04 | Architect    | Phase 2.02 COMPLETE. Extracted 7 IC contracts to atoms (SYS.010-SYS.016). Updated Constitution PRD IC table + atom index. 17 total atoms, all validations pass.                                                    |
+| 6.1     | 2025-12-04 | PM           | Phase 2.01 COMPLETE. Extracted 8 PR requirements to atoms (SYS.002-SYS.009). Updated Constitution PRD + Epics with atom references. All validations pass.                                                          |
+| 6.0     | 2025-12-04 | BMad Builder | Phase 1.07 COMPLETE. Story/Dev workflows: 5 NEW (validate-story, amend-story, amend-code, validate-code-review, amend-code-review) + 3 updated with atom integration (create-story, dev-story, code-review).       |
+| 5.9     | 2025-12-04 | BMad Builder | Phase 1.06 COMPLETE. Product-Soul Triad created: validate-product-soul + amend-product-soul workflows. Constitution-only (no routing needed).                                                                      |
+| 5.8     | 2025-12-04 | BMad Builder | Phase 1.05 COMPLETE. Epics Triad verified: entity-first detection already implemented. All 8 epics workflows have proper routing and Five Entity Types support.                                                    |
+| 5.7     | 2025-12-04 | BMad Builder | Phase 1.04 COMPLETE. UX Triad audit: entity-first detection already implemented. All 5 entity-specific UX checklists verified.                                                                                     |
+| 5.6     | 2025-12-04 | BMad Builder | Phase 1.03 COMPLETE. Upgraded Architecture Triad: restored create-system-architecture, added entity-first detection, renamed to create-architecture.                                                               |
+| 5.5     | 2025-12-04 | BMad Builder | Phase 1.01 COMPLETE. Verified all 92 workflows (85 active + 6 archived + 1 template). Added detailed inventory tables with status and update requirements.                                                         |
+| 5.4     | 2025-12-04 | BMad Builder | Phase 1.02 COMPLETE. PRD Triad audit: entity-first detection already implemented. Deferred: checklist files creation, entity-menu.yaml verification.                                                               |
+| 5.3     | 2025-12-04 | Analyst      | Phase 0 COMPLETE. Created validate-atoms.ts (0.04), implemented 5 gate rules (0.05), reviewed Product Soul (0.06), updated pre-commit (0.07) and CI (0.08).                                                        |
+| 5.2     | 2025-12-04 | BMad Builder | Phase 0.01-0.03 complete. Changed atom CRUD from XML tasks to TypeScript scripts (scalability). Simplified atom ID (no type prefix). Auto-generated index.                                                         |
+| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                                                                                 |
+| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location                                                       |
+| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                                                                                |
+| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                                                                            |
+| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                                                                           |
+| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                                                                                   |
+| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                                                                        |
 
 > **Related Documents:**
 >
@@ -1181,8 +1183,8 @@ This phase completes the validation and amendment workflows for context and rese
 | 2.01 | Extract PR-xxx       | All PR atoms extracted  | ✅ COMPLETE |
 | 2.02 | Extract IC-xxx       | All IC atoms extracted  | ✅ COMPLETE |
 | 2.03 | Extract ADR-xxx      | All ADR atoms extracted | ✅ COMPLETE |
-| 2.04 | Update References    | All docs link to atoms  | Pending     |
-| 2.05 | Migration Validation | Zero broken refs        | Pending     |
+| 2.04 | Update References    | All docs link to atoms  | ✅ COMPLETE |
+| 2.05 | Migration Validation | Zero broken refs        | ✅ COMPLETE |
 
 **Phase 2.01 Completion Notes (2025-12-04):**
 
@@ -1274,6 +1276,61 @@ This phase completes the validation and amendment workflows for context and rese
 ```
 ✅ pnpm run validate:atoms — 35 atoms, 0 errors
 ```
+
+**Phase 2.04 Completion Notes (2025-12-04):**
+
+Updated all documentation to link to SSOT atoms when referencing Constitution-level requirements.
+
+**Documents Updated:**
+
+| Document                                  | Changes                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `docs/platform/epics.md`                  | Added Atom ID column to IC Coverage table, linked all 7 ICs to atoms                                   |
+| `docs/_atoms/_index.md`                   | Updated index with 35 atoms including all ADRs (SYS.017-034)                                           |
+| `docs/platform/core-api/prd.md`           | Added atom links to inherited constraints, FR table, capability table, interfaces, traceability tables |
+| `docs/platform/core-api/architecture.md`  | Added atom links to PR-001, PR-002 section headings                                                    |
+| `docs/platform/core-api/events.md`        | Added atom links to IC-001, IC-002, IC-005 references                                                  |
+| `docs/platform/core-api/api-reference.md` | Added atom link to IC-004 Soul section heading                                                         |
+
+**Validation Results:**
+
+```
+✅ pnpm run validate:atoms — 35 atoms, 0 errors
+✅ pnpm run validate:links — 198 links, 90 files
+```
+
+**Phase 2.05 Completion Notes (2025-12-04):**
+
+Final migration validation confirming all SSOT atom infrastructure is complete and fully operational.
+
+**Validation Suite Results:**
+
+| Validation Script | Result    | Details                                                |
+| ----------------- | --------- | ------------------------------------------------------ |
+| `validate:atoms`  | ✅ PASSED | 35 atoms checked, 0 errors, 0 warnings                 |
+| `validate:links`  | ✅ PASSED | 198 links validated, 90 files checked                  |
+| `validate:docs`   | ✅ PASSED | Constitution docs, sprint status, cross-refs all valid |
+
+**Exit Criteria Verified:**
+
+| Criterion             | Status    | Evidence                           |
+| --------------------- | --------- | ---------------------------------- |
+| Zero broken refs      | ✅ PASSED | All 198 links resolve correctly    |
+| All atoms valid       | ✅ PASSED | 35 atoms pass schema validation    |
+| Cross-refs consistent | ✅ PASSED | Constitution → Atom links verified |
+
+**Phase 2 Summary:**
+
+| Micro-Phase | Deliverable           | Count     |
+| ----------- | --------------------- | --------- |
+| 2.01        | PR atoms extracted    | 8         |
+| 2.02        | IC atoms extracted    | 7         |
+| 2.03        | ADR atoms extracted   | 18        |
+| 2.04        | References updated    | 6 docs    |
+| 2.05        | Migration validated   | 3 scripts |
+| **Total**   | **Atoms in registry** | **35**    |
+
+> **PHASE 2 GATE: PASSED** — All migration tasks complete. Ready for Phase 3 (Audit Group A).
 
 ### 11.5 Phases 3-6: Audit Groups
 
@@ -1390,9 +1447,9 @@ This phase completes the validation and amendment workflows for context and rese
 ### Phase 2: Migration
 
 - [x] **2.01** Extract PR-xxx atoms — 8 atoms created (SYS.002-SYS.009)
-- [ ] **2.02** Extract IC-xxx atoms
-- [ ] **2.03** Extract ADR-xxx atoms
-- [ ] **2.04** Update references
+- [x] **2.02** Extract IC-xxx atoms — 7 atoms created (SYS.010-SYS.016)
+- [x] **2.03** Extract ADR-xxx atoms — 18 atoms created (SYS.017-SYS.034)
+- [x] **2.04** Update references — all docs link to atoms (198 links, 90 files)
 - [ ] **2.05** Validation — zero broken refs
 - [ ] **Gate:** All atoms migrated
 
