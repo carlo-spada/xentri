@@ -6,21 +6,23 @@
 
 ## Document Governance
 
-| Attribute        | Value                                                                  |
-| ---------------- | ---------------------------------------------------------------------- |
-| **Version**      | 6.0                                                                    |
-| **Status**       | In Progress — Phase 0 COMPLETE, Phases 1.01-1.07 COMPLETE              |
-| **Owner**        | Platform Team                                                          |
-| **DRI**          | BMad Builder (Phase 0), Analyst (Phases 1-6) ([Glossary](#2-glossary)) |
-| **Created**      | 2025-12-03                                                             |
-| **Last Updated** | 2025-12-04                                                             |
-| **Review Cycle** | After each micro-phase completion                                      |
-| **Approval**     | Phase 0 Gate PASSED — all validation scripts pass                      |
+| Attribute        | Value                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| **Version**      | 6.2                                                                                         |
+| **Status**       | In Progress — Phase 0 COMPLETE, Phase 1 COMPLETE, Phase 2.01-2.02 COMPLETE                  |
+| **Owner**        | Platform Team                                                                               |
+| **DRI**          | BMad Builder (Phase 0), Architect (Phase 2), Analyst (Phases 3-6) ([Glossary](#2-glossary)) |
+| **Created**      | 2025-12-03                                                                                  |
+| **Last Updated** | 2025-12-04                                                                                  |
+| **Review Cycle** | After each micro-phase completion                                                           |
+| **Approval**     | Phase 0 Gate PASSED, Phase 1 Gate PASSED — all validation scripts pass                      |
 
 ### Change Log
 
 | Version | Date       | Author       | Changes                                                                                                                                                                                                      |
 | ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 6.2     | 2025-12-04 | Architect    | Phase 2.02 COMPLETE. Extracted 7 IC contracts to atoms (SYS.010-SYS.016). Updated Constitution PRD IC table + atom index. 17 total atoms, all validations pass.                                              |
+| 6.1     | 2025-12-04 | PM           | Phase 2.01 COMPLETE. Extracted 8 PR requirements to atoms (SYS.002-SYS.009). Updated Constitution PRD + Epics with atom references. All validations pass.                                                    |
 | 6.0     | 2025-12-04 | BMad Builder | Phase 1.07 COMPLETE. Story/Dev workflows: 5 NEW (validate-story, amend-story, amend-code, validate-code-review, amend-code-review) + 3 updated with atom integration (create-story, dev-story, code-review). |
 | 5.9     | 2025-12-04 | BMad Builder | Phase 1.06 COMPLETE. Product-Soul Triad created: validate-product-soul + amend-product-soul workflows. Constitution-only (no routing needed).                                                                |
 | 5.8     | 2025-12-04 | BMad Builder | Phase 1.05 COMPLETE. Epics Triad verified: entity-first detection already implemented. All 8 epics workflows have proper routing and Five Entity Types support.                                              |
@@ -1125,13 +1127,66 @@ create-story → validate-story → story-ready → story-context
 
 ### 11.4 Phase 2: Migration (5 micro-phases)
 
-| ID   | Name                 | Exit Criteria           |
-| ---- | -------------------- | ----------------------- |
-| 2.01 | Extract PR-xxx       | All PR atoms extracted  |
-| 2.02 | Extract IC-xxx       | All IC atoms extracted  |
-| 2.03 | Extract ADR-xxx      | All ADR atoms extracted |
-| 2.04 | Update References    | All docs link to atoms  |
-| 2.05 | Migration Validation | Zero broken refs        |
+| ID   | Name                 | Exit Criteria           | Status      |
+| ---- | -------------------- | ----------------------- | ----------- |
+| 2.01 | Extract PR-xxx       | All PR atoms extracted  | ✅ COMPLETE |
+| 2.02 | Extract IC-xxx       | All IC atoms extracted  | ✅ COMPLETE |
+| 2.03 | Extract ADR-xxx      | All ADR atoms extracted | Pending     |
+| 2.04 | Update References    | All docs link to atoms  | Pending     |
+| 2.05 | Migration Validation | Zero broken refs        | Pending     |
+
+**Phase 2.01 Completion Notes (2025-12-04):**
+
+| Deliverable | Location                 | Notes                                  |
+| ----------- | ------------------------ | -------------------------------------- |
+| SYS.002     | `docs/_atoms/SYS.002.md` | PR-001: Multi-tenant RLS Architecture  |
+| SYS.003     | `docs/_atoms/SYS.003.md` | PR-002: Event Spine Emission           |
+| SYS.004     | `docs/_atoms/SYS.004.md` | PR-003: API Authentication Requirement |
+| SYS.005     | `docs/_atoms/SYS.005.md` | PR-004: Soul Read-Only Access          |
+| SYS.006     | `docs/_atoms/SYS.006.md` | PR-005: Permission Primitives          |
+| SYS.007     | `docs/_atoms/SYS.007.md` | PR-006: Automated Action Logging       |
+| SYS.008     | `docs/_atoms/SYS.008.md` | PR-007: Graceful Module Failure        |
+| SYS.009     | `docs/_atoms/SYS.009.md` | PR-008: Soul-Aware Vocabulary          |
+
+**Documents Updated:**
+
+| Document                 | Changes                                                          |
+| ------------------------ | ---------------------------------------------------------------- |
+| `docs/platform/prd.md`   | Added Atom ID column to PR table, linked to atoms                |
+| `docs/platform/epics.md` | Updated traceability table, all story traces now reference atoms |
+
+**Validation Results:**
+
+```
+✅ pnpm run validate:atoms — 10 atoms, 0 errors
+✅ pnpm run validate:links — 89 links, 65 files
+```
+
+**Phase 2.02 Completion Notes (2025-12-04):**
+
+| Deliverable | Location                 | Notes                                      |
+| ----------- | ------------------------ | ------------------------------------------ |
+| SYS.010     | `docs/_atoms/SYS.010.md` | IC-001: Event Envelope Schema              |
+| SYS.011     | `docs/_atoms/SYS.011.md` | IC-002: Event Naming Convention            |
+| SYS.012     | `docs/_atoms/SYS.012.md` | IC-003: Module Registration Manifest       |
+| SYS.013     | `docs/_atoms/SYS.013.md` | IC-004: Soul Access API                    |
+| SYS.014     | `docs/_atoms/SYS.014.md` | IC-005: Recommendation Submission Protocol |
+| SYS.015     | `docs/_atoms/SYS.015.md` | IC-006: Notification Delivery Contract     |
+| SYS.016     | `docs/_atoms/SYS.016.md` | IC-007: Permission Check Protocol          |
+
+**Documents Updated:**
+
+| Document                | Changes                                                        |
+| ----------------------- | -------------------------------------------------------------- |
+| `docs/platform/prd.md`  | Added Atom column to IC table, linked all 7 contracts to atoms |
+| `docs/_atoms/_index.md` | Updated index with all 17 atoms including Legacy ID column     |
+
+**Validation Results:**
+
+```
+✅ pnpm run validate:atoms — 17 atoms, 0 errors
+✅ pnpm run validate:links — 96 links, 72 files
+```
 
 ### 11.5 Phases 3-6: Audit Groups
 
@@ -1247,7 +1302,9 @@ create-story → validate-story → story-ready → story-context
 
 ### Phase 2: Migration
 
-- [ ] **2.01-2.03** Extract PR/IC/ADR atoms
+- [x] **2.01** Extract PR-xxx atoms — 8 atoms created (SYS.002-SYS.009)
+- [ ] **2.02** Extract IC-xxx atoms
+- [ ] **2.03** Extract ADR-xxx atoms
 - [ ] **2.04** Update references
 - [ ] **2.05** Validation — zero broken refs
 - [ ] **Gate:** All atoms migrated

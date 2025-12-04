@@ -73,31 +73,33 @@ Not _"I hope nothing is dropping."_ But _"I know nothing is dropping — because
 ## Platform Requirements Index
 
 > **Governance:** These are Constitution-level requirements. All Infrastructure Modules, Strategic Containers, Coordination Units, and Business Modules MUST comply. Changes require explicit rationale and governance review.
+>
+> **SSOT:** Authoritative content for each requirement lives in [`docs/_atoms/`](../_atoms/_index.md). This table provides a quick reference with links to the atom files.
 
 ### Platform Requirements (PR-xxx)
 
-| ID         | Requirement                                                                       | Implemented By |
-| ---------- | --------------------------------------------------------------------------------- | -------------- |
-| **PR-001** | All database tables MUST include `org_id` column with RLS policy                  | core-api       |
-| **PR-002** | All mutations MUST emit events to Event Spine with standard envelope              | core-api       |
-| **PR-003** | All API endpoints MUST require authentication except health checks                | core-api       |
-| **PR-004** | All modules MUST read Soul through standard API, never write directly             | core-api       |
-| **PR-005** | All user actions MUST respect permission primitives (view/edit/approve/configure) | core-api       |
-| **PR-006** | All automated actions MUST be logged with human-readable explanation              | core-api       |
-| **PR-007** | All modules MUST fail gracefully; never crash the shell                           | shell          |
-| **PR-008** | All copilots MUST adapt vocabulary to Soul-indicated business type                | core-api       |
+| Legacy ID  | Atom ID                           | Requirement                                                                       | Implemented By |
+| ---------- | --------------------------------- | --------------------------------------------------------------------------------- | -------------- |
+| **PR-001** | [`SYS.002`](../_atoms/SYS.002.md) | All database tables MUST include `org_id` column with RLS policy                  | core-api       |
+| **PR-002** | [`SYS.003`](../_atoms/SYS.003.md) | All mutations MUST emit events to Event Spine with standard envelope              | core-api       |
+| **PR-003** | [`SYS.004`](../_atoms/SYS.004.md) | All API endpoints MUST require authentication except health checks                | core-api       |
+| **PR-004** | [`SYS.005`](../_atoms/SYS.005.md) | All modules MUST read Soul through standard API, never write directly             | core-api       |
+| **PR-005** | [`SYS.006`](../_atoms/SYS.006.md) | All user actions MUST respect permission primitives (view/edit/approve/configure) | core-api       |
+| **PR-006** | [`SYS.007`](../_atoms/SYS.007.md) | All automated actions MUST be logged with human-readable explanation              | core-api       |
+| **PR-007** | [`SYS.008`](../_atoms/SYS.008.md) | All modules MUST fail gracefully; never crash the shell                           | shell          |
+| **PR-008** | [`SYS.009`](../_atoms/SYS.009.md) | All copilots MUST adapt vocabulary to Soul-indicated business type                | core-api       |
 
 ### Integration Contracts (IC-xxx)
 
-| ID         | Contract                                                                  | Version | Defined In |
-| ---------- | ------------------------------------------------------------------------- | ------- | ---------- |
-| **IC-001** | Event Envelope Schema — `SystemEvent` interface definition                | v1.0    | ts-schema  |
-| **IC-002** | Event Naming Convention — `xentri.{category}.{entity}.{action}.{version}` | v1.0    | ts-schema  |
-| **IC-003** | Module Registration Manifest — Format for registering modules with shell  | v1.0    | shell      |
-| **IC-004** | Soul Access API — `GET /api/v1/soul/{section}`                            | v1.0    | core-api   |
-| **IC-005** | Recommendation Submission Protocol — How modules submit recommendations   | v1.0    | core-api   |
-| **IC-006** | Notification Delivery Contract — How notifications are delivered to users | v1.0    | core-api   |
-| **IC-007** | Permission Check Protocol — Permission primitives definition              | v1.0    | core-api   |
+| ID         | Atom                              | Contract                                                                  | Version | Defined In |
+| ---------- | --------------------------------- | ------------------------------------------------------------------------- | ------- | ---------- |
+| **IC-001** | [`SYS.010`](../_atoms/SYS.010.md) | Event Envelope Schema — `SystemEvent` interface definition                | v1.0    | ts-schema  |
+| **IC-002** | [`SYS.011`](../_atoms/SYS.011.md) | Event Naming Convention — `xentri.{category}.{entity}.{action}.{version}` | v1.0    | ts-schema  |
+| **IC-003** | [`SYS.012`](../_atoms/SYS.012.md) | Module Registration Manifest — Format for registering modules with shell  | v1.0    | shell      |
+| **IC-004** | [`SYS.013`](../_atoms/SYS.013.md) | Soul Access API — `GET /api/v1/soul/{section}`                            | v1.0    | core-api   |
+| **IC-005** | [`SYS.014`](../_atoms/SYS.014.md) | Recommendation Submission Protocol — How modules submit recommendations   | v1.0    | core-api   |
+| **IC-006** | [`SYS.015`](../_atoms/SYS.015.md) | Notification Delivery Contract — How notifications are delivered to users | v1.0    | core-api   |
+| **IC-007** | [`SYS.016`](../_atoms/SYS.016.md) | Permission Check Protocol — Permission primitives definition              | v1.0    | core-api   |
 
 ---
 

@@ -193,7 +193,22 @@ pnpm exec tsx scripts/atoms/atom-deprecate.ts --id SYS.001
 
 > **Auto-generated.** Run `pnpm exec tsx scripts/validation/validate-atoms.ts` to regenerate.
 
-| ID              | Type        | Title                      | Status | Entity               |
-| --------------- | ----------- | -------------------------- | ------ | -------------------- |
-| SYS.001         | requirement | Shell Module Commission    | draft  | docs/platform/       |
-| SYS.001-SHL.001 | requirement | Shell Navigation Component | draft  | docs/platform/shell/ |
+| ID              | Type        | Title                              | Status   | Entity               | Legacy ID |
+| --------------- | ----------- | ---------------------------------- | -------- | -------------------- | --------- |
+| SYS.001         | requirement | Shell Module Commission            | draft    | docs/platform/       | —         |
+| SYS.001-SHL.001 | requirement | Shell Navigation Component         | draft    | docs/platform/shell/ | —         |
+| SYS.002         | requirement | Multi-tenant RLS Architecture      | approved | docs/platform/       | PR-001    |
+| SYS.003         | requirement | Event Spine Integration            | approved | docs/platform/       | PR-002    |
+| SYS.004         | requirement | Authentication Required            | approved | docs/platform/       | PR-003    |
+| SYS.005         | requirement | Soul Read-Only Access              | approved | docs/platform/       | PR-004    |
+| SYS.006         | requirement | Permission Primitives              | approved | docs/platform/       | PR-005    |
+| SYS.007         | requirement | Explainable Automation             | approved | docs/platform/       | PR-006    |
+| SYS.008         | requirement | Graceful Module Failure            | approved | docs/platform/       | PR-007    |
+| SYS.009         | requirement | Soul-Aware Vocabulary              | approved | docs/platform/       | PR-008    |
+| SYS.010         | interface   | Event Envelope Schema              | approved | docs/platform/       | IC-001    |
+| SYS.011         | interface   | Event Naming Convention            | approved | docs/platform/       | IC-002    |
+| SYS.012         | interface   | Module Registration Manifest       | approved | docs/platform/       | IC-003    |
+| SYS.013         | interface   | Soul Access API                    | approved | docs/platform/       | IC-004    |
+| SYS.014         | interface   | Recommendation Submission Protocol | approved | docs/platform/       | IC-005    |
+| SYS.015         | interface   | Notification Delivery Contract     | approved | docs/platform/       | IC-006    |
+| SYS.016         | interface   | Permission Check Protocol          | approved | docs/platform/       | IC-007    |
