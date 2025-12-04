@@ -26,6 +26,15 @@
 8. [Validation Criteria](#8-validation-criteria)
 9. [Execution Checklist](#9-execution-checklist)
 
+**Appendices:**
+
+- [A: Files Flagged for Immediate Attention](#appendix-a-files-flagged-for-immediate-attention)
+- [B: Agent Activation Commands](#appendix-b-agent-activation-commands)
+- [C: Validation Workflow Commands](#appendix-c-validation-workflow-commands)
+- [D: Critical Files for Recent Changes](#appendix-d-critical-files-for-recent-changes)
+- [E: Missing Workflows (Phase 0)](#appendix-e-missing-workflows-phase-0) ← NEW
+- [F: Gate Validation Rules](#appendix-f-gate-validation-rules) ← NEW
+
 ---
 
 ## 1. Executive Summary
@@ -589,9 +598,27 @@ Work can be parallelized across agents AND within agent work streams.
 
 ---
 
-## 6. Dependencies & Sequencing
+## 7. Dependencies & Sequencing
 
 ```
+┌─────────────────────────────────────────────────────────────────────┐
+│                          PHASE 0: SSOT FOUNDATION                   │
+│  ┌────────────┐                                                     │
+│  │ Instance 1 │  Foundation (atoms, skills)                         │
+│  └─────┬──────┘                                                     │
+│        │                                                            │
+│  ┌─────┴──────┬────────────┐                                        │
+│  ▼            ▼            │                                        │
+│  Instance 2   Instance 3   │  (parallel after Instance 1)           │
+│  Validation   Workflows    │                                        │
+│  └─────┬──────┴─────┬──────┘                                        │
+│        │            │                                               │
+│        └─────┬──────┘                                               │
+│              ▼                                                      │
+│        Instance 4 (Optional Migration)                              │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                          PHASE 1: GROUP A                           │
 │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ │
@@ -631,9 +658,9 @@ Work can be parallelized across agents AND within agent work streams.
 
 ---
 
-## 7. Validation Criteria
+## 8. Validation Criteria
 
-### 7.1 Structural Compliance
+### 8.1 Structural Compliance
 
 | Criterion                                           | Validation Method                                                       |
 | --------------------------------------------------- | ----------------------------------------------------------------------- |
@@ -661,7 +688,19 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 # Checks entity_documents structure compliance
 ```
 
-### 7.2 Workflow Status Alignment
+### 8.2 Atom System Compliance (NEW)
+
+| Criterion                                    | Validation Method                       |
+| -------------------------------------------- | --------------------------------------- |
+| `docs/_atoms/` directory exists              | Pre-flight check                        |
+| Atom ID format valid (`SYS.001-STR.001-...`) | `scripts/validation/validate-atoms.ts`  |
+| All atom parents exist                       | Gate validation (P0-V-02)               |
+| All atom references resolve                  | Gate validation (P0-V-05)               |
+| No references to deprecated atoms            | Gate validation (P0-V-06)               |
+| Pre-commit hook installed                    | `.husky/pre-commit` exists              |
+| CI workflow active                           | `.github/workflows/atom-validation.yml` |
+
+### 8.3 Workflow Status Alignment
 
 | Criterion                              | Validation Method |
 | -------------------------------------- | ----------------- |
@@ -669,7 +708,7 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 | Status enum values valid               | SM SM-04          |
 | Phase progression logical              | SM SM-05          |
 
-### 7.3 Content Quality
+### 8.4 Content Quality
 
 | Criterion                                | Validation Method             |
 | ---------------------------------------- | ----------------------------- |
@@ -679,7 +718,7 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 | Links resolve correctly                  | `pnpm run validate:links`     |
 | Frontmatter complete                     | Analyst AN-06                 |
 
-### 7.4 Inheritance Compliance
+### 8.5 Inheritance Compliance
 
 | Criterion                             | Validation Method |
 | ------------------------------------- | ----------------- |
@@ -689,7 +728,7 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 
 ---
 
-## 8. Execution Checklist
+## 9. Execution Checklist
 
 ### Pre-Flight
 
@@ -700,6 +739,31 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 - [ ] Verify `.claude/hooks/` enforcement is configured
 - [ ] Create backup of current documentation state
 - [ ] Establish communication channel for cross-agent coordination
+- [ ] **NEW:** Review `docs/ssot-specification-draft.md` for Phase 0 requirements
+- [ ] **NEW:** Review `docs/brainstorming-session-results-2025-12-03.md` for architectural decisions
+
+### Phase 0: SSOT Foundation (NEW — Must Complete First)
+
+- [ ] **Instance 1 (BMad Builder):** Complete P0-F-01 through P0-F-07
+  - [ ] Create `docs/_atoms/` directory
+  - [ ] Write `docs/_atoms/README.md`
+  - [ ] Create `docs/_atoms/_template.md`
+  - [ ] Create 4 atom skills (create, search, amend, deprecate)
+- [ ] **Gate:** Instance 1 complete before starting Instances 2 & 3
+- [ ] **Instance 2 (Analyst):** Complete P0-V-01 through P0-V-08
+  - [ ] Create `scripts/validation/validate-atoms.ts`
+  - [ ] Implement 5 gate validation rules
+  - [ ] Create `.husky/pre-commit` hook
+  - [ ] Create `.github/workflows/atom-validation.yml`
+- [ ] **Instance 3 (PM + Architect):** Complete P0-W-01 through P0-W-12
+  - [ ] Add entity-first detection to workflows
+  - [ ] Update PRD/Architecture/Epics workflows
+  - [ ] Create 8 HIGH-priority missing workflows
+- [ ] **Gate:** Instances 2 & 3 complete before Instance 4
+- [ ] **Instance 4 (Tech Writer):** Complete P0-M-01 through P0-M-05 (optional)
+  - [ ] Extract existing PR/IC/ADR to atoms
+  - [ ] Update document references
+- [ ] **Gate:** Phase 0 complete before Groups A-D
 
 ### Phase 1: Group A (Parallel Foundation)
 
@@ -845,6 +909,82 @@ These files contain the authoritative definitions for the recent architectural c
 | `.claude/settings.local.json`                                  | Hook configuration                   |
 | `docs/platform/examples/*.requirement.yaml`                    | Requirement file format examples     |
 | `docs/platform/examples/*.interface.yaml`                      | Interface file format examples       |
+
+### SSOT Atom System Files (NEW)
+
+| File                                               | Purpose                               |
+| -------------------------------------------------- | ------------------------------------- |
+| `docs/_atoms/`                                     | Centralized atom storage directory    |
+| `docs/_atoms/README.md`                            | Atom ID scheme documentation          |
+| `docs/_atoms/_template.md`                         | Template for new atom files           |
+| `docs/ssot-specification-draft.md`                 | Complete SSOT technical specification |
+| `docs/brainstorming-session-results-2025-12-03.md` | Architecture decisions transcript     |
+| `scripts/validation/validate-atoms.ts`             | Atom validation script (Phase 0)      |
+| `scripts/validation/check-doc-duplication.ts`      | Document ownership validation         |
+| `.bmad/core/tasks/create-atom.xml`                 | Atom creation skill                   |
+| `.bmad/core/tasks/search-atom.xml`                 | Atom search skill                     |
+| `.bmad/core/tasks/amend-atom.xml`                  | Atom amendment skill                  |
+| `.bmad/core/tasks/deprecate-atom.xml`              | Atom deprecation skill                |
+| `.husky/pre-commit`                                | Gate validation hook (Phase 0)        |
+| `.github/workflows/atom-validation.yml`            | CI atom validation (Phase 0)          |
+
+---
+
+## Appendix E: Missing Workflows (Phase 0)
+
+These 16 workflows were identified during brainstorming as missing from the current BMAD system:
+
+### Amendment Workflows (HIGH Priority)
+
+| Workflow             | Purpose                                     | Owner       |
+| -------------------- | ------------------------------------------- | ----------- |
+| `amend-prd`          | Structured PRD amendments with traceability | PM          |
+| `amend-architecture` | Architecture updates with ADR integration   | Architect   |
+| `amend-ux`           | UX design amendments                        | UX Designer |
+| `amend-story`        | Story modifications during sprint           | Dev         |
+| `amend-product-soul` | Product soul updates                        | PM          |
+
+### Validation Workflows (HIGH Priority)
+
+| Workflow                | Purpose                                   | Owner |
+| ----------------------- | ----------------------------------------- | ----- |
+| `validate-story`        | Story completeness and traceability check | Dev   |
+| `validate-product-soul` | Product soul consistency validation       | PM    |
+
+### Design Workflows (MEDIUM Priority)
+
+| Workflow      | Purpose                             | Owner |
+| ------------- | ----------------------------------- | ----- |
+| `test-design` | Test strategy and coverage planning | Dev   |
+
+### Entity Management Workflows (to be created in Phase 0)
+
+| Workflow               | Purpose                                    | Task ID |
+| ---------------------- | ------------------------------------------ | ------- |
+| Entity-first detection | Detect entity type before workflow start   | P0-W-01 |
+| PRD atom integration   | Integrate atom creation into PRD workflow  | P0-W-02 |
+| Arch atom integration  | Integrate atom creation into Arch workflow | P0-W-03 |
+| Epic atom referencing  | Integrate atom refs into Epics workflow    | P0-W-04 |
+
+---
+
+## Appendix F: Gate Validation Rules
+
+Five rules enforced at pre-commit and CI (Phase 0):
+
+| Rule | Name          | Description                                          | Severity |
+| ---- | ------------- | ---------------------------------------------------- | -------- |
+| 1    | Parent Exists | Atom parent ID must exist in `docs/_atoms/`          | BLOCK    |
+| 2    | Entity Valid  | Entity path in atom frontmatter must resolve         | BLOCK    |
+| 3    | ID Format     | Atom ID must match `{ENTITY}.{SEQ}(-{CHILD}.{SEQ})*` | BLOCK    |
+| 4    | Refs Resolve  | All `[text](../atoms/{id}.md)` must resolve          | BLOCK    |
+| 5    | No Deprecated | Cannot reference atoms with `status: deprecated`     | BLOCK    |
+
+**Enforcement Layers:**
+
+1. **Workflow inline:** Validation during atom CRUD operations
+2. **Pre-commit hook:** `.husky/pre-commit` runs `validate-atoms.ts` on ALL files
+3. **CI pipeline:** `.github/workflows/atom-validation.yml` runs on all PRs
 
 ---
 
