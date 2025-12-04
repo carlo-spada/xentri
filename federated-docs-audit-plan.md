@@ -457,15 +457,16 @@ INSTANCE 2            INSTANCE 3
 
 ### 5.3 Instance 1: Foundation (BMad Builder)
 
-| ID      | Task                               | Output                                | Priority |
-| ------- | ---------------------------------- | ------------------------------------- | -------- |
-| P0-F-01 | Create `docs/_atoms/` directory    | Directory structure                   | HIGH     |
-| P0-F-02 | Write atom ID scheme documentation | `docs/_atoms/README.md`               | HIGH     |
-| P0-F-03 | Create atom template               | `docs/_atoms/_template.md`            | HIGH     |
-| P0-F-04 | Create `create-atom` skill         | `.bmad/core/tasks/create-atom.xml`    | HIGH     |
-| P0-F-05 | Create `search-atom` skill         | `.bmad/core/tasks/search-atom.xml`    | MEDIUM   |
-| P0-F-06 | Create `amend-atom` skill          | `.bmad/core/tasks/amend-atom.xml`     | MEDIUM   |
-| P0-F-07 | Create `deprecate-atom` skill      | `.bmad/core/tasks/deprecate-atom.xml` | MEDIUM   |
+| ID      | Task                               | Output                                  | Priority |
+| ------- | ---------------------------------- | --------------------------------------- | -------- |
+| P0-F-01 | Create `docs/_atoms/` directory    | Directory structure                     | HIGH     |
+| P0-F-02 | Write atom ID scheme documentation | `docs/_atoms/README.md`                 | HIGH     |
+| P0-F-03 | Create atom template               | `docs/_atoms/_template.md`              | HIGH     |
+| P0-F-04 | Create `create-atom` skill         | `.bmad/core/tasks/create-atom.xml`      | HIGH     |
+| P0-F-05 | Create `search-atom` skill         | `.bmad/core/tasks/search-atom.xml`      | MEDIUM   |
+| P0-F-06 | Create `amend-atom` skill          | `.bmad/core/tasks/amend-atom.xml`       | MEDIUM   |
+| P0-F-07 | Create `deprecate-atom` skill      | `.bmad/core/tasks/deprecate-atom.xml`   | MEDIUM   |
+| P0-F-08 | Create Product Soul template       | `docs/_atoms/_product-soul-template.md` | HIGH     |
 
 ### 5.4 Instance 2: Validation (Analyst)
 
@@ -497,14 +498,17 @@ INSTANCE 2            INSTANCE 3
 | P0-W-11 | Create `amend-product-soul`    | New workflow                | MEDIUM   |
 | P0-W-12 | Create `test-design`           | New workflow                | MEDIUM   |
 
-### 5.6 Instance 4: Migration (Tech Writer) — Optional
+### 5.6 Instance 4: Migration (Tech Writer) — REQUIRED
+
+> **Note:** Gate validation rules (Appendix F) make migration effectively mandatory.
+> Without migrating existing PR-xxx, IC-xxx, and ADR-xxx to atoms, validation will fail.
 
 | ID      | Task                                 | Output                  | Priority |
 | ------- | ------------------------------------ | ----------------------- | -------- |
-| P0-M-01 | Extract PR-xxx from prd.md           | Individual atom files   | MEDIUM   |
-| P0-M-02 | Extract IC-xxx from prd.md           | Individual atom files   | MEDIUM   |
-| P0-M-03 | Extract ADR-xxx from architecture.md | Individual atom files   | MEDIUM   |
-| P0-M-04 | Update document references           | Links to `docs/_atoms/` | MEDIUM   |
+| P0-M-01 | Extract PR-xxx from prd.md           | Individual atom files   | HIGH     |
+| P0-M-02 | Extract IC-xxx from prd.md           | Individual atom files   | HIGH     |
+| P0-M-03 | Extract ADR-xxx from architecture.md | Individual atom files   | HIGH     |
+| P0-M-04 | Update document references           | Links to `docs/_atoms/` | HIGH     |
 | P0-M-05 | Run validation                       | Zero broken refs        | HIGH     |
 
 ### 5.7 Phase 0 Sync Points
@@ -744,11 +748,12 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 
 ### Phase 0: SSOT Foundation (NEW — Must Complete First)
 
-- [ ] **Instance 1 (BMad Builder):** Complete P0-F-01 through P0-F-07
+- [ ] **Instance 1 (BMad Builder):** Complete P0-F-01 through P0-F-08
   - [ ] Create `docs/_atoms/` directory
   - [ ] Write `docs/_atoms/README.md`
   - [ ] Create `docs/_atoms/_template.md`
   - [ ] Create 4 atom skills (create, search, amend, deprecate)
+  - [ ] Create Product Soul template (`docs/_atoms/_product-soul-template.md`)
 - [ ] **Gate:** Instance 1 complete before starting Instances 2 & 3
 - [ ] **Instance 2 (Analyst):** Complete P0-V-01 through P0-V-08
   - [ ] Create `scripts/validation/validate-atoms.ts`
@@ -760,9 +765,12 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
   - [ ] Update PRD/Architecture/Epics workflows
   - [ ] Create 8 HIGH-priority missing workflows
 - [ ] **Gate:** Instances 2 & 3 complete before Instance 4
-- [ ] **Instance 4 (Tech Writer):** Complete P0-M-01 through P0-M-05 (optional)
-  - [ ] Extract existing PR/IC/ADR to atoms
-  - [ ] Update document references
+- [ ] **Instance 4 (Tech Writer):** Complete P0-M-01 through P0-M-05 (REQUIRED)
+  - [ ] Extract existing PR-xxx to atoms
+  - [ ] Extract existing IC-xxx to atoms
+  - [ ] Extract existing ADR-xxx to atoms
+  - [ ] Update all document references to atom links
+  - [ ] Run validation — zero broken refs
 - [ ] **Gate:** Phase 0 complete before Groups A-D
 
 ### Phase 1: Group A (Parallel Foundation)
@@ -917,6 +925,7 @@ These files contain the authoritative definitions for the recent architectural c
 | `docs/_atoms/`                                     | Centralized atom storage directory    |
 | `docs/_atoms/README.md`                            | Atom ID scheme documentation          |
 | `docs/_atoms/_template.md`                         | Template for new atom files           |
+| `docs/_atoms/_product-soul-template.md`            | Template for product-soul.md docs     |
 | `docs/ssot-specification-draft.md`                 | Complete SSOT technical specification |
 | `docs/brainstorming-session-results-2025-12-03.md` | Architecture decisions transcript     |
 | `scripts/validation/validate-atoms.ts`             | Atom validation script (Phase 0)      |
