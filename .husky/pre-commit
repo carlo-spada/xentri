@@ -1,5 +1,4 @@
 # Lint staged files (fast - only changed files)
 pnpm lint-staged
 
-# Typecheck full workspace (catches cross-file issues)
-pnpm run typecheck
+

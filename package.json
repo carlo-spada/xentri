@@ -8,14 +8,6 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "test:smoke": "TSX_DAEMON=0 tsx scripts/smoke-test.ts",
-    "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
-    "db:migrate": "pnpm --filter services/core-api run db:migrate",
-    "clean": "turbo run clean && rm -rf node_modules",
     "validate:docs": "node scripts/validation/validate-docs.js",
     "validate:links": "node scripts/validation/validate-links.js",
     "prepare": "husky"
@@ -33,24 +25,16 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@playwright/test": "^1.50.0",
-    "@prisma/adapter-pg": "^7.0.1",
-    "@prisma/client": "^7.0.1",
     "@types/node": "^22.0.0",
-    "@vitest/coverage-v8": "^3.2.4",
     "ajv": "^8.17.1",
     "eslint": "^9.0.0",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
-    "pg": "^8.16.0",
     "prettier": "^3.4.2",
-    "prisma": "^7.0.1",
     "tsx": "^4.19.0",
-    "turbo": "^2.6.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.48.1",
-    "vitest": "^3.0.0",
     "yaml": "^2.7.0"
   }
 }
