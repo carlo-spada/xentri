@@ -2,10 +2,8 @@
 # Module: platform/ui
 # Package: packages/ui
 
-generated: 2025-11-27
+generated: 2025-12-04
 module: ui
 category: platform
 
-development_status:
-  # No dedicated stories - components evolve with other modules
-  # Component updates tracked in module changelogs
+development_status: {}

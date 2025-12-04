@@ -68,7 +68,10 @@ function validateConstitutionDocs() {
   console.log('\n📋 Validating Constitution Documents...\n')
 
   for (const docName of CONSTITUTION_DOCS) {
-    const filePath = path.join(PLATFORM_DIR, docName)
+    let filePath = path.join(PLATFORM_DIR, docName)
+    if (docName === 'product-soul.md') {
+      filePath = path.join(DOCS_DIR, docName)
+    }
 
     if (!fs.existsSync(filePath)) {
       errors.push(`Missing Constitution document: ${docName}`)

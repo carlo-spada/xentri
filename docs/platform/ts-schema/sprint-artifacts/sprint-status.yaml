@@ -2,10 +2,8 @@
 # Module: platform/ts-schema
 # Package: packages/ts-schema
 
-generated: 2025-11-27
+generated: 2025-12-04
 module: ts-schema
 category: platform
 
-development_status:
-  # No dedicated stories - schemas evolve with other modules
-  # Schema updates tracked in module changelogs
+development_status: {}

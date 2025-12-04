@@ -9,7 +9,7 @@
 
 | Indicator    | Status      | Notes                                           |
 | ------------ | ----------- | ----------------------------------------------- |
-| **Live API** | Healthy     | https://core-api-production-8016.up.railway.app |
+| **Live API** | Healthy     | <https://core-api-production-8016.up.railway.app> |
 | **Build**    | Passing     | All CI checks green                             |
 | **Tests**    | 25+ passing | Coverage thresholds met                         |
 
@@ -92,7 +92,7 @@ _Track cross-module requests via GitHub Issues with the `cross-module` label._
 
 ### Build Sequence Adherence
 
-Following ADR-005 (SPA + Copilot First) in [Architecture](./architecture.md):
+Following ADR-005 (SPA + Copilot First) in [Architecture](../architecture.md):
 
 | Phase | Category  | SPA           | Copilot           | Status       |
 | ----- | --------- | ------------- | ----------------- | ------------ |
@@ -118,9 +118,9 @@ Following ADR-005 (SPA + Copilot First) in [Architecture](./architecture.md):
 
 | Date       | Decision                     | Impact                         | Reference                                 |
 | ---------- | ---------------------------- | ------------------------------ | ----------------------------------------- |
-| 2025-11-28 | SPA + Copilot First strategy | Build order for all categories | [Architecture](./architecture.md) ADR-005 |
-| 2025-11-27 | Module Isolation Plan        | Cross-module coordination      | [Architecture](./architecture.md)         |
-| 2025-11-26 | Railway Bootstrap            | Deploy to Railway before K8s   | [Architecture](./architecture.md) ADR-004 |
+| 2025-11-28 | SPA + Copilot First strategy | Build order for all categories | [Architecture](../architecture.md) ADR-005 |
+| 2025-11-27 | Module Isolation Plan        | Cross-module coordination      | [Architecture](../architecture.md)         |
+| 2025-11-26 | Railway Bootstrap            | Deploy to Railway before K8s   | [Architecture](../architecture.md) ADR-004 |
 
 ---
 
@@ -148,7 +148,7 @@ See [Issue #TBD] for automation implementation.
 ## Contact
 
 - **Product Owner:** Carlo
-- **Architecture Questions:** See [Architecture](./architecture.md)
+- **Architecture Questions:** See [Architecture](../architecture.md)
 - **Cross-Module Requests:** Create a GitHub Issue with the `cross-module` label
 
 ---

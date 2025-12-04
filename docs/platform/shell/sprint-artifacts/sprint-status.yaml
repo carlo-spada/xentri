@@ -2,13 +2,8 @@
 # Module: platform/shell
 # Package: apps/shell
 
-generated: 2025-11-27
+generated: 2025-12-04
 module: shell
 category: platform
 
-development_status:
-  # Epic 1 Stories (assigned to shell)
-  1-5-application-shell-navigation: done
-
-  # Future Stories
-  # navigation-improvements: backlog
+development_status: {}

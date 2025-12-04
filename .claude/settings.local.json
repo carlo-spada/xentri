@@ -195,7 +195,13 @@
       "WebFetch(domain:github.com)",
       "SlashCommand(/bmad:core:workflows:brainstorming)",
       "Bash(grep:*)",
-      "Bash(git -C:*)"
+      "Bash(git -C:*)",
+      "Bash(\"docs/platform/sprint-artifacts/1-7-devops-observability-test-readiness.md\" )",
+      "Bash(\"docs/platform/core-api/sprint-artifacts/1-2-event-backbone-database-schema.md\" )",
+      "Bash(\"docs/platform/core-api/sprint-artifacts/1-3-user-authentication-signup.md\" )",
+      "Bash(\"docs/platform/core-api/sprint-artifacts/1-4-organization-creation-provisioning.md\" )",
+      "Bash(\"docs/platform/core-api/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md\" )",
+      "Bash(\"docs/platform/shell/sprint-artifacts/1-5-application-shell-navigation.md\")"
     ],
     "deny": [],
     "ask": []

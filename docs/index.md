@@ -70,7 +70,7 @@ User-facing business categories with coordination units and business modules.
 
 ### Sprint Status
 
-- [Pulse](./platform/pulse.md) — Cross-team coordination and system-wide progress
+- [Pulse](./platform/pulse/pulse.md) — Cross-team coordination and system-wide progress
 - [Epic Status](./platform/sprint-artifacts/sprint-status.yaml) — Overall progress
 - [Core API Stories](./platform/core-api/sprint-artifacts/) — API implementation
 - [Shell Stories](./platform/shell/sprint-artifacts/) — Frontend implementation

@@ -2,16 +2,8 @@
 # Module: platform/core-api
 # Package: services/core-api
 
-generated: 2025-11-27
+generated: 2025-12-04
 module: core-api
 category: platform
 
-development_status:
-  # Epic 1 Stories (assigned to core-api)
-  1-2-event-backbone-database-schema: done
-  1-3-user-authentication-signup: done
-  1-4-organization-creation-provisioning: done
-  1-6-thin-vertical-slice-signup-brief-event: done
-
-  # Epic 2 Stories (future)
-  # 2-x-universal-brief-schema: backlog
+development_status: {}
