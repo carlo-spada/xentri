@@ -39,6 +39,9 @@ jobs:
       - name: Validate Frontmatter
         run: pnpm run validate:docs
 
+      - name: Validate SSOT Atoms
+        run: pnpm run validate:atoms
+
   check-constitution-changes:
     name: Constitution Change Review
     runs-on: ubuntu-latest
@@ -53,7 +56,7 @@ jobs:
       - name: Check for Constitution changes
         id: constitution
         run: |
-          CONSTITUTION_FILES="docs/platform/prd.md docs/platform/architecture.md docs/platform/ux-design.md docs/platform/epics.md docs/platform/product-soul.md"
+          CONSTITUTION_FILES="docs/platform/prd.md docs/platform/architecture.md docs/platform/ux-design.md docs/platform/epics.md docs/product-soul.md"
 
           CHANGED=""
           for file in $CONSTITUTION_FILES; do

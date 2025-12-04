@@ -1,0 +1,91 @@
+# Architecture Patterns Catalog
+# Common patterns for different architectural concerns
+
+patterns:
+  # Structural Patterns
+  structural:
+    - name: layered
+      description: 'Horizontal layers (presentation, business, data)'
+      use_when: 'Clear separation of concerns needed'
+
+    - name: hexagonal
+      description: 'Ports and adapters - domain at center'
+      use_when: 'Domain logic is complex, need flexibility in I/O'
+
+    - name: vertical_slice
+      description: 'Organize by feature, not layer'
+      use_when: 'Features are independent, team organization by feature'
+
+  # Data Patterns
+  data:
+    - name: repository
+      description: 'Abstract data access behind interface'
+      use_when: 'Need to swap data sources, testing flexibility'
+
+    - name: unit_of_work
+      description: 'Track changes, commit atomically'
+      use_when: 'Complex transactions across multiple entities'
+
+    - name: cqrs
+      description: 'Separate read/write models'
+      use_when: 'Read and write patterns differ significantly'
+
+  # Integration Patterns
+  integration:
+    - name: api_gateway
+      description: 'Single entry point for clients'
+      use_when: 'Multiple services, cross-cutting concerns'
+
+    - name: backend_for_frontend
+      description: 'Dedicated backend per client type'
+      use_when: 'Different clients have different needs'
+
+    - name: saga
+      description: 'Coordinate distributed transactions'
+      use_when: 'Multi-service business processes'
+
+    - name: outbox
+      description: 'Ensure message delivery with DB transaction'
+      use_when: 'Need exactly-once delivery guarantee'
+
+  # Resilience Patterns
+  resilience:
+    - name: circuit_breaker
+      description: 'Fail fast when dependency is down'
+      use_when: 'Calling unreliable services'
+
+    - name: retry_with_backoff
+      description: 'Retry failed calls with increasing delay'
+      use_when: 'Transient failures expected'
+
+    - name: bulkhead
+      description: 'Isolate failures to prevent cascade'
+      use_when: 'Multiple independent operations'
+
+  # Security Patterns
+  security:
+    - name: zero_trust
+      description: 'Verify every request, assume breach'
+      use_when: 'High security requirements'
+
+    - name: rbac
+      description: 'Role-Based Access Control'
+      use_when: 'Hierarchical permissions needed'
+
+    - name: abac
+      description: 'Attribute-Based Access Control'
+      use_when: 'Complex, context-dependent permissions'
+
+  # Multi-tenancy Patterns
+  multitenancy:
+    - name: database_per_tenant
+      description: 'Complete isolation per tenant'
+      use_when: 'Strong isolation, compliance requirements'
+
+    - name: schema_per_tenant
+      description: 'Shared DB, separate schemas'
+      use_when: 'Moderate isolation, simpler ops'
+
+    - name: row_level_security
+      description: 'Shared tables with tenant filtering'
+      use_when: 'Cost efficiency, many tenants'

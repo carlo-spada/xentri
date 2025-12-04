@@ -10,6 +10,7 @@
   "scripts": {
     "validate:docs": "node scripts/validation/validate-docs.js",
     "validate:links": "node scripts/validation/validate-links.js",
+    "validate:atoms": "npx tsx scripts/validation/validate-atoms.ts",
     "prepare": "husky"
   },
   "lint-staged": {

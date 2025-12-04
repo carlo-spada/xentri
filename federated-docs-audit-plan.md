@@ -8,26 +8,33 @@
 
 | Attribute        | Value                                                                  |
 | ---------------- | ---------------------------------------------------------------------- |
-| **Version**      | 5.1                                                                    |
-| **Status**       | Draft — Pending Implementation                                         |
+| **Version**      | 5.8                                                                    |
+| **Status**       | In Progress — Phase 0 COMPLETE, Phases 1.01-1.05 COMPLETE              |
 | **Owner**        | Platform Team                                                          |
 | **DRI**          | BMad Builder (Phase 0), Analyst (Phases 1-6) ([Glossary](#2-glossary)) |
 | **Created**      | 2025-12-03                                                             |
 | **Last Updated** | 2025-12-04                                                             |
 | **Review Cycle** | After each micro-phase completion                                      |
-| **Approval**     | Pending — requires validation of Phase 0 deliverables                  |
+| **Approval**     | Phase 0 Gate PASSED — all validation scripts pass                      |
 
 ### Change Log
 
-| Version | Date       | Author       | Changes                                                                                                                                                      |
-| ------- | ---------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                           |
-| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location |
-| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                          |
-| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                      |
-| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                     |
-| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                             |
-| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                  |
+| Version | Date       | Author       | Changes                                                                                                                                                         |
+| ------- | ---------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 5.8     | 2025-12-04 | BMad Builder | Phase 1.05 COMPLETE. Epics Triad verified: entity-first detection already implemented. All 8 epics workflows have proper routing and Five Entity Types support. |
+| 5.7     | 2025-12-04 | BMad Builder | Phase 1.04 COMPLETE. UX Triad audit: entity-first detection already implemented. All 5 entity-specific UX checklists verified.                                  |
+| 5.6     | 2025-12-04 | BMad Builder | Phase 1.03 COMPLETE. Upgraded Architecture Triad: restored create-system-architecture, added entity-first detection, renamed to create-architecture.            |
+| 5.5     | 2025-12-04 | BMad Builder | Phase 1.01 COMPLETE. Verified all 92 workflows (85 active + 6 archived + 1 template). Added detailed inventory tables with status and update requirements.      |
+| 5.4     | 2025-12-04 | BMad Builder | Phase 1.02 COMPLETE. PRD Triad audit: entity-first detection already implemented. Deferred: checklist files creation, entity-menu.yaml verification.            |
+| 5.3     | 2025-12-04 | Analyst      | Phase 0 COMPLETE. Created validate-atoms.ts (0.04), implemented 5 gate rules (0.05), reviewed Product Soul (0.06), updated pre-commit (0.07) and CI (0.08).     |
+| 5.2     | 2025-12-04 | BMad Builder | Phase 0.01-0.03 complete. Changed atom CRUD from XML tasks to TypeScript scripts (scalability). Simplified atom ID (no type prefix). Auto-generated index.      |
+| 5.1     | 2025-12-04 | Claude Code  | Clarified: Product Soul special location, 92+15=107 workflow target, Phase 0 create/review pattern                                                              |
+| 5.0     | 2025-12-04 | Claude Code  | Major revision: fixed workflow inventory (92 total), unified taxonomy, sequential micro-phases, added coordination protocol, corrected product-soul location    |
+| 4.0     | 2025-12-04 | Claude Code  | Major refactor: consolidated duplicates, unified task IDs, added conventions, restructured sections                                                             |
+| 3.4     | 2025-12-04 | Claude Code  | Party mode review: Fixed workflow counts, research triad, BMM patterns, 47 micro-phases                                                                         |
+| 3.0     | 2025-12-03 | Claude Code  | Merged Platform Remediation + SSOT Specification + Workflow Gap Analysis                                                                                        |
+| 2.0     | 2025-12-02 | BMad Builder | Added Phase 0, SSOT Atom System, Gate Validation                                                                                                                |
+| 1.0     | 2025-12-01 | Analyst      | Initial audit plan creation                                                                                                                                     |
 
 > **Related Documents:**
 >
@@ -455,12 +462,31 @@ SYS.004-STR.001-PUL.001-DAS.001
 
 ### 10.3 Atom Operations
 
-| Operation     | Skill File                            | Purpose                 |
-| ------------- | ------------------------------------- | ----------------------- |
-| **Create**    | `.bmad/core/tasks/create-atom.xml`    | Add new atom            |
-| **Search**    | `.bmad/core/tasks/search-atom.xml`    | Find atoms by criteria  |
-| **Amend**     | `.bmad/core/tasks/amend-atom.xml`     | Modify existing atom    |
-| **Deprecate** | `.bmad/core/tasks/deprecate-atom.xml` | Mark atom as deprecated |
+> **Implementation Decision (v5.2):** CRUD operations implemented as TypeScript scripts rather than XML agent tasks.
+>
+> **Rationale:** Agent-based XML tasks would require reading all atom files into context for search/validation operations. With potentially hundreds of atoms, this approach:
+>
+> - Bloats context windows unnecessarily
+> - Creates non-deterministic behavior
+> - Scales poorly
+>
+> TypeScript scripts use file system operations directly, enabling efficient searching without LLM overhead.
+
+| Operation     | Script                            | Purpose                 |
+| ------------- | --------------------------------- | ----------------------- |
+| **Create**    | `scripts/atoms/atom-create.ts`    | Add new atom            |
+| **Search**    | `scripts/atoms/atom-search.ts`    | Find atoms by criteria  |
+| **Amend**     | `scripts/atoms/atom-amend.ts`     | Modify existing atom    |
+| **Deprecate** | `scripts/atoms/atom-deprecate.ts` | Mark atom as deprecated |
+
+Usage:
+
+```bash
+pnpm exec tsx scripts/atoms/atom-create.ts --entity SYS --type requirement --title "My Atom"
+pnpm exec tsx scripts/atoms/atom-search.ts --entity SHL --status draft
+pnpm exec tsx scripts/atoms/atom-amend.ts --id SYS.001 --status approved
+pnpm exec tsx scripts/atoms/atom-deprecate.ts --id SYS.001
+```
 
 ### 10.4 Gate Validation Rules
 
@@ -476,9 +502,13 @@ Five rules enforced at pre-commit and CI:
 
 **Enforcement Layers:**
 
-1. Workflow inline validation during atom CRUD
+1. Script-based validation during atom CRUD operations
 2. Pre-commit hook: `.husky/pre-commit`
-3. CI pipeline: `.github/workflows/atom-validation.yml`
+3. CI pipeline: `.github/workflows/docs-validation.yml`
+
+> **Implementation Decision (v5.2):** Index auto-generation moved to `validate-atoms.ts`.
+>
+> **Rationale:** Manual index maintenance is error-prone and creates drift. The validation script regenerates `docs/_atoms/_index.md` on each run, ensuring the index always reflects actual atom state.
 
 ---
 
@@ -502,40 +532,501 @@ Five rules enforced at pre-commit and CI:
 
 > **Note:** For existing infrastructure, tasks follow "create if not exist, review if exists" pattern.
 
-| ID   | Name                   | Owner | Action | Exit Criteria                                                                  |
-| ---- | ---------------------- | ----- | ------ | ------------------------------------------------------------------------------ |
-| 0.01 | Atom Directory Setup   | BB    | Create | `docs/_atoms/` exists with ID scheme                                           |
-| 0.02 | Atom Template Creation | BB    | Create | Template + index section                                                       |
-| 0.03 | Atom CRUD Skills       | BB    | Create | All 4 skills functional                                                        |
-| 0.04 | Validation Script      | AN    | Create | `validate-atoms.ts` validates format                                           |
-| 0.05 | Gate Validation Rules  | AN    | Create | 5 rules implemented in validate-atoms.ts                                       |
-| 0.06 | Product Soul Template  | BB    | Review | `docs/product-soul.md` follows template                                        |
-| 0.07 | Pre-commit Hook        | BB    | Review | `.husky/pre-commit` exists; add atom validation if missing                     |
-| 0.08 | CI Pipeline            | BB    | Review | `.github/workflows/docs-validation.yml` exists; add atom validation if missing |
+| ID   | Name                   | Owner | Action | Exit Criteria                                                                  | Status      |
+| ---- | ---------------------- | ----- | ------ | ------------------------------------------------------------------------------ | ----------- |
+| 0.01 | Atom Directory Setup   | BB    | Create | `docs/_atoms/` exists with ID scheme                                           | ✅ COMPLETE |
+| 0.02 | Atom Template Creation | BB    | Create | Template + index section                                                       | ✅ COMPLETE |
+| 0.03 | Atom CRUD Scripts      | BB    | Create | All 4 scripts functional                                                       | ✅ COMPLETE |
+| 0.04 | Validation Script      | AN    | Create | `validate-atoms.ts` validates format + regenerates index                       | ✅ COMPLETE |
+| 0.05 | Gate Validation Rules  | AN    | Create | 5 rules implemented in validate-atoms.ts                                       | ✅ COMPLETE |
+| 0.06 | Product Soul Template  | AN    | Review | `docs/product-soul.md` follows template                                        | ✅ COMPLETE |
+| 0.07 | Pre-commit Hook        | AN    | Review | `.husky/pre-commit` exists; add atom validation if missing                     | ✅ COMPLETE |
+| 0.08 | CI Pipeline            | AN    | Review | `.github/workflows/docs-validation.yml` exists; add atom validation if missing | ✅ COMPLETE |
+
+**Phase 0.01-0.03 Completion Notes (2025-12-04):**
+
+| Deliverable    | Location                  | Notes                                                          |
+| -------------- | ------------------------- | -------------------------------------------------------------- |
+| Atom directory | `docs/_atoms/`            | Created with `_index.md`, `_schema.yaml`, `_template.md`       |
+| ID scheme docs | `docs/_atoms/_index.md`   | Hierarchical IDs encode full lineage (no separate type prefix) |
+| CRUD scripts   | `scripts/atoms/atom-*.ts` | TypeScript instead of XML (see Section 10.3 rationale)         |
+
+**Key Design Decisions:**
+
+1. **No type prefix in atom IDs** — The hierarchical ID itself (`SYS.001-SHL.001`) encodes the entity lineage. Adding `PR-`, `IC-`, `ADR-` prefixes would be redundant since the `type` field in frontmatter already captures this.
+
+2. **TypeScript scripts over XML tasks** — Agents reading hundreds of atoms for search operations is computationally wasteful and bloats context. Scripts use file system operations directly.
+
+3. **Auto-generated index** — The `_index.md` Atom Index table will be regenerated by `validate-atoms.ts` rather than manually maintained, preventing drift.
 
 **Existing Infrastructure (as of 2025-12-04):**
 
-- `.husky/pre-commit` — EXISTS (runs lint-staged + typecheck)
-- `.github/workflows/docs-validation.yml` — EXISTS (runs validate:links + validate:docs)
+- `.husky/pre-commit` — EXISTS (runs lint-staged + atom validation)
+- `.github/workflows/docs-validation.yml` — EXISTS (runs validate:links + validate:docs + validate:atoms)
 - `scripts/validation/validate-docs.js` — EXISTS
 - `scripts/validation/validate-links.js` — EXISTS
 - `scripts/validation/validate-dependencies.ts` — EXISTS
-- `scripts/validation/validate-atoms.ts` — DOES NOT EXIST (create in 0.04)
+- `scripts/validation/validate-atoms.ts` — EXISTS (created 0.04)
+- `scripts/atoms/atom-create.ts` — EXISTS (created 0.03)
+- `scripts/atoms/atom-search.ts` — EXISTS (created 0.03)
+- `scripts/atoms/atom-amend.ts` — EXISTS (created 0.03)
+- `scripts/atoms/atom-deprecate.ts` — EXISTS (created 0.03)
+
+**Phase 0.04-0.08 Completion Notes (2025-12-04):**
+
+| Deliverable       | Location                                       | Notes                                                  |
+| ----------------- | ---------------------------------------------- | ------------------------------------------------------ |
+| Validation script | `scripts/validation/validate-atoms.ts`         | Implements all 5 gate rules                            |
+| NPM script        | `package.json`                                 | Added `validate:atoms` command                         |
+| Pre-commit hook   | `.husky/pre-commit`                            | Conditional atom validation on staged files            |
+| CI pipeline       | `.github/workflows/docs-validation.yml`        | Added validate:atoms step + fixed product-soul.md path |
+| Sample atoms      | `docs/_atoms/SYS.001.md`, `SYS.001-SHL.001.md` | Created for validation testing                         |
+
+**Gate Validation Rules (0.05):**
+
+| Rule | Name          | Description                                  | Severity |
+| ---- | ------------- | -------------------------------------------- | -------- |
+| 1    | Parent Exists | Parent atom (ID prefix) must exist           | BLOCK    |
+| 2    | Entity Valid  | Entity path in frontmatter must resolve      | BLOCK    |
+| 3    | ID Format     | ID matches `{ENTITY}.{SEQ}(-{CHILD}.{SEQ})*` | BLOCK    |
+| 4    | Refs Resolve  | All internal `./ID.md` refs must resolve     | BLOCK    |
+| 5    | No Deprecated | Cannot reference deprecated atoms            | BLOCK    |
+
+**Phase 0 Gate Validation — PASSED:**
+
+```
+✅ pnpm run validate:docs
+✅ pnpm run validate:links (54 links, 57 files)
+✅ pnpm run validate:atoms (2 atoms, 0 errors)
+```
 
 ### 11.3 Phase 1: Workflow Updates (8 micro-phases)
 
 > **Strategy:** Keep all 92 existing workflows. Update those needing entity-first detection. Create 15 new workflows.
 
-| ID   | Name                         | Action | Exit Criteria                           |
-| ---- | ---------------------------- | ------ | --------------------------------------- |
-| 1.01 | Inventory Current Workflows  | Audit  | All 92 workflows catalogued with status |
-| 1.02 | PRD Triad Upgrade            | Update | Entity-first detection added            |
-| 1.03 | Architecture Triad Upgrade   | Update | Entity-first detection added            |
-| 1.04 | UX Triad Upgrade             | Update | Entity-first detection added            |
-| 1.05 | Epics Triad Upgrade          | Update | Entity-first detection added            |
-| 1.06 | Product-Soul Triad           | Create | 2 NEW workflows (validate + amend)      |
-| 1.07 | Story/Dev Workflows          | Mixed  | 5 NEW + update existing                 |
-| 1.08 | Context + Research Workflows | Mixed  | 8 NEW + update existing                 |
+| ID   | Name                         | Action | Exit Criteria                           | Status      |
+| ---- | ---------------------------- | ------ | --------------------------------------- | ----------- |
+| 1.01 | Inventory Current Workflows  | Audit  | All 92 workflows catalogued with status | ✅ COMPLETE |
+| 1.02 | PRD Triad Upgrade            | Audit  | Entity-first detection verified         | ✅ COMPLETE |
+| 1.03 | Architecture Triad Upgrade   | Update | Entity-first detection added            | ✅ COMPLETE |
+| 1.04 | UX Triad Upgrade             | Audit  | Entity-first detection verified         | ✅ COMPLETE |
+| 1.05 | Epics Triad Upgrade          | Audit  | Entity-first detection verified         | ✅ COMPLETE |
+| 1.06 | Product-Soul Triad           | Create | 2 NEW workflows (validate + amend)      | Pending     |
+| 1.07 | Story/Dev Workflows          | Mixed  | 5 NEW + update existing                 | Pending     |
+| 1.08 | Context + Research Workflows | Mixed  | 8 NEW + update existing                 | Pending     |
+
+**Phase 1.01 Completion Notes (2025-12-04):**
+
+| Metric                                   | Value |
+| ---------------------------------------- | ----- |
+| Total workflows verified                 | 92    |
+| Active workflows                         | 86    |
+| Archived workflows                       | 6     |
+| Workflows needing entity-first detection | 33    |
+| Workflows needing atom integration       | 9     |
+| Total workflows needing updates          | 42    |
+
+**Breakdown by Module:**
+
+| Module                      | Active | Archived | Template |
+| --------------------------- | ------ | -------- | -------- |
+| BMB                         | 9      | 0        | 1        |
+| BMM 1-Analysis              | 4      | 0        | 0        |
+| BMM 2-Plan                  | 12     | 0        | 0        |
+| BMM 3-Solutioning           | 24     | 6        | 0        |
+| BMM 4-Implementation        | 11     | 0        | 0        |
+| BMM Diagrams                | 4      | 0        | 0        |
+| BMM Testarch                | 8      | 0        | 0        |
+| BMM Other                   | 4      | 0        | 0        |
+| CIS                         | 4      | 0        | 0        |
+| Core                        | 2      | 0        | 0        |
+| Custom/Federated-Validation | 3      | 0        | 0        |
+| **Total**                   | **85** | **6**    | **1**    |
+
+> **Note:** The 85 active + 6 archived + 1 template = 92 total. The `workflow-status/init` is counted within BMM Other (4 workflows).
+
+**Verified Workflow Inventory (1.01):**
+
+<details>
+<summary>BMB Module (9 active + 1 template)</summary>
+
+| Workflow                          | Path                                                     | Status   | Needs Update? |
+| --------------------------------- | -------------------------------------------------------- | -------- | ------------- |
+| audit-workflow                    | `.bmad/bmb/workflows/audit-workflow/`                    | Active   | No            |
+| convert-legacy                    | `.bmad/bmb/workflows/convert-legacy/`                    | Active   | No            |
+| create-agent                      | `.bmad/bmb/workflows/create-agent/`                      | Active   | No            |
+| create-module                     | `.bmad/bmb/workflows/create-module/`                     | Active   | No            |
+| create-workflow                   | `.bmad/bmb/workflows/create-workflow/`                   | Active   | No            |
+| create-workflow/workflow-template | `.bmad/bmb/workflows/create-workflow/workflow-template/` | Template | No            |
+| edit-agent                        | `.bmad/bmb/workflows/edit-agent/`                        | Active   | No            |
+| edit-module                       | `.bmad/bmb/workflows/edit-module/`                       | Active   | No            |
+| edit-workflow                     | `.bmad/bmb/workflows/edit-workflow/`                     | Active   | No            |
+| module-brief                      | `.bmad/bmb/workflows/module-brief/`                      | Active   | No            |
+
+</details>
+
+<details>
+<summary>BMM 1-Analysis (4 active)</summary>
+
+| Workflow           | Path                                                 | Status | Needs Update?    |
+| ------------------ | ---------------------------------------------------- | ------ | ---------------- |
+| brainstorm-project | `.bmad/bmm/workflows/1-analysis/brainstorm-project/` | Active | No               |
+| domain-research    | `.bmad/bmm/workflows/1-analysis/domain-research/`    | Active | No               |
+| product-brief      | `.bmad/bmm/workflows/1-analysis/product-brief/`      | Active | No               |
+| research           | `.bmad/bmm/workflows/1-analysis/research/`           | Active | Atom integration |
+
+</details>
+
+<details>
+<summary>BMM 2-Plan (12 active)</summary>
+
+| Workflow            | Path                                                        | Status | Needs Update?    |
+| ------------------- | ----------------------------------------------------------- | ------ | ---------------- |
+| amend-domain-prd    | `.bmad/bmm/workflows/2-plan-workflows/amend-domain-prd/`    | Active | Entity-first     |
+| amend-prd           | `.bmad/bmm/workflows/2-plan-workflows/amend-prd/`           | Active | Entity-first     |
+| amend-system-prd    | `.bmad/bmm/workflows/2-plan-workflows/amend-system-prd/`    | Active | Entity-first     |
+| create-domain-prd   | `.bmad/bmm/workflows/2-plan-workflows/create-domain-prd/`   | Active | Entity-first     |
+| create-prd          | `.bmad/bmm/workflows/2-plan-workflows/create-prd/`          | Active | Entity-first     |
+| create-system-prd   | `.bmad/bmm/workflows/2-plan-workflows/create-system-prd/`   | Active | Entity-first     |
+| create-ux-design    | `.bmad/bmm/workflows/2-plan-workflows/create-ux-design/`    | Active | Entity-first     |
+| prd                 | `.bmad/bmm/workflows/2-plan-workflows/prd/`                 | Active | Entity-first     |
+| tech-spec           | `.bmad/bmm/workflows/2-plan-workflows/tech-spec/`           | Active | Atom integration |
+| validate-domain-prd | `.bmad/bmm/workflows/2-plan-workflows/validate-domain-prd/` | Active | Entity-first     |
+| validate-prd        | `.bmad/bmm/workflows/2-plan-workflows/validate-prd/`        | Active | Entity-first     |
+| validate-system-prd | `.bmad/bmm/workflows/2-plan-workflows/validate-system-prd/` | Active | Entity-first     |
+
+</details>
+
+<details>
+<summary>BMM 3-Solutioning (24 active, 6 archived)</summary>
+
+| Workflow                             | Path                                                              | Status   | Needs Update? |
+| ------------------------------------ | ----------------------------------------------------------------- | -------- | ------------- |
+| amend-architecture                   | `.bmad/bmm/workflows/3-solutioning/amend-architecture/`           | Active   | Entity-first  |
+| amend-domain-architecture            | `.bmad/bmm/workflows/3-solutioning/amend-domain-architecture/`    | Active   | Entity-first  |
+| amend-domain-epics                   | `.bmad/bmm/workflows/3-solutioning/amend-domain-epics/`           | Active   | Entity-first  |
+| amend-domain-ux                      | `.bmad/bmm/workflows/3-solutioning/amend-domain-ux/`              | Active   | Entity-first  |
+| amend-epics                          | `.bmad/bmm/workflows/3-solutioning/amend-epics/`                  | Active   | Entity-first  |
+| amend-system-architecture            | `.bmad/bmm/workflows/3-solutioning/amend-system-architecture/`    | Active   | Entity-first  |
+| amend-system-epics                   | `.bmad/bmm/workflows/3-solutioning/amend-system-epics/`           | Active   | Entity-first  |
+| amend-system-ux                      | `.bmad/bmm/workflows/3-solutioning/amend-system-ux/`              | Active   | Entity-first  |
+| amend-ux                             | `.bmad/bmm/workflows/3-solutioning/amend-ux/`                     | Active   | Entity-first  |
+| architecture                         | `.bmad/bmm/workflows/3-solutioning/architecture/`                 | Active   | Entity-first  |
+| create-architecture                  | `.bmad/bmm/workflows/3-solutioning/create-architecture/`          | Active   | Entity-first  |
+| create-epics-and-stories             | `.bmad/bmm/workflows/3-solutioning/create-epics-and-stories/`     | Active   | Entity-first  |
+| create-epics                         | `.bmad/bmm/workflows/3-solutioning/create-epics/`                 | Active   | Entity-first  |
+| create-ux                            | `.bmad/bmm/workflows/3-solutioning/create-ux/`                    | Active   | Entity-first  |
+| implementation-readiness             | `.bmad/bmm/workflows/3-solutioning/implementation-readiness/`     | Active   | No            |
+| validate-architecture                | `.bmad/bmm/workflows/3-solutioning/validate-architecture/`        | Active   | Entity-first  |
+| validate-domain-architecture         | `.bmad/bmm/workflows/3-solutioning/validate-domain-architecture/` | Active   | Entity-first  |
+| validate-domain-epics                | `.bmad/bmm/workflows/3-solutioning/validate-domain-epics/`        | Active   | Entity-first  |
+| validate-domain-ux                   | `.bmad/bmm/workflows/3-solutioning/validate-domain-ux/`           | Active   | Entity-first  |
+| validate-epics                       | `.bmad/bmm/workflows/3-solutioning/validate-epics/`               | Active   | Entity-first  |
+| validate-system-architecture         | `.bmad/bmm/workflows/3-solutioning/validate-system-architecture/` | Active   | Entity-first  |
+| validate-system-epics                | `.bmad/bmm/workflows/3-solutioning/validate-system-epics/`        | Active   | Entity-first  |
+| validate-system-ux                   | `.bmad/bmm/workflows/3-solutioning/validate-system-ux/`           | Active   | Entity-first  |
+| validate-ux                          | `.bmad/bmm/workflows/3-solutioning/validate-ux/`                  | Active   | Entity-first  |
+| \_archive/create-domain-architecture | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived | N/A           |
+| \_archive/create-domain-epics        | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived | N/A           |
+| \_archive/create-domain-ux           | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived | N/A           |
+| \_archive/create-system-architecture | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived | N/A           |
+| \_archive/create-system-epics        | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived | N/A           |
+| \_archive/create-system-ux           | `.bmad/bmm/workflows/3-solutioning/_archive/`                     | Archived | N/A           |
+
+</details>
+
+<details>
+<summary>BMM 4-Implementation (11 active)</summary>
+
+| Workflow          | Path                                                      | Status | Needs Update?    |
+| ----------------- | --------------------------------------------------------- | ------ | ---------------- |
+| code-review       | `.bmad/bmm/workflows/4-implementation/code-review/`       | Active | Atom integration |
+| correct-course    | `.bmad/bmm/workflows/4-implementation/correct-course/`    | Active | No               |
+| create-story      | `.bmad/bmm/workflows/4-implementation/create-story/`      | Active | Atom integration |
+| dev-story         | `.bmad/bmm/workflows/4-implementation/dev-story/`         | Active | Atom integration |
+| epic-tech-context | `.bmad/bmm/workflows/4-implementation/epic-tech-context/` | Active | Atom integration |
+| retrospective     | `.bmad/bmm/workflows/4-implementation/retrospective/`     | Active | No               |
+| sprint-planning   | `.bmad/bmm/workflows/4-implementation/sprint-planning/`   | Active | No               |
+| sprint-rollup     | `.bmad/bmm/workflows/4-implementation/sprint-rollup/`     | Active | No               |
+| story-context     | `.bmad/bmm/workflows/4-implementation/story-context/`     | Active | Atom integration |
+| story-done        | `.bmad/bmm/workflows/4-implementation/story-done/`        | Active | No               |
+| story-ready       | `.bmad/bmm/workflows/4-implementation/story-ready/`       | Active | No               |
+
+</details>
+
+<details>
+<summary>BMM Diagrams (4 active)</summary>
+
+| Workflow         | Path                                             | Status | Needs Update? |
+| ---------------- | ------------------------------------------------ | ------ | ------------- |
+| create-dataflow  | `.bmad/bmm/workflows/diagrams/create-dataflow/`  | Active | No            |
+| create-diagram   | `.bmad/bmm/workflows/diagrams/create-diagram/`   | Active | No            |
+| create-flowchart | `.bmad/bmm/workflows/diagrams/create-flowchart/` | Active | No            |
+| create-wireframe | `.bmad/bmm/workflows/diagrams/create-wireframe/` | Active | No            |
+
+</details>
+
+<details>
+<summary>BMM Testarch (8 active)</summary>
+
+| Workflow    | Path                                        | Status | Needs Update? |
+| ----------- | ------------------------------------------- | ------ | ------------- |
+| atdd        | `.bmad/bmm/workflows/testarch/atdd/`        | Active | No            |
+| automate    | `.bmad/bmm/workflows/testarch/automate/`    | Active | No            |
+| ci          | `.bmad/bmm/workflows/testarch/ci/`          | Active | No            |
+| framework   | `.bmad/bmm/workflows/testarch/framework/`   | Active | No            |
+| nfr-assess  | `.bmad/bmm/workflows/testarch/nfr-assess/`  | Active | No            |
+| test-design | `.bmad/bmm/workflows/testarch/test-design/` | Active | No            |
+| test-review | `.bmad/bmm/workflows/testarch/test-review/` | Active | No            |
+| trace       | `.bmad/bmm/workflows/testarch/trace/`       | Active | No            |
+
+</details>
+
+<details>
+<summary>BMM Other (4 active)</summary>
+
+| Workflow              | Path                                         | Status | Needs Update? |
+| --------------------- | -------------------------------------------- | ------ | ------------- |
+| document-project      | `.bmad/bmm/workflows/document-project/`      | Active | No            |
+| migrate-to-federation | `.bmad/bmm/workflows/migrate-to-federation/` | Active | No            |
+| workflow-status       | `.bmad/bmm/workflows/workflow-status/`       | Active | Entity-first  |
+| workflow-status/init  | `.bmad/bmm/workflows/workflow-status/init/`  | Active | Entity-first  |
+
+</details>
+
+<details>
+<summary>CIS Module (4 active)</summary>
+
+| Workflow            | Path                                       | Status | Needs Update? |
+| ------------------- | ------------------------------------------ | ------ | ------------- |
+| design-thinking     | `.bmad/cis/workflows/design-thinking/`     | Active | No            |
+| innovation-strategy | `.bmad/cis/workflows/innovation-strategy/` | Active | No            |
+| problem-solving     | `.bmad/cis/workflows/problem-solving/`     | Active | No            |
+| storytelling        | `.bmad/cis/workflows/storytelling/`        | Active | No            |
+
+</details>
+
+<details>
+<summary>Core Module (2 active)</summary>
+
+| Workflow      | Path                                  | Status | Needs Update? |
+| ------------- | ------------------------------------- | ------ | ------------- |
+| brainstorming | `.bmad/core/workflows/brainstorming/` | Active | No            |
+| party-mode    | `.bmad/core/workflows/party-mode/`    | Active | No            |
+
+</details>
+
+<details>
+<summary>Custom/Federated-Validation (3 active)</summary>
+
+| Workflow              | Path                                                                         | Status | Needs Update? |
+| --------------------- | ---------------------------------------------------------------------------- | ------ | ------------- |
+| validate-constitution | `.bmad/custom/modules/federated-validation/workflows/validate-constitution/` | Active | No            |
+| validate-domain-prd   | `.bmad/custom/modules/federated-validation/workflows/validate-domain-prd/`   | Active | No            |
+| validate-epic         | `.bmad/custom/modules/federated-validation/workflows/validate-epic/`         | Active | No            |
+
+</details>
+
+**Workflows Requiring Updates Summary:**
+
+| Update Type               | Count  | Target Phases |
+| ------------------------- | ------ | ------------- |
+| Entity-first detection    | 33     | 1.02-1.05     |
+| Atom integration          | 9      | 1.07-1.08     |
+| **Total needing updates** | **42** |               |
+
+**Phase 1.02 Completion Notes (2025-12-04):**
+
+**Result: NO UPGRADE NEEDED — Entity-first detection already implemented.**
+
+The PRD Triad uses a sophisticated two-tier routing architecture:
+
+| Workflow               | Type             | Entity Detection                                                          |
+| ---------------------- | ---------------- | ------------------------------------------------------------------------- |
+| `prd/`                 | Unified Creation | Federated hierarchy variables (`output_folder_resolved`, `current_level`) |
+| `validate-prd/`        | Router           | `select-entity.xml` → `detect-entity-type.xml` → routes to system/domain  |
+| `amend-prd/`           | Router           | `select-entity.xml` → `detect-entity-type.xml` → routes to system/domain  |
+| `validate-system-prd/` | System-specific  | Fixed Constitution path                                                   |
+| `validate-domain-prd/` | Domain-specific  | Entity-specific checklists per type                                       |
+| `amend-system-prd/`    | System-specific  | Constitution amendment                                                    |
+| `amend-domain-prd/`    | Domain-specific  | Inheritance-aware amendment                                               |
+
+**Key Components Verified:**
+
+| Component                 | Path                                       | Status                                |
+| ------------------------- | ------------------------------------------ | ------------------------------------- |
+| Entity Detection Task     | `.bmad/bmm/tasks/detect-entity-type.xml`   | ✅ Five entity types, manifest lookup |
+| Entity Selection Task     | `.bmad/bmm/tasks/select-entity.xml`        | ✅ Lightweight menu, fuzzy matching   |
+| Inheritance Validation    | `.bmad/bmm/tasks/validate-inheritance.xml` | ✅ Referenced in workflows            |
+| Traceability Verification | `.bmad/bmm/tasks/verify-traceability.xml`  | ✅ Referenced in workflows            |
+
+**Deferred Items (Non-blocking):**
+
+| Item                       | Severity | Phase | Notes                                                                                                                                             |
+| -------------------------- | -------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entity-specific checklists | LOW      | 3-4   | `infrastructure-prd-checklist.md`, `strategic-prd-checklist.md`, `coordination-prd-checklist.md`, `business-prd-checklist.md` — may need creation |
+| `entity-menu.yaml`         | LOW      | 3-4   | Verify exists at `.bmad/bmm/data/entity-menu.yaml`                                                                                                |
+
+**Phase 1.03 Completion Notes (2025-12-04):**
+
+**Result: UPGRADED — Entity-first detection added to create-architecture.**
+
+The Architecture Triad was upgraded from Constitution-specific to entity-agnostic:
+
+| Before                                            | After                                     |
+| ------------------------------------------------- | ----------------------------------------- |
+| `create-system-architecture/` (Constitution-only) | `create-architecture/` (Entity-first)     |
+| Hardcoded `entity_type: constitution`             | Runtime detection via `select-entity.xml` |
+| Single template                                   | Two templates: constitution + domain      |
+
+**Changes Made:**
+
+1. **Restored** `create-system-architecture/` from archive
+2. **Updated** `workflow.yaml`:
+   - Removed hardcoded Constitution entity type
+   - Added entity-first detection variables
+   - Added `select_entity_task` reference
+   - Added `templates.constitution` and `templates.domain`
+   - Added `checklists.constitution` and `checklists.domain`
+   - Added `parent_architecture_path` for inheritance validation
+   - Added `validate_inheritance_task` reference
+3. **Rewrote** `instructions.md`:
+   - Step 0: Entity detection via `select-entity` task
+   - Conditional logic: Constitution vs Domain-specific sections
+   - Inheritance validation for non-Constitution entities
+   - Dynamic template and checklist selection
+4. **Copied** `domain-architecture-template.md` from archive
+5. **Created** shared resource files:
+   - `decision-catalog.yaml` — architectural decision options
+   - `architecture-patterns.yaml` — pattern reference catalog
+   - `pattern-categories.csv` — pattern classification data
+6. **Renamed** folder to `create-architecture/`
+
+**Final Structure:**
+
+```
+.bmad/bmm/workflows/3-solutioning/create-architecture/
+├── architecture-patterns.yaml
+├── constitution-architecture-template.md
+├── decision-catalog.yaml
+├── domain-architecture-template.md
+├── instructions.md
+├── pattern-categories.csv
+└── workflow.yaml
+```
+
+**Triad Status:**
+
+| Workflow                        | Entity-First      | Status       |
+| ------------------------------- | ----------------- | ------------ |
+| `create-architecture/`          | ✅ Yes            | UPGRADED     |
+| `validate-architecture/`        | ✅ Yes (router)   | Already had  |
+| `amend-architecture/`           | ✅ Yes (router)   | Already had  |
+| `validate-system-architecture/` | Constitution-only | Sub-workflow |
+| `validate-domain-architecture/` | Domain-specific   | Sub-workflow |
+| `amend-system-architecture/`    | Constitution-only | Sub-workflow |
+| `amend-domain-architecture/`    | Domain-specific   | Sub-workflow |
+
+**Phase 1.04 Completion Notes (2025-12-04):**
+
+**Result: NO UPGRADE NEEDED — Entity-first detection already implemented.**
+
+The UX Triad uses the identical two-tier routing architecture as the PRD Triad:
+
+| Workflow              | Type             | Entity Detection                               |
+| --------------------- | ---------------- | ---------------------------------------------- |
+| `create-ux/`          | Unified Creation | `select-entity.xml` → `detect-entity-type.xml` |
+| `validate-ux/`        | Router           | `select-entity.xml` → routes to system/domain  |
+| `amend-ux/`           | Router           | `select-entity.xml` → routes to system/domain  |
+| `validate-system-ux/` | System-specific  | Fixed Constitution path                        |
+| `validate-domain-ux/` | Domain-specific  | Entity-specific checklists per type            |
+| `amend-system-ux/`    | System-specific  | Constitution UX amendment                      |
+| `amend-domain-ux/`    | Domain-specific  | Inheritance-aware amendment                    |
+
+**Entity-Specific UX Checklists Verified:**
+
+| Checklist      | Path                                                  | Status    |
+| -------------- | ----------------------------------------------------- | --------- |
+| Constitution   | `.bmad/bmm/checklists/constitution-ux-checklist.md`   | ✅ EXISTS |
+| Infrastructure | `.bmad/bmm/checklists/infrastructure-ux-checklist.md` | ✅ EXISTS |
+| Strategic      | `.bmad/bmm/checklists/strategic-ux-checklist.md`      | ✅ EXISTS |
+| Coordination   | `.bmad/bmm/checklists/coordination-ux-checklist.md`   | ✅ EXISTS |
+| Business       | `.bmad/bmm/checklists/business-ux-checklist.md`       | ✅ EXISTS |
+
+**Key Observations:**
+
+1. **Unified Creation Workflow** — `create-ux/` handles ALL entity types with conditional logic for Constitution vs domain entities
+2. **Inheritance Validation** — Non-Constitution entities invoke `validate-inheritance.xml` before finalization
+3. **Template Selection** — Two templates: `constitution-ux-template.md` and `domain-ux-template.md`
+4. **Full Coverage** — All 5 entity-specific checklists exist (unlike PRD Triad which has deferred items)
+
+**Comparison to PRD Triad:**
+
+| Feature                    | PRD Triad   | UX Triad    |
+| -------------------------- | ----------- | ----------- |
+| Entity-first detection     | ✅          | ✅          |
+| Router workflows           | ✅          | ✅          |
+| Entity-specific checklists | ⚠️ Deferred | ✅ Complete |
+| Inheritance validation     | ✅          | ✅          |
+
+**Phase 1.05 Completion Notes (2025-12-04):**
+
+**Result: NO UPGRADE NEEDED — Entity-first detection already implemented.**
+
+The Epics Triad has full entity-first detection with a sophisticated three-tier architecture:
+
+| Workflow                    | Type             | Entity Detection                                        |
+| --------------------------- | ---------------- | ------------------------------------------------------- |
+| `create-epics/`             | Unified Creation | `select-entity.xml` → conditional logic per entity type |
+| `create-epics-and-stories/` | Unified          | Federated hierarchy via `output_folder_resolved`        |
+| `validate-epics/`           | Router           | `select-entity.xml` → routes to system/domain           |
+| `amend-epics/`              | Router           | `select-entity.xml` → routes to system/domain           |
+| `validate-system-epics/`    | System-specific  | Fixed Constitution path                                 |
+| `validate-domain-epics/`    | Domain-specific  | Entity-specific checklists + inheritance validation     |
+| `amend-system-epics/`       | System-specific  | Impact analysis on downstream entities                  |
+| `amend-domain-epics/`       | Domain-specific  | Inheritance-aware amendment                             |
+
+**Key Implementation Features:**
+
+1. **Five Entity Types Support** — `create-epics/` has explicit conditional blocks for all five entity types:
+   - Constitution: PR-xxx, IC-xxx, NFR-xxx extraction
+   - Infrastructure Module: FR-{MOD}-xxx + interface documentation
+   - Strategic Container: FR-{CAT}-xxx + strategic alignment
+   - Coordination Unit: FR-{CAT}-{SUB}-xxx + orchestration requirements
+   - Business Module: FR-{CAT}-{SUB}-{MOD}-xxx + feature requirements
+
+2. **Two-Tier Routing** — Router workflows (`validate-epics/`, `amend-epics/`) invoke:
+   - `select-entity.xml` for lightweight entity selection
+   - `detect-entity-type.xml` for manifest.yaml lookup (when needed)
+
+3. **Inheritance Validation** — All non-Constitution entities invoke `validate-inheritance.xml` (step 4)
+
+4. **Traceability Verification** — `verify-traceability.xml` ensures PRD→Epic coverage (step 4)
+
+5. **Entity-Specific Checklists** — `validate-domain-epics/` references:
+   - `.bmad/bmm/checklists/infrastructure-epics-checklist.md`
+   - `.bmad/bmm/checklists/strategic-epics-checklist.md`
+   - `.bmad/bmm/checklists/coordination-epics-checklist.md`
+   - `.bmad/bmm/checklists/business-epics-checklist.md`
+
+**Triad Comparison Summary:**
+
+| Triad        | Entity-First       | Router Pattern | Checklists  | Inheritance |
+| ------------ | ------------------ | -------------- | ----------- | ----------- |
+| PRD          | ✅                 | ✅             | ⚠️ Deferred | ✅          |
+| Architecture | ✅ (upgraded 1.03) | ✅             | ✅          | ✅          |
+| UX           | ✅                 | ✅             | ✅ Complete | ✅          |
+| **Epics**    | ✅                 | ✅             | ✅ Complete | ✅          |
+
+**Phase 1.01-1.05 Cumulative Progress:**
+
+| Triad        | Workflows Audited | Upgrades Needed            | Status |
+| ------------ | ----------------- | -------------------------- | ------ |
+| PRD          | 12                | 0 (already implemented)    | ✅     |
+| Architecture | 7                 | 1 (`create-architecture/`) | ✅     |
+| UX           | 7                 | 0 (already implemented)    | ✅     |
+| Epics        | 8                 | 0 (already implemented)    | ✅     |
+| **Total**    | **34**            | **1**                      | ✅     |
 
 ### 11.4 Phase 2: Migration (5 micro-phases)
 
@@ -641,10 +1132,10 @@ Five rules enforced at pre-commit and CI:
 
 ### Phase 0: SSOT Foundation
 
-- [ ] **0.01** Atom Directory Setup
-- [ ] **0.02** Atom Template Creation
-- [ ] **0.03** Atom CRUD Skills
-- [ ] **0.04** Create `validate-atoms.ts` script
+- [x] **0.01** Atom Directory Setup — `docs/_atoms/` created with `_index.md`, `_schema.yaml`
+- [x] **0.02** Atom Template Creation — `docs/_atoms/_template.md` created
+- [x] **0.03** Atom CRUD Scripts — 4 TypeScript scripts in `scripts/atoms/` (not XML tasks)
+- [ ] **0.04** Create `validate-atoms.ts` script (includes index auto-generation)
 - [ ] **0.05** Gate Validation Rules
 - [ ] **0.06** Product Soul Template
 - [ ] **0.07** Pre-commit Hook Setup
@@ -653,7 +1144,7 @@ Five rules enforced at pre-commit and CI:
 
 ### Phase 1: Workflow Updates
 
-- [ ] **1.01** Inventory all 92 current workflows
+- [x] **1.01** Inventory all 92 current workflows — VERIFIED: 85 active + 6 archived + 1 template = 92 total
 - [ ] **1.02-1.05** Update existing triads (entity-first detection)
 - [ ] **1.06** Create 2 NEW Product-Soul workflows
 - [ ] **1.07-1.08** Create 13 NEW workflows + update existing
@@ -742,6 +1233,28 @@ pnpm exec tsx scripts/validation/validate-dependencies.ts --path docs
 pnpm exec tsx scripts/validation/validate-atoms.ts
 ```
 
+### Atom CRUD Operations (Phase 0.03)
+
+```bash
+# Create a new atom
+pnpm exec tsx scripts/atoms/atom-create.ts --entity SYS --type requirement --title "My Atom"
+pnpm exec tsx scripts/atoms/atom-create.ts --entity SHL --type interface --title "Shell API" --parent SYS.001
+
+# Search atoms
+pnpm exec tsx scripts/atoms/atom-search.ts --entity SHL
+pnpm exec tsx scripts/atoms/atom-search.ts --type requirement --status approved
+pnpm exec tsx scripts/atoms/atom-search.ts --title auth --json
+
+# Amend atom metadata
+pnpm exec tsx scripts/atoms/atom-amend.ts --id SYS.001 --status approved
+pnpm exec tsx scripts/atoms/atom-amend.ts --id SYS.001 --title "New Title"
+pnpm exec tsx scripts/atoms/atom-amend.ts --id SYS.001 --add-tag security
+
+# Deprecate atom (with safety checks)
+pnpm exec tsx scripts/atoms/atom-deprecate.ts --id SYS.001
+pnpm exec tsx scripts/atoms/atom-deprecate.ts --id SYS.001 --force  # Skip safety checks
+```
+
 ### Workflow-Based
 
 | Type         | Command                                     |
@@ -755,14 +1268,21 @@ pnpm exec tsx scripts/validation/validate-atoms.ts
 
 ## Appendix D: Critical Files Reference
 
-| File                                                           | Purpose                           |
-| -------------------------------------------------------------- | --------------------------------- |
-| `docs/platform/architecture/adr-020-sibling-dependency-law.md` | Sibling Dependency Law definition |
-| `docs/platform/document-contracts.yaml`                        | Entity document structure rules   |
-| `scripts/validation/validate-dependencies.ts`                  | Dependency validation script      |
-| `.claude/skills/validate-sibling-dependency/SKILL.md`          | Claude skill for ADR-020          |
-| `docs/manifest.yaml`                                           | Documentation structure SSOT      |
-| `docs/product-soul.md`                                         | Constitution Product Soul         |
+| File                                                           | Purpose                            |
+| -------------------------------------------------------------- | ---------------------------------- |
+| `docs/platform/architecture/adr-020-sibling-dependency-law.md` | Sibling Dependency Law definition  |
+| `docs/document-contracts.yaml`                                 | Entity document structure rules    |
+| `scripts/validation/validate-dependencies.ts`                  | Dependency validation script       |
+| `.claude/skills/validate-sibling-dependency/SKILL.md`          | Claude skill for ADR-020           |
+| `docs/manifest.yaml`                                           | Documentation structure SSOT       |
+| `docs/product-soul.md`                                         | Constitution Product Soul          |
+| `docs/_atoms/_index.md`                                        | Atom repository index + ID scheme  |
+| `docs/_atoms/_schema.yaml`                                     | Atom frontmatter JSON schema       |
+| `docs/_atoms/_template.md`                                     | Template for creating new atoms    |
+| `scripts/atoms/atom-create.ts`                                 | Create new atoms                   |
+| `scripts/atoms/atom-search.ts`                                 | Search atoms by criteria           |
+| `scripts/atoms/atom-amend.ts`                                  | Modify atom frontmatter            |
+| `scripts/atoms/atom-deprecate.ts`                              | Deprecate atoms with safety checks |
 
 ---
 
@@ -986,6 +1506,14 @@ These existing workflows need entity-first detection and/or atom integration:
 | -------------------------- | ------ | --------------- |
 | Module doc scaffolds       | High   | Epic 2+ backlog |
 | Sprint status regeneration | Low    | Per-module      |
+
+### PRD Triad Infrastructure (Phase 1.02)
+
+| Item                           | Path                                                 | Effort | Notes                                                                                                                                 |
+| ------------------------------ | ---------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Entity-specific PRD checklists | `.bmad/bmm/checklists/`                              | Low    | Create: `infrastructure-prd-checklist.md`, `strategic-prd-checklist.md`, `coordination-prd-checklist.md`, `business-prd-checklist.md` |
+| Entity menu data file          | `.bmad/bmm/data/entity-menu.yaml`                    | Low    | Verify exists; referenced by `select-entity.xml` for lightweight entity selection                                                     |
+| Constitution PRD checklist     | `.bmad/bmm/checklists/constitution-prd-checklist.md` | Low    | Verify exists; referenced by `validate-system-prd`                                                                                    |
 
 ---
 

@@ -1,0 +1,20 @@
+category,pattern,description,applicable_to,priority
+structural,layered,"Horizontal layers for separation",all,high
+structural,hexagonal,"Ports and adapters architecture",complex_domains,medium
+structural,vertical_slice,"Feature-based organization",feature_teams,medium
+data,repository,"Abstract data access",all,high
+data,unit_of_work,"Atomic transaction management",complex_transactions,medium
+data,cqrs,"Separate read/write models",read_heavy,low
+integration,api_gateway,"Single entry point",microservices,high
+integration,backend_for_frontend,"Client-specific backends",multi_client,medium
+integration,saga,"Distributed transaction coordination",distributed,medium
+integration,outbox,"Reliable event publishing",event_driven,high
+resilience,circuit_breaker,"Fail fast on dependency failure",distributed,high
+resilience,retry_with_backoff,"Handle transient failures",all,high
+resilience,bulkhead,"Isolate failure domains",distributed,medium
+security,zero_trust,"Verify every request",high_security,high
+security,rbac,"Role-based access control",most_apps,high
+security,abac,"Attribute-based access control",complex_permissions,low
+multitenancy,database_per_tenant,"Complete tenant isolation",enterprise,low
+multitenancy,schema_per_tenant,"Schema-level isolation",regulated,medium
+multitenancy,row_level_security,"Row-level tenant filtering",saas,high

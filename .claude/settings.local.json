@@ -201,7 +201,8 @@
       "Bash(\"docs/platform/core-api/sprint-artifacts/1-3-user-authentication-signup.md\" )",
       "Bash(\"docs/platform/core-api/sprint-artifacts/1-4-organization-creation-provisioning.md\" )",
       "Bash(\"docs/platform/core-api/sprint-artifacts/1-6-thin-vertical-slice-signup-brief-event.md\" )",
-      "Bash(\"docs/platform/shell/sprint-artifacts/1-5-application-shell-navigation.md\")"
+      "Bash(\"docs/platform/shell/sprint-artifacts/1-5-application-shell-navigation.md\")",
+      "Bash(pnpm run validate:atoms:*)"
     ],
     "deny": [],
     "ask": []

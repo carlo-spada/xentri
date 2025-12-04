@@ -1,4 +1,10 @@
 # Lint staged files (fast - only changed files)
 pnpm lint-staged
 
+# Validate atoms if any were staged
+if git diff --cached --name-only | grep -q '^docs/_atoms/'; then
+  echo "🔍 Validating SSOT atoms..."
+  pnpm run validate:atoms --staged
+fi
+
 

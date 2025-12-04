@@ -1,0 +1,28 @@
+# Product Soul Validation Workflow
+name: validate-product-soul
+description: 'Validates the Product Soul document against BMAD standards, ensuring vision clarity, strategic alignment, and completeness for downstream consumption.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Product Soul is Constitution-level ONLY - special root location
+# No entity detection needed - this workflow targets a single document
+product_soul_path: '{output_folder}/product-soul.md'
+product_brief_checklist: '{project-root}/.bmad/bmm/workflows/1-analysis/product-brief/checklist.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/1-analysis/validate-product-soul'
+instructions: '{installed_path}/instructions.md'
+checklist: '{installed_path}/checklist.md'
+validation_report_template: '{installed_path}/validation-report-template.md'
+
+# Output configuration
+default_output_file: '{output_folder}/product-soul-validation-report-{{date}}.md'
+
+standalone: true

@@ -1,0 +1,98 @@
+# Atom Frontmatter Schema
+# Version: 1.0.0
+# Purpose: Defines required and optional fields for atom frontmatter
+
+$schema: 'http://json-schema.org/draft-07/schema#'
+title: Atom Frontmatter Schema
+description: Schema for SSOT atom frontmatter validation
+
+type: object
+required:
+  - id
+  - type
+  - title
+  - status
+  - entity_path
+  - created
+  - updated
+  - author
+
+properties:
+  id:
+    type: string
+    pattern: "^[A-Z]{3}\\.[0-9]{3}(-[A-Z]{3}\\.[0-9]{3})*$"
+    description: 'Hierarchical atom ID encoding full lineage'
+    examples:
+      - 'SYS.001'
+      - 'SYS.001-SHL.001'
+      - 'SYS.003-STR.001-PUL.001'
+
+  type:
+    type: string
+    enum:
+      - requirement
+      - interface
+      - decision
+      - constraint
+    description: 'The type of authoritative content this atom represents'
+
+  title:
+    type: string
+    minLength: 5
+    maxLength: 100
+    description: 'Human-readable title for the atom'
+
+  status:
+    type: string
+    enum:
+      - draft
+      - approved
+      - deprecated
+    description: 'Current status of the atom'
+
+  entity_path:
+    type: string
+    pattern: '^docs/[a-z0-9-/]+/$'
+    description: 'Path to the owning entity directory'
+    examples:
+      - 'docs/platform/'
+      - 'docs/platform/shell/'
+      - 'docs/strategy/pulse/'
+
+  created:
+    type: string
+    format: date
+    description: 'ISO date when atom was created'
+
+  updated:
+    type: string
+    format: date
+    description: 'ISO date when atom was last updated'
+
+  author:
+    type: string
+    description: 'Agent or human who created/owns this atom'
+
+  tags:
+    type: array
+    items:
+      type: string
+    description: 'Optional searchable tags for filtering atoms'
+
+# Validation rules applied by validate-atoms.ts
+additionalProperties: false
+
+# Entity code reference (for validation)
+x-entity-codes:
+  SYS: 'Constitution (docs/platform/)'
+  SHL: 'Shell Module (docs/platform/shell/)'
+  UI: 'UI Module (docs/platform/ui/)'
+  API: 'Core API Module (docs/platform/core-api/)'
+  TSS: 'TS-Schema Module (docs/platform/ts-schema/)'
+  STR: 'Strategy Container (docs/strategy/)'
+  MKT: 'Marketing Container (docs/marketing/)'
+  FIN: 'Finance Container (docs/finance/)'
+  LEG: 'Legal Container (docs/legal/)'
+  OPS: 'Operations Container (docs/operations/)'
+  SAL: 'Sales Container (docs/sales/)'
+  TEM: 'Team Container (docs/team/)'

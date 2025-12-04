@@ -1,0 +1,77 @@
+# Architecture Decision Catalog
+# Reference for common architectural decisions and their trade-offs
+
+decisions:
+  architectural_style:
+    question: 'What architectural style best supports your vision?'
+    options:
+      - name: microservices
+        description: 'Independent, loosely-coupled services'
+        pros: ['Independent deployment', 'Technology flexibility', 'Scalability per service']
+        cons: ['Distributed complexity', 'Network latency', 'Operational overhead']
+        best_for: ['Large teams', 'Complex domains', 'High scale requirements']
+      - name: modular_monolith
+        description: 'Single deployable with clear module boundaries'
+        pros: ['Simple deployment', 'Lower latency', 'Easier debugging']
+        cons: ['Shared database', 'Coupled releases', 'Single point of failure']
+        best_for: ['Small teams', 'Early stage products', 'Rapid iteration']
+      - name: hybrid
+        description: 'Core monolith with extracted services for specific needs'
+        pros: ['Pragmatic balance', 'Gradual evolution']
+        cons: ['Mixed complexity', 'Inconsistent patterns']
+        best_for: ['Growing products', 'Teams transitioning to microservices']
+
+  data_architecture:
+    question: 'How should data be organized and persisted?'
+    options:
+      - name: single_database
+        description: 'One database for all data'
+        best_for: ['Simple applications', 'Strong consistency needs']
+      - name: database_per_service
+        description: 'Each service owns its data'
+        best_for: ['Microservices', 'Independent scaling']
+      - name: event_sourcing
+        description: 'Store events, derive state'
+        best_for: ['Audit requirements', 'Complex domain logic']
+      - name: cqrs
+        description: 'Separate read and write models'
+        best_for: ['Read-heavy workloads', 'Complex queries']
+
+  integration_pattern:
+    question: 'How should components communicate?'
+    options:
+      - name: synchronous
+        description: 'Request/response via REST or gRPC'
+        best_for: ['Simple interactions', 'Low latency needs']
+      - name: asynchronous
+        description: 'Message queues and event streams'
+        best_for: ['Decoupled services', 'Resilience']
+      - name: event_driven
+        description: 'Publish/subscribe event backbone'
+        best_for: ['Reactive systems', 'Complex workflows']
+
+  authentication:
+    question: 'How will users authenticate?'
+    options:
+      - name: jwt
+        description: 'JSON Web Tokens'
+        best_for: ['Stateless APIs', 'Microservices']
+      - name: session
+        description: 'Server-side sessions'
+        best_for: ['Traditional web apps', 'Simple setup']
+      - name: oauth2
+        description: 'OAuth 2.0 flows'
+        best_for: ['Third-party integrations', 'Enterprise SSO']
+
+  deployment_model:
+    question: 'Where will the application run?'
+    options:
+      - name: cloud_native
+        description: 'Containers on Kubernetes'
+        best_for: ['Scalability', 'Multi-cloud']
+      - name: serverless
+        description: 'Functions as a Service'
+        best_for: ['Variable load', 'Cost optimization']
+      - name: platform_as_service
+        description: 'Managed platforms (Railway, Vercel, etc.)'
+        best_for: ['Simplicity', 'Rapid deployment']

@@ -1,0 +1,29 @@
+# Product Soul Amendment Workflow
+name: amend-product-soul
+description: 'Guided amendment workflow for the Product Soul document. Handles validation-driven fixes, scope changes, and vision refinements while maintaining document integrity.'
+author: 'BMad'
+
+# Critical variables from config
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+date: system-generated
+
+# Product Soul is Constitution-level ONLY - special root location
+product_soul_path: '{output_folder}/product-soul.md'
+
+# Related workflows and artifacts
+validate_workflow: '{project-root}/.bmad/bmm/workflows/1-analysis/validate-product-soul/workflow.yaml'
+product_brief_template: '{project-root}/.bmad/bmm/workflows/1-analysis/product-brief/template.md'
+
+# Workflow components
+installed_path: '{project-root}/.bmad/bmm/workflows/1-analysis/amend-product-soul'
+instructions: '{installed_path}/instructions.md'
+amendment_log_template: '{installed_path}/amendment-log-template.md'
+
+# Output configuration
+amendment_log_file: '{output_folder}/product-soul-amendment-log-{{date}}.md'
+
+standalone: true
