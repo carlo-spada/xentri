@@ -15,25 +15,33 @@
 ### Types/Schemas
 
 ```typescript
-{{type_definitions}}
+{
+  {
+    type_definitions
+  }
+}
 ```
 
 ### API Endpoints (if applicable)
 
-| Method | Path | Description |
-|--------|------|-------------|
+| Method     | Path     | Description     |
+| ---------- | -------- | --------------- |
 | {{method}} | {{path}} | {{description}} |
 
 ### Events (if applicable)
 
-| Event Type | Payload | Description |
-|------------|---------|-------------|
+| Event Type     | Payload            | Description     |
+| -------------- | ------------------ | --------------- |
 | {{event_type}} | {{payload_schema}} | {{description}} |
 
 ## Usage Example
 
 ```typescript
-{{usage_example}}
+{
+  {
+    usage_example
+  }
+}
 ```
 
 ## Versioning
@@ -44,16 +52,17 @@
 ## Dependencies
 
 This interface depends on:
+
 - {{dependency_list}}
 
 ## Consumers
 
-| Module | Usage | Since |
-|--------|-------|-------|
+| Module       | Usage        | Since          |
+| ------------ | ------------ | -------------- |
 | {{consumer}} | {{how_used}} | {{since_date}} |
 
 ## Change Log
 
-| Date | Change | Issue |
-|------|--------|-------|
+| Date     | Change                       | Issue     |
+| -------- | ---------------------------- | --------- |
 | {{date}} | Initial interface definition | {{issue}} |

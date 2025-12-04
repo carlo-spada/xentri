@@ -1,12 +1,12 @@
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { getAuth } from '@clerk/fastify';
-import { getPrisma } from '../infra/db.js';
-import { orgProvisioningService } from '../domain/orgs/OrgProvisioningService.js';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import { getAuth } from '@clerk/fastify'
+import { getPrisma } from '../infra/db.js'
+import { orgProvisioningService } from '../domain/orgs/OrgProvisioningService.js'
 import {
   UpdateOrgSettingsSchema,
   type GetCurrentOrgResponse,
   type UpdateOrgSettingsResponse,
-} from '@xentri/ts-schema';
+} from '@xentri/ts-schema'
 
 // ===================
 // Types
@@ -14,10 +14,10 @@ import {
 
 interface AuthenticatedRequest extends FastifyRequest {
   auth: {
-    userId: string;
-    orgId: string;
-    orgRole: string;
-  };
+    userId: string
+    orgId: string
+    orgRole: string
+  }
 }
 
 // ===================
@@ -34,34 +34,34 @@ async function getCurrentOrg(
   request: FastifyRequest,
   reply: FastifyReply
 ): Promise<GetCurrentOrgResponse | void> {
-  const auth = getAuth(request);
+  const auth = getAuth(request)
 
   if (!auth.userId || !auth.orgId) {
     return reply.status(401).send({
       error: 'Unauthorized',
       message: 'Valid authentication with organization context required',
-    });
+    })
   }
 
-  const prisma = getPrisma();
+  const prisma = getPrisma()
 
   // Fetch org with settings in transaction with RLS context
   const result = await prisma.$transaction(async (tx) => {
-    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${auth.orgId}, true)`;
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${auth.orgId}, true)`
 
     const org = await tx.organization.findUnique({
       where: { id: auth.orgId },
       include: { settings: true },
-    });
+    })
 
-    return org;
-  });
+    return org
+  })
 
   if (!result) {
     return reply.status(404).send({
       error: 'Not Found',
       message: 'Organization not found',
-    });
+    })
   }
 
   // Handle case where settings don't exist (shouldn't happen after provisioning)
@@ -71,7 +71,7 @@ async function getCurrentOrg(
     preferences: {},
     createdAt: result.createdAt,
     updatedAt: result.updatedAt,
-  };
+  }
 
   return {
     org: {
@@ -88,7 +88,7 @@ async function getCurrentOrg(
       created_at: result.createdAt.toISOString(),
       updated_at: result.updatedAt.toISOString(),
     },
-  };
+  }
 }
 
 /**
@@ -101,34 +101,34 @@ async function updateOrgSettings(
   request: FastifyRequest,
   reply: FastifyReply
 ): Promise<UpdateOrgSettingsResponse | void> {
-  const auth = getAuth(request);
-  const prisma = getPrisma();
+  const auth = getAuth(request)
+  const prisma = getPrisma()
 
   if (!auth.userId || !auth.orgId) {
     return reply.status(401).send({
       error: 'Unauthorized',
       message: 'Valid authentication with organization context required',
-    });
+    })
   }
 
   // Extract validated auth values (TypeScript narrowing)
-  const { userId, orgId } = auth;
+  const { userId, orgId } = auth
 
   // Validate request body
-  const parseResult = UpdateOrgSettingsSchema.safeParse(request.body);
+  const parseResult = UpdateOrgSettingsSchema.safeParse(request.body)
   if (!parseResult.success) {
     return reply.status(400).send({
       error: 'Bad Request',
       message: 'Invalid request body',
       details: parseResult.error.errors,
-    });
+    })
   }
 
-  const { preferences } = parseResult.data;
+  const { preferences } = parseResult.data
 
   // Verify membership role from DB (owner-only)
   const membership = await prisma.$transaction(async (tx) => {
-    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
     return tx.member.findUnique({
       where: {
         orgId_userId: {
@@ -137,25 +137,25 @@ async function updateOrgSettings(
         },
       },
       select: { role: true },
-    });
-  });
+    })
+  })
 
   if (!membership || membership.role !== 'owner') {
     return reply.status(403).send({
       error: 'Forbidden',
       message: 'Only organization owners can update settings',
-    });
+    })
   }
 
   // Nothing to update
   if (!preferences || Object.keys(preferences).length === 0) {
     // Return current settings
-    const currentSettings = await orgProvisioningService.getOrgSettings(auth.orgId);
+    const currentSettings = await orgProvisioningService.getOrgSettings(auth.orgId)
     if (!currentSettings) {
       return reply.status(404).send({
         error: 'Not Found',
         message: 'Organization settings not found',
-      });
+      })
     }
 
     return {
@@ -166,11 +166,11 @@ async function updateOrgSettings(
         created_at: currentSettings.createdAt.toISOString(),
         updated_at: currentSettings.updatedAt.toISOString(),
       },
-    };
+    }
   }
 
   // Update preferences
-  const updated = await orgProvisioningService.updateOrgPreferences(auth.orgId, preferences);
+  const updated = await orgProvisioningService.updateOrgPreferences(auth.orgId, preferences)
 
   return {
     settings: {
@@ -180,7 +180,7 @@ async function updateOrgSettings(
       created_at: updated.createdAt.toISOString(),
       updated_at: updated.updatedAt.toISOString(),
     },
-  };
+  }
 }
 
 // ===================
@@ -189,8 +189,8 @@ async function updateOrgSettings(
 
 export default async function orgsRoutes(fastify: FastifyInstance): Promise<void> {
   // GET /api/v1/orgs/current
-  fastify.get('/api/v1/orgs/current', getCurrentOrg);
+  fastify.get('/api/v1/orgs/current', getCurrentOrg)
 
   // PATCH /api/v1/orgs/current/settings
-  fastify.patch('/api/v1/orgs/current/settings', updateOrgSettings);
+  fastify.patch('/api/v1/orgs/current/settings', updateOrgSettings)
 }

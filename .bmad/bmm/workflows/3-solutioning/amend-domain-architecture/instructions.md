@@ -62,7 +62,7 @@ Options:
 - Current state
 - Proposed new state
 - Rationale for change
-</action>
+  </action>
 
 </step>
 
@@ -80,17 +80,17 @@ Options:
   <output>
   ❌ ALIGNMENT VIOLATION DETECTED
 
-  Your proposed change contradicts parent architecture:
-  {violation_details}
+Your proposed change contradicts parent architecture:
+{violation_details}
 
-  Options:
+Options:
 
-  1. Modify your change to align
-  2. Request parent amendment first
-  3. Document as local exception (requires ADR)
-  </output>
+1. Modify your change to align
+2. Request parent amendment first
+3. Document as local exception (requires ADR)
+   </output>
 
-  <ask>How would you like to proceed? (1/2/3)</ask>
+<ask>How would you like to proceed? (1/2/3)</ask>
 </check>
 </step>
 
@@ -175,17 +175,17 @@ Options:
   📋 CHILD UPDATE RECOMMENDATIONS
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  The following child architectures may need review:
+The following child architectures may need review:
 
-  {child_update_list}
+{child_update_list}
 
-  **Recommended Actions:**
+**Recommended Actions:**
 
-  1. Review each impacted document for alignment
-  2. Use amend-domain-architecture for updates
-  3. Validate after all changes complete
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  </output>
+1. Review each impacted document for alignment
+2. Use amend-domain-architecture for updates
+3. Validate after all changes complete
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
 
 </check>
 

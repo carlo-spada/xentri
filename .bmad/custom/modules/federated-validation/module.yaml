@@ -19,74 +19,74 @@
 #   - Custom project-specific validation rules
 
 name: federated-validation
-description: "Workflows and checklists for validating the Five Entity Types Model (Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module)"
+description: 'Workflows and checklists for validating the Five Entity Types Model (Constitution, Infrastructure Module, Strategic Container, Coordination Unit, Business Module)'
 version: 2.1.0
 author: BMad Builder
 status: deprecated-partial
 
 deprecation:
-  notice: "PRD checklists and validation workflows superseded by BMM core"
-  since: "2.1.0"
+  notice: 'PRD checklists and validation workflows superseded by BMM core'
+  since: '2.1.0'
   migration_path:
-    constitution_checklist: ".bmad/bmm/checklists/constitution-prd-checklist.md"
-    domain_checklists: ".bmad/bmm/checklists/{entity_type}-prd-checklist.md"
-    validate_workflows: ".bmad/bmm/workflows/2-plan-workflows/validate-{system|domain}-prd/"
+    constitution_checklist: '.bmad/bmm/checklists/constitution-prd-checklist.md'
+    domain_checklists: '.bmad/bmm/checklists/{entity_type}-prd-checklist.md'
+    validate_workflows: '.bmad/bmm/workflows/2-plan-workflows/validate-{system|domain}-prd/'
   retained:
-    - "Epic validation (validate-epic) - not yet in BMM core"
-    - "Custom project-specific rules"
+    - 'Epic validation (validate-epic) - not yet in BMM core'
+    - 'Custom project-specific rules'
 
 # Dependencies
 requires:
-  - bmm  # Base BMM workflows
+  - bmm # Base BMM workflows
 
 # What this module provides
 provides:
   checklists:
     - name: constitution-checklist
       path: checklists/constitution-checklist.md
-      purpose: "Validate Constitution PRD"
-      validates: "docs/platform/prd.md"
+      purpose: 'Validate Constitution PRD'
+      validates: 'docs/platform/prd.md'
 
     - name: domain-prd-checklist
       path: checklists/domain-prd-checklist.md
-      purpose: "Validate Infrastructure/Strategic/Coordination/Business PRDs"
-      validates: "docs/**/*prd.md"
+      purpose: 'Validate Infrastructure/Strategic/Coordination/Business PRDs'
+      validates: 'docs/**/*prd.md'
 
     - name: epic-checklist
       path: checklists/epic-checklist.md
-      purpose: "Validate Epic breakdowns with traceability"
-      validates: "docs/**/epics.md"
+      purpose: 'Validate Epic breakdowns with traceability'
+      validates: 'docs/**/epics.md'
 
   workflows:
     - name: validate-constitution
       path: workflows/validate-constitution/workflow.yaml
-      purpose: "Full validation of Constitution PRD"
-      trigger: "Manual or on docs/platform/prd.md changes"
+      purpose: 'Full validation of Constitution PRD'
+      trigger: 'Manual or on docs/platform/prd.md changes'
 
     - name: validate-domain-prd
       path: workflows/validate-domain-prd/workflow.yaml
-      purpose: "Full validation of Entity PRDs"
-      trigger: "Manual or on entity PRD changes"
+      purpose: 'Full validation of Entity PRDs'
+      trigger: 'Manual or on entity PRD changes'
 
     - name: validate-epic
       path: workflows/validate-epic/workflow.yaml
-      purpose: "Validate epic with traceability matrix"
-      trigger: "Manual or on epics.md changes"
+      purpose: 'Validate epic with traceability matrix'
+      trigger: 'Manual or on epics.md changes'
 
   templates:
     - name: validation-report
       path: templates/validation-report.md
-      purpose: "Standard format for validation reports"
+      purpose: 'Standard format for validation reports'
 
 # Integration notes
 integration:
-  manifest_reference: "docs/manifest.yaml"
+  manifest_reference: 'docs/manifest.yaml'
   frontmatter_fields:
-    - entity_type: "constitution | infrastructure_module | strategic_container | coordination_unit | business_module"
-    - doc_type: "prd | architecture | epics | ux-design | product-brief"
-    - parent: "path/to/parent/prd.md (for non-constitution entities)"
+    - entity_type: 'constitution | infrastructure_module | strategic_container | coordination_unit | business_module'
+    - doc_type: 'prd | architecture | epics | ux-design | product-brief'
+    - parent: 'path/to/parent/prd.md (for non-constitution entities)'
 
   naming_conventions:
-    platform_requirement: "PR-xxx"
-    integration_contract: "IC-xxx"
-    functional_requirement: "FR-{SCOPE}-xxx"
+    platform_requirement: 'PR-xxx'
+    integration_contract: 'IC-xxx'
+    functional_requirement: 'FR-{SCOPE}-xxx'

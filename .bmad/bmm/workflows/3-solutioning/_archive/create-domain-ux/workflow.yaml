@@ -1,87 +1,87 @@
 # Domain UX Design Workflow
 name: create-domain-ux
-description: "Create UX Design for domain entities: Infrastructure Module, Strategic Container, Coordination Unit, or Business Module. Inherits from parent UX and Constitution, generates entity-appropriate experience design."
-author: "BMad"
+description: 'Create UX Design for domain entities: Infrastructure Module, Strategic Container, Coordination Unit, or Business Module. Inherits from parent UX and Constitution, generates entity-appropriate experience design.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-project_name: "{config_source}:project_name"
-output_folder: "{config_source}:output_folder"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-user_skill_level: "{config_source}:user_skill_level"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+project_name: '{config_source}:project_name'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+user_skill_level: '{config_source}:user_skill_level'
 date: system-generated
 
 # Federated hierarchy - determined at runtime
 # These are set by detect-entity-type task or passed from router
-entity_type: "{entity_type}"
-entity_type_display: "{entity_type_display}"
-output_folder_resolved: "{output_folder_resolved}"
-parent_ux_path: "{parent_ux_path}"
-constitution_ux_path: "docs/platform/ux-design.md"
-entity_code: "{entity_code}"
+entity_type: '{entity_type}'
+entity_type_display: '{entity_type_display}'
+output_folder_resolved: '{output_folder_resolved}'
+parent_ux_path: '{parent_ux_path}'
+constitution_ux_path: 'docs/platform/ux-design.md'
+entity_code: '{entity_code}'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-ux"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-ux'
+instructions: '{installed_path}/instructions.md'
 
 # Templates - single template with conditional sections
-ux_template: "{installed_path}/domain-ux-template.md"
+ux_template: '{installed_path}/domain-ux-template.md'
 
 # Checklists - entity-specific (resolved at runtime)
-checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-ux-checklist.md"
-checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-ux-checklist.md"
-checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md"
-checklist_business: "{project-root}/.bmad/bmm/checklists/business-ux-checklist.md"
+checklist_infrastructure: '{project-root}/.bmad/bmm/checklists/infrastructure-ux-checklist.md'
+checklist_strategic: '{project-root}/.bmad/bmm/checklists/strategic-ux-checklist.md'
+checklist_coordination: '{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md'
+checklist_business: '{project-root}/.bmad/bmm/checklists/business-ux-checklist.md'
 
 # Validation - schema resolved based on entity type
 validation:
   schema_map:
-    infrastructure_module: "{project-root}/.bmad/bmm/checklists/infrastructure-ux-checklist.md"
-    strategic_container: "{project-root}/.bmad/bmm/checklists/strategic-ux-checklist.md"
-    coordination_unit: "{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md"
-    business_module: "{project-root}/.bmad/bmm/checklists/business-ux-checklist.md"
+    infrastructure_module: '{project-root}/.bmad/bmm/checklists/infrastructure-ux-checklist.md'
+    strategic_container: '{project-root}/.bmad/bmm/checklists/strategic-ux-checklist.md'
+    coordination_unit: '{project-root}/.bmad/bmm/checklists/coordination-ux-checklist.md'
+    business_module: '{project-root}/.bmad/bmm/checklists/business-ux-checklist.md'
   required: true
-  on_fail: "warn_and_offer_fix"
+  on_fail: 'warn_and_offer_fix'
 
 # Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
-save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
-validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+frontmatter_task: '{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml'
+save_task: '{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml'
+validate_inheritance_task: '{project-root}/.bmad/bmm/tasks/validate-inheritance.xml'
 
 # Input file patterns
 input_file_patterns:
   constitution_ux:
-    description: "Constitution UX (always loaded for inheritance)"
-    whole: "{project-root}/docs/platform/ux-design.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Constitution UX (always loaded for inheritance)'
+    whole: '{project-root}/docs/platform/ux-design.md'
+    load_strategy: 'FULL_LOAD'
 
   parent_ux:
-    description: "Parent UX for inheritance validation"
-    whole: "{parent_ux_path}"
-    load_strategy: "FULL_LOAD"
+    description: 'Parent UX for inheritance validation'
+    whole: '{parent_ux_path}'
+    load_strategy: 'FULL_LOAD'
 
   entity_prd:
-    description: "PRD at this level for feature context"
-    whole: "{output_folder_resolved}prd.md"
-    load_strategy: "FULL_LOAD"
+    description: 'PRD at this level for feature context'
+    whole: '{output_folder_resolved}prd.md'
+    load_strategy: 'FULL_LOAD'
 
   entity_architecture:
-    description: "Architecture at this level for technical context"
-    whole: "{output_folder_resolved}architecture.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Architecture at this level for technical context'
+    whole: '{output_folder_resolved}architecture.md'
+    load_strategy: 'FULL_LOAD'
 
   existing_ux:
-    description: "Existing UX at this level (if updating)"
-    whole: "{output_folder_resolved}ux-design.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Existing UX at this level (if updating)'
+    whole: '{output_folder_resolved}ux-design.md'
+    load_strategy: 'FULL_LOAD'
 
 # Output files
-status_file: "{output_folder}/bmm-workflow-status.yaml"
-default_output_file: "{output_folder_resolved}ux-design.md"
-color_themes_html: "{output_folder_resolved}ux-color-themes.html"
-design_directions_html: "{output_folder_resolved}ux-design-directions.html"
+status_file: '{output_folder}/bmm-workflow-status.yaml'
+default_output_file: '{output_folder_resolved}ux-design.md'
+color_themes_html: '{output_folder_resolved}ux-color-themes.html'
+design_directions_html: '{output_folder_resolved}ux-design-directions.html'
 
 standalone: true

@@ -1,8 +1,8 @@
-import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-import node from '@astrojs/node';
-import clerk from '@clerk/astro';
-import sentry from '@sentry/astro';
+import { defineConfig } from 'astro/config'
+import react from '@astrojs/react'
+import node from '@astrojs/node'
+import clerk from '@clerk/astro'
+import sentry from '@sentry/astro'
 
 // https://astro.build/config
 export default defineConfig({
@@ -49,4 +49,4 @@ export default defineConfig({
     prefetchAll: false,
     defaultStrategy: 'hover',
   },
-});
+})

@@ -28,6 +28,6 @@ Interface documents are auto-generated from approved cross-module requests (GitH
 
 <!-- Auto-populated by interface-sync workflow -->
 
-| Interface | Consumer | Status | Issue |
-|-----------|----------|--------|-------|
-| *No interfaces documented yet* | - | - | - |
+| Interface                      | Consumer | Status | Issue |
+| ------------------------------ | -------- | ------ | ----- |
+| _No interfaces documented yet_ | -        | -      | -     |

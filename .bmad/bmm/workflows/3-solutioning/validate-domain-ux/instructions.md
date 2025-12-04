@@ -30,7 +30,7 @@
   <output>❌ UX Design not found at {ux_path}
 
 Use create-domain-ux workflow to create it first.</output>
-  <action>Exit workflow</action>
+<action>Exit workflow</action>
 </check>
 
 <output>
@@ -165,14 +165,14 @@ Parent UX: {parent_ux_path}
 📊 {entity_type_display} UX VALIDATION RESULTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| Category | Pass | Fail | Warn |
-|----------|------|------|------|
-| Structural | {pass} | {fail} | {warn} |
-| Parent Alignment | {pass} | {fail} | {warn} |
-| Constitution Alignment | {pass} | {fail} | {warn} |
-| Entity-Specific | {pass} | {fail} | {warn} |
-| Content Quality | {pass} | {fail} | {warn} |
-| **TOTAL** | {total_pass} | {total_fail} | {total_warn} |
+| Category               | Pass         | Fail         | Warn         |
+| ---------------------- | ------------ | ------------ | ------------ |
+| Structural             | {pass}       | {fail}       | {warn}       |
+| Parent Alignment       | {pass}       | {fail}       | {warn}       |
+| Constitution Alignment | {pass}       | {fail}       | {warn}       |
+| Entity-Specific        | {pass}       | {fail}       | {warn}       |
+| Content Quality        | {pass}       | {fail}       | {warn}       |
+| **TOTAL**              | {total_pass} | {total_fail} | {total_warn} |
 
 **Pass Rate:** {pass_rate}%
 **Status:** {status}
@@ -187,8 +187,8 @@ Parent UX: {parent_ux_path}
 
 Issues requiring attention:
 {failed_items_list}
-  </output>
-  <ask>Would you like to address these issues now? (y/n)</ask>
+</output>
+<ask>Would you like to address these issues now? (y/n)</ask>
 </check>
 
 <check if="pass_rate >= 80">

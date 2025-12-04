@@ -18,7 +18,6 @@
 - [ ] `status` field (draft/review/approved)
 - [ ] `created` and `updated` dates
 
-
 ---
 
 ## Inheritance Validation
@@ -35,7 +34,6 @@
 - [ ] Parent PRD referenced correctly
 - [ ] Scope within parent boundaries
 - [ ] No skip-level references (direct only to Constitution)
-
 
 ---
 
@@ -79,7 +77,6 @@
 - [ ] Test scenarios derivable from acceptance criteria
 - [ ] Ready for sprint planning
 
-
 ---
 
 ## Infrastructure-Specific Sections
@@ -107,7 +104,6 @@
 - [ ] Security beyond platform minimum
 - [ ] Justified need for each NFR
 
-
 ---
 
 ## Quality Standards
@@ -123,7 +119,6 @@
 
 - [ ] Document history tracks changes
 
-
 ---
 
 ### Formatting
@@ -133,13 +128,12 @@
 - [ ] Tables properly formatted
 - [ ] No broken markdown
 
-
 ---
 
 ## Validation Result
 
-**Date:** _______________
-**Validator:** _______________
+**Date:** ******\_\_\_******
+**Validator:** ******\_\_\_******
 
 **Overall Status:** ☐ PASS ☐ FAIL ☐ NEEDS REVISION
 

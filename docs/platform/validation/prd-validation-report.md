@@ -10,6 +10,7 @@
 ## Overview
 
 This validation report will document the review of the System PRD against:
+
 - Completeness of Platform Requirements (PR-xxx)
 - Integration Contract (IC-xxx) coverage
 - Consistency with Product Soul

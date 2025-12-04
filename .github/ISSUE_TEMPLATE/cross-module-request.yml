@@ -1,6 +1,6 @@
 name: Cross-Module Request
 description: Request changes to another module's code or contracts
-labels: ["cross-module", "needs-triage"]
+labels: ['cross-module', 'needs-triage']
 body:
   - type: markdown
     attributes:
@@ -63,7 +63,7 @@ body:
     attributes:
       label: Related Story/Issue
       description: Link to the story or issue driving this request
-      placeholder: "#123 or story-2-1-event-backbone"
+      placeholder: '#123 or story-2-1-event-backbone'
     validations:
       required: true
 

@@ -6,21 +6,24 @@ The Sales category contains modules for managing customer relationships, sales p
 
 ## Modules
 
-| Module | Purpose | Status |
-|--------|---------|--------|
-| crm | Contact and company management | Planned |
-| quotes | Quote generation and tracking | Planned |
-| pipeline | Deal stages and forecasting | Planned |
+| Module   | Purpose                        | Status  |
+| -------- | ------------------------------ | ------- |
+| crm      | Contact and company management | Planned |
+| quotes   | Quote generation and tracking  | Planned |
+| pipeline | Deal stages and forecasting    | Planned |
 
 ## Key Concepts
 
 ### Lead-to-Client Flow
+
 ```
 Lead (Brand) → Contact (CRM) → Deal (Pipeline) → Quote → Client
 ```
 
 ### Event Integration
+
 All sales activities emit events:
+
 - `deal.created`, `deal.stage_changed`, `deal.won`, `deal.lost`
 - `quote.sent`, `quote.accepted`, `quote.rejected`
 
@@ -28,11 +31,11 @@ These events trigger automations and update the "Calm Prompt" daily view.
 
 ## Dependencies
 
-| Depends On | Relationship |
-|------------|--------------|
-| `platform/core-api` | Authentication, event storage |
-| `brand/lead-capture` | Lead source (optional) |
-| `strategy/universal-brief` | Quote templates, pricing |
+| Depends On                 | Relationship                  |
+| -------------------------- | ----------------------------- |
+| `platform/core-api`        | Authentication, event storage |
+| `brand/lead-capture`       | Lead source (optional)        |
+| `strategy/universal-brief` | Quote templates, pricing      |
 
 ## Roadmap
 
@@ -40,4 +43,4 @@ This category is planned for post-MVP development.
 
 ---
 
-*Modules in this category are planned. Documentation will be added as development begins.*
+_Modules in this category are planned. Documentation will be added as development begins._

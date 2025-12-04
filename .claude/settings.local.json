@@ -188,9 +188,54 @@
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri commit --no-verify -m \"$(cat <<''EOF''\nchore: Update lockfile with validation dependencies\n\nAdds ajv and yaml packages to lockfile from root workspace install.\n\nNote: Pre-commit hook bypassed due to pre-existing broken links\nthat require separate remediation.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(wc:*)",
       "Bash(git -C /Users/carlo/Desktop/Projects/xentri commit --no-verify -m \"$(cat <<''EOF''\nfix(docs): Resolve 55 broken links across documentation\n\n## Navigation Files\n- docs/index.md: Remove stale orchestration references, update Soul terminology\n- docs/platform/README.md: Update to flat module structure (no subcategories)\n\n## Architecture\n- docs/platform/architecture.md: Convert external ADR links to internal anchors\n- Fix Pulse link path (../../pulse.md → ./pulse.md)\n\n## Module READMEs\n- Fix 35 module README files with incorrect manifest.yaml paths\n- Changed ../../../manifest.yaml → ../../manifest.yaml\n\n## Sprint Status\n- Update schema to allow null development_status for modules without stories\n- Fix remaining validation errors\n\n## New Files\n- docs/platform/validation/epics-validation-report.md (placeholder)\n\nValidation now passes:\n- pnpm run validate:docs ✅\n- pnpm run validate:links ✅ (164 links, 98 files)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(pnpm exec tsx:*)"
+      "Bash(pnpm exec tsx:*)",
+      "Bash(ls:*)",
+      "Bash(comm -23:*)",
+      "Bash(comm:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-edit-manifest.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit-docs.sh",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit-yaml.sh",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit-ts.sh",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit-duplication.sh",
+            "timeout": 45
+          }
+        ]
+      }
+    ]
   }
 }

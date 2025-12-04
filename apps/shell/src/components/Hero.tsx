@@ -1,4 +1,4 @@
-import { Button } from '@xentri/ui';
+import { Button } from '@xentri/ui'
 
 export function Hero() {
   return (
@@ -10,5 +10,5 @@ export function Hero() {
         <Button variant="outline">Learn More</Button>
       </div>
     </div>
-  );
+  )
 }

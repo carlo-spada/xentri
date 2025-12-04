@@ -1,10 +1,10 @@
 ---
 entity_type: constitution
 document_type: epics
-title: "{{project_name}} - System Epics"
-version: "1.0"
-date: "{{date}}"
-author: "{{user_name}}"
+title: '{{project_name}} - System Epics'
+version: '1.0'
+date: '{{date}}'
+author: '{{user_name}}'
 status: draft
 ---
 
@@ -21,6 +21,7 @@ status: draft
 This document defines the epic structure for {{project_name}} at the Constitution level. These epics represent category-level outcomes that coordinate work across all Infrastructure Modules.
 
 **Cascading Epic Pattern:**
+
 - Constitution epics use simple IDs: Epic 1, Epic 2, Epic 3...
 - Child entities inherit: Epic 1-1, Epic 1-2, Epic 2-1...
 
@@ -30,16 +31,18 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 
 ### Platform Requirements (PR-xxx)
 
-| ID | Requirement | Epic Coverage |
-|----|-------------|---------------|
+| ID  | Requirement | Epic Coverage |
+| --- | ----------- | ------------- |
+
 {{#each platform_requirements}}
 | {{id}} | {{description}} | Epic {{epic_ref}} |
 {{/each}}
 
 ### Integration Contracts (IC-xxx)
 
-| ID | Contract | Epic Coverage |
-|----|----------|---------------|
+| ID  | Contract | Epic Coverage |
+| --- | -------- | ------------- |
+
 {{#each integration_contracts}}
 | {{id}} | {{description}} | Epic {{epic_ref}} |
 {{/each}}
@@ -49,7 +52,8 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 ## Epic Summary
 
 | Epic | Title | Goal | PR/IC Coverage |
-|------|-------|------|----------------|
+| ---- | ----- | ---- | -------------- |
+
 {{#each epics}}
 | {{number}} | {{title}} | {{goal}} | {{coverage}} |
 {{/each}}
@@ -57,11 +61,13 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 ---
 
 {{#each epics}}
+
 ## Epic {{number}}: {{title}}
 
 **Goal:** {{goal}}
 
 **Scope:**
+
 - Platform Requirements: {{pr_coverage}}
 - Integration Contracts: {{ic_coverage}}
 - Infrastructure Modules: {{modules_involved}}
@@ -71,6 +77,7 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 ### Stories
 
 {{#each stories}}
+
 #### Story {{../number}}.{{number}}: {{title}}
 
 **Traces to:** {{traces_to}}
@@ -78,8 +85,9 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 
 **Acceptance Criteria:**
 {{#each acceptance_criteria}}
+
 - {{this}}
-{{/each}}
+  {{/each}}
 
 **Technical Notes:** {{technical_notes}}
 
@@ -92,7 +100,8 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 ## Traceability Matrix
 
 | Requirement | Type | Epic | Story | Status |
-|-------------|------|------|-------|--------|
+| ----------- | ---- | ---- | ----- | ------ |
+
 {{#each traceability}}
 | {{requirement_id}} | {{type}} | Epic {{epic}} | Story {{story}} | {{status}} |
 {{/each}}
@@ -103,8 +112,9 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 
 ### Infrastructure Module Coordination
 
-| Epic | shell | ui | core-api | ts-schema | orchestration |
-|------|-------|-----|----------|-----------|---------------|
+| Epic | shell | ui  | core-api | ts-schema | orchestration |
+| ---- | ----- | --- | -------- | --------- | ------------- |
+
 {{#each coordination_matrix}}
 | Epic {{epic}} | {{shell}} | {{ui}} | {{core_api}} | {{ts_schema}} | {{orchestration}} |
 {{/each}}
@@ -115,19 +125,19 @@ This document defines the epic structure for {{project_name}} at the Constitutio
 
 When creating epics for Infrastructure Modules, use cascading IDs:
 
-| Constitution Epic | Child Epic Pattern | Example |
-|-------------------|-------------------|---------|
-| Epic 1 | Epic 1-x | Epic 1-1, Epic 1-2 |
-| Epic 2 | Epic 2-x | Epic 2-1, Epic 2-2 |
-| Epic 3 | Epic 3-x | Epic 3-1, Epic 3-2 |
+| Constitution Epic | Child Epic Pattern | Example            |
+| ----------------- | ------------------ | ------------------ |
+| Epic 1            | Epic 1-x           | Epic 1-1, Epic 1-2 |
+| Epic 2            | Epic 2-x           | Epic 2-1, Epic 2-2 |
+| Epic 3            | Epic 3-x           | Epic 3-1, Epic 3-2 |
 
 ---
 
 ## Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{date}} | {{user_name}} | Initial epic structure |
+| Version | Date     | Author        | Changes                |
+| ------- | -------- | ------------- | ---------------------- |
+| 1.0     | {{date}} | {{user_name}} | Initial epic structure |
 
 ---
 

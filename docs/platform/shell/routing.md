@@ -48,20 +48,15 @@ src/pages/
 
 ```typescript
 // src/middleware.ts
-import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/astro/server'
 
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-  '/api/health'
-]);
+const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/api/health'])
 
 export const onRequest = clerkMiddleware((auth, ctx) => {
   if (!isPublicRoute(ctx.request) && !auth().userId) {
-    return auth().redirectToSignIn();
+    return auth().redirectToSignIn()
   }
-});
+})
 ```
 
 ### Page-Level Guards
@@ -96,19 +91,19 @@ const navigation = [
     items: [
       { label: 'Overview', href: '/strategy' },
       { label: 'Soul', href: '/strategy/soul' },
-      { label: 'Goals', href: '/strategy/goals' }
-    ]
+      { label: 'Goals', href: '/strategy/goals' },
+    ],
   },
   {
     category: 'Finance',
     icon: 'dollar',
     items: [
       { label: 'Overview', href: '/finance' },
-      { label: 'Invoices', href: '/finance/invoices' }
-    ]
-  }
+      { label: 'Invoices', href: '/finance/invoices' },
+    ],
+  },
   // ...
-];
+]
 ```
 
 ### Active State
@@ -168,13 +163,13 @@ src/pages/api/
 
 ```typescript
 // src/pages/api/health.ts
-import type { APIRoute } from 'astro';
+import type { APIRoute } from 'astro'
 
 export const GET: APIRoute = async () => {
   return new Response(JSON.stringify({ status: 'ok' }), {
-    headers: { 'Content-Type': 'application/json' }
-  });
-};
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
 ```
 
 ---

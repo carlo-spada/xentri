@@ -15,25 +15,31 @@
  *   1 - Validation errors found
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { join, basename } from 'path';
-import { execSync } from 'child_process';
+import { readFileSync, existsSync } from 'fs'
+import { join, basename } from 'path'
+import { execSync } from 'child_process'
 
 // =============================================================================
 // Configuration
 // =============================================================================
 
-const DOCS_PATH = 'docs/platform';
-const CONSTITUTION_FILES = ['prd.md', 'architecture.md', 'ux-design.md', 'epics.md', 'product-soul.md'];
+const DOCS_PATH = 'docs/platform'
+const CONSTITUTION_FILES = [
+  'prd.md',
+  'architecture.md',
+  'ux-design.md',
+  'epics.md',
+  'product-soul.md',
+]
 
 interface ValidationRule {
-  name: string;
-  pattern: RegExp;
-  forbiddenIn: string[];
-  allowedIn: string[];
-  message: string;
-  severity: 'error' | 'warning';
-  suggestion?: string;
+  name: string
+  pattern: RegExp
+  forbiddenIn: string[]
+  allowedIn: string[]
+  message: string
+  severity: 'error' | 'warning'
+  suggestion?: string
 }
 
 const VALIDATION_RULES: ValidationRule[] = [
@@ -44,7 +50,8 @@ const VALIDATION_RULES: ValidationRule[] = [
     allowedIn: ['architecture.md'],
     message: 'TypeScript interfaces belong in architecture.md only',
     severity: 'error',
-    suggestion: 'Move interface to architecture.md and add reference: "See [ADR-xxx](./architecture.md#...)"',
+    suggestion:
+      'Move interface to architecture.md and add reference: "See [ADR-xxx](./architecture.md#...)"',
   },
   {
     name: 'No requirement definitions in Epics',
@@ -90,21 +97,21 @@ const VALIDATION_RULES: ValidationRule[] = [
     message: 'CSS custom properties belong in ux-design.md',
     severity: 'warning',
   },
-];
+]
 
 // =============================================================================
 // Types
 // =============================================================================
 
 interface Violation {
-  file: string;
-  rule: string;
-  line: number;
-  column: number;
-  match: string;
-  message: string;
-  severity: 'error' | 'warning';
-  suggestion?: string;
+  file: string
+  rule: string
+  line: number
+  column: number
+  match: string
+  message: string
+  severity: 'error' | 'warning'
+  suggestion?: string
 }
 
 // =============================================================================
@@ -114,47 +121,47 @@ interface Violation {
 function getFilesToCheck(stagedOnly: boolean): string[] {
   if (stagedOnly) {
     try {
-      const staged = execSync('git diff --cached --name-only', { encoding: 'utf-8' });
+      const staged = execSync('git diff --cached --name-only', { encoding: 'utf-8' })
       return staged
         .split('\n')
         .filter((f) => f.startsWith(DOCS_PATH) && f.endsWith('.md'))
         .map((f) => basename(f))
-        .filter((f) => CONSTITUTION_FILES.includes(f));
+        .filter((f) => CONSTITUTION_FILES.includes(f))
     } catch {
-      console.error('Failed to get staged files. Running on all Constitution files.');
-      return CONSTITUTION_FILES;
+      console.error('Failed to get staged files. Running on all Constitution files.')
+      return CONSTITUTION_FILES
     }
   }
-  return CONSTITUTION_FILES;
+  return CONSTITUTION_FILES
 }
 
 function findViolations(filename: string, content: string): Violation[] {
-  const violations: Violation[] = [];
-  const lines = content.split('\n');
+  const violations: Violation[] = []
+  const lines = content.split('\n')
 
   for (const rule of VALIDATION_RULES) {
     if (!rule.forbiddenIn.includes(filename)) {
-      continue;
+      continue
     }
 
     // Reset regex lastIndex for global patterns
-    rule.pattern.lastIndex = 0;
+    rule.pattern.lastIndex = 0
 
-    let match: RegExpExecArray | null;
+    let match: RegExpExecArray | null
     while ((match = rule.pattern.exec(content)) !== null) {
       // Find line number
-      const beforeMatch = content.slice(0, match.index);
-      const lineNumber = beforeMatch.split('\n').length;
-      const lineStart = beforeMatch.lastIndexOf('\n') + 1;
-      const column = match.index - lineStart + 1;
+      const beforeMatch = content.slice(0, match.index)
+      const lineNumber = beforeMatch.split('\n').length
+      const lineStart = beforeMatch.lastIndexOf('\n') + 1
+      const column = match.index - lineStart + 1
 
       // Check if match is inside a code block (skip if so for some rules)
-      const lineContent = lines[lineNumber - 1] || '';
-      const isInCodeBlock = isInsideCodeBlock(content, match.index);
+      const lineContent = lines[lineNumber - 1] || ''
+      const isInCodeBlock = isInsideCodeBlock(content, match.index)
 
       // Skip hex colors and pixel values inside code blocks (they're examples)
       if (isInCodeBlock && (rule.name.includes('hex colors') || rule.name.includes('pixel'))) {
-        continue;
+        continue
       }
 
       violations.push({
@@ -166,102 +173,102 @@ function findViolations(filename: string, content: string): Violation[] {
         message: rule.message,
         severity: rule.severity,
         suggestion: rule.suggestion,
-      });
+      })
     }
   }
 
-  return violations;
+  return violations
 }
 
 function isInsideCodeBlock(content: string, position: number): boolean {
-  const before = content.slice(0, position);
-  const codeBlockStarts = (before.match(/```/g) || []).length;
+  const before = content.slice(0, position)
+  const codeBlockStarts = (before.match(/```/g) || []).length
   // If odd number of ``` before position, we're inside a code block
-  return codeBlockStarts % 2 === 1;
+  return codeBlockStarts % 2 === 1
 }
 
 function formatViolation(v: Violation, showSuggestion: boolean): string {
-  const icon = v.severity === 'error' ? '❌' : '⚠️';
-  let output = `${icon} ${v.file}:${v.line}:${v.column} - ${v.message}`;
-  output += `\n   Match: "${v.match}"`;
-  output += `\n   Rule: ${v.rule}`;
+  const icon = v.severity === 'error' ? '❌' : '⚠️'
+  let output = `${icon} ${v.file}:${v.line}:${v.column} - ${v.message}`
+  output += `\n   Match: "${v.match}"`
+  output += `\n   Rule: ${v.rule}`
   if (showSuggestion && v.suggestion) {
-    output += `\n   Fix: ${v.suggestion}`;
+    output += `\n   Fix: ${v.suggestion}`
   }
-  return output;
+  return output
 }
 
 function main(): void {
-  const args = process.argv.slice(2);
-  const stagedOnly = args.includes('--staged');
-  const showFix = args.includes('--fix');
+  const args = process.argv.slice(2)
+  const stagedOnly = args.includes('--staged')
+  const showFix = args.includes('--fix')
 
-  console.log('🔍 Documentation Duplication Checker\n');
-  console.log(`   Based on: docs/platform/document-contracts.yaml`);
-  console.log(`   Mode: ${stagedOnly ? 'Staged files only' : 'All Constitution files'}\n`);
+  console.log('🔍 Documentation Duplication Checker\n')
+  console.log(`   Based on: docs/platform/document-contracts.yaml`)
+  console.log(`   Mode: ${stagedOnly ? 'Staged files only' : 'All Constitution files'}\n`)
 
-  const files = getFilesToCheck(stagedOnly);
+  const files = getFilesToCheck(stagedOnly)
 
   if (files.length === 0) {
-    console.log('✅ No Constitution files to check.\n');
-    process.exit(0);
+    console.log('✅ No Constitution files to check.\n')
+    process.exit(0)
   }
 
-  console.log(`   Checking: ${files.join(', ')}\n`);
+  console.log(`   Checking: ${files.join(', ')}\n`)
 
-  let allViolations: Violation[] = [];
+  let allViolations: Violation[] = []
 
   for (const filename of files) {
-    const filepath = join(process.cwd(), DOCS_PATH, filename);
+    const filepath = join(process.cwd(), DOCS_PATH, filename)
 
     if (!existsSync(filepath)) {
-      console.log(`   ⏭️  Skipping ${filename} (not found)`);
-      continue;
+      console.log(`   ⏭️  Skipping ${filename} (not found)`)
+      continue
     }
 
-    const content = readFileSync(filepath, 'utf-8');
-    const violations = findViolations(filename, content);
-    allViolations = allViolations.concat(violations);
+    const content = readFileSync(filepath, 'utf-8')
+    const violations = findViolations(filename, content)
+    allViolations = allViolations.concat(violations)
   }
 
   // Report results
-  const errors = allViolations.filter((v) => v.severity === 'error');
-  const warnings = allViolations.filter((v) => v.severity === 'warning');
+  const errors = allViolations.filter((v) => v.severity === 'error')
+  const warnings = allViolations.filter((v) => v.severity === 'warning')
 
   if (allViolations.length === 0) {
-    console.log('✅ All checks passed! No ownership violations found.\n');
-    process.exit(0);
+    console.log('✅ All checks passed! No ownership violations found.\n')
+    process.exit(0)
   }
 
-  console.log('─'.repeat(60) + '\n');
+  console.log('─'.repeat(60) + '\n')
 
   if (errors.length > 0) {
-    console.log(`❌ ERRORS (${errors.length}):\n`);
+    console.log(`❌ ERRORS (${errors.length}):\n`)
     for (const v of errors) {
-      console.log(formatViolation(v, showFix));
-      console.log('');
+      console.log(formatViolation(v, showFix))
+      console.log('')
     }
   }
 
   if (warnings.length > 0) {
-    console.log(`⚠️  WARNINGS (${warnings.length}):\n`);
+    console.log(`⚠️  WARNINGS (${warnings.length}):\n`)
     for (const v of warnings) {
-      console.log(formatViolation(v, showFix));
-      console.log('');
+      console.log(formatViolation(v, showFix))
+      console.log('')
     }
   }
 
-  console.log('─'.repeat(60));
-  console.log(`\nSummary: ${errors.length} error(s), ${warnings.length} warning(s)`);
+  console.log('─'.repeat(60))
+  console.log(`\nSummary: ${errors.length} error(s), ${warnings.length} warning(s)`)
 
   if (errors.length > 0) {
-    console.log('\n💡 Run with --fix to see remediation suggestions.\n');
-    console.log('📖 See docs/platform/document-contracts.yaml for ownership rules.\n');
-    process.exit(1);
+    console.log('\n💡 Run with --fix to see remediation suggestions.\n')
+    console.log('📖 See docs/platform/document-contracts.yaml for ownership rules.\n')
+    process.exit(1)
   }
 
-  console.log('\n⚠️  Warnings found but not blocking. Consider fixing them.\n');
-  process.exit(0);
+  console.log('\n⚠️  Warnings found but not blocking. Consider fixing them.\n')
+  process.exit(0)
 }
 
-main();
+main()

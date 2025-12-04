@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 // ===================
 // Theme Preferences
@@ -7,8 +7,8 @@ import { z } from 'zod';
 /**
  * Valid theme preference values.
  */
-export const ThemePreferenceSchema = z.enum(['light', 'dark', 'system']);
-export type ThemePreference = z.infer<typeof ThemePreferenceSchema>;
+export const ThemePreferenceSchema = z.enum(['light', 'dark', 'system'])
+export type ThemePreference = z.infer<typeof ThemePreferenceSchema>
 
 // ===================
 // Email Notification Preferences
@@ -20,8 +20,8 @@ export type ThemePreference = z.infer<typeof ThemePreferenceSchema>;
 export const EmailNotificationsSchema = z.object({
   lead_created: z.boolean().optional().default(true),
   system: z.boolean().optional().default(true),
-});
-export type EmailNotifications = z.infer<typeof EmailNotificationsSchema>;
+})
+export type EmailNotifications = z.infer<typeof EmailNotificationsSchema>
 
 // ===================
 // User Preferences Model
@@ -33,8 +33,8 @@ export type EmailNotifications = z.infer<typeof EmailNotificationsSchema>;
 export const UserPreferencesSchema = z.object({
   theme: ThemePreferenceSchema.default('dark'),
   email_notifications: EmailNotificationsSchema.optional(),
-});
-export type UserPreferences = z.infer<typeof UserPreferencesSchema>;
+})
+export type UserPreferences = z.infer<typeof UserPreferencesSchema>
 
 // ===================
 // API Request/Response Schemas
@@ -46,13 +46,13 @@ export type UserPreferences = z.infer<typeof UserPreferencesSchema>;
 export const UpdateUserPreferencesRequestSchema = z.object({
   theme: ThemePreferenceSchema.optional(),
   email_notifications: EmailNotificationsSchema.optional(),
-});
-export type UpdateUserPreferencesRequest = z.infer<typeof UpdateUserPreferencesRequestSchema>;
+})
+export type UpdateUserPreferencesRequest = z.infer<typeof UpdateUserPreferencesRequestSchema>
 
 /**
  * Response for user preferences endpoints.
  */
 export const UserPreferencesResponseSchema = z.object({
   preferences: UserPreferencesSchema,
-});
-export type UserPreferencesResponse = z.infer<typeof UserPreferencesResponseSchema>;
+})
+export type UserPreferencesResponse = z.infer<typeof UserPreferencesResponseSchema>

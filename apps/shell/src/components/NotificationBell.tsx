@@ -1,6 +1,6 @@
-import { useStore } from '@nanostores/react';
-import { Bell, Loader2 } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useStore } from '@nanostores/react'
+import { Bell, Loader2 } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import {
   $notifications,
   $unreadCount,
@@ -11,69 +11,69 @@ import {
   markAsRead,
   markAllAsRead,
   fetchNotifications,
-} from '../stores/notifications';
-import { cn } from '@xentri/ui';
+} from '../stores/notifications'
+import { cn } from '@xentri/ui'
 
 export default function NotificationBell() {
-  const notifications = useStore($notifications);
-  const unreadCount = useStore($unreadCount);
-  const isOpen = useStore($notificationDropdownOpen);
-  const isLoading = useStore($notificationsLoading);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifications = useStore($notifications)
+  const unreadCount = useStore($unreadCount)
+  const isOpen = useStore($notificationDropdownOpen)
+  const isLoading = useStore($notificationsLoading)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Fetch notifications on mount
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    fetchNotifications()
+  }, [])
 
   // Close on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        closeNotificationDropdown();
+        closeNotificationDropdown()
       }
-    };
+    }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
 
   // Close on escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        closeNotificationDropdown();
+        closeNotificationDropdown()
       }
-    };
+    }
 
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keydown', handleKeyDown)
     }
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen])
 
   const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMins / 60)
+    const diffDays = Math.floor(diffHours / 24)
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
+    if (diffMins < 1) return 'Just now'
+    if (diffMins < 60) return `${diffMins}m ago`
+    if (diffHours < 24) return `${diffHours}h ago`
+    if (diffDays < 7) return `${diffDays}d ago`
+    return date.toLocaleDateString()
+  }
 
   return (
     <div className="notification-bell relative" ref={dropdownRef}>
@@ -93,9 +93,11 @@ export default function NotificationBell() {
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex items-center justify-center
+          <span
+            className="absolute top-1 right-1 flex items-center justify-center
             min-w-[18px] h-[18px] px-1 rounded-full
-            bg-[var(--color-error)] text-white text-xs font-medium">
+            bg-[var(--color-error)] text-white text-xs font-medium"
+          >
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -111,11 +113,11 @@ export default function NotificationBell() {
           role="menu"
         >
           {/* Header */}
-          <div className="dropdown-header flex items-center justify-between
-            px-4 py-3 border-b border-[var(--color-surface-plus)]">
-            <h3 className="font-semibold text-[var(--color-text-primary)]">
-              Notifications
-            </h3>
+          <div
+            className="dropdown-header flex items-center justify-between
+            px-4 py-3 border-b border-[var(--color-surface-plus)]"
+          >
+            <h3 className="font-semibold text-[var(--color-text-primary)]">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
@@ -135,9 +137,7 @@ export default function NotificationBell() {
             ) : notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
                 <Bell size={32} className="text-[var(--color-text-muted)] mb-2" />
-                <p className="text-sm text-[var(--color-text-muted)]">
-                  No notifications yet
-                </p>
+                <p className="text-sm text-[var(--color-text-muted)]">No notifications yet</p>
               </div>
             ) : (
               <ul className="divide-y divide-[var(--color-surface-plus)]">
@@ -194,5 +194,5 @@ export default function NotificationBell() {
         </div>
       )}
     </div>
-  );
+  )
 }

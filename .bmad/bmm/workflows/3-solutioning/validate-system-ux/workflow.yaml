@@ -1,34 +1,34 @@
 # System UX Validation Workflow (Constitution)
 name: validate-system-ux
-description: "Validate the System UX Design (Constitution) against quality standards, completeness, and governance requirements."
-author: "BMad"
+description: 'Validate the System UX Design (Constitution) against quality standards, completeness, and governance requirements.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Fixed paths for Constitution
 entity_type: constitution
-ux_path: "{project-root}/docs/platform/ux-design.md"
+ux_path: '{project-root}/docs/platform/ux-design.md'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-ux"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-ux'
+instructions: '{installed_path}/instructions.md'
 
 # Checklist and Validation Schema
-checklist: "{project-root}/.bmad/bmm/checklists/constitution-ux-checklist.md"
+checklist: '{project-root}/.bmad/bmm/checklists/constitution-ux-checklist.md'
 validation:
-  schema: "{checklist}"
+  schema: '{checklist}'
   strict: true
   min_pass_rate: 80
 
 # Shared tasks
-validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+validate_inheritance_task: '{project-root}/.bmad/bmm/tasks/validate-inheritance.xml'
 
 # Output
-validation_report_path: "{project-root}/docs/platform/validation-reports/ux-validation-{date}.md"
+validation_report_path: '{project-root}/docs/platform/validation-reports/ux-validation-{date}.md'
 
 template: false
 standalone: true

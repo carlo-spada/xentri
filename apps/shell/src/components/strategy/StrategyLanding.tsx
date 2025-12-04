@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useStore } from '@nanostores/react';
-import { Loader2 } from 'lucide-react';
-import { BriefSummaryTile } from './BriefSummaryTile';
-import { CreateBriefCTA } from './CreateBriefCTA';
+import { useEffect, useState } from 'react'
+import { useStore } from '@nanostores/react'
+import { Loader2 } from 'lucide-react'
+import { BriefSummaryTile } from './BriefSummaryTile'
+import { CreateBriefCTA } from './CreateBriefCTA'
 import {
   $brief,
   $briefLoading,
@@ -10,10 +10,10 @@ import {
   setBriefLoading,
   setBriefError,
   getApiUrl,
-} from '../../stores/brief.js';
+} from '../../stores/brief.js'
 
 interface StrategyLandingProps {
-  orgId?: string;
+  orgId?: string
 }
 
 /**
@@ -24,19 +24,19 @@ interface StrategyLandingProps {
  * - Shows BriefSummaryTile if Brief exists
  */
 export function StrategyLanding({ orgId }: StrategyLandingProps) {
-  const brief = useStore($brief);
-  const loading = useStore($briefLoading);
-  const [initialized, setInitialized] = useState(false);
+  const brief = useStore($brief)
+  const loading = useStore($briefLoading)
+  const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
     async function fetchBrief() {
       if (!orgId) {
-        setBriefError('No organization context');
-        setInitialized(true);
-        return;
+        setBriefError('No organization context')
+        setInitialized(true)
+        return
       }
 
-      setBriefLoading(true);
+      setBriefLoading(true)
 
       try {
         const response = await fetch(`${getApiUrl()}/api/v1/briefs/current`, {
@@ -44,37 +44,37 @@ export function StrategyLanding({ orgId }: StrategyLandingProps) {
             'x-org-id': orgId,
           },
           credentials: 'include',
-        });
+        })
 
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
         }
 
-        const data = await response.json();
-        setBrief(data.data);
+        const data = await response.json()
+        setBrief(data.data)
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to fetch brief';
-        setBriefError(message);
+        const message = err instanceof Error ? err.message : 'Failed to fetch brief'
+        setBriefError(message)
       } finally {
-        setBriefLoading(false);
-        setInitialized(true);
+        setBriefLoading(false)
+        setInitialized(true)
       }
     }
 
-    fetchBrief();
-  }, [orgId]);
+    fetchBrief()
+  }, [orgId])
 
   const handleCreateClick = () => {
-    window.location.href = '/strategy/brief/new';
-  };
+    window.location.href = '/strategy/brief/new'
+  }
 
   const handleEditClick = (briefId: string) => {
-    window.location.href = `/strategy/brief/${briefId}?edit=true`;
-  };
+    window.location.href = `/strategy/brief/${briefId}?edit=true`
+  }
 
   const handleViewClick = (briefId: string) => {
-    window.location.href = `/strategy/brief/${briefId}`;
-  };
+    window.location.href = `/strategy/brief/${briefId}`
+  }
 
   if (!initialized || loading) {
     return (
@@ -83,16 +83,14 @@ export function StrategyLanding({ orgId }: StrategyLandingProps) {
         <span>Loading Strategy...</span>
         <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </div>
-    );
+    )
   }
 
   return (
     <div style={styles.container}>
       <header style={styles.header}>
         <h1 style={styles.title}>Strategy</h1>
-        <p style={styles.subtitle}>
-          Define your business DNA and unlock AI-powered insights
-        </p>
+        <p style={styles.subtitle}>Define your business DNA and unlock AI-powered insights</p>
       </header>
 
       <section style={styles.content}>
@@ -107,7 +105,7 @@ export function StrategyLanding({ orgId }: StrategyLandingProps) {
         )}
       </section>
     </div>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -145,4 +143,4 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     gap: '1.5rem',
   },
-};
+}

@@ -17,10 +17,25 @@
     "db:migrate": "pnpm --filter services/core-api run db:migrate",
     "clean": "turbo run clean && rm -rf node_modules",
     "validate:docs": "node scripts/validation/validate-docs.js",
-    "validate:links": "node scripts/validation/validate-links.js"
+    "validate:links": "node scripts/validation/validate-links.js",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix"
+    ],
+    "*.{json,md,yaml,yml}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "ajv": "^8.17.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.4.2",
     "@playwright/test": "^1.50.0",
     "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.0.1",

@@ -8,16 +8,16 @@ The Platform category (meta) contains foundational sub-categories that are alway
 
 Platform modules are flat (no subcategories) — terminal nodes with implementation only.
 
-| Module | Purpose | Package | Status |
-|--------|---------|---------|--------|
-| [shell](./shell/) | Astro app shell, routing, islands | `apps/shell` | Active |
-| [ui](./ui/) | Design system, shared components | `packages/ui` | Active |
-| [core-api](./core-api/) | Auth, events, organizations | `services/core-api` | Active |
-| [ts-schema](./ts-schema/) | TypeScript types and Zod schemas | `packages/ts-schema` | Active |
-| events | Event Spine and Operational Pulse | — | Planned |
-| auth | Authentication and permissions | — | Planned |
-| billing | Subscription and payment processing | — | Planned |
-| soul | Soul system storage and synthesis | — | Planned |
+| Module                    | Purpose                             | Package              | Status  |
+| ------------------------- | ----------------------------------- | -------------------- | ------- |
+| [shell](./shell/)         | Astro app shell, routing, islands   | `apps/shell`         | Active  |
+| [ui](./ui/)               | Design system, shared components    | `packages/ui`        | Active  |
+| [core-api](./core-api/)   | Auth, events, organizations         | `services/core-api`  | Active  |
+| [ts-schema](./ts-schema/) | TypeScript types and Zod schemas    | `packages/ts-schema` | Active  |
+| events                    | Event Spine and Operational Pulse   | —                    | Planned |
+| auth                      | Authentication and permissions      | —                    | Planned |
+| billing                   | Subscription and payment processing | —                    | Planned |
+| soul                      | Soul system storage and synthesis   | —                    | Planned |
 
 ## Architecture Overview
 
@@ -57,4 +57,4 @@ Platform modules have no external category dependencies - they ARE the foundatio
 
 ---
 
-*See [architecture.md](./architecture.md) for detailed technical decisions.*
+_See [architecture.md](./architecture.md) for detailed technical decisions._

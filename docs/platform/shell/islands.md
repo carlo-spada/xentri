@@ -13,13 +13,13 @@ React islands are interactive components that hydrate independently within the A
 
 ## Island Catalog
 
-| Island | Purpose | Hydration |
-|--------|---------|-----------|
-| `StrategySPA` | Strategy category SPA | `client:visible` |
-| `SoulEditor` | Soul section editor | `client:load` |
-| `NotificationBell` | Notification center | `client:idle` |
-| `CopilotPanel` | AI copilot interface | `client:visible` |
-| `CommandPalette` | Cmd+K search | `client:idle` |
+| Island             | Purpose               | Hydration        |
+| ------------------ | --------------------- | ---------------- |
+| `StrategySPA`      | Strategy category SPA | `client:visible` |
+| `SoulEditor`       | Soul section editor   | `client:load`    |
+| `NotificationBell` | Notification center   | `client:idle`    |
+| `CopilotPanel`     | AI copilot interface  | `client:visible` |
+| `CommandPalette`   | Cmd+K search          | `client:idle`    |
 
 ---
 
@@ -29,22 +29,22 @@ React islands are interactive components that hydrate independently within the A
 
 ```tsx
 // src/islands/MyIsland.tsx
-import { useStore } from '@nanostores/react';
-import { $user } from '../stores/user';
+import { useStore } from '@nanostores/react'
+import { $user } from '../stores/user'
 
 interface MyIslandProps {
-  initialData?: string;
+  initialData?: string
 }
 
 export function MyIsland({ initialData }: MyIslandProps) {
-  const user = useStore($user);
+  const user = useStore($user)
 
   return (
     <div className="my-island">
       <h2>Hello, {user?.name}</h2>
       {initialData && <p>{initialData}</p>}
     </div>
-  );
+  )
 }
 ```
 
@@ -108,39 +108,35 @@ Renders only on client, no SSR. Use when server rendering is impossible.
 
 ```typescript
 // stores/soul.ts
-import { atom, computed } from 'nanostores';
+import { atom, computed } from 'nanostores'
 
-export const $soul = atom<Soul | null>(null);
-export const $soulSection = atom<string>('identity');
+export const $soul = atom<Soul | null>(null)
+export const $soulSection = atom<string>('identity')
 
 export const $currentSection = computed(
   [$soul, $soulSection],
   (soul, section) => soul?.sections[section]
-);
+)
 ```
 
 ### Using in Islands
 
 ```tsx
-import { useStore } from '@nanostores/react';
-import { $soul, $soulSection } from '../stores/soul';
+import { useStore } from '@nanostores/react'
+import { $soul, $soulSection } from '../stores/soul'
 
 export function SoulNav() {
-  const section = useStore($soulSection);
+  const section = useStore($soulSection)
 
   return (
     <nav>
-      {['identity', 'offerings', 'goals'].map(s => (
-        <button
-          key={s}
-          onClick={() => $soulSection.set(s)}
-          data-active={section === s}
-        >
+      {['identity', 'offerings', 'goals'].map((s) => (
+        <button key={s} onClick={() => $soulSection.set(s)} data-active={section === s}>
           {s}
         </button>
       ))}
     </nav>
-  );
+  )
 }
 ```
 
@@ -168,19 +164,19 @@ For dynamic data after hydration:
 
 ```tsx
 export function SoulEditor({ initialSoul }) {
-  const [soul, setSoul] = useState(initialSoul);
+  const [soul, setSoul] = useState(initialSoul)
 
   const refresh = async () => {
-    const response = await fetch('/api/v1/soul');
-    setSoul(await response.json());
-  };
+    const response = await fetch('/api/v1/soul')
+    setSoul(await response.json())
+  }
 
   return (
     <div>
       <button onClick={refresh}>Refresh</button>
       {/* ... */}
     </div>
-  );
+  )
 }
 ```
 
@@ -192,32 +188,29 @@ Islands communicate via Nano Stores:
 
 ```tsx
 // Island A: Updates store
-import { $selectedDeal } from '../stores/deals';
+import { $selectedDeal } from '../stores/deals'
 
 function DealList() {
   return (
     <ul>
-      {deals.map(deal => (
-        <li
-          key={deal.id}
-          onClick={() => $selectedDeal.set(deal)}
-        >
+      {deals.map((deal) => (
+        <li key={deal.id} onClick={() => $selectedDeal.set(deal)}>
           {deal.name}
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
 // Island B: Reacts to store
-import { $selectedDeal } from '../stores/deals';
+import { $selectedDeal } from '../stores/deals'
 
 function DealDetail() {
-  const deal = useStore($selectedDeal);
+  const deal = useStore($selectedDeal)
 
-  if (!deal) return <p>Select a deal</p>;
+  if (!deal) return <p>Select a deal</p>
 
-  return <div>{deal.name}</div>;
+  return <div>{deal.name}</div>
 }
 ```
 

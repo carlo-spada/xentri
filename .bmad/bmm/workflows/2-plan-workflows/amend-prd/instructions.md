@@ -34,8 +34,8 @@ You are about to amend the System Constitution.
 This affects ALL downstream entities.
 
 Routing to Constitution amendment workflow...
-  </output>
-  <invoke-workflow path="{system_amend_workflow}" />
+</output>
+<invoke-workflow path="{system_amend_workflow}" />
 </check>
 
 <check if="entity_type != 'constitution'">

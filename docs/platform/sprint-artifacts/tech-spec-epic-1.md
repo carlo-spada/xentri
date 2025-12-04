@@ -40,16 +40,17 @@ The architectural philosophy is "Decoupled Unity"—a unified shell providing se
 
 This epic implements the foundational layers defined in `architecture.md`:
 
-| Component | Architecture Reference | Epic 1 Deliverable |
-|-----------|----------------------|-------------------|
-| **Shell** | Astro container with React islands | `apps/shell` with sidebar, header, auth |
-| **Shared Contract** | `packages/ts-schema` | Event envelope, User/Org schemas, API types |
-| **Backend** | Node.js microservices | `services/core-api` for auth, orgs, events |
-| **Data** | Postgres with RLS | Schema migrations, RLS policies |
-| **Events** | Postgres `system_events` + Redis transport | v0.1 event types, outbox pattern stub |
-| **Observability** | OpenTelemetry + Pino | Structured logging, trace propagation |
+| Component           | Architecture Reference                     | Epic 1 Deliverable                          |
+| ------------------- | ------------------------------------------ | ------------------------------------------- |
+| **Shell**           | Astro container with React islands         | `apps/shell` with sidebar, header, auth     |
+| **Shared Contract** | `packages/ts-schema`                       | Event envelope, User/Org schemas, API types |
+| **Backend**         | Node.js microservices                      | `services/core-api` for auth, orgs, events  |
+| **Data**            | Postgres with RLS                          | Schema migrations, RLS policies             |
+| **Events**          | Postgres `system_events` + Redis transport | v0.1 event types, outbox pattern stub       |
+| **Observability**   | OpenTelemetry + Pino                       | Structured logging, trace propagation       |
 
 **ADR Alignment:**
+
 - ADR-002 (Event Envelope): Implement `SystemEvent<T>` interface in `packages/ts-schema`
 - ADR-003 (Multi-Tenant Security): Implement fail-closed RLS with `set_config('app.current_org_id', ...)` pattern
 - ADR-004 (Railway Bootstrap Strategy): Deploy via Railway for bootstrapping; K8s when triggers fire. See `docs/architecture/adr-004-railway-bootstrap.md`
@@ -60,17 +61,18 @@ This epic implements the foundational layers defined in `architecture.md`:
 
 ### Services and Modules
 
-| Service/Package | Responsibility | Inputs | Outputs | Owner |
-|-----------------|----------------|--------|---------|-------|
-| `apps/shell` | Astro container, routing, auth UI, sidebar/header | User session, nav state | Rendered HTML, mounted React islands | Frontend |
-| `packages/ts-schema` | Shared TypeScript types, Zod schemas, event definitions | None | Exported types consumed by all | Shared |
-| `packages/ui` | shadcn/ui components with Xentri design tokens | Design spec | Reusable React components | Frontend |
-| `services/core-api` | Auth endpoints, org management, event ingestion, notifications | HTTP requests | JSON responses, events | Backend |
-| Database | Postgres 16.11 with RLS | SQL queries | Query results (org-scoped) | Infrastructure |
+| Service/Package      | Responsibility                                                 | Inputs                  | Outputs                              | Owner          |
+| -------------------- | -------------------------------------------------------------- | ----------------------- | ------------------------------------ | -------------- |
+| `apps/shell`         | Astro container, routing, auth UI, sidebar/header              | User session, nav state | Rendered HTML, mounted React islands | Frontend       |
+| `packages/ts-schema` | Shared TypeScript types, Zod schemas, event definitions        | None                    | Exported types consumed by all       | Shared         |
+| `packages/ui`        | shadcn/ui components with Xentri design tokens                 | Design spec             | Reusable React components            | Frontend       |
+| `services/core-api`  | Auth endpoints, org management, event ingestion, notifications | HTTP requests           | JSON responses, events               | Backend        |
+| Database             | Postgres 16.11 with RLS                                        | SQL queries             | Query results (org-scoped)           | Infrastructure |
 
 ### Data Models and Contracts
 
 **Users Table:**
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -84,6 +86,7 @@ CREATE TABLE users (
 ```
 
 **Organizations Table:**
+
 ```sql
 CREATE TABLE organizations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -97,6 +100,7 @@ CREATE TABLE organizations (
 ```
 
 **Members Table (Org-User Junction):**
+
 ```sql
 CREATE TABLE members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -109,6 +113,7 @@ CREATE TABLE members (
 ```
 
 **System Events Table:**
+
 ```sql
 CREATE TABLE system_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -136,6 +141,7 @@ CREATE INDEX idx_events_org_type_time ON system_events(org_id, event_type, occur
 ```
 
 **RLS Policy (Fail-Closed):**
+
 ```sql
 ALTER TABLE system_events ENABLE ROW LEVEL SECURITY;
 
@@ -148,6 +154,7 @@ CREATE POLICY tenant_isolation ON system_events
 ```
 
 **Notifications Table:**
+
 ```sql
 CREATE TABLE notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -162,6 +169,7 @@ CREATE TABLE notifications (
 ```
 
 **User Preferences Table:**
+
 ```sql
 CREATE TABLE user_preferences (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -177,39 +185,40 @@ CREATE TABLE user_preferences (
 
 **Authentication Endpoints (core-api):**
 
-| Method | Path | Request | Response | Events |
-|--------|------|---------|----------|--------|
-| POST | `/api/v1/auth/signup` | `{email, password, name}` | `{user, org, access_token}` | `xentri.user.signup.v1`, `xentri.org.created.v1` |
-| POST | `/api/v1/auth/login` | `{email, password}` | `{user, access_token}` | `xentri.user.login.v1` |
-| POST | `/api/v1/auth/oauth/google` | OAuth callback | `{user, access_token}` | `xentri.user.signup.v1` or `xentri.user.login.v1` |
-| POST | `/api/v1/auth/logout` | - | `{success: true}` | - |
-| POST | `/api/v1/auth/refresh` | Refresh token cookie | `{access_token}` | - |
-| POST | `/api/v1/auth/reset-password` | `{email}` | `{success: true}` | - |
+| Method | Path                          | Request                   | Response                    | Events                                            |
+| ------ | ----------------------------- | ------------------------- | --------------------------- | ------------------------------------------------- |
+| POST   | `/api/v1/auth/signup`         | `{email, password, name}` | `{user, org, access_token}` | `xentri.user.signup.v1`, `xentri.org.created.v1`  |
+| POST   | `/api/v1/auth/login`          | `{email, password}`       | `{user, access_token}`      | `xentri.user.login.v1`                            |
+| POST   | `/api/v1/auth/oauth/google`   | OAuth callback            | `{user, access_token}`      | `xentri.user.signup.v1` or `xentri.user.login.v1` |
+| POST   | `/api/v1/auth/logout`         | -                         | `{success: true}`           | -                                                 |
+| POST   | `/api/v1/auth/refresh`        | Refresh token cookie      | `{access_token}`            | -                                                 |
+| POST   | `/api/v1/auth/reset-password` | `{email}`                 | `{success: true}`           | -                                                 |
 
 **User/Profile Endpoints:**
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| GET | `/api/v1/users/me` | - | `{user, org, preferences}` |
-| PATCH | `/api/v1/users/me` | `{name?, avatar_url?}` | `{user}` |
-| DELETE | `/api/v1/users/me` | - | `{success: true}` |
+| Method | Path               | Request                | Response                   |
+| ------ | ------------------ | ---------------------- | -------------------------- |
+| GET    | `/api/v1/users/me` | -                      | `{user, org, preferences}` |
+| PATCH  | `/api/v1/users/me` | `{name?, avatar_url?}` | `{user}`                   |
+| DELETE | `/api/v1/users/me` | -                      | `{success: true}`          |
 
 **Events Endpoint:**
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| POST | `/api/v1/events` | `SystemEvent` payload | `{event_id, acknowledged: true}` |
-| GET | `/api/v1/events` | `?type=&since=&limit=` | `{data: SystemEvent[], meta: {cursor}}` |
+| Method | Path             | Request                | Response                                |
+| ------ | ---------------- | ---------------------- | --------------------------------------- |
+| POST   | `/api/v1/events` | `SystemEvent` payload  | `{event_id, acknowledged: true}`        |
+| GET    | `/api/v1/events` | `?type=&since=&limit=` | `{data: SystemEvent[], meta: {cursor}}` |
 
 **Notifications Endpoints:**
 
-| Method | Path | Request | Response |
-|--------|------|---------|----------|
-| GET | `/api/v1/notifications` | `?unread_only=` | `{data: Notification[], meta}` |
-| PATCH | `/api/v1/notifications/:id/read` | - | `{notification}` |
-| PATCH | `/api/v1/users/me/preferences` | `{theme?, email_notifications?}` | `{preferences}` |
+| Method | Path                             | Request                          | Response                       |
+| ------ | -------------------------------- | -------------------------------- | ------------------------------ |
+| GET    | `/api/v1/notifications`          | `?unread_only=`                  | `{data: Notification[], meta}` |
+| PATCH  | `/api/v1/notifications/:id/read` | -                                | `{notification}`               |
+| PATCH  | `/api/v1/users/me/preferences`   | `{theme?, email_notifications?}` | `{preferences}`                |
 
 **Error Response Format (Problem Details):**
+
 ```json
 {
   "type": "https://xentri.app/errors/validation",
@@ -268,15 +277,16 @@ CREATE TABLE user_preferences (
 
 ### Performance
 
-| Metric | Target | Source |
-|--------|--------|--------|
-| Shell initial load (FMP) | <2s on 3G | NFR1 |
-| Module/category switch | <500ms | NFR2 |
-| Event write latency | <100ms | NFR5 |
-| API response (reads) | p95 <300ms | Architecture |
-| API response (writes) | p95 <600ms | Architecture |
+| Metric                   | Target     | Source       |
+| ------------------------ | ---------- | ------------ |
+| Shell initial load (FMP) | <2s on 3G  | NFR1         |
+| Module/category switch   | <500ms     | NFR2         |
+| Event write latency      | <100ms     | NFR5         |
+| API response (reads)     | p95 <300ms | Architecture |
+| API response (writes)    | p95 <600ms | Architecture |
 
 **Implementation:**
+
 - Astro SSG for shell HTML (minimal JS)
 - React islands lazy-loaded with hover prefetch
 - Connection pooling for Postgres (PgBouncer)
@@ -284,41 +294,43 @@ CREATE TABLE user_preferences (
 
 ### Security
 
-| Requirement | Implementation | Source |
-|-------------|----------------|--------|
-| TLS 1.3 | Ingress/CDN termination, internal mTLS | NFR7 |
-| Encryption at rest | Postgres encryption, encrypted backups | NFR8 |
-| Multi-tenant isolation | RLS on all tables, `org_id` enforcement | NFR9, FR82 |
-| Secure tokens | HTTP-only cookies, short-lived JWTs, refresh rotation | NFR10 |
-| No PII in logs | Scrub email/name from application logs | NFR11 |
-| SQL injection prevention | Parameterized queries via Prisma | NFR12 |
-| XSS prevention | CSP headers, output encoding | NFR13 |
+| Requirement              | Implementation                                        | Source     |
+| ------------------------ | ----------------------------------------------------- | ---------- |
+| TLS 1.3                  | Ingress/CDN termination, internal mTLS                | NFR7       |
+| Encryption at rest       | Postgres encryption, encrypted backups                | NFR8       |
+| Multi-tenant isolation   | RLS on all tables, `org_id` enforcement               | NFR9, FR82 |
+| Secure tokens            | HTTP-only cookies, short-lived JWTs, refresh rotation | NFR10      |
+| No PII in logs           | Scrub email/name from application logs                | NFR11      |
+| SQL injection prevention | Parameterized queries via Prisma                      | NFR12      |
+| XSS prevention           | CSP headers, output encoding                          | NFR13      |
 
 ### Reliability/Availability
 
-| Metric | Target | Source |
-|--------|--------|--------|
-| System availability | 99.5% uptime | NFR19 |
-| Data durability | Zero data loss | NFR20 |
-| Backup frequency | Daily full + continuous WAL | NFR21 |
-| RTO | <4 hours | NFR22 |
-| RPO | <1 hour | NFR23 |
+| Metric              | Target                      | Source |
+| ------------------- | --------------------------- | ------ |
+| System availability | 99.5% uptime                | NFR19  |
+| Data durability     | Zero data loss              | NFR20  |
+| Backup frequency    | Daily full + continuous WAL | NFR21  |
+| RTO                 | <4 hours                    | NFR22  |
+| RPO                 | <1 hour                     | NFR23  |
 
 **Implementation:**
+
 - Managed Postgres with automated failover
 - Point-in-time recovery enabled
 - Event log is append-only (no accidental deletes)
 
 ### Observability
 
-| Requirement | Implementation | Source |
-|-------------|----------------|--------|
-| Structured logging | Pino JSON logs with correlation IDs | NFR24 |
-| Error tracking | Exception capture with stack traces | NFR25 |
-| Performance monitoring | OpenTelemetry traces, p50/p95/p99 dashboards | NFR26 |
-| Alerting | PagerDuty/Slack for critical issues | NFR28 |
+| Requirement            | Implementation                               | Source |
+| ---------------------- | -------------------------------------------- | ------ |
+| Structured logging     | Pino JSON logs with correlation IDs          | NFR24  |
+| Error tracking         | Exception capture with stack traces          | NFR25  |
+| Performance monitoring | OpenTelemetry traces, p50/p95/p99 dashboards | NFR26  |
+| Alerting               | PagerDuty/Slack for critical issues          | NFR28  |
 
 **Logging Format:**
+
 ```json
 {
   "level": "info",
@@ -337,30 +349,30 @@ CREATE TABLE user_preferences (
 
 ### External Dependencies
 
-| Dependency | Version | Purpose |
-|------------|---------|---------|
-| Astro | 5.16.0 | Shell framework |
-| React | 19.2.0 | Islands/micro-apps |
-| Node.js | 24.11.1 LTS | Backend runtime |
-| Fastify | 5.6.2 | API framework |
-| Prisma | 7.0.1 | Database ORM |
-| Postgres | 16.11 | Primary database |
-| Redis | 8.4.0 | Event transport, caching |
-| Clerk | @clerk/fastify 3.x, @clerk/astro 1.x | Authentication with native Organizations |
-| Turborepo | 2.6.1 | Monorepo tooling |
-| pnpm | 10.23.0 | Package manager |
+| Dependency | Version                              | Purpose                                  |
+| ---------- | ------------------------------------ | ---------------------------------------- |
+| Astro      | 5.16.0                               | Shell framework                          |
+| React      | 19.2.0                               | Islands/micro-apps                       |
+| Node.js    | 24.11.1 LTS                          | Backend runtime                          |
+| Fastify    | 5.6.2                                | API framework                            |
+| Prisma     | 7.0.1                                | Database ORM                             |
+| Postgres   | 16.11                                | Primary database                         |
+| Redis      | 8.4.0                                | Event transport, caching                 |
+| Clerk      | @clerk/fastify 3.x, @clerk/astro 1.x | Authentication with native Organizations |
+| Turborepo  | 2.6.1                                | Monorepo tooling                         |
+| pnpm       | 10.23.0                              | Package manager                          |
 
 ### Internal Packages
 
-| Package | Purpose |
-|---------|---------|
-| `packages/ts-schema` | Shared types, Zod schemas, event definitions |
-| `packages/ui` | shadcn/ui components with Xentri design tokens |
+| Package              | Purpose                                        |
+| -------------------- | ---------------------------------------------- |
+| `packages/ts-schema` | Shared types, Zod schemas, event definitions   |
+| `packages/ui`        | shadcn/ui components with Xentri design tokens |
 
 ### Transactional Email (Notification Delivery)
 
-| Provider | Purpose |
-|----------|---------|
+| Provider           | Purpose                                           |
+| ------------------ | ------------------------------------------------- |
 | Resend or Postmark | Welcome email, password reset, lead notifications |
 
 ---
@@ -368,6 +380,7 @@ CREATE TABLE user_preferences (
 ## Acceptance Criteria (Authoritative)
 
 ### Story 1.1: Project Initialization & Infrastructure
+
 1. **Given** a fresh clone, **When** `npm install && npm run dev` runs, **Then** the Astro shell loads locally
 2. **Given** the project structure, **When** inspected, **Then** it follows the monorepo layout (`apps/shell`, `packages/ui`, `services/core-api`)
 3. **Given** the database, **When** initialized, **Then** it runs a local Postgres instance via Docker with RLS enabled
@@ -375,6 +388,7 @@ CREATE TABLE user_preferences (
 5. **Given** the smoke script, **When** executed, **Then** it seeds org A/B and confirms cross-org read is blocked while shell still loads
 
 ### Story 1.2: Event Backbone & Database Schema
+
 1. `system_events` table exists with `org_id`, `event_type`, `payload`, `timestamp` (append-only)
 2. Queries under an authenticated role enforce RLS automatically; cross-org reads return 0 rows
 3. Events are immutable (no updates/deletes) and include `user_id` when present
@@ -383,17 +397,20 @@ CREATE TABLE user_preferences (
 6. Org-scoped events endpoint allows viewing recent events per org
 
 ### Story 1.3: User Authentication & Signup
+
 1. Email/password login redirects to shell on success
 2. Social OAuth login (Google, Apple, or other configured providers) succeeds and redirects to shell
 3. `user_signup` and `user_login` events log with `org_id` + `user_id`
 4. Sessions use HTTP-only cookies; session managed by Clerk SDK
 
 ### Story 1.4: Organization Creation & Provisioning
+
 1. On new user signup, an Organization record is automatically created
 2. New user is assigned as "Owner" of that org
 3. `org_created` event is logged
 
 ### Story 1.5: Application Shell & Navigation
+
 1. Shell shows 7 category icons in the sidebar
 2. Sidebar expands active category and collapses others on click
 3. Navigation switches panels without full page reload; state preserved
@@ -401,18 +418,21 @@ CREATE TABLE user_preferences (
 5. Mobile: sidebar uses touch-safe targets (44px) and shows graceful offline banner
 
 ### Story 1.6: Thin Vertical Slice
+
 1. From a fresh environment, a user can sign up, land in shell, open Strategy, and create a Brief draft
 2. `brief_created` event is written and visible via org-scoped event query
 3. Shell shows Brief summary tile post-creation
 4. Slice runs in dev and CI environment; uses production-like RLS
 
 ### Story 1.7: DevOps, Observability, and Test Readiness
+
 1. CI runs lint + unit tests + type checks on PRs; fails gate merges
 2. Logging uses structured JSON with correlation IDs; error tracking hooked
 3. Minimal load test or smoke test script for shell/Brief slice
 4. Deployment pipeline supports zero-downtime deploys
 
 **Deployment Artifacts (ADR-004):**
+
 - `docs/architecture/adr-004-railway-bootstrap.md` — Bridge Strategy decision record
 - `docs/deployment-plan.md` — Step-by-step Railway deployment guide
 - `docs/k8s-migration-runbook.md` — K8s migration when triggers fire
@@ -423,42 +443,46 @@ CREATE TABLE user_preferences (
 ## Post-Review Follow-ups
 
 ### Story 1.2 (Resolved)
+
 - ~~Story 1.2: Enforce org membership/JWT before setting org context for events~~ → Membership check implemented; JWT binding deferred to Story 1.3
 - ~~Story 1.2: Rewrite listEvents query with parameterized SQL~~ → Implemented with Prisma.sql fragments
 - ~~Story 1.2: Tie CreateEvent validation to typed payload schemas~~ → Implemented with schema refinement
 - ~~Story 1.2: Add RLS/cross-org API coverage~~ → Integration tests added
 
 ### Story 1.3 (CRITICAL - from Story 1.2 deferral)
+
 - **[HIGH] Story 1.3 MUST implement JWT-backed org/user verification** before any deployment. Current events API trusts x-user-id header without JWT binding, creating cross-tenant exposure risk. (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58)
 - **[MEDIUM] Story 1.3 should add auth spoof tests** to verify JWT binding prevents header spoofing (services/core-api/src/routes/events.test.ts)
 
 ### Story 1.4 (Resolved 2025-11-26)
+
 - **[HIGH] Set org context before organization.upsert in organization.created webhook** to satisfy RLS and allow provisioning under non-superuser roles (services/core-api/src/routes/webhooks/clerk.ts:123-137; services/core-api/prisma/migrations/20251126093000_clerk_ids_text/migration.sql:45-58).
 - **[MEDIUM] Enforce owner-only org settings updates** by checking membership role (MemberRole.owner) instead of trusting `orgRole` string; add negative test (services/core-api/src/routes/orgs.ts:100-166).
 - **[LOW] Deduplicate/transactional provisioned event emission** to avoid duplicate `xentri.org.provisioned.v1` events on concurrent webhook replays (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-135).
 
 ### Story 1.6 (Resolved 2025-11-28)
+
 - Strategy/Brief flows use authenticated Clerk org context; brief events emitted under RLS; readiness metrics recorded; failure UX with retry and co-pilot fallback added. E2E updated to require session cookie and org envs.
 
 ---
 
 ## Traceability Mapping
 
-| AC# | Spec Section | Component(s) | Test Idea |
-|-----|--------------|--------------|-----------|
-| 1.1.1 | Bootstrap commands | `apps/shell`, `docker-compose` | E2E: fresh clone → dev server starts |
-| 1.1.2 | Project Structure | All packages | Unit: directory structure matches spec |
-| 1.1.3 | Data Models | Database, RLS policies | Integration: RLS enabled check |
-| 1.1.5 | RLS Enforcement | Database | Integration: cross-org query returns 0 |
-| 1.2.1 | Data Models (system_events) | Database | Unit: table schema validation |
-| 1.2.2 | RLS Policy | Database | Integration: org isolation test |
-| 1.2.3 | Event immutability | Database | Unit: UPDATE/DELETE blocked |
-| 1.3.1-2 | Auth APIs | `core-api` | E2E: signup → shell redirect |
-| 1.3.3 | Event Write Flow | `core-api`, events table | Integration: event logged on login |
-| 1.4.1-3 | Signup Flow | `core-api`, triggers | Integration: org auto-created |
-| 1.5.1-4 | Shell UX | `apps/shell`, `packages/ui` | E2E: sidebar behavior, theme toggle |
-| 1.6.1-3 | End-to-end slice | All | E2E: signup → Brief → event visible |
-| 1.7.1-4 | CI/CD, Observability | GitHub Actions, logging | CI: pipeline runs on PR |
+| AC#     | Spec Section                | Component(s)                   | Test Idea                              |
+| ------- | --------------------------- | ------------------------------ | -------------------------------------- |
+| 1.1.1   | Bootstrap commands          | `apps/shell`, `docker-compose` | E2E: fresh clone → dev server starts   |
+| 1.1.2   | Project Structure           | All packages                   | Unit: directory structure matches spec |
+| 1.1.3   | Data Models                 | Database, RLS policies         | Integration: RLS enabled check         |
+| 1.1.5   | RLS Enforcement             | Database                       | Integration: cross-org query returns 0 |
+| 1.2.1   | Data Models (system_events) | Database                       | Unit: table schema validation          |
+| 1.2.2   | RLS Policy                  | Database                       | Integration: org isolation test        |
+| 1.2.3   | Event immutability          | Database                       | Unit: UPDATE/DELETE blocked            |
+| 1.3.1-2 | Auth APIs                   | `core-api`                     | E2E: signup → shell redirect           |
+| 1.3.3   | Event Write Flow            | `core-api`, events table       | Integration: event logged on login     |
+| 1.4.1-3 | Signup Flow                 | `core-api`, triggers           | Integration: org auto-created          |
+| 1.5.1-4 | Shell UX                    | `apps/shell`, `packages/ui`    | E2E: sidebar behavior, theme toggle    |
+| 1.6.1-3 | End-to-end slice            | All                            | E2E: signup → Brief → event visible    |
+| 1.7.1-4 | CI/CD, Observability        | GitHub Actions, logging        | CI: pipeline runs on PR                |
 
 ---
 
@@ -466,29 +490,29 @@ CREATE TABLE user_preferences (
 
 ### Risks
 
-| Risk | Severity | Mitigation |
-|------|----------|------------|
+| Risk                                 | Severity | Mitigation                                                   |
+| ------------------------------------ | -------- | ------------------------------------------------------------ |
 | **R1:** RLS bypass creates data leak | Critical | Paranoid testing; fail-closed pattern; code review checklist |
-| **R2:** Auth token leakage | High | HTTP-only cookies; short TTL; refresh rotation |
-| **R3:** Event table grows unbounded | Medium | Partitioning strategy; archival policy (defer to v0.3) |
-| **R4:** Apple Silicon Docker quirks | Low | Document env prerequisites; test on M1/M2 |
+| **R2:** Auth token leakage           | High     | HTTP-only cookies; short TTL; refresh rotation               |
+| **R3:** Event table grows unbounded  | Medium   | Partitioning strategy; archival policy (defer to v0.3)       |
+| **R4:** Apple Silicon Docker quirks  | Low      | Document env prerequisites; test on M1/M2                    |
 
 ### Assumptions
 
-| ID | Assumption |
-|----|------------|
+| ID      | Assumption                                                      |
+| ------- | --------------------------------------------------------------- |
 | **A1:** | Clerk Auth is sufficient for MVP (no custom auth server needed) |
 | **A2:** | Single Postgres cluster handles MVP load (no read replicas yet) |
-| **A3:** | Event throughput <1000/sec is sufficient for MVP |
-| **A4:** | Mobile PWA is acceptable (no native app for v0.1) |
+| **A3:** | Event throughput <1000/sec is sufficient for MVP                |
+| **A4:** | Mobile PWA is acceptable (no native app for v0.1)               |
 
 ### Open Questions
 
-| ID | Question | Owner | Decision |
-|----|----------|-------|----------|
-| **Q1:** | Which transactional email provider? | Backend | **Resend** — Modern API, React Email templates, great DX |
-| **Q2:** | Redis hosting approach? | DevOps | **Upstash** — Pay-per-request (cheap at start), auto-scales to millions, zero ops |
-| **Q3:** | How to handle OAuth callback state edge cases? | Backend | Document during Story 1.3 implementation |
+| ID      | Question                                       | Owner   | Decision                                                                          |
+| ------- | ---------------------------------------------- | ------- | --------------------------------------------------------------------------------- |
+| **Q1:** | Which transactional email provider?            | Backend | **Resend** — Modern API, React Email templates, great DX                          |
+| **Q2:** | Redis hosting approach?                        | DevOps  | **Upstash** — Pay-per-request (cheap at start), auto-scales to millions, zero ops |
+| **Q3:** | How to handle OAuth callback state edge cases? | Backend | Document during Story 1.3 implementation                                          |
 
 ---
 
@@ -496,11 +520,11 @@ CREATE TABLE user_preferences (
 
 ### Test Levels
 
-| Level | Scope | Framework | Coverage Target |
-|-------|-------|-----------|-----------------|
-| **Unit** | Functions, utilities, schemas | Vitest | >70% for core modules |
-| **Integration** | Database, RLS, API routes | Vitest + Postgres test container | All RLS policies |
-| **E2E** | Full user flows | Playwright | Critical paths (signup, auth, shell nav) |
+| Level           | Scope                         | Framework                        | Coverage Target                          |
+| --------------- | ----------------------------- | -------------------------------- | ---------------------------------------- |
+| **Unit**        | Functions, utilities, schemas | Vitest                           | >70% for core modules                    |
+| **Integration** | Database, RLS, API routes     | Vitest + Postgres test container | All RLS policies                         |
+| **E2E**         | Full user flows               | Playwright                       | Critical paths (signup, auth, shell nav) |
 
 ### Priority Test Cases
 

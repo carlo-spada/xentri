@@ -48,7 +48,8 @@ across the entire system.
 ### Key Architecture Decisions
 
 | Decision | Choice | Rationale | Alternatives Considered |
-|----------|--------|-----------|------------------------|
+| -------- | ------ | --------- | ----------------------- |
+
 {{#each architecture_decisions}}
 | {{name}} | {{choice}} | {{rationale}} | {{alternatives}} |
 {{/each}}
@@ -62,13 +63,18 @@ across the entire system.
 ### Event Envelope Schema
 
 ```typescript
-{{event_envelope_schema}}
+{
+  {
+    event_envelope_schema
+  }
+}
 ```
 
 ### Event Categories
 
 | Category | Pattern | Examples |
-|----------|---------|----------|
+| -------- | ------- | -------- |
+
 {{#each event_categories}}
 | {{category}} | {{pattern}} | {{examples}} |
 {{/each}}
@@ -82,7 +88,8 @@ across the entire system.
 ### Data Stores
 
 | Store | Technology | Purpose | Tenancy Model |
-|-------|------------|---------|---------------|
+| ----- | ---------- | ------- | ------------- |
+
 {{#each data_stores}}
 | {{name}} | {{technology}} | {{purpose}} | {{tenancy}} |
 {{/each}}
@@ -118,7 +125,8 @@ across the entire system.
 ### Stack Summary
 
 | Layer | Technology | Version | Rationale |
-|-------|------------|---------|-----------|
+| ----- | ---------- | ------- | --------- |
+
 {{#each tech_stack}}
 | {{layer}} | {{technology}} | {{version}} | {{rationale}} |
 {{/each}}
@@ -148,6 +156,7 @@ across the entire system.
 ## Architecture Decision Records
 
 {{#each adrs}}
+
 ### ADR-{{number}}: {{title}}
 
 **Status:** {{status}}
@@ -164,9 +173,9 @@ across the entire system.
 
 ## Document History
 
-| Date | Version | Change | Author |
-|------|---------|--------|--------|
-| {{date}} | 1.0.0 | Initial architecture created | {{user_name}} |
+| Date     | Version | Change                       | Author        |
+| -------- | ------- | ---------------------------- | ------------- |
+| {{date}} | 1.0.0   | Initial architecture created | {{user_name}} |
 
 ---
 

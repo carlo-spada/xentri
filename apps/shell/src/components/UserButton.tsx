@@ -1,4 +1,4 @@
-import { UserButton as ClerkUserButton, OrganizationSwitcher } from '@clerk/astro/react';
+import { UserButton as ClerkUserButton, OrganizationSwitcher } from '@clerk/astro/react'
 
 /**
  * User button component for the shell header.
@@ -44,5 +44,5 @@ export function UserButton() {
         }}
       />
     </div>
-  );
+  )
 }

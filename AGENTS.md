@@ -12,13 +12,13 @@
 
 Documentation follows a **Five Entity Types** model (determined by PURPOSE, not depth):
 
-| Entity Type | Path Pattern | Contains |
-|-------------|--------------|----------|
-| **Constitution** | `docs/platform/*.md` | PR-xxx, IC-xxx, system-wide rules |
-| **Infrastructure Module** | `docs/platform/{module}/` | Interfaces, implementation |
-| **Strategic Container** | `docs/{category}/` | Strategic alignment |
-| **Coordination Unit** | `docs/{category}/{subcat}/` | Module orchestration |
-| **Business Module** | `docs/{cat}/{subcat}/{mod}/` | Feature FRs |
+| Entity Type               | Path Pattern                 | Contains                          |
+| ------------------------- | ---------------------------- | --------------------------------- |
+| **Constitution**          | `docs/platform/*.md`         | PR-xxx, IC-xxx, system-wide rules |
+| **Infrastructure Module** | `docs/platform/{module}/`    | Interfaces, implementation        |
+| **Strategic Container**   | `docs/{category}/`           | Strategic alignment               |
+| **Coordination Unit**     | `docs/{category}/{subcat}/`  | Module orchestration              |
+| **Business Module**       | `docs/{cat}/{subcat}/{mod}/` | Feature FRs                       |
 
 ```
 docs/
@@ -35,6 +35,7 @@ docs/
 ```
 
 **Module Management:** NEVER manually edit `manifest.yaml`. Use scripts:
+
 ```bash
 ./scripts/add-module.sh platform {module}
 ./scripts/add-category.sh {category} "Description"
@@ -44,15 +45,16 @@ docs/
 
 ## Architecture: "Decoupled Unity"
 
-| Layer | Technology | Role |
-|-------|------------|------|
-| **Shell** | Astro | Container, routing, auth |
-| **Micro-Apps** | React Islands | Interactive SPAs, lazy-loaded |
-| **Backend** | Fastify + Prisma | Microservices per domain |
-| **Data** | PostgreSQL | Schema-per-service, RLS multi-tenancy |
-| **Events** | Redis Streams | Async event transport |
+| Layer          | Technology       | Role                                  |
+| -------------- | ---------------- | ------------------------------------- |
+| **Shell**      | Astro            | Container, routing, auth              |
+| **Micro-Apps** | React Islands    | Interactive SPAs, lazy-loaded         |
+| **Backend**    | Fastify + Prisma | Microservices per domain              |
+| **Data**       | PostgreSQL       | Schema-per-service, RLS multi-tenancy |
+| **Events**     | Redis Streams    | Async event transport                 |
 
 **Non-negotiables:**
+
 - Multi-tenant: every table has `org_id` with Row-Level Security
 - Event-first: business actions write to `system_events` before domain tables
 - Visible automation: every automated action logged with explanation
@@ -90,23 +92,23 @@ Workflows tracked **per entity** (not project-wide). Each entity type has its ow
 /bmad:bmm:workflows:workflow-status  # View progress, next steps
 ```
 
-| Phase | Workflows | Status |
-|-------|-----------|--------|
-| **Discovery** | brainstorm-project, research, product-soul | Optional |
-| **Planning** | prd, validate-prd | Required + Recommended |
-| **Design** | create-ux, validate-ux | Conditional (if_has_ui) |
-| **Solutioning** | architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness | Required + Recommended |
-| **Implementation** | sprint-planning | Required |
+| Phase              | Workflows                                                                                                            | Status                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| **Discovery**      | brainstorm-project, research, product-soul                                                                           | Optional                |
+| **Planning**       | prd, validate-prd                                                                                                    | Required + Recommended  |
+| **Design**         | create-ux, validate-ux                                                                                               | Conditional (if_has_ui) |
+| **Solutioning**    | architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness | Required + Recommended  |
+| **Implementation** | sprint-planning                                                                                                      | Required                |
 
 **Validation workflows are RECOMMENDED** to ensure quality gates.
 
-| Entity Type | Key Differences |
-|-------------|-----------------|
-| **Constitution** | Full stack, product-soul, system-wide epics |
-| **Infrastructure Module** | Inherits Constitution, module-specific PRD |
-| **Strategic Container** | Strategic PRD, no epics (children handle) |
-| **Coordination Unit** | Coordination PRD, no epics (children handle) |
-| **Business Module** | Full stack, implementation-ready |
+| Entity Type               | Key Differences                              |
+| ------------------------- | -------------------------------------------- |
+| **Constitution**          | Full stack, product-soul, system-wide epics  |
+| **Infrastructure Module** | Inherits Constitution, module-specific PRD   |
+| **Strategic Container**   | Strategic PRD, no epics (children handle)    |
+| **Coordination Unit**     | Coordination PRD, no epics (children handle) |
+| **Business Module**       | Full stack, implementation-ready             |
 
 ## Coding Standards
 
@@ -119,14 +121,17 @@ Workflows tracked **per entity** (not project-wide). Each entity type has its ow
 ## Governance
 
 ### Constitution Changes
+
 Protected documents (`docs/platform/*.md`): prd, architecture, ux-design, epics, product-soul
 
 When modifying: **Flag change → Provide rationale → Include in commit message**
 
 ### Zero-Trust Inheritance
+
 Entities inherit from **direct parent only**. Can ADD requirements, never CONTRADICT parent.
 
 ### Requirement IDs
+
 ```
 PR-xxx / IC-xxx     → Constitution only
 FR-{CODE}-xxx       → All other entities (e.g., FR-SHL-001, FR-STR-PUL-001)

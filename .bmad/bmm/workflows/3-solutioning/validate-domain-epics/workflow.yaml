@@ -1,70 +1,70 @@
 # Domain Epics Validation Workflow
 name: validate-domain-epics
-description: "Validate Domain Epics document for completeness, traceability, and inheritance alignment."
-author: "BMad"
+description: 'Validate Domain Epics document for completeness, traceability, and inheritance alignment.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Federated hierarchy - determined at runtime
-entity_type: "{entity_type}"
-entity_type_display: "{entity_type_display}"
-output_folder_resolved: "{output_folder_resolved}"
-parent_epics_path: "{parent_epics_path}"
-constitution_epics_path: "docs/platform/epics.md"
+entity_type: '{entity_type}'
+entity_type_display: '{entity_type_display}'
+output_folder_resolved: '{output_folder_resolved}'
+parent_epics_path: '{parent_epics_path}'
+constitution_epics_path: 'docs/platform/epics.md'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-epics"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/validate-domain-epics'
+instructions: '{installed_path}/instructions.md'
 
 # Entity-specific checklists
-checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-epics-checklist.md"
-checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-epics-checklist.md"
-checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-epics-checklist.md"
-checklist_business: "{project-root}/.bmad/bmm/checklists/business-epics-checklist.md"
+checklist_infrastructure: '{project-root}/.bmad/bmm/checklists/infrastructure-epics-checklist.md'
+checklist_strategic: '{project-root}/.bmad/bmm/checklists/strategic-epics-checklist.md'
+checklist_coordination: '{project-root}/.bmad/bmm/checklists/coordination-epics-checklist.md'
+checklist_business: '{project-root}/.bmad/bmm/checklists/business-epics-checklist.md'
 
 # Validation - schema resolved based on entity type
 validation:
   schema_map:
-    infrastructure_module: "{project-root}/.bmad/bmm/checklists/infrastructure-epics-checklist.md"
-    strategic_container: "{project-root}/.bmad/bmm/checklists/strategic-epics-checklist.md"
-    coordination_unit: "{project-root}/.bmad/bmm/checklists/coordination-epics-checklist.md"
-    business_module: "{project-root}/.bmad/bmm/checklists/business-epics-checklist.md"
+    infrastructure_module: '{project-root}/.bmad/bmm/checklists/infrastructure-epics-checklist.md'
+    strategic_container: '{project-root}/.bmad/bmm/checklists/strategic-epics-checklist.md'
+    coordination_unit: '{project-root}/.bmad/bmm/checklists/coordination-epics-checklist.md'
+    business_module: '{project-root}/.bmad/bmm/checklists/business-epics-checklist.md'
   strict: true
   min_pass_rate: 80
   inheritance_required: true
 
 # Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
-verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+validate_inheritance_task: '{project-root}/.bmad/bmm/tasks/validate-inheritance.xml'
+verify_traceability_task: '{project-root}/.bmad/bmm/tasks/verify-traceability.xml'
 
 # Input file patterns
 input_file_patterns:
   epics_to_validate:
-    description: "Domain Epics to validate"
-    whole: "{output_folder_resolved}epics.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Domain Epics to validate'
+    whole: '{output_folder_resolved}epics.md'
+    load_strategy: 'FULL_LOAD'
 
   entity_prd:
-    description: "Entity PRD for traceability"
-    whole: "{output_folder_resolved}prd.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Entity PRD for traceability'
+    whole: '{output_folder_resolved}prd.md'
+    load_strategy: 'FULL_LOAD'
 
   constitution_epics:
-    description: "Constitution Epics for inheritance check"
-    whole: "{project-root}/docs/platform/epics.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Constitution Epics for inheritance check'
+    whole: '{project-root}/docs/platform/epics.md'
+    load_strategy: 'FULL_LOAD'
 
   parent_epics:
-    description: "Parent Epics for inheritance check"
-    whole: "{parent_epics_path}"
-    load_strategy: "FULL_LOAD"
+    description: 'Parent Epics for inheritance check'
+    whole: '{parent_epics_path}'
+    load_strategy: 'FULL_LOAD'
 
 # Output
-validation_report_path: "{output_folder_resolved}validation-reports/"
+validation_report_path: '{output_folder_resolved}validation-reports/'
 
 standalone: true

@@ -3,12 +3,12 @@ name: Schema Check
 on:
   push:
     paths:
-      - "packages/ts-schema/**"
-      - ".github/workflows/schema-check.yml"
+      - 'packages/ts-schema/**'
+      - '.github/workflows/schema-check.yml'
   pull_request:
     paths:
-      - "packages/ts-schema/**"
-      - ".github/workflows/schema-check.yml"
+      - 'packages/ts-schema/**'
+      - '.github/workflows/schema-check.yml'
 
 jobs:
   typecheck:

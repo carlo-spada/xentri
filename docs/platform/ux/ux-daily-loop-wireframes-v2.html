@@ -1,1910 +1,2095 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xentri Daily Loop v2 — Enhanced Visual Hierarchy + Complete Specs</title>
-  <style>
-    :root {
-      /* Xentri 4-Layer Dark Neutral System */
-      --base: #0d0b12;           /* Deepest - app background */
-      --chrome: #16131e;         /* Navigation, sidebars */
-      --surface: #1e1a28;        /* Content cards, panels */
-      --surface-plus: #282335;   /* Elevated/focused elements */
-
-      /* Borders & Structure */
-      --border-subtle: #2a2538;  /* Subtle separation */
-      --border-default: #352f45; /* Default borders */
-      --border-strong: #453d5a;  /* Strong separation, nav groups */
-
-      /* Accent Colors */
-      --primary: #38bdf8;
-      --secondary: #a78bfa;
-      --success: #34d399;
-      --warning: #fbbf24;
-      --error: #f87171;
-      --info: #60a5fa;
-
-      /* Text */
-      --text: #f0ecf7;
-      --text-secondary: #b8b0c8;
-      --text-muted: #7a7289;
-      --text-dim: #5a5368;
-
-      /* Active/Focus */
-      --active-bg: rgba(56, 189, 248, 0.08);
-      --active-border: var(--primary);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: var(--base);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    /* ===== DOCUMENT STRUCTURE ===== */
-    .doc-header {
-      padding: 48px 40px;
-      border-bottom: 1px solid var(--border-strong);
-      background: linear-gradient(180deg, var(--chrome) 0%, var(--base) 100%);
-    }
-
-    .doc-header h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .doc-header p {
-      color: var(--text-secondary);
-      max-width: 700px;
-    }
-
-    .section {
-      padding: 48px 40px;
-      border-bottom: 1px solid var(--border-strong);
-    }
-
-    .section-header {
-      margin-bottom: 32px;
-    }
-
-    .section-number {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-
-    .section h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .section-desc {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
-
-    /* ===== COLOR SYSTEM PREVIEW ===== */
-    .color-system {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-
-    @media (max-width: 800px) {
-      .color-system { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .color-layer {
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid var(--border-default);
-    }
-
-    .color-layer-base { background: var(--base); }
-    .color-layer-chrome { background: var(--chrome); }
-    .color-layer-surface { background: var(--surface); }
-    .color-layer-surface-plus { background: var(--surface-plus); }
-
-    .color-layer-name {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .color-layer-hex {
-      font-family: monospace;
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    .color-layer-use {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-top: 8px;
-    }
-
-    /* ===== WIREFRAME CONTAINERS ===== */
-    .wireframe-grid {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 32px;
-      margin-top: 32px;
-    }
-
-    @media (max-width: 1100px) {
-      .wireframe-grid { grid-template-columns: 1fr; }
-    }
-
-    .wireframe-column h3 {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    /* ===== MOBILE FRAME ===== */
-    .mobile-frame {
-      width: 360px;
-      background: var(--base);
-      border: 2px solid var(--border-strong);
-      border-radius: 24px;
-      overflow: hidden;
-    }
-
-    .mobile-status-bar {
-      background: var(--chrome);
-      padding: 8px 16px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .mobile-header {
-      background: var(--chrome);
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-default);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .mobile-header-left h4 {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .mobile-header-left .subtitle {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .mobile-body {
-      background: var(--base);
-      padding: 16px 20px;
-      min-height: 480px;
-    }
-
-    .mobile-section {
-      margin-bottom: 24px;
-    }
-
-    .mobile-section-header {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .mobile-bottom {
-      background: var(--chrome);
-      border-top: 1px solid var(--border-default);
-      padding: 12px 20px;
-    }
-
-    /* ===== DESKTOP FRAME ===== */
-    .desktop-frame {
-      background: var(--base);
-      border: 2px solid var(--border-strong);
-      border-radius: 12px;
-      overflow: hidden;
-      min-height: 520px;
-    }
-
-    .desktop-layout {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      min-height: 520px;
-    }
-
-    .desktop-nav {
-      background: var(--chrome);
-      border-right: 1px solid var(--border-default);
-      padding: 20px 0;
-    }
-
-    .desktop-nav-header {
-      padding: 0 20px 16px;
-      border-bottom: 1px solid var(--border-subtle);
-      margin-bottom: 12px;
-    }
-
-    .desktop-nav-header h4 {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .desktop-nav-header .subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .desktop-content {
-      background: var(--base);
-      padding: 24px;
-    }
-
-    /* ===== NAV ITEMS WITH LEFT RAIL ===== */
-    .nav-group {
-      margin-bottom: 8px;
-    }
-
-    .nav-group-label {
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      padding: 8px 20px 6px;
-    }
-
-    .nav-item {
-      padding: 12px 20px;
-      margin: 2px 8px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-      color: var(--text-secondary);
-    }
-
-    .nav-item:hover {
-      background: var(--surface);
-    }
-
-    .nav-item.active {
-      background: var(--active-bg);
-      color: var(--text);
-    }
-
-    .nav-item.active::before {
-      content: '';
-      position: absolute;
-      left: -8px;
-      top: 4px;
-      bottom: 4px;
-      width: 3px;
-      background: var(--primary);
-      border-radius: 0 2px 2px 0;
-    }
-
-    .nav-item-icon {
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-    }
-
-    .nav-item-badge {
-      margin-left: auto;
-      background: var(--primary);
-      color: var(--base);
-      font-size: 0.65rem;
-      font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 100px;
-    }
-
-    .nav-divider {
-      height: 1px;
-      background: var(--border-default);
-      margin: 12px 20px;
-    }
-
-    /* ===== CARDS ===== */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-
-    .card.elevated {
-      background: var(--surface-plus);
-      border-color: var(--border-strong);
-    }
-
-    .card.active {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
-    }
-
-    .card.warning {
-      border-color: var(--warning);
-      box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.15);
-    }
-
-    .card.error {
-      border-color: var(--error);
-      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.15);
-    }
-
-    /* ===== EXCEPTION CARDS ===== */
-    .exception-card {
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .exception-card:hover {
-      background: var(--surface-plus);
-      border-color: var(--border-strong);
-    }
-
-    .exception-card.selected {
-      background: var(--active-bg);
-      border-color: var(--primary);
-    }
-
-    .exception-card.needs-review {
-      border-left: 3px solid var(--warning);
-    }
-
-    .exception-card.blocked {
-      border-left: 3px solid var(--error);
-    }
-
-    .exception-card.auto-executed {
-      border-left: 3px solid var(--success);
-    }
-
-    .exception-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-    }
-
-    .exception-what {
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-
-    .exception-why {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .exception-status {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    .status-dot.drafted { background: var(--warning); }
-    .status-dot.executed { background: var(--success); }
-    .status-dot.blocked { background: var(--error); }
-    .status-dot.quarantine { background: var(--info); }
-
-    .exception-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    /* ===== BADGES ===== */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    .badge-low {
-      background: rgba(52, 211, 153, 0.15);
-      color: var(--success);
-    }
-
-    .badge-med {
-      background: rgba(251, 191, 36, 0.15);
-      color: var(--warning);
-    }
-
-    .badge-high {
-      background: rgba(248, 113, 113, 0.15);
-      color: var(--error);
-    }
-
-    .badge-info {
-      background: rgba(96, 165, 250, 0.15);
-      color: var(--info);
-    }
-
-    .badge-secondary {
-      background: rgba(167, 139, 250, 0.15);
-      color: var(--secondary);
-    }
-
-    .autonomy-badge {
-      font-size: 0.7rem;
-      padding: 6px 12px;
-      border-radius: 100px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .autonomy-badge.healthy {
-      background: rgba(52, 211, 153, 0.12);
-      color: var(--success);
-      border: 1px solid rgba(52, 211, 153, 0.3);
-    }
-
-    .autonomy-badge.degraded {
-      background: rgba(251, 191, 36, 0.12);
-      color: var(--warning);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-
-    .autonomy-badge.limited {
-      background: rgba(248, 113, 113, 0.12);
-      color: var(--error);
-      border: 1px solid rgba(248, 113, 113, 0.3);
-    }
-
-    .autonomy-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn {
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--base);
-    }
-
-    .btn-primary:hover {
-      background: #5fcbfa;
-    }
-
-    .btn-secondary {
-      background: var(--surface-plus);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-default);
-    }
-
-    .btn-secondary:hover {
-      background: var(--border-subtle);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-muted);
-    }
-
-    .btn-ghost:hover {
-      background: var(--surface);
-    }
-
-    .btn-danger {
-      background: rgba(248, 113, 113, 0.15);
-      color: var(--error);
-      border: 1px solid rgba(248, 113, 113, 0.3);
-    }
-
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-      text-align: center;
-      padding: 48px 24px;
-    }
-
-    .empty-icon {
-      width: 64px;
-      height: 64px;
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 50%;
-      margin: 0 auto 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: var(--success);
-    }
-
-    .empty-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .empty-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      max-width: 260px;
-      margin: 0 auto;
-    }
-
-    /* ===== TOAST / SNACKBAR ===== */
-    .toast {
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    }
-
-    .toast.success {
-      border-color: var(--success);
-      background: linear-gradient(90deg, rgba(52, 211, 153, 0.08) 0%, var(--surface) 100%);
-    }
-
-    .toast-content {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .toast-icon {
-      font-size: 1.1rem;
-    }
-
-    .toast-text strong {
-      color: var(--success);
-    }
-
-    .toast-action {
-      color: var(--primary);
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    /* ===== DETAIL PANEL ===== */
-    .detail-panel {
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .detail-header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border-subtle);
-      background: var(--surface-plus);
-    }
-
-    .detail-header h5 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .detail-header .meta {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .detail-section {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .detail-section:last-of-type {
-      border-bottom: none;
-    }
-
-    .detail-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-dim);
-      margin-bottom: 6px;
-    }
-
-    .detail-value {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-    }
-
-    .detail-actions {
-      padding: 16px 20px;
-      display: flex;
-      gap: 10px;
-      background: var(--chrome);
-      border-top: 1px solid var(--border-default);
-    }
-
-    /* ===== POLICY SHEET ===== */
-    .policy-section {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .policy-label {
-      font-size: 0.8rem;
-      font-weight: 500;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .policy-value {
-      font-size: 0.75rem;
-      color: var(--secondary);
-      font-weight: 600;
-    }
-
-    .slider-track {
-      height: 6px;
-      background: var(--surface-plus);
-      border-radius: 100px;
-      position: relative;
-    }
-
-    .slider-fill {
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      background: var(--primary);
-      border-radius: 100px;
-    }
-
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 0.65rem;
-      color: var(--text-dim);
-    }
-
-    .slider-labels span.active {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    /* ===== TABS ===== */
-    .tabs {
-      display: flex;
-      gap: 4px;
-      background: var(--chrome);
-      padding: 4px;
-      border-radius: 10px;
-    }
-
-    .tab {
-      padding: 8px 14px;
-      font-size: 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--text-muted);
-    }
-
-    .tab.active {
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    /* ===== FEEDBACK BUTTONS ===== */
-    .feedback-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .feedback-btn {
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: transparent;
-      border: 1px solid var(--border-default);
-      color: var(--text-muted);
-    }
-
-    .feedback-btn:hover {
-      background: var(--surface-plus);
-    }
-
-    .feedback-btn.positive:hover {
-      border-color: var(--success);
-      color: var(--success);
-    }
-
-    .feedback-btn.negative:hover {
-      border-color: var(--error);
-      color: var(--error);
-    }
-
-    /* ===== PREVIEW DIFF ===== */
-    .preview-diff {
-      background: var(--surface-plus);
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 0.8rem;
-      margin-top: 12px;
-    }
-
-    .diff-item {
-      display: flex;
-      gap: 12px;
-      padding: 6px 0;
-    }
-
-    .diff-label {
-      color: var(--text-dim);
-      min-width: 80px;
-    }
-
-    .diff-old {
-      color: var(--error);
-      text-decoration: line-through;
-    }
-
-    .diff-arrow {
-      color: var(--text-dim);
-    }
-
-    .diff-new {
-      color: var(--success);
-    }
-
-    /* ===== BATCH SELECT ===== */
-    .batch-bar {
-      background: var(--surface);
-      border: 1px solid var(--primary);
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .batch-count {
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .batch-count strong {
-      color: var(--primary);
-    }
-
-    .batch-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    /* ===== QUARANTINE BANNER ===== */
-    .quarantine-banner {
-      background: linear-gradient(90deg, rgba(96, 165, 250, 0.1) 0%, var(--surface) 100%);
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .quarantine-icon {
-      width: 36px;
-      height: 36px;
-      background: rgba(96, 165, 250, 0.15);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      color: var(--info);
-    }
-
-    .quarantine-text {
-      flex: 1;
-    }
-
-    .quarantine-title {
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-
-    .quarantine-desc {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    /* ===== DEGRADED MODE BANNER ===== */
-    .degraded-banner {
-      background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, var(--surface) 100%);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-    }
-
-    .degraded-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-
-    .degraded-icon {
-      color: var(--warning);
-      font-size: 1.1rem;
-    }
-
-    .degraded-title {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--warning);
-    }
-
-    .degraded-desc {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      margin-bottom: 10px;
-    }
-
-    .degraded-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    /* ===== ANNOTATIONS ===== */
-    .annotation {
-      background: rgba(167, 139, 250, 0.08);
-      border-left: 3px solid var(--secondary);
-      padding: 14px 18px;
-      margin: 20px 0;
-      border-radius: 0 10px 10px 0;
-    }
-
-    .annotation-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--secondary);
-      margin-bottom: 6px;
-    }
-
-    .annotation p {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    /* ===== SPEC BOX ===== */
-    .spec-box {
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 24px;
-    }
-
-    .spec-box h4 {
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--primary);
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .spec-item {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .spec-item:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .spec-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-bottom: 4px;
-    }
-
-    .spec-text {
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-
-    .spec-note {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-style: italic;
-    }
-
-    /* ===== TIMELINE ===== */
-    .timeline-item {
-      display: flex;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .timeline-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--primary);
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-
-    .timeline-content {
-      flex: 1;
-    }
-
-    .timeline-what {
-      font-size: 0.85rem;
-      margin-bottom: 2px;
-    }
-
-    .timeline-meta {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
-
-    /* ===== SEARCH BAR ===== */
-    .search-bar {
-      background: var(--surface);
-      border: 1px solid var(--border-default);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .search-bar:hover {
-      border-color: var(--border-strong);
-      background: var(--surface-plus);
-    }
-
-    /* ===== FOOTER ===== */
-    .doc-footer {
-      padding: 48px 40px;
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 0.85rem;
-      background: var(--chrome);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- HEADER -->
-  <div class="doc-header">
-    <h1>Xentri Daily Loop v2</h1>
-    <p>Enhanced visual hierarchy with 4-layer neutral system + complete UX specs including autopilot degraded mode, quarantine, batch operations, overflow triage, policy preview, and feedback loops.</p>
-  </div>
-
-  <!-- SECTION: COLOR SYSTEM -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">Foundation</div>
-      <h2>4-Layer Neutral System</h2>
-      <p class="section-desc">Clear visual hierarchy even without semantic colors. Each layer has distinct purpose and sufficient contrast.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xentri Daily Loop v2 — Enhanced Visual Hierarchy + Complete Specs</title>
+    <style>
+      :root {
+        /* Xentri 4-Layer Dark Neutral System */
+        --base: #0d0b12; /* Deepest - app background */
+        --chrome: #16131e; /* Navigation, sidebars */
+        --surface: #1e1a28; /* Content cards, panels */
+        --surface-plus: #282335; /* Elevated/focused elements */
+
+        /* Borders & Structure */
+        --border-subtle: #2a2538; /* Subtle separation */
+        --border-default: #352f45; /* Default borders */
+        --border-strong: #453d5a; /* Strong separation, nav groups */
+
+        /* Accent Colors */
+        --primary: #38bdf8;
+        --secondary: #a78bfa;
+        --success: #34d399;
+        --warning: #fbbf24;
+        --error: #f87171;
+        --info: #60a5fa;
+
+        /* Text */
+        --text: #f0ecf7;
+        --text-secondary: #b8b0c8;
+        --text-muted: #7a7289;
+        --text-dim: #5a5368;
+
+        /* Active/Focus */
+        --active-bg: rgba(56, 189, 248, 0.08);
+        --active-border: var(--primary);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: var(--base);
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      /* ===== DOCUMENT STRUCTURE ===== */
+      .doc-header {
+        padding: 48px 40px;
+        border-bottom: 1px solid var(--border-strong);
+        background: linear-gradient(180deg, var(--chrome) 0%, var(--base) 100%);
+      }
+
+      .doc-header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .doc-header p {
+        color: var(--text-secondary);
+        max-width: 700px;
+      }
+
+      .section {
+        padding: 48px 40px;
+        border-bottom: 1px solid var(--border-strong);
+      }
+
+      .section-header {
+        margin-bottom: 32px;
+      }
+
+      .section-number {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin-bottom: 8px;
+      }
+
+      .section h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .section-desc {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      /* ===== COLOR SYSTEM PREVIEW ===== */
+      .color-system {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      @media (max-width: 800px) {
+        .color-system {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .color-layer {
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid var(--border-default);
+      }
+
+      .color-layer-base {
+        background: var(--base);
+      }
+      .color-layer-chrome {
+        background: var(--chrome);
+      }
+      .color-layer-surface {
+        background: var(--surface);
+      }
+      .color-layer-surface-plus {
+        background: var(--surface-plus);
+      }
+
+      .color-layer-name {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+
+      .color-layer-hex {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .color-layer-use {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin-top: 8px;
+      }
+
+      /* ===== WIREFRAME CONTAINERS ===== */
+      .wireframe-grid {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 32px;
+        margin-top: 32px;
+      }
+
+      @media (max-width: 1100px) {
+        .wireframe-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .wireframe-column h3 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+
+      /* ===== MOBILE FRAME ===== */
+      .mobile-frame {
+        width: 360px;
+        background: var(--base);
+        border: 2px solid var(--border-strong);
+        border-radius: 24px;
+        overflow: hidden;
+      }
+
+      .mobile-status-bar {
+        background: var(--chrome);
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .mobile-header {
+        background: var(--chrome);
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-default);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .mobile-header-left h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .mobile-header-left .subtitle {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .mobile-body {
+        background: var(--base);
+        padding: 16px 20px;
+        min-height: 480px;
+      }
+
+      .mobile-section {
+        margin-bottom: 24px;
+      }
+
+      .mobile-section-header {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .mobile-bottom {
+        background: var(--chrome);
+        border-top: 1px solid var(--border-default);
+        padding: 12px 20px;
+      }
+
+      /* ===== DESKTOP FRAME ===== */
+      .desktop-frame {
+        background: var(--base);
+        border: 2px solid var(--border-strong);
+        border-radius: 12px;
+        overflow: hidden;
+        min-height: 520px;
+      }
+
+      .desktop-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        min-height: 520px;
+      }
+
+      .desktop-nav {
+        background: var(--chrome);
+        border-right: 1px solid var(--border-default);
+        padding: 20px 0;
+      }
+
+      .desktop-nav-header {
+        padding: 0 20px 16px;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 12px;
+      }
+
+      .desktop-nav-header h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+
+      .desktop-nav-header .subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .desktop-content {
+        background: var(--base);
+        padding: 24px;
+      }
+
+      /* ===== NAV ITEMS WITH LEFT RAIL ===== */
+      .nav-group {
+        margin-bottom: 8px;
+      }
+
+      .nav-group-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-dim);
+        padding: 8px 20px 6px;
+      }
+
+      .nav-item {
+        padding: 12px 20px;
+        margin: 2px 8px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        color: var(--text-secondary);
+      }
+
+      .nav-item:hover {
+        background: var(--surface);
+      }
+
+      .nav-item.active {
+        background: var(--active-bg);
+        color: var(--text);
+      }
+
+      .nav-item.active::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 4px;
+        bottom: 4px;
+        width: 3px;
+        background: var(--primary);
+        border-radius: 0 2px 2px 0;
+      }
+
+      .nav-item-icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+      }
+
+      .nav-item-badge {
+        margin-left: auto;
+        background: var(--primary);
+        color: var(--base);
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 2px 6px;
+        border-radius: 100px;
+      }
+
+      .nav-divider {
+        height: 1px;
+        background: var(--border-default);
+        margin: 12px 20px;
+      }
+
+      /* ===== CARDS ===== */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+
+      .card.elevated {
+        background: var(--surface-plus);
+        border-color: var(--border-strong);
+      }
+
+      .card.active {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
+      }
+
+      .card.warning {
+        border-color: var(--warning);
+        box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.15);
+      }
+
+      .card.error {
+        border-color: var(--error);
+        box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.15);
+      }
+
+      /* ===== EXCEPTION CARDS ===== */
+      .exception-card {
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .exception-card:hover {
+        background: var(--surface-plus);
+        border-color: var(--border-strong);
+      }
+
+      .exception-card.selected {
+        background: var(--active-bg);
+        border-color: var(--primary);
+      }
+
+      .exception-card.needs-review {
+        border-left: 3px solid var(--warning);
+      }
+
+      .exception-card.blocked {
+        border-left: 3px solid var(--error);
+      }
+
+      .exception-card.auto-executed {
+        border-left: 3px solid var(--success);
+      }
+
+      .exception-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+
+      .exception-what {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+
+      .exception-why {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      .exception-status {
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .status-dot.drafted {
+        background: var(--warning);
+      }
+      .status-dot.executed {
+        background: var(--success);
+      }
+      .status-dot.blocked {
+        background: var(--error);
+      }
+      .status-dot.quarantine {
+        background: var(--info);
+      }
+
+      .exception-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* ===== BADGES ===== */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+
+      .badge-low {
+        background: rgba(52, 211, 153, 0.15);
+        color: var(--success);
+      }
+
+      .badge-med {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--warning);
+      }
+
+      .badge-high {
+        background: rgba(248, 113, 113, 0.15);
+        color: var(--error);
+      }
+
+      .badge-info {
+        background: rgba(96, 165, 250, 0.15);
+        color: var(--info);
+      }
+
+      .badge-secondary {
+        background: rgba(167, 139, 250, 0.15);
+        color: var(--secondary);
+      }
+
+      .autonomy-badge {
+        font-size: 0.7rem;
+        padding: 6px 12px;
+        border-radius: 100px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .autonomy-badge.healthy {
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--success);
+        border: 1px solid rgba(52, 211, 153, 0.3);
+      }
+
+      .autonomy-badge.degraded {
+        background: rgba(251, 191, 36, 0.12);
+        color: var(--warning);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+      }
+
+      .autonomy-badge.limited {
+        background: rgba(248, 113, 113, 0.12);
+        color: var(--error);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+      }
+
+      .autonomy-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      /* ===== BUTTONS ===== */
+      .btn {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: var(--base);
+      }
+
+      .btn-primary:hover {
+        background: #5fcbfa;
+      }
+
+      .btn-secondary {
+        background: var(--surface-plus);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-default);
+      }
+
+      .btn-secondary:hover {
+        background: var(--border-subtle);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-muted);
+      }
+
+      .btn-ghost:hover {
+        background: var(--surface);
+      }
+
+      .btn-danger {
+        background: rgba(248, 113, 113, 0.15);
+        color: var(--error);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+      }
+
+      /* ===== EMPTY STATE ===== */
+      .empty-state {
+        text-align: center;
+        padding: 48px 24px;
+      }
+
+      .empty-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--success);
+      }
+
+      .empty-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .empty-desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        max-width: 260px;
+        margin: 0 auto;
+      }
+
+      /* ===== TOAST / SNACKBAR ===== */
+      .toast {
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .toast.success {
+        border-color: var(--success);
+        background: linear-gradient(90deg, rgba(52, 211, 153, 0.08) 0%, var(--surface) 100%);
+      }
+
+      .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .toast-icon {
+        font-size: 1.1rem;
+      }
+
+      .toast-text strong {
+        color: var(--success);
+      }
+
+      .toast-action {
+        color: var(--primary);
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      /* ===== DETAIL PANEL ===== */
+      .detail-panel {
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .detail-header {
+        padding: 20px;
+        border-bottom: 1px solid var(--border-subtle);
+        background: var(--surface-plus);
+      }
+
+      .detail-header h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .detail-header .meta {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .detail-section {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .detail-section:last-of-type {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+      }
+
+      .detail-value {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .detail-actions {
+        padding: 16px 20px;
+        display: flex;
+        gap: 10px;
+        background: var(--chrome);
+        border-top: 1px solid var(--border-default);
+      }
+
+      /* ===== POLICY SHEET ===== */
+      .policy-section {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .policy-label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .policy-value {
+        font-size: 0.75rem;
+        color: var(--secondary);
+        font-weight: 600;
+      }
+
+      .slider-track {
+        height: 6px;
+        background: var(--surface-plus);
+        border-radius: 100px;
+        position: relative;
+      }
+
+      .slider-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: var(--primary);
+        border-radius: 100px;
+      }
+
+      .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-size: 0.65rem;
+        color: var(--text-dim);
+      }
+
+      .slider-labels span.active {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      /* ===== TABS ===== */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--chrome);
+        padding: 4px;
+        border-radius: 10px;
+      }
+
+      .tab {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+        cursor: pointer;
+        color: var(--text-muted);
+      }
+
+      .tab.active {
+        background: var(--surface);
+        color: var(--text);
+      }
+
+      /* ===== FEEDBACK BUTTONS ===== */
+      .feedback-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-subtle);
+      }
+
+      .feedback-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: transparent;
+        border: 1px solid var(--border-default);
+        color: var(--text-muted);
+      }
+
+      .feedback-btn:hover {
+        background: var(--surface-plus);
+      }
+
+      .feedback-btn.positive:hover {
+        border-color: var(--success);
+        color: var(--success);
+      }
+
+      .feedback-btn.negative:hover {
+        border-color: var(--error);
+        color: var(--error);
+      }
+
+      /* ===== PREVIEW DIFF ===== */
+      .preview-diff {
+        background: var(--surface-plus);
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 0.8rem;
+        margin-top: 12px;
+      }
+
+      .diff-item {
+        display: flex;
+        gap: 12px;
+        padding: 6px 0;
+      }
+
+      .diff-label {
+        color: var(--text-dim);
+        min-width: 80px;
+      }
+
+      .diff-old {
+        color: var(--error);
+        text-decoration: line-through;
+      }
+
+      .diff-arrow {
+        color: var(--text-dim);
+      }
+
+      .diff-new {
+        color: var(--success);
+      }
+
+      /* ===== BATCH SELECT ===== */
+      .batch-bar {
+        background: var(--surface);
+        border: 1px solid var(--primary);
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .batch-count {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .batch-count strong {
+        color: var(--primary);
+      }
+
+      .batch-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* ===== QUARANTINE BANNER ===== */
+      .quarantine-banner {
+        background: linear-gradient(90deg, rgba(96, 165, 250, 0.1) 0%, var(--surface) 100%);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .quarantine-icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(96, 165, 250, 0.15);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: var(--info);
+      }
+
+      .quarantine-text {
+        flex: 1;
+      }
+
+      .quarantine-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+
+      .quarantine-desc {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+      }
+
+      /* ===== DEGRADED MODE BANNER ===== */
+      .degraded-banner {
+        background: linear-gradient(90deg, rgba(251, 191, 36, 0.1) 0%, var(--surface) 100%);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 16px;
+      }
+
+      .degraded-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .degraded-icon {
+        color: var(--warning);
+        font-size: 1.1rem;
+      }
+
+      .degraded-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--warning);
+      }
+
+      .degraded-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 10px;
+      }
+
+      .degraded-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* ===== ANNOTATIONS ===== */
+      .annotation {
+        background: rgba(167, 139, 250, 0.08);
+        border-left: 3px solid var(--secondary);
+        padding: 14px 18px;
+        margin: 20px 0;
+        border-radius: 0 10px 10px 0;
+      }
+
+      .annotation-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--secondary);
+        margin-bottom: 6px;
+      }
+
+      .annotation p {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      /* ===== SPEC BOX ===== */
+      .spec-box {
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 24px;
+      }
+
+      .spec-box h4 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--primary);
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .spec-item {
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .spec-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .spec-label {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin-bottom: 4px;
+      }
+
+      .spec-text {
+        font-size: 0.9rem;
+        color: var(--text);
+      }
+
+      .spec-note {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+        font-style: italic;
+      }
+
+      /* ===== TIMELINE ===== */
+      .timeline-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .timeline-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        margin-top: 6px;
+        flex-shrink: 0;
+      }
+
+      .timeline-content {
+        flex: 1;
+      }
+
+      .timeline-what {
+        font-size: 0.85rem;
+        margin-bottom: 2px;
+      }
+
+      .timeline-meta {
+        font-size: 0.7rem;
+        color: var(--text-dim);
+      }
+
+      /* ===== SEARCH BAR ===== */
+      .search-bar {
+        background: var(--surface);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .search-bar:hover {
+        border-color: var(--border-strong);
+        background: var(--surface-plus);
+      }
+
+      /* ===== FOOTER ===== */
+      .doc-footer {
+        padding: 48px 40px;
+        text-align: center;
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        background: var(--chrome);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="doc-header">
+      <h1>Xentri Daily Loop v2</h1>
+      <p>
+        Enhanced visual hierarchy with 4-layer neutral system + complete UX specs including
+        autopilot degraded mode, quarantine, batch operations, overflow triage, policy preview, and
+        feedback loops.
+      </p>
     </div>
 
-    <div class="color-system">
-      <div class="color-layer color-layer-base">
-        <div class="color-layer-name">Base</div>
-        <div class="color-layer-hex">#0d0b12</div>
-        <div class="color-layer-use">App background, deepest layer</div>
+    <!-- SECTION: COLOR SYSTEM -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">Foundation</div>
+        <h2>4-Layer Neutral System</h2>
+        <p class="section-desc">
+          Clear visual hierarchy even without semantic colors. Each layer has distinct purpose and
+          sufficient contrast.
+        </p>
       </div>
-      <div class="color-layer color-layer-chrome">
-        <div class="color-layer-name">Chrome</div>
-        <div class="color-layer-hex">#16131e</div>
-        <div class="color-layer-use">Navigation, sidebars, headers</div>
-      </div>
-      <div class="color-layer color-layer-surface">
-        <div class="color-layer-name">Surface</div>
-        <div class="color-layer-hex">#1e1a28</div>
-        <div class="color-layer-use">Cards, panels, content areas</div>
-      </div>
-      <div class="color-layer color-layer-surface-plus">
-        <div class="color-layer-name">Surface+</div>
-        <div class="color-layer-hex">#282335</div>
-        <div class="color-layer-use">Elevated, focused, hover states</div>
-      </div>
-    </div>
 
-    <div class="annotation">
-      <div class="annotation-label">Structural Elements</div>
-      <p><strong>Borders:</strong> subtle (#2a2538), default (#352f45), strong (#453d5a) · <strong>Active indicator:</strong> 3px primary left-rail on nav items · <strong>Group separators:</strong> 1px strong border between nav sections · <strong>Card states:</strong> border-left accent for status (warning/error/success)</p>
-    </div>
-  </div>
-
-  <!-- SECTION: AUTOPILOT DEGRADED MODE -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">New Spec 1</div>
-      <h2>Autopilot Degraded Mode</h2>
-      <p class="section-desc">When autonomy is reduced due to errors, rate limits, or user-triggered pause. System clearly communicates reduced capability.</p>
-    </div>
-
-    <div class="wireframe-grid">
-      <div class="wireframe-column">
-        <h3>Mobile: Degraded State</h3>
-        <div class="mobile-frame">
-          <div class="mobile-status-bar">
-            <span>9:41</span>
-            <span>⚡ 87%</span>
-          </div>
-          <div class="mobile-header">
-            <div class="mobile-header-left">
-              <h4>Today</h4>
-              <div class="subtitle">Tuesday, Nov 25</div>
-            </div>
-            <div class="autonomy-badge degraded">
-              <span class="autonomy-dot"></span>
-              Degraded
-            </div>
-          </div>
-          <div class="mobile-body">
-            <div class="degraded-banner">
-              <div class="degraded-header">
-                <span class="degraded-icon">⚠</span>
-                <span class="degraded-title">Autopilot running in safe mode</span>
-              </div>
-              <div class="degraded-desc">
-                3 auto-actions paused due to API rate limit. Lead responses are being drafted instead of sent.
-              </div>
-              <div class="degraded-actions">
-                <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 6px 12px;">View Details</button>
-                <button class="btn btn-ghost" style="font-size: 0.75rem; padding: 6px 12px;">Dismiss</button>
-              </div>
-            </div>
-
-            <div class="mobile-section">
-              <div class="mobile-section-header">
-                Needs You
-                <span class="badge badge-med" style="font-size: 0.6rem;">3</span>
-              </div>
-
-              <div class="exception-card needs-review">
-                <div class="exception-top">
-                  <div>
-                    <div class="exception-what">Lead reply paused</div>
-                    <div class="exception-why">Would auto-send, but degraded mode active</div>
-                  </div>
-                  <span class="badge badge-info">Paused</span>
-                </div>
-                <div class="exception-actions">
-                  <button class="btn btn-primary">Send Now</button>
-                  <button class="btn btn-secondary">Wait</button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="color-system">
+        <div class="color-layer color-layer-base">
+          <div class="color-layer-name">Base</div>
+          <div class="color-layer-hex">#0d0b12</div>
+          <div class="color-layer-use">App background, deepest layer</div>
+        </div>
+        <div class="color-layer color-layer-chrome">
+          <div class="color-layer-name">Chrome</div>
+          <div class="color-layer-hex">#16131e</div>
+          <div class="color-layer-use">Navigation, sidebars, headers</div>
+        </div>
+        <div class="color-layer color-layer-surface">
+          <div class="color-layer-name">Surface</div>
+          <div class="color-layer-hex">#1e1a28</div>
+          <div class="color-layer-use">Cards, panels, content areas</div>
+        </div>
+        <div class="color-layer color-layer-surface-plus">
+          <div class="color-layer-name">Surface+</div>
+          <div class="color-layer-hex">#282335</div>
+          <div class="color-layer-use">Elevated, focused, hover states</div>
         </div>
       </div>
 
-      <div class="wireframe-column">
-        <h3>Degraded Mode Spec</h3>
-        <div class="spec-box">
-          <h4>Degraded Mode Triggers</h4>
-          <div class="spec-item">
-            <div class="spec-label">API Rate Limit</div>
-            <div class="spec-text">External service throttling (email, AI, etc.)</div>
-            <div class="spec-note">Auto-recovers when limit resets. Shows countdown.</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Error Threshold</div>
-            <div class="spec-text">3+ consecutive failures in same domain</div>
-            <div class="spec-note">Pauses that domain until user reviews or 24h passes.</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">User-Triggered</div>
-            <div class="spec-text">"Pause autopilot" from any exception card</div>
-            <div class="spec-note">Quick way to stop all auto-actions temporarily.</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Confidence Drop</div>
-            <div class="spec-text">System-wide confidence below 60%</div>
-            <div class="spec-note">Happens when many actions are getting "wrong" feedback.</div>
-          </div>
-        </div>
-
-        <div class="spec-box">
-          <h4>Degraded Mode Behavior</h4>
-          <div class="spec-item">
-            <div class="spec-label">Auto-execute → Auto-draft</div>
-            <div class="spec-text">Actions that would send now queue for review</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Badge Change</div>
-            <div class="spec-text">"Autopilot: High" → "Degraded" (yellow)</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Banner</div>
-            <div class="spec-text">Persistent but dismissible explanation</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Recovery</div>
-            <div class="spec-text">Auto-recovers or user clicks "Resume"</div>
-          </div>
-        </div>
+      <div class="annotation">
+        <div class="annotation-label">Structural Elements</div>
+        <p>
+          <strong>Borders:</strong> subtle (#2a2538), default (#352f45), strong (#453d5a) ·
+          <strong>Active indicator:</strong> 3px primary left-rail on nav items ·
+          <strong>Group separators:</strong> 1px strong border between nav sections ·
+          <strong>Card states:</strong> border-left accent for status (warning/error/success)
+        </p>
       </div>
     </div>
-  </div>
 
-  <!-- SECTION: QUARANTINE -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">New Spec 2</div>
-      <h2>Needs-Classification Quarantine</h2>
-      <p class="section-desc">Items that couldn't be automatically classified. Kept separate to avoid polluting the main queue.</p>
-    </div>
-
-    <div class="wireframe-grid">
-      <div class="wireframe-column">
-        <h3>Mobile: Quarantine View</h3>
-        <div class="mobile-frame">
-          <div class="mobile-status-bar">
-            <span>9:41</span>
-            <span>⚡ 87%</span>
-          </div>
-          <div class="mobile-header">
-            <div class="mobile-header-left">
-              <h4>Today</h4>
-              <div class="subtitle">Tuesday, Nov 25</div>
-            </div>
-            <div class="autonomy-badge healthy">
-              <span class="autonomy-dot"></span>
-              High
-            </div>
-          </div>
-          <div class="mobile-body">
-            <div class="quarantine-banner">
-              <div class="quarantine-icon">?</div>
-              <div class="quarantine-text">
-                <div class="quarantine-title">2 items need classification</div>
-                <div class="quarantine-desc">Couldn't determine type automatically</div>
-              </div>
-              <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 6px 10px;">Review</button>
-            </div>
-
-            <div class="mobile-section">
-              <div class="mobile-section-header">
-                Quarantine
-                <span class="badge badge-info" style="font-size: 0.6rem;">2</span>
-              </div>
-
-              <div class="exception-card" style="border-left: 3px solid var(--info);">
-                <div class="exception-top">
-                  <div>
-                    <div class="exception-what">Email from unknown sender</div>
-                    <div class="exception-why">Can't determine: lead, spam, or personal?</div>
-                  </div>
-                  <span class="badge badge-info">Unclassified</span>
-                </div>
-                <div class="exception-actions">
-                  <button class="btn btn-primary">It's a Lead</button>
-                  <button class="btn btn-secondary">Spam</button>
-                  <button class="btn btn-ghost">Other</button>
-                </div>
-              </div>
-
-              <div class="exception-card" style="border-left: 3px solid var(--info);">
-                <div class="exception-top">
-                  <div>
-                    <div class="exception-what">WhatsApp forward: "check this out"</div>
-                    <div class="exception-why">No clear intent detected</div>
-                  </div>
-                  <span class="badge badge-info">Unclassified</span>
-                </div>
-                <div class="exception-actions">
-                  <button class="btn btn-primary">Classify</button>
-                  <button class="btn btn-ghost">Ignore</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- SECTION: AUTOPILOT DEGRADED MODE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">New Spec 1</div>
+        <h2>Autopilot Degraded Mode</h2>
+        <p class="section-desc">
+          When autonomy is reduced due to errors, rate limits, or user-triggered pause. System
+          clearly communicates reduced capability.
+        </p>
       </div>
 
-      <div class="wireframe-column">
-        <h3>Quarantine Spec</h3>
-        <div class="spec-box">
-          <h4>What Goes to Quarantine</h4>
-          <div class="spec-item">
-            <div class="spec-label">Low Confidence Classification</div>
-            <div class="spec-text">AI confidence < 50% on item type</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Ambiguous Intent</div>
-            <div class="spec-text">Multiple possible interpretations</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Unknown Source</div>
-            <div class="spec-text">Sender not in contacts, no clear context</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Potential Spam</div>
-            <div class="spec-text">Spam signals but not certain enough to auto-delete</div>
-          </div>
-        </div>
-
-        <div class="spec-box">
-          <h4>Quarantine Behavior</h4>
-          <div class="spec-item">
-            <div class="spec-label">Separate from Exceptions</div>
-            <div class="spec-text">Own section, doesn't clutter "Needs You"</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">One-Tap Classification</div>
-            <div class="spec-text">Quick buttons for common types</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Trains the System</div>
-            <div class="spec-text">Each classification improves future accuracy</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Auto-Archive</div>
-            <div class="spec-text">Unclassified items archive after 7 days</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION: BATCH APPROVE/UNDO -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">New Spec 3</div>
-      <h2>Batch Approve / Undo</h2>
-      <p class="section-desc">Handle multiple similar items at once. Essential when autopilot produces many drafts.</p>
-    </div>
-
-    <div class="wireframe-grid">
-      <div class="wireframe-column">
-        <h3>Mobile: Batch Mode</h3>
-        <div class="mobile-frame">
-          <div class="mobile-status-bar">
-            <span>9:41</span>
-            <span>⚡ 87%</span>
-          </div>
-          <div class="mobile-header">
-            <div class="mobile-header-left">
-              <h4>Today</h4>
-              <div class="subtitle">Selecting items...</div>
+      <div class="wireframe-grid">
+        <div class="wireframe-column">
+          <h3>Mobile: Degraded State</h3>
+          <div class="mobile-frame">
+            <div class="mobile-status-bar">
+              <span>9:41</span>
+              <span>⚡ 87%</span>
             </div>
-            <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 0.8rem;">Cancel</button>
-          </div>
-          <div class="mobile-body">
-            <div class="batch-bar">
-              <div class="batch-count"><strong>3</strong> items selected</div>
-              <div class="batch-actions">
-                <button class="btn btn-primary" style="padding: 6px 12px;">Approve All</button>
-                <button class="btn btn-secondary" style="padding: 6px 12px;">Undo All</button>
-              </div>
-            </div>
-
-            <div class="mobile-section">
-              <div class="exception-card selected needs-review">
-                <div class="exception-top">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 20px; height: 20px; border-radius: 4px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">✓</div>
-                    <div>
-                      <div class="exception-what">Reply to Sarah Martinez</div>
-                      <div class="exception-why">Warm Welcome template</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="exception-card selected needs-review">
-                <div class="exception-top">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 20px; height: 20px; border-radius: 4px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">✓</div>
-                    <div>
-                      <div class="exception-what">Reply to James Cooper</div>
-                      <div class="exception-why">Warm Welcome template</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="exception-card selected needs-review">
-                <div class="exception-top">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 20px; height: 20px; border-radius: 4px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">✓</div>
-                    <div>
-                      <div class="exception-what">Reply to Maria Lopez</div>
-                      <div class="exception-why">Warm Welcome template</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="wireframe-column">
-        <h3>Batch Operations Spec</h3>
-        <div class="spec-box">
-          <h4>Entering Batch Mode</h4>
-          <div class="spec-item">
-            <div class="spec-label">Long-press</div>
-            <div class="spec-text">Long-press any exception card to enter selection mode</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Select All Similar</div>
-            <div class="spec-text">"Select all using same template" quick action</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Header Action</div>
-            <div class="spec-text">"Select" button in section header</div>
-          </div>
-        </div>
-
-        <div class="spec-box">
-          <h4>Batch Actions</h4>
-          <div class="spec-item">
-            <div class="spec-label">Approve All</div>
-            <div class="spec-text">Send all selected drafts</div>
-            <div class="spec-note">Shows: "Send 3 replies?" confirmation</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Undo All</div>
-            <div class="spec-text">Retract/cancel all selected</div>
-            <div class="spec-note">Only for reversible actions</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Archive All</div>
-            <div class="spec-text">Clear from queue without action</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Change Policy</div>
-            <div class="spec-text">Apply new policy to all selected</div>
-          </div>
-        </div>
-
-        <div class="spec-box">
-          <h4>Batch Undo Toast</h4>
-          <div class="spec-item">
-            <div class="spec-label">Pattern</div>
-            <div class="spec-text">"Sent 3 replies. Undo all"</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Individual Undo</div>
-            <div class="spec-text">Can undo individual items from timeline</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION: OVERFLOW TRIAGE -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">New Spec 4</div>
-      <h2>Notification Budget Overflow Triage</h2>
-      <p class="section-desc">When there are more items than the notification budget allows. Smart prioritization, not just truncation.</p>
-    </div>
-
-    <div class="wireframe-grid">
-      <div class="wireframe-column">
-        <h3>Desktop: Overflow State</h3>
-        <div class="desktop-frame">
-          <div class="desktop-layout">
-            <div class="desktop-nav">
-              <div class="desktop-nav-header">
+            <div class="mobile-header">
+              <div class="mobile-header-left">
                 <h4>Today</h4>
-                <div class="subtitle">Tuesday, November 25</div>
+                <div class="subtitle">Tuesday, Nov 25</div>
+              </div>
+              <div class="autonomy-badge degraded">
+                <span class="autonomy-dot"></span>
+                Degraded
+              </div>
+            </div>
+            <div class="mobile-body">
+              <div class="degraded-banner">
+                <div class="degraded-header">
+                  <span class="degraded-icon">⚠</span>
+                  <span class="degraded-title">Autopilot running in safe mode</span>
+                </div>
+                <div class="degraded-desc">
+                  3 auto-actions paused due to API rate limit. Lead responses are being drafted
+                  instead of sent.
+                </div>
+                <div class="degraded-actions">
+                  <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 6px 12px">
+                    View Details
+                  </button>
+                  <button class="btn btn-ghost" style="font-size: 0.75rem; padding: 6px 12px">
+                    Dismiss
+                  </button>
+                </div>
               </div>
 
-              <div class="nav-group">
-                <div class="nav-group-label">Priority</div>
-                <div class="nav-item active">
-                  <span class="nav-item-icon">⚡</span>
+              <div class="mobile-section">
+                <div class="mobile-section-header">
                   Needs You
-                  <span class="nav-item-badge">4</span>
+                  <span class="badge badge-med" style="font-size: 0.6rem">3</span>
                 </div>
-                <div class="nav-item">
-                  <span class="nav-item-icon">?</span>
+
+                <div class="exception-card needs-review">
+                  <div class="exception-top">
+                    <div>
+                      <div class="exception-what">Lead reply paused</div>
+                      <div class="exception-why">Would auto-send, but degraded mode active</div>
+                    </div>
+                    <span class="badge badge-info">Paused</span>
+                  </div>
+                  <div class="exception-actions">
+                    <button class="btn btn-primary">Send Now</button>
+                    <button class="btn btn-secondary">Wait</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wireframe-column">
+          <h3>Degraded Mode Spec</h3>
+          <div class="spec-box">
+            <h4>Degraded Mode Triggers</h4>
+            <div class="spec-item">
+              <div class="spec-label">API Rate Limit</div>
+              <div class="spec-text">External service throttling (email, AI, etc.)</div>
+              <div class="spec-note">Auto-recovers when limit resets. Shows countdown.</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Error Threshold</div>
+              <div class="spec-text">3+ consecutive failures in same domain</div>
+              <div class="spec-note">Pauses that domain until user reviews or 24h passes.</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">User-Triggered</div>
+              <div class="spec-text">"Pause autopilot" from any exception card</div>
+              <div class="spec-note">Quick way to stop all auto-actions temporarily.</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Confidence Drop</div>
+              <div class="spec-text">System-wide confidence below 60%</div>
+              <div class="spec-note">Happens when many actions are getting "wrong" feedback.</div>
+            </div>
+          </div>
+
+          <div class="spec-box">
+            <h4>Degraded Mode Behavior</h4>
+            <div class="spec-item">
+              <div class="spec-label">Auto-execute → Auto-draft</div>
+              <div class="spec-text">Actions that would send now queue for review</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Badge Change</div>
+              <div class="spec-text">"Autopilot: High" → "Degraded" (yellow)</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Banner</div>
+              <div class="spec-text">Persistent but dismissible explanation</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Recovery</div>
+              <div class="spec-text">Auto-recovers or user clicks "Resume"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: QUARANTINE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">New Spec 2</div>
+        <h2>Needs-Classification Quarantine</h2>
+        <p class="section-desc">
+          Items that couldn't be automatically classified. Kept separate to avoid polluting the main
+          queue.
+        </p>
+      </div>
+
+      <div class="wireframe-grid">
+        <div class="wireframe-column">
+          <h3>Mobile: Quarantine View</h3>
+          <div class="mobile-frame">
+            <div class="mobile-status-bar">
+              <span>9:41</span>
+              <span>⚡ 87%</span>
+            </div>
+            <div class="mobile-header">
+              <div class="mobile-header-left">
+                <h4>Today</h4>
+                <div class="subtitle">Tuesday, Nov 25</div>
+              </div>
+              <div class="autonomy-badge healthy">
+                <span class="autonomy-dot"></span>
+                High
+              </div>
+            </div>
+            <div class="mobile-body">
+              <div class="quarantine-banner">
+                <div class="quarantine-icon">?</div>
+                <div class="quarantine-text">
+                  <div class="quarantine-title">2 items need classification</div>
+                  <div class="quarantine-desc">Couldn't determine type automatically</div>
+                </div>
+                <button class="btn btn-secondary" style="font-size: 0.75rem; padding: 6px 10px">
+                  Review
+                </button>
+              </div>
+
+              <div class="mobile-section">
+                <div class="mobile-section-header">
                   Quarantine
-                  <span class="nav-item-badge" style="background: var(--info);">2</span>
+                  <span class="badge badge-info" style="font-size: 0.6rem">2</span>
                 </div>
-              </div>
 
-              <div class="nav-divider"></div>
-
-              <div class="nav-group">
-                <div class="nav-group-label">Overflow (47 more)</div>
-                <div class="nav-item">
-                  <span class="nav-item-icon">📥</span>
-                  Low Priority
-                  <span style="margin-left: auto; font-size: 0.75rem; color: var(--text-dim);">35</span>
-                </div>
-                <div class="nav-item">
-                  <span class="nav-item-icon">✓</span>
-                  Auto-Handled
-                  <span style="margin-left: auto; font-size: 0.75rem; color: var(--text-dim);">12</span>
-                </div>
-              </div>
-
-              <div class="nav-divider"></div>
-
-              <div class="nav-group">
-                <div class="nav-group-label">Activity</div>
-                <div class="nav-item">
-                  <span class="nav-item-icon">📊</span>
-                  What Changed
-                </div>
-                <div class="nav-item">
-                  <span class="nav-item-icon">🔍</span>
-                  Timeline
-                </div>
-              </div>
-            </div>
-
-            <div class="desktop-content">
-              <div style="margin-bottom: 20px;">
-                <h4 style="font-size: 1rem; margin-bottom: 8px;">Needs You</h4>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">4 high-priority items. 47 more in overflow.</p>
-              </div>
-
-              <div class="exception-card needs-review">
-                <div class="exception-top">
-                  <div>
-                    <div class="exception-what">Payment failed: Invoice #1847</div>
-                    <div class="exception-why">Card declined — customer notified</div>
+                <div class="exception-card" style="border-left: 3px solid var(--info)">
+                  <div class="exception-top">
+                    <div>
+                      <div class="exception-what">Email from unknown sender</div>
+                      <div class="exception-why">Can't determine: lead, spam, or personal?</div>
+                    </div>
+                    <span class="badge badge-info">Unclassified</span>
                   </div>
-                  <span class="badge badge-high">High</span>
-                </div>
-                <div class="exception-status">
-                  <span class="status-dot blocked"></span>
-                  Blocked · Requires action
-                </div>
-              </div>
-
-              <div class="exception-card needs-review">
-                <div class="exception-top">
-                  <div>
-                    <div class="exception-what">Urgent lead: "Need quote today"</div>
-                    <div class="exception-why">Keyword "urgent" triggered escalation</div>
+                  <div class="exception-actions">
+                    <button class="btn btn-primary">It's a Lead</button>
+                    <button class="btn btn-secondary">Spam</button>
+                    <button class="btn btn-ghost">Other</button>
                   </div>
-                  <span class="badge badge-high">High</span>
                 </div>
-              </div>
 
-              <div style="margin-top: 24px; padding: 16px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border-default);">
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-                  <strong style="color: var(--text);">47 items</strong> moved to overflow based on your notification budget
-                </div>
-                <div style="display: flex; gap: 8px;">
-                  <button class="btn btn-secondary" style="font-size: 0.8rem;">Review Overflow</button>
-                  <button class="btn btn-ghost" style="font-size: 0.8rem;">Adjust Budget</button>
+                <div class="exception-card" style="border-left: 3px solid var(--info)">
+                  <div class="exception-top">
+                    <div>
+                      <div class="exception-what">WhatsApp forward: "check this out"</div>
+                      <div class="exception-why">No clear intent detected</div>
+                    </div>
+                    <span class="badge badge-info">Unclassified</span>
+                  </div>
+                  <div class="exception-actions">
+                    <button class="btn btn-primary">Classify</button>
+                    <button class="btn btn-ghost">Ignore</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="wireframe-column">
-        <h3>Overflow Triage Spec</h3>
-        <div class="spec-box">
-          <h4>Priority Scoring</h4>
-          <div class="spec-item">
-            <div class="spec-label">Money at Risk</div>
-            <div class="spec-text">Payments, invoices, billing issues → always high</div>
+        <div class="wireframe-column">
+          <h3>Quarantine Spec</h3>
+          <div class="spec-box">
+            <h4>What Goes to Quarantine</h4>
+            <div class="spec-item">
+              <div class="spec-label">Low Confidence Classification</div>
+              <div class="spec-text">AI confidence < 50% on item type</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Ambiguous Intent</div>
+              <div class="spec-text">Multiple possible interpretations</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Unknown Source</div>
+              <div class="spec-text">Sender not in contacts, no clear context</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Potential Spam</div>
+              <div class="spec-text">Spam signals but not certain enough to auto-delete</div>
+            </div>
           </div>
-          <div class="spec-item">
-            <div class="spec-label">Time Sensitive</div>
-            <div class="spec-text">"Urgent", "today", deadlines → bumped up</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">User Rules</div>
-            <div class="spec-text">VIP contacts, specific keywords → custom priority</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Recency</div>
-            <div class="spec-text">Newer items score higher (tie-breaker)</div>
-          </div>
-        </div>
 
-        <div class="spec-box">
-          <h4>Overflow Buckets</h4>
-          <div class="spec-item">
-            <div class="spec-label">Low Priority</div>
-            <div class="spec-text">Drafts that can wait, routine follow-ups</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Auto-Handled</div>
-            <div class="spec-text">Successfully auto-executed, just FYI</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Digest</div>
-            <div class="spec-text">Bundled into daily email summary</div>
-          </div>
-        </div>
-
-        <div class="spec-box">
-          <h4>Budget Rules</h4>
-          <div class="spec-item">
-            <div class="spec-label">Default Budget</div>
-            <div class="spec-text">5 high-priority items in "Needs You"</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Adjustable</div>
-            <div class="spec-text">User can set 3-10 based on preference</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Overflow Access</div>
-            <div class="spec-text">Always visible, never hidden</div>
+          <div class="spec-box">
+            <h4>Quarantine Behavior</h4>
+            <div class="spec-item">
+              <div class="spec-label">Separate from Exceptions</div>
+              <div class="spec-text">Own section, doesn't clutter "Needs You"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">One-Tap Classification</div>
+              <div class="spec-text">Quick buttons for common types</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Trains the System</div>
+              <div class="spec-text">Each classification improves future accuracy</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Auto-Archive</div>
+              <div class="spec-text">Unclassified items archive after 7 days</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- SECTION: POLICY CHANGE PREVIEW -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">New Spec 5</div>
-      <h2>Policy Change Preview</h2>
-      <p class="section-desc">Before saving a policy change, show what would be different. Builds confidence in system behavior.</p>
-    </div>
+    <!-- SECTION: BATCH APPROVE/UNDO -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">New Spec 3</div>
+        <h2>Batch Approve / Undo</h2>
+        <p class="section-desc">
+          Handle multiple similar items at once. Essential when autopilot produces many drafts.
+        </p>
+      </div>
 
-    <div class="wireframe-grid">
-      <div class="wireframe-column">
-        <h3>Mobile: Policy Preview</h3>
-        <div class="mobile-frame">
-          <div class="mobile-status-bar">
-            <span>9:41</span>
-            <span>⚡ 87%</span>
-          </div>
-          <div class="mobile-header">
-            <div class="mobile-header-left">
-              <h4>Lead Response Policy</h4>
-              <div class="subtitle">Preview changes</div>
+      <div class="wireframe-grid">
+        <div class="wireframe-column">
+          <h3>Mobile: Batch Mode</h3>
+          <div class="mobile-frame">
+            <div class="mobile-status-bar">
+              <span>9:41</span>
+              <span>⚡ 87%</span>
             </div>
-            <button class="btn btn-ghost" style="padding: 4px 8px;">Cancel</button>
-          </div>
-          <div class="mobile-body" style="padding: 0;">
-            <div class="policy-section">
-              <div class="policy-label">
-                Autonomy Level
-                <span class="policy-value">Auto-send (was: Auto-draft)</span>
+            <div class="mobile-header">
+              <div class="mobile-header-left">
+                <h4>Today</h4>
+                <div class="subtitle">Selecting items...</div>
               </div>
-              <div class="slider-track">
-                <div class="slider-fill" style="width: 100%;"></div>
-              </div>
-              <div class="slider-labels">
-                <span>Suggest</span>
-                <span>Auto-draft</span>
-                <span class="active">Auto-send</span>
-              </div>
+              <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 0.8rem">
+                Cancel
+              </button>
             </div>
-
-            <div class="policy-section">
-              <div class="policy-label">
-                Confidence Threshold
-                <span class="policy-value">70% (was: 80%)</span>
-              </div>
-              <div class="slider-track">
-                <div class="slider-fill" style="width: 70%;"></div>
-              </div>
-            </div>
-
-            <div class="policy-section" style="background: var(--surface-plus);">
-              <div style="font-size: 0.8rem; font-weight: 500; margin-bottom: 12px; color: var(--secondary);">
-                What This Changes
-              </div>
-              <div class="preview-diff">
-                <div class="diff-item">
-                  <span class="diff-label">Before:</span>
-                  <span class="diff-old">Drafts for review</span>
-                </div>
-                <div class="diff-item">
-                  <span class="diff-label">After:</span>
-                  <span class="diff-new">Auto-sends if confidence ≥ 70%</span>
+            <div class="mobile-body">
+              <div class="batch-bar">
+                <div class="batch-count"><strong>3</strong> items selected</div>
+                <div class="batch-actions">
+                  <button class="btn btn-primary" style="padding: 6px 12px">Approve All</button>
+                  <button class="btn btn-secondary" style="padding: 6px 12px">Undo All</button>
                 </div>
               </div>
 
-              <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted);">
-                <strong style="color: var(--text);">Impact estimate:</strong> ~80% of lead replies will auto-send (vs. 0% currently)
+              <div class="mobile-section">
+                <div class="exception-card selected needs-review">
+                  <div class="exception-top">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                      <div
+                        style="
+                          width: 20px;
+                          height: 20px;
+                          border-radius: 4px;
+                          background: var(--primary);
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          font-size: 0.7rem;
+                        "
+                      >
+                        ✓
+                      </div>
+                      <div>
+                        <div class="exception-what">Reply to Sarah Martinez</div>
+                        <div class="exception-why">Warm Welcome template</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="exception-card selected needs-review">
+                  <div class="exception-top">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                      <div
+                        style="
+                          width: 20px;
+                          height: 20px;
+                          border-radius: 4px;
+                          background: var(--primary);
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          font-size: 0.7rem;
+                        "
+                      >
+                        ✓
+                      </div>
+                      <div>
+                        <div class="exception-what">Reply to James Cooper</div>
+                        <div class="exception-why">Warm Welcome template</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="exception-card selected needs-review">
+                  <div class="exception-top">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                      <div
+                        style="
+                          width: 20px;
+                          height: 20px;
+                          border-radius: 4px;
+                          background: var(--primary);
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          font-size: 0.7rem;
+                        "
+                      >
+                        ✓
+                      </div>
+                      <div>
+                        <div class="exception-what">Reply to Maria Lopez</div>
+                        <div class="exception-why">Warm Welcome template</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div style="padding: 16px 20px; background: var(--chrome); border-top: 1px solid var(--border-default);">
-              <button class="btn btn-primary" style="width: 100%;">Save Changes</button>
-              <div style="text-align: center; margin-top: 8px; font-size: 0.75rem; color: var(--text-dim);">
-                You can always undo from Timeline
-              </div>
+        <div class="wireframe-column">
+          <h3>Batch Operations Spec</h3>
+          <div class="spec-box">
+            <h4>Entering Batch Mode</h4>
+            <div class="spec-item">
+              <div class="spec-label">Long-press</div>
+              <div class="spec-text">Long-press any exception card to enter selection mode</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Select All Similar</div>
+              <div class="spec-text">"Select all using same template" quick action</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Header Action</div>
+              <div class="spec-text">"Select" button in section header</div>
+            </div>
+          </div>
+
+          <div class="spec-box">
+            <h4>Batch Actions</h4>
+            <div class="spec-item">
+              <div class="spec-label">Approve All</div>
+              <div class="spec-text">Send all selected drafts</div>
+              <div class="spec-note">Shows: "Send 3 replies?" confirmation</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Undo All</div>
+              <div class="spec-text">Retract/cancel all selected</div>
+              <div class="spec-note">Only for reversible actions</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Archive All</div>
+              <div class="spec-text">Clear from queue without action</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Change Policy</div>
+              <div class="spec-text">Apply new policy to all selected</div>
+            </div>
+          </div>
+
+          <div class="spec-box">
+            <h4>Batch Undo Toast</h4>
+            <div class="spec-item">
+              <div class="spec-label">Pattern</div>
+              <div class="spec-text">"Sent 3 replies. Undo all"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Individual Undo</div>
+              <div class="spec-text">Can undo individual items from timeline</div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="wireframe-column">
-        <h3>Policy Preview Spec</h3>
-        <div class="spec-box">
-          <h4>Preview Components</h4>
-          <div class="spec-item">
-            <div class="spec-label">Before/After Diff</div>
-            <div class="spec-text">Clear visual showing old → new values</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Impact Estimate</div>
-            <div class="spec-text">% of items affected by change</div>
-            <div class="spec-note">Based on historical data from last 30 days</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Example Items</div>
-            <div class="spec-text">"3 recent items would have been handled differently"</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Reversibility Note</div>
-            <div class="spec-text">"You can always undo from Timeline"</div>
+    <!-- SECTION: OVERFLOW TRIAGE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">New Spec 4</div>
+        <h2>Notification Budget Overflow Triage</h2>
+        <p class="section-desc">
+          When there are more items than the notification budget allows. Smart prioritization, not
+          just truncation.
+        </p>
+      </div>
+
+      <div class="wireframe-grid">
+        <div class="wireframe-column">
+          <h3>Desktop: Overflow State</h3>
+          <div class="desktop-frame">
+            <div class="desktop-layout">
+              <div class="desktop-nav">
+                <div class="desktop-nav-header">
+                  <h4>Today</h4>
+                  <div class="subtitle">Tuesday, November 25</div>
+                </div>
+
+                <div class="nav-group">
+                  <div class="nav-group-label">Priority</div>
+                  <div class="nav-item active">
+                    <span class="nav-item-icon">⚡</span>
+                    Needs You
+                    <span class="nav-item-badge">4</span>
+                  </div>
+                  <div class="nav-item">
+                    <span class="nav-item-icon">?</span>
+                    Quarantine
+                    <span class="nav-item-badge" style="background: var(--info)">2</span>
+                  </div>
+                </div>
+
+                <div class="nav-divider"></div>
+
+                <div class="nav-group">
+                  <div class="nav-group-label">Overflow (47 more)</div>
+                  <div class="nav-item">
+                    <span class="nav-item-icon">📥</span>
+                    Low Priority
+                    <span style="margin-left: auto; font-size: 0.75rem; color: var(--text-dim)"
+                      >35</span
+                    >
+                  </div>
+                  <div class="nav-item">
+                    <span class="nav-item-icon">✓</span>
+                    Auto-Handled
+                    <span style="margin-left: auto; font-size: 0.75rem; color: var(--text-dim)"
+                      >12</span
+                    >
+                  </div>
+                </div>
+
+                <div class="nav-divider"></div>
+
+                <div class="nav-group">
+                  <div class="nav-group-label">Activity</div>
+                  <div class="nav-item">
+                    <span class="nav-item-icon">📊</span>
+                    What Changed
+                  </div>
+                  <div class="nav-item">
+                    <span class="nav-item-icon">🔍</span>
+                    Timeline
+                  </div>
+                </div>
+              </div>
+
+              <div class="desktop-content">
+                <div style="margin-bottom: 20px">
+                  <h4 style="font-size: 1rem; margin-bottom: 8px">Needs You</h4>
+                  <p style="font-size: 0.85rem; color: var(--text-muted)">
+                    4 high-priority items. 47 more in overflow.
+                  </p>
+                </div>
+
+                <div class="exception-card needs-review">
+                  <div class="exception-top">
+                    <div>
+                      <div class="exception-what">Payment failed: Invoice #1847</div>
+                      <div class="exception-why">Card declined — customer notified</div>
+                    </div>
+                    <span class="badge badge-high">High</span>
+                  </div>
+                  <div class="exception-status">
+                    <span class="status-dot blocked"></span>
+                    Blocked · Requires action
+                  </div>
+                </div>
+
+                <div class="exception-card needs-review">
+                  <div class="exception-top">
+                    <div>
+                      <div class="exception-what">Urgent lead: "Need quote today"</div>
+                      <div class="exception-why">Keyword "urgent" triggered escalation</div>
+                    </div>
+                    <span class="badge badge-high">High</span>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    margin-top: 24px;
+                    padding: 16px;
+                    background: var(--surface);
+                    border-radius: 12px;
+                    border: 1px solid var(--border-default);
+                  "
+                >
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px">
+                    <strong style="color: var(--text)">47 items</strong> moved to overflow based on
+                    your notification budget
+                  </div>
+                  <div style="display: flex; gap: 8px">
+                    <button class="btn btn-secondary" style="font-size: 0.8rem">
+                      Review Overflow
+                    </button>
+                    <button class="btn btn-ghost" style="font-size: 0.8rem">Adjust Budget</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="spec-box">
-          <h4>Change Logging</h4>
-          <div class="spec-item">
-            <div class="spec-label">Event Type</div>
-            <div class="spec-text">`policy_updated`</div>
+        <div class="wireframe-column">
+          <h3>Overflow Triage Spec</h3>
+          <div class="spec-box">
+            <h4>Priority Scoring</h4>
+            <div class="spec-item">
+              <div class="spec-label">Money at Risk</div>
+              <div class="spec-text">Payments, invoices, billing issues → always high</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Time Sensitive</div>
+              <div class="spec-text">"Urgent", "today", deadlines → bumped up</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">User Rules</div>
+              <div class="spec-text">VIP contacts, specific keywords → custom priority</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Recency</div>
+              <div class="spec-text">Newer items score higher (tie-breaker)</div>
+            </div>
           </div>
-          <div class="spec-item">
-            <div class="spec-label">Payload</div>
-            <div class="spec-text">domain, field, old_value, new_value, actor</div>
+
+          <div class="spec-box">
+            <h4>Overflow Buckets</h4>
+            <div class="spec-item">
+              <div class="spec-label">Low Priority</div>
+              <div class="spec-text">Drafts that can wait, routine follow-ups</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Auto-Handled</div>
+              <div class="spec-text">Successfully auto-executed, just FYI</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Digest</div>
+              <div class="spec-text">Bundled into daily email summary</div>
+            </div>
           </div>
-          <div class="spec-item">
-            <div class="spec-label">Rollback</div>
-            <div class="spec-text">User can "Undo policy change" from timeline</div>
+
+          <div class="spec-box">
+            <h4>Budget Rules</h4>
+            <div class="spec-item">
+              <div class="spec-label">Default Budget</div>
+              <div class="spec-text">5 high-priority items in "Needs You"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Adjustable</div>
+              <div class="spec-text">User can set 3-10 based on preference</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Overflow Access</div>
+              <div class="spec-text">Always visible, never hidden</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- SECTION: QUICK FEEDBACK -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-number">New Spec 6</div>
-      <h2>Quick Feedback ("This was wrong/right")</h2>
-      <p class="section-desc">Lightweight mechanism to train the system. Every feedback improves future accuracy.</p>
-    </div>
+    <!-- SECTION: POLICY CHANGE PREVIEW -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">New Spec 5</div>
+        <h2>Policy Change Preview</h2>
+        <p class="section-desc">
+          Before saving a policy change, show what would be different. Builds confidence in system
+          behavior.
+        </p>
+      </div>
 
-    <div class="wireframe-grid">
-      <div class="wireframe-column">
-        <h3>Mobile: Feedback UI</h3>
-        <div class="mobile-frame">
-          <div class="mobile-status-bar">
-            <span>9:41</span>
-            <span>⚡ 87%</span>
-          </div>
-          <div class="mobile-header">
-            <div class="mobile-header-left">
-              <h4>Activity</h4>
-              <div class="subtitle">Recent actions</div>
+      <div class="wireframe-grid">
+        <div class="wireframe-column">
+          <h3>Mobile: Policy Preview</h3>
+          <div class="mobile-frame">
+            <div class="mobile-status-bar">
+              <span>9:41</span>
+              <span>⚡ 87%</span>
+            </div>
+            <div class="mobile-header">
+              <div class="mobile-header-left">
+                <h4>Lead Response Policy</h4>
+                <div class="subtitle">Preview changes</div>
+              </div>
+              <button class="btn btn-ghost" style="padding: 4px 8px">Cancel</button>
+            </div>
+            <div class="mobile-body" style="padding: 0">
+              <div class="policy-section">
+                <div class="policy-label">
+                  Autonomy Level
+                  <span class="policy-value">Auto-send (was: Auto-draft)</span>
+                </div>
+                <div class="slider-track">
+                  <div class="slider-fill" style="width: 100%"></div>
+                </div>
+                <div class="slider-labels">
+                  <span>Suggest</span>
+                  <span>Auto-draft</span>
+                  <span class="active">Auto-send</span>
+                </div>
+              </div>
+
+              <div class="policy-section">
+                <div class="policy-label">
+                  Confidence Threshold
+                  <span class="policy-value">70% (was: 80%)</span>
+                </div>
+                <div class="slider-track">
+                  <div class="slider-fill" style="width: 70%"></div>
+                </div>
+              </div>
+
+              <div class="policy-section" style="background: var(--surface-plus)">
+                <div
+                  style="
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    margin-bottom: 12px;
+                    color: var(--secondary);
+                  "
+                >
+                  What This Changes
+                </div>
+                <div class="preview-diff">
+                  <div class="diff-item">
+                    <span class="diff-label">Before:</span>
+                    <span class="diff-old">Drafts for review</span>
+                  </div>
+                  <div class="diff-item">
+                    <span class="diff-label">After:</span>
+                    <span class="diff-new">Auto-sends if confidence ≥ 70%</span>
+                  </div>
+                </div>
+
+                <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted)">
+                  <strong style="color: var(--text)">Impact estimate:</strong> ~80% of lead replies
+                  will auto-send (vs. 0% currently)
+                </div>
+              </div>
+
+              <div
+                style="
+                  padding: 16px 20px;
+                  background: var(--chrome);
+                  border-top: 1px solid var(--border-default);
+                "
+              >
+                <button class="btn btn-primary" style="width: 100%">Save Changes</button>
+                <div
+                  style="
+                    text-align: center;
+                    margin-top: 8px;
+                    font-size: 0.75rem;
+                    color: var(--text-dim);
+                  "
+                >
+                  You can always undo from Timeline
+                </div>
+              </div>
             </div>
           </div>
-          <div class="mobile-body">
-            <div class="card">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                <div>
-                  <div style="font-size: 0.9rem; font-weight: 500;">Auto-reply sent to Sarah</div>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Warm Welcome template · 94% confidence</div>
-                </div>
-                <span class="badge badge-low">Auto</span>
-              </div>
+        </div>
 
-              <div style="background: var(--surface-plus); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">
-                "Hi Sarah, thanks for reaching out! I'd love to hear more about your project..."
-              </div>
-
-              <div class="feedback-row">
-                <button class="feedback-btn positive">
-                  <span>👍</span> Good
-                </button>
-                <button class="feedback-btn negative">
-                  <span>👎</span> Wrong
-                </button>
-                <button class="feedback-btn">
-                  <span>✏️</span> Could be better
-                </button>
-              </div>
+        <div class="wireframe-column">
+          <h3>Policy Preview Spec</h3>
+          <div class="spec-box">
+            <h4>Preview Components</h4>
+            <div class="spec-item">
+              <div class="spec-label">Before/After Diff</div>
+              <div class="spec-text">Clear visual showing old → new values</div>
             </div>
-
-            <div class="card" style="border-color: var(--success);">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                <div>
-                  <div style="font-size: 0.9rem; font-weight: 500;">Lead classified as "Hot"</div>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Based on company size + urgency</div>
-                </div>
-                <span style="color: var(--success); font-size: 0.8rem;">✓ Marked Good</span>
-              </div>
-
-              <div style="font-size: 0.75rem; color: var(--text-dim);">
-                Thanks! This helps Xentri learn.
-              </div>
+            <div class="spec-item">
+              <div class="spec-label">Impact Estimate</div>
+              <div class="spec-text">% of items affected by change</div>
+              <div class="spec-note">Based on historical data from last 30 days</div>
             </div>
+            <div class="spec-item">
+              <div class="spec-label">Example Items</div>
+              <div class="spec-text">"3 recent items would have been handled differently"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Reversibility Note</div>
+              <div class="spec-text">"You can always undo from Timeline"</div>
+            </div>
+          </div>
 
-            <div class="card" style="border-color: var(--error);">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                <div>
-                  <div style="font-size: 0.9rem; font-weight: 500;">Follow-up marked as "Done"</div>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Auto-detected from email reply</div>
-                </div>
-                <span style="color: var(--error); font-size: 0.8rem;">✗ Marked Wrong</span>
-              </div>
-
-              <div style="background: rgba(248, 113, 113, 0.1); padding: 10px 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 8px;">
-                <div style="color: var(--error); font-weight: 500; margin-bottom: 4px;">What went wrong?</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                  <button class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 8px;">Wrong contact</button>
-                  <button class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 8px;">Not actually done</button>
-                  <button class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 8px;">Other</button>
-                </div>
-              </div>
+          <div class="spec-box">
+            <h4>Change Logging</h4>
+            <div class="spec-item">
+              <div class="spec-label">Event Type</div>
+              <div class="spec-text">`policy_updated`</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Payload</div>
+              <div class="spec-text">domain, field, old_value, new_value, actor</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Rollback</div>
+              <div class="spec-text">User can "Undo policy change" from timeline</div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="wireframe-column">
-        <h3>Feedback Spec</h3>
-        <div class="spec-box">
-          <h4>Feedback Types</h4>
-          <div class="spec-item">
-            <div class="spec-label">👍 Good</div>
-            <div class="spec-text">Action was correct. Strengthens this pattern.</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">👎 Wrong</div>
-            <div class="spec-text">Action was incorrect. Opens follow-up question.</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">✏️ Could be better</div>
-            <div class="spec-text">Direction was right, details were off.</div>
+    <!-- SECTION: QUICK FEEDBACK -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-number">New Spec 6</div>
+        <h2>Quick Feedback ("This was wrong/right")</h2>
+        <p class="section-desc">
+          Lightweight mechanism to train the system. Every feedback improves future accuracy.
+        </p>
+      </div>
+
+      <div class="wireframe-grid">
+        <div class="wireframe-column">
+          <h3>Mobile: Feedback UI</h3>
+          <div class="mobile-frame">
+            <div class="mobile-status-bar">
+              <span>9:41</span>
+              <span>⚡ 87%</span>
+            </div>
+            <div class="mobile-header">
+              <div class="mobile-header-left">
+                <h4>Activity</h4>
+                <div class="subtitle">Recent actions</div>
+              </div>
+            </div>
+            <div class="mobile-body">
+              <div class="card">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 8px;
+                  "
+                >
+                  <div>
+                    <div style="font-size: 0.9rem; font-weight: 500">Auto-reply sent to Sarah</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted)">
+                      Warm Welcome template · 94% confidence
+                    </div>
+                  </div>
+                  <span class="badge badge-low">Auto</span>
+                </div>
+
+                <div
+                  style="
+                    background: var(--surface-plus);
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    font-size: 0.8rem;
+                    color: var(--text-secondary);
+                    margin-bottom: 12px;
+                  "
+                >
+                  "Hi Sarah, thanks for reaching out! I'd love to hear more about your project..."
+                </div>
+
+                <div class="feedback-row">
+                  <button class="feedback-btn positive"><span>👍</span> Good</button>
+                  <button class="feedback-btn negative"><span>👎</span> Wrong</button>
+                  <button class="feedback-btn"><span>✏️</span> Could be better</button>
+                </div>
+              </div>
+
+              <div class="card" style="border-color: var(--success)">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 8px;
+                  "
+                >
+                  <div>
+                    <div style="font-size: 0.9rem; font-weight: 500">Lead classified as "Hot"</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted)">
+                      Based on company size + urgency
+                    </div>
+                  </div>
+                  <span style="color: var(--success); font-size: 0.8rem">✓ Marked Good</span>
+                </div>
+
+                <div style="font-size: 0.75rem; color: var(--text-dim)">
+                  Thanks! This helps Xentri learn.
+                </div>
+              </div>
+
+              <div class="card" style="border-color: var(--error)">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 8px;
+                  "
+                >
+                  <div>
+                    <div style="font-size: 0.9rem; font-weight: 500">
+                      Follow-up marked as "Done"
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted)">
+                      Auto-detected from email reply
+                    </div>
+                  </div>
+                  <span style="color: var(--error); font-size: 0.8rem">✗ Marked Wrong</span>
+                </div>
+
+                <div
+                  style="
+                    background: rgba(248, 113, 113, 0.1);
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    font-size: 0.8rem;
+                    margin-top: 8px;
+                  "
+                >
+                  <div style="color: var(--error); font-weight: 500; margin-bottom: 4px">
+                    What went wrong?
+                  </div>
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                    <button class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 8px">
+                      Wrong contact
+                    </button>
+                    <button class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 8px">
+                      Not actually done
+                    </button>
+                    <button class="btn btn-secondary" style="font-size: 0.7rem; padding: 4px 8px">
+                      Other
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="spec-box">
-          <h4>Wrong Follow-up Questions</h4>
-          <div class="spec-item">
-            <div class="spec-label">Classification Errors</div>
-            <div class="spec-text">"Should have been: Lead / Spam / Other"</div>
+        <div class="wireframe-column">
+          <h3>Feedback Spec</h3>
+          <div class="spec-box">
+            <h4>Feedback Types</h4>
+            <div class="spec-item">
+              <div class="spec-label">👍 Good</div>
+              <div class="spec-text">Action was correct. Strengthens this pattern.</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">👎 Wrong</div>
+              <div class="spec-text">Action was incorrect. Opens follow-up question.</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">✏️ Could be better</div>
+              <div class="spec-text">Direction was right, details were off.</div>
+            </div>
           </div>
-          <div class="spec-item">
-            <div class="spec-label">Tone Errors</div>
-            <div class="spec-text">"Too formal / Too casual / Wrong language"</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Timing Errors</div>
-            <div class="spec-text">"Should have waited / Should have been faster"</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Content Errors</div>
-            <div class="spec-text">"Wrong info / Missing info / Hallucinated"</div>
-          </div>
-        </div>
 
-        <div class="spec-box">
-          <h4>Feedback Impact</h4>
-          <div class="spec-item">
-            <div class="spec-label">Immediate</div>
-            <div class="spec-text">Updates local confidence model</div>
+          <div class="spec-box">
+            <h4>Wrong Follow-up Questions</h4>
+            <div class="spec-item">
+              <div class="spec-label">Classification Errors</div>
+              <div class="spec-text">"Should have been: Lead / Spam / Other"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Tone Errors</div>
+              <div class="spec-text">"Too formal / Too casual / Wrong language"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Timing Errors</div>
+              <div class="spec-text">"Should have waited / Should have been faster"</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Content Errors</div>
+              <div class="spec-text">"Wrong info / Missing info / Hallucinated"</div>
+            </div>
           </div>
-          <div class="spec-item">
-            <div class="spec-label">Aggregate</div>
-            <div class="spec-text">Multiple "wrong" → triggers degraded mode</div>
-          </div>
-          <div class="spec-item">
-            <div class="spec-label">Policy Suggestion</div>
-            <div class="spec-text">Many negatives → "Consider adjusting policy?"</div>
+
+          <div class="spec-box">
+            <h4>Feedback Impact</h4>
+            <div class="spec-item">
+              <div class="spec-label">Immediate</div>
+              <div class="spec-text">Updates local confidence model</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Aggregate</div>
+              <div class="spec-text">Multiple "wrong" → triggers degraded mode</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Policy Suggestion</div>
+              <div class="spec-text">Many negatives → "Consider adjusting policy?"</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- FOOTER -->
-  <div class="doc-footer">
-    <p><strong>Xentri Daily Loop v2</strong></p>
-    <p>4-layer neutral system + 6 complete UX specs</p>
-    <p style="margin-top: 12px; opacity: 0.6;">
-      Design System: shadcn/ui patterns · Colors: Sky Blue on enhanced Dusk palette
-    </p>
-  </div>
-
-</body>
+    <!-- FOOTER -->
+    <div class="doc-footer">
+      <p><strong>Xentri Daily Loop v2</strong></p>
+      <p>4-layer neutral system + 6 complete UX specs</p>
+      <p style="margin-top: 12px; opacity: 0.6">
+        Design System: shadcn/ui patterns · Colors: Sky Blue on enhanced Dusk palette
+      </p>
+    </div>
+  </body>
 </html>

@@ -19,7 +19,7 @@
   <output>❌ Constitution UX Design not found at {ux_path}
 
 Use create-system-ux workflow to create it first.</output>
-  <action>Exit workflow</action>
+<action>Exit workflow</action>
 </check>
 
 <output>
@@ -44,7 +44,7 @@ What type of amendment do you want to make?
 2. **Modify** - Change existing UX decision
 3. **Remove** - Remove existing UX element
 4. **Other** - Modify design system, colors, typography, etc.
-</output>
+   </output>
 
 <ask>Select amendment type (1-4):</ask>
 <action>Store as amendment_type</action>
@@ -55,12 +55,13 @@ What type of amendment do you want to make?
   <ask>Describe what you want to add:
 
 Consider:
+
 - Is this truly platform-wide?
 - Should it apply to ALL entities?
 - What's the rationale for adding this?</ask>
 
   <action>Draft the new content</action>
-</check>
+  </check>
 
 <check if="amendment_type == 2 (Modify)">
   <output>Current UX sections available for modification:
@@ -74,21 +75,21 @@ Consider:
 8. Responsive Strategy
 9. Inheritance Guidelines</output>
 
-  <ask>Which section do you want to modify?</ask>
-  <action>Load current content of selected section</action>
+<ask>Which section do you want to modify?</ask>
+<action>Load current content of selected section</action>
 
-  <output>Current:
+<output>Current:
 {current_content}</output>
 
-  <ask>What change do you want to make? Explain WHY this change is needed.</ask>
-  <action>Draft modification</action>
+<ask>What change do you want to make? Explain WHY this change is needed.</ask>
+<action>Draft modification</action>
 </check>
 
 <check if="amendment_type == 3 (Remove)">
   <output>Current UX elements that could be removed:
 (List principles, patterns, guidelines)</output>
 
-  <ask>What do you want to remove and WHY?
+<ask>What do you want to remove and WHY?
 
 Note: Removing Constitution elements may break downstream entities.</ask>
 </check>
@@ -97,12 +98,13 @@ Note: Removing Constitution elements may break downstream entities.</ask>
   <ask>Describe the change you want to make.
 
 For Constitution UX, this might include:
+
 - Design system change
 - Color palette update
 - Typography change
 - Accessibility level change</ask>
-</check>
-</step>
+  </check>
+  </step>
 
 <step n="3" goal="Impact Analysis">
 <output>
@@ -143,12 +145,12 @@ This amendment will require updates to:
 {affected_documents_list}
 
 These entities currently depend on what you're changing.
-  </output>
+</output>
 
-  <ask>Proceed with this breaking change? (yes/no)</ask>
-  <check if="response != 'yes'">
-    <action>Exit workflow</action>
-  </check>
+<ask>Proceed with this breaking change? (yes/no)</ask>
+<check if="response != 'yes'">
+<action>Exit workflow</action>
+</check>
 </check>
 </step>
 
@@ -156,6 +158,7 @@ These entities currently depend on what you're changing.
 <ask>Provide the rationale for this Constitution UX change:
 
 This rationale will be:
+
 1. Recorded in the document history
 2. Required in the commit message
 3. Available for future reference
@@ -180,10 +183,11 @@ Why is this change necessary?</ask>
 {rationale}
 
 **Impact:**
+
 - {affected_entity_count} entity types affected
 - {affected_documents_count} documents may need updates
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <ask>Review the amendment:
 [a] Approve and apply
@@ -227,6 +231,7 @@ Updated: docs/platform/ux-design.md
 {rationale}
 
 **Commit Message Format:**
+
 ```
 docs(constitution): {short_description}
 

@@ -59,7 +59,7 @@ Parent: {parent_architecture_path}
 - No tech stack deviations without ADR
 - Alignment with Constitution patterns
 - No contradictions to parent decisions
-</action>
+  </action>
 
 </step>
 

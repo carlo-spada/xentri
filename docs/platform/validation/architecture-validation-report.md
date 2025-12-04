@@ -10,6 +10,7 @@
 ## Overview
 
 This validation report will document the review of the System Architecture against:
+
 - ADR completeness and rationale
 - Technology stack alignment
 - Pattern consistency

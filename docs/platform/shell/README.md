@@ -9,6 +9,7 @@
 ## Overview
 
 The Shell is the container application that provides:
+
 - Stable header and sidebar across all views
 - Client-side routing via Astro
 - React island hosting for interactive micro-apps
@@ -40,11 +41,11 @@ The Shell is the container application that provides:
 
 ## Dependencies
 
-| Module | Relationship |
-|--------|--------------|
-| `platform/ui` | Design system components |
-| `platform/ts-schema` | Shared type definitions |
-| `platform/core-api` | API calls via TanStack Query |
+| Module               | Relationship                 |
+| -------------------- | ---------------------------- |
+| `platform/ui`        | Design system components     |
+| `platform/ts-schema` | Shared type definitions      |
+| `platform/core-api`  | API calls via TanStack Query |
 
 ## Development
 

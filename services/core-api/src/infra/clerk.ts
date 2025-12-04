@@ -1,4 +1,4 @@
-import { clerkClient, createClerkClient } from '@clerk/fastify';
+import { clerkClient, createClerkClient } from '@clerk/fastify'
 
 /**
  * Clerk Backend API client for server-side operations.
@@ -11,17 +11,17 @@ import { clerkClient, createClerkClient } from '@clerk/fastify';
  * Requires CLERK_SECRET_KEY environment variable.
  */
 export function getClerkClient() {
-  const secretKey = process.env.CLERK_SECRET_KEY;
+  const secretKey = process.env.CLERK_SECRET_KEY
 
   if (!secretKey) {
     throw new Error(
       'CLERK_SECRET_KEY environment variable is required. ' +
         'Get it from https://dashboard.clerk.com → Your App → API Keys'
-    );
+    )
   }
 
-  return createClerkClient({ secretKey });
+  return createClerkClient({ secretKey })
 }
 
 // Re-export clerkClient for Fastify plugin usage
-export { clerkClient };
+export { clerkClient }

@@ -1,4 +1,4 @@
-import { useStore } from '@nanostores/react';
+import { useStore } from '@nanostores/react'
 import {
   Target,
   Palette,
@@ -10,7 +10,7 @@ import {
   ChevronDown,
   Lock,
   type LucideIcon,
-} from 'lucide-react';
+} from 'lucide-react'
 import {
   type Category,
   $expandedCategory,
@@ -18,8 +18,8 @@ import {
   $sidebarState,
   toggleCategory,
   setActiveModule,
-} from '../stores/navigation';
-import { cn } from '@xentri/ui';
+} from '../stores/navigation'
+import { cn } from '@xentri/ui'
 
 // Icon mapping
 const ICONS: Record<string, LucideIcon> = {
@@ -30,36 +30,36 @@ const ICONS: Record<string, LucideIcon> = {
   Truck,
   UserCog,
   Scale,
-};
+}
 
 interface SidebarCategoryProps {
-  category: Category;
+  category: Category
 }
 
 export default function SidebarCategory({ category }: SidebarCategoryProps) {
-  const expandedCategory = useStore($expandedCategory);
-  const activeModule = useStore($activeModule);
-  const sidebarState = useStore($sidebarState);
+  const expandedCategory = useStore($expandedCategory)
+  const activeModule = useStore($activeModule)
+  const sidebarState = useStore($sidebarState)
 
-  const isExpanded = expandedCategory === category.id;
-  const isCollapsed = sidebarState === 'collapsed';
-  const Icon = ICONS[category.icon] || Target;
+  const isExpanded = expandedCategory === category.id
+  const isCollapsed = sidebarState === 'collapsed'
+  const Icon = ICONS[category.icon] || Target
 
   const handleCategoryClick = () => {
-    if (!category.active) return;
-    toggleCategory(category.id);
-  };
+    if (!category.active) return
+    toggleCategory(category.id)
+  }
 
   const handleModuleClick = (moduleId: string) => {
-    setActiveModule(moduleId);
-  };
+    setActiveModule(moduleId)
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleCategoryClick();
+      e.preventDefault()
+      handleCategoryClick()
     }
-  };
+  }
 
   return (
     <div className="sidebar-category">
@@ -88,9 +88,7 @@ export default function SidebarCategory({ category }: SidebarCategoryProps) {
             size={20}
             className={cn(
               'transition-colors',
-              isExpanded
-                ? 'text-[var(--color-primary)]'
-                : 'text-[var(--color-text-secondary)]'
+              isExpanded ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-secondary)]'
             )}
           />
         </span>
@@ -119,10 +117,7 @@ export default function SidebarCategory({ category }: SidebarCategoryProps) {
                 )}
               />
             ) : (
-              <Lock
-                size={14}
-                className="shrink-0 text-[var(--color-text-muted)]"
-              />
+              <Lock size={14} className="shrink-0 text-[var(--color-text-muted)]" />
             )}
           </>
         )}
@@ -137,7 +132,7 @@ export default function SidebarCategory({ category }: SidebarCategoryProps) {
           aria-label={`${category.label} modules`}
         >
           {category.modules.map((module) => {
-            const isActive = activeModule === module.id;
+            const isActive = activeModule === module.id
 
             return (
               <a
@@ -158,10 +153,10 @@ export default function SidebarCategory({ category }: SidebarCategoryProps) {
               >
                 {module.label}
               </a>
-            );
+            )
           })}
         </div>
       )}
     </div>
-  );
+  )
 }

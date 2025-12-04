@@ -14,10 +14,11 @@
 ## Inheritance Context
 
 This PRD inherits from:
+
 - **Constitution:** `docs/platform/prd.md`
-{{#if parent_prd_path}}
+  {{#if parent_prd_path}}
 - **Parent PRD:** `{{parent_prd_path}}`
-{{/if}}
+  {{/if}}
 
 All Platform Requirements (PR-xxx) and Integration Contracts (IC-xxx) from the Constitution apply.
 {{#if parent_fr_summary}}
@@ -42,8 +43,9 @@ Parent FRs inherited: {{parent_fr_summary}}
 
 ### FR Summary
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
+| ID  | Requirement | Priority |
+| --- | ----------- | -------- |
+
 {{#each functional_requirements_table}}
 | {{id}} | {{summary}} | {{priority}} |
 {{/each}}
@@ -51,6 +53,7 @@ Parent FRs inherited: {{parent_fr_summary}}
 ---
 
 {{#if entity_type == 'infrastructure_module'}}
+
 ## Exposed Interfaces
 
 {{exposed_interfaces}}
@@ -61,6 +64,7 @@ Parent FRs inherited: {{parent_fr_summary}}
 {{/if}}
 
 {{#if entity_type == 'strategic_container'}}
+
 ## Strategic Alignment
 
 {{strategic_alignment}}
@@ -71,6 +75,7 @@ Parent FRs inherited: {{parent_fr_summary}}
 {{/if}}
 
 {{#if entity_type == 'coordination_unit'}}
+
 ## Module Orchestration
 
 {{module_orchestration}}
@@ -82,6 +87,7 @@ Parent FRs inherited: {{parent_fr_summary}}
 
 {{#if entity_type == 'business_module'}}
 {{#if user_stories}}
+
 ## User Stories
 
 {{user_stories}}
@@ -91,6 +97,7 @@ Parent FRs inherited: {{parent_fr_summary}}
 ---
 
 {{#if entity_nfrs}}
+
 ## Non-Functional Requirements
 
 These are specific to this {{entity_type_display}}, beyond inherited system-wide NFRs.
@@ -105,7 +112,8 @@ These are specific to this {{entity_type_display}}, beyond inherited system-wide
 ### Constitution Alignment
 
 | Platform Requirement | How Addressed |
-|---------------------|---------------|
+| -------------------- | ------------- |
+
 {{#each constitution_alignment}}
 | {{pr_id}} | {{implementation}} |
 {{/each}}
@@ -113,7 +121,8 @@ These are specific to this {{entity_type_display}}, beyond inherited system-wide
 ### Parent PRD Alignment
 
 | Parent FR | Related FRs Here |
-|-----------|------------------|
+| --------- | ---------------- |
+
 {{#each parent_alignment}}
 | {{parent_fr}} | {{child_frs}} |
 {{/each}}
@@ -122,9 +131,9 @@ These are specific to this {{entity_type_display}}, beyond inherited system-wide
 
 ## Document History
 
-| Date | Version | Change | Author |
-|------|---------|--------|--------|
-| {{date}} | 1.0.0 | Initial PRD created | {{user_name}} |
+| Date     | Version | Change              | Author        |
+| -------- | ------- | ------------------- | ------------- |
+| {{date}} | 1.0.0   | Initial PRD created | {{user_name}} |
 
 ---
 

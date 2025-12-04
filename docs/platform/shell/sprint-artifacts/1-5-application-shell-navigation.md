@@ -95,6 +95,7 @@ so that **I can navigate between Xentri capabilities seamlessly without page rel
 ### Technical Specifications
 
 **7 Categories (Sidebar):**
+
 ```typescript
 const CATEGORIES = [
   { id: 'management', icon: 'Strategy', label: 'Management & Strategy', active: true },
@@ -104,10 +105,11 @@ const CATEGORIES = [
   { id: 'operations', icon: 'Truck', label: 'Operations & Delivery', active: false },
   { id: 'team', icon: 'UserCog', label: 'Team & Leadership', active: false },
   { id: 'legal', icon: 'Scale', label: 'Legal & Compliance', active: false },
-] as const;
+] as const
 ```
 
 **Theme Persistence Flow:**
+
 ```
 1. User clicks theme toggle → Nano Store updates
 2. Store change triggers API call: PATCH /api/v1/users/me/preferences { theme: 'dark' }
@@ -117,15 +119,29 @@ const CATEGORIES = [
 ```
 
 **Responsive Breakpoints:**
+
 ```css
 /* Full sidebar with labels */
-@media (min-width: 1024px) { .sidebar { width: 240px; } }
+@media (min-width: 1024px) {
+  .sidebar {
+    width: 240px;
+  }
+}
 
 /* Collapsed icon-only */
-@media (min-width: 768px) and (max-width: 1023px) { .sidebar { width: 64px; } }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar {
+    width: 64px;
+  }
+}
 
 /* Mobile drawer (hidden by default) */
-@media (max-width: 767px) { .sidebar { position: fixed; transform: translateX(-100%); } }
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    transform: translateX(-100%);
+  }
+}
 ```
 
 [Source: docs/architecture.md#Implementation-Patterns-B]
@@ -133,6 +149,7 @@ const CATEGORIES = [
 ### Project Structure Notes
 
 **Files to create:**
+
 ```
 apps/shell/
 ├── src/
@@ -160,6 +177,7 @@ packages/ts-schema/src/
 ```
 
 **Files to modify:**
+
 ```
 apps/shell/src/pages/index.astro              (use AppShell layout)
 apps/shell/astro.config.mjs                   (enable View Transitions, prefetch)
@@ -205,11 +223,11 @@ packages/ts-schema/src/index.ts               (export users module)
 
 ### NFR Alignment
 
-| NFR | Target | How Achieved |
-|-----|--------|--------------|
-| NFR1 | Shell load <2s on 3G | Astro SSG, minimal JS, lazy islands |
-| NFR2 | Category switch <500ms | View Transitions, hover prefetch |
-| NFR4 | WCAG 2.1 AA | Keyboard nav, focus management, contrast |
+| NFR  | Target                 | How Achieved                             |
+| ---- | ---------------------- | ---------------------------------------- |
+| NFR1 | Shell load <2s on 3G   | Astro SSG, minimal JS, lazy islands      |
+| NFR2 | Category switch <500ms | View Transitions, hover prefetch         |
+| NFR4 | WCAG 2.1 AA            | Keyboard nav, focus management, contrast |
 
 ### References
 
@@ -253,6 +271,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 ### File List
 
 **New Files:**
+
 - `apps/shell/src/layouts/AppShell.astro` - Main shell layout
 - `apps/shell/src/components/Header.astro` - Header with logo, notifications, user menu
 - `apps/shell/src/components/Sidebar.astro` - Sidebar container
@@ -269,6 +288,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - `packages/ts-schema/src/users.ts` - User preferences Zod schemas
 
 **Modified Files:**
+
 - `apps/shell/src/pages/index.astro` - Use AppShell layout
 - `apps/shell/astro.config.mjs` - Add prefetch config
 - `apps/shell/package.json` - Add nanostores, lucide-react
@@ -286,11 +306,11 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 
 ## Change Log
 
-| Date | Author | Change |
-|------|--------|--------|
-| 2025-11-26 | SM Agent (Bob) | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, PRD, and Story 1.4 learnings |
-| 2025-11-26 | Dev Agent (Amelia) | Implementation complete. All ACs satisfied. Ready for review. |
-| 2025-11-29 | Dev Agent (Amelia) | Senior Developer Review appended |
+| Date       | Author             | Change                                                                                                   |
+| ---------- | ------------------ | -------------------------------------------------------------------------------------------------------- |
+| 2025-11-26 | SM Agent (Bob)     | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, PRD, and Story 1.4 learnings |
+| 2025-11-26 | Dev Agent (Amelia) | Implementation complete. All ACs satisfied. Ready for review.                                            |
+| 2025-11-29 | Dev Agent (Amelia) | Senior Developer Review appended                                                                         |
 
 ---
 
@@ -301,16 +321,19 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - Outcome: Approve
 
 ### Summary
+
 - AC6 fixed: Theme now hydrates from `/api/v1/users/me/preferences`, applies on load, and persists to localStorage/server.
 - AC8 fixed: Service worker registered with manifest and cache for shell/offline navigation; offline banner backed by SW.
 - Notifications fetch hardened with response validation and graceful fallback.
 
 ### Key Findings
+
 - **Resolved (AC6)**: Theme persistence and load-from-server implemented (apps/shell/src/stores/theme.ts; apps/shell/src/components/UserMenu.tsx; apps/shell/src/layouts/AppShell.astro).
 - **Resolved (AC8)**: Service worker + manifest added and registered for offline nav caching (apps/shell/public/sw.js; apps/shell/public/manifest.webmanifest; apps/shell/src/scripts/sw-register.ts; apps/shell/src/layouts/AppShell.astro).
 - **Resolved**: Notifications fetch handles non-200 and schema variants, defaulting safely (apps/shell/src/stores/notifications.ts).
 
 ### Acceptance Criteria Coverage
+
 - AC1: Implemented (apps/shell/src/components/Header.astro).
 - AC2: Implemented (apps/shell/src/stores/navigation.ts).
 - AC3: Implemented (apps/shell/src/components/SidebarCategory.tsx).
@@ -324,25 +347,32 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 AC Coverage: 9/9 implemented.
 
 ### Task Completion Validation
+
 - Tasks previously missing now covered: 3.4 (load theme on init), 6.2 (service worker registration).
 - Remaining unchecked tasks stay open (2.6, 3.7, 4.6, 6.4, 7.5, 8.4-8.6) as originally deferred.
 
 ### Test Coverage and Gaps
+
 - Added unit coverage for theme persistence/hydration (`apps/shell/src/stores/theme.test.ts`) and e2e checks for stored theme application and offline banner (`e2e/shell.spec.ts`). Additional deferred tasks (2.6, 3.7, 4.6, 6.4, 7.5, 8.4-8.6) remain unimplemented.
 
 ### Architectural Alignment
+
 - Aligns with architecture.md: Astro islands, nanostores, view transitions, PWA readiness.
 
 ### Security Notes
+
 - SW scope restricted to same-origin; theme fetch uses credentials and handles failures gracefully.
 
 ### Best-Practices & References
+
 - Uses ts-schema contracts, Clerk IDs, and PWA manifest per Epic 1 tech spec.
 
 ### Action Items
 
 **Code Changes Required**
+
 - None (all ACs satisfied).
 
 **Advisory Notes**
+
 - Consider adding unit/e2e coverage for theme persistence and offline flow when the test harness is prioritized.

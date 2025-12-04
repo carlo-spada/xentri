@@ -9,6 +9,7 @@
 ## Overview
 
 The ts-schema package is the **single source of truth** for:
+
 - TypeScript type definitions used across all packages
 - Zod schemas for runtime validation
 - API request/response contracts
@@ -20,6 +21,7 @@ The ts-schema package is the **single source of truth** for:
 > it MUST be defined in ts-schema.
 
 This ensures:
+
 - Type safety across the entire codebase
 - Runtime validation at system boundaries
 - Consistent contracts between services
@@ -39,11 +41,11 @@ None - this is the foundational package that others depend on.
 
 ## Consumed By
 
-| Module | Usage |
-|--------|-------|
+| Module              | Usage                               |
+| ------------------- | ----------------------------------- |
 | `platform/core-api` | Request validation, response typing |
-| `platform/shell` | API response typing |
-| All future services | Shared contracts |
+| `platform/shell`    | API response typing                 |
+| All future services | Shared contracts                    |
 
 ## Development
 
@@ -75,6 +77,7 @@ docs/platform/ts-schema/
 ## Schema Change Protocol
 
 When modifying ts-schema:
+
 1. Update the schema with new/changed fields
 2. Run `pnpm run typecheck` across entire repo
 3. Fix any type errors in consuming packages
@@ -82,4 +85,4 @@ When modifying ts-schema:
 
 ---
 
-*Module documentation to be expanded as development continues.*
+_Module documentation to be expanded as development continues._

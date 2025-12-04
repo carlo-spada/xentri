@@ -10,11 +10,11 @@ This directory contains research documents that inform product decisions. These 
 
 ## Research Types
 
-| Type | Document | Status |
-|------|----------|--------|
-| **Market Research** | [market-research.md](./market-research.md) | Pending |
+| Type                     | Document                                             | Status  |
+| ------------------------ | ---------------------------------------------------- | ------- |
+| **Market Research**      | [market-research.md](./market-research.md)           | Pending |
 | **Competitive Analysis** | [competitive-analysis.md](./competitive-analysis.md) | Pending |
-| **User Research** | [user-research.md](./user-research.md) | Pending |
+| **User Research**        | [user-research.md](./user-research.md)               | Pending |
 
 ## Research Process
 

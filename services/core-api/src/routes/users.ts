@@ -1,11 +1,8 @@
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { clerkAuthMiddleware, requireOrgContext, getClerkUser } from '../middleware/clerkAuth.js';
-import { getPrisma } from '../infra/db.js';
-import { problemDetails } from '../middleware/orgContext.js';
-import {
-  UpdateUserPreferencesRequestSchema,
-  type UserPreferences,
-} from '@xentri/ts-schema';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import { clerkAuthMiddleware, requireOrgContext, getClerkUser } from '../middleware/clerkAuth.js'
+import { getPrisma } from '../infra/db.js'
+import { problemDetails } from '../middleware/orgContext.js'
+import { UpdateUserPreferencesRequestSchema, type UserPreferences } from '@xentri/ts-schema'
 
 // ===================
 // Types
@@ -13,21 +10,21 @@ import {
 
 interface UserMeResponse {
   user: {
-    id: string;
-    email: string;
-    email_verified: boolean;
-    created_at: string;
-  };
+    id: string
+    email: string
+    email_verified: boolean
+    created_at: string
+  }
   organization?: {
-    id: string;
-    name: string;
-    slug: string;
-    role: string;
-  };
+    id: string
+    name: string
+    slug: string
+    role: string
+  }
   preferences?: {
-    theme: string;
-    email_notifications?: Record<string, boolean>;
-  };
+    theme: string
+    email_notifications?: Record<string, boolean>
+  }
 }
 
 // ===================
@@ -51,22 +48,22 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
       preHandler: [clerkAuthMiddleware],
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      const prisma = getPrisma();
+      const prisma = getPrisma()
 
       // Get user from local database
       const user = await prisma.user.findUnique({
         where: { id: request.clerkUserId },
-      });
+      })
 
       if (!user) {
         // User exists in Clerk but not synced to local DB yet
         // This can happen if webhook hasn't processed yet
         // Fetch from Clerk and return basic info
         try {
-          const clerkUser = await getClerkUser(request.clerkUserId!);
+          const clerkUser = await getClerkUser(request.clerkUserId!)
           const primaryEmail = clerkUser.emailAddresses.find(
             (e) => e.id === clerkUser.primaryEmailAddressId
-          );
+          )
 
           const response: UserMeResponse = {
             user: {
@@ -75,13 +72,13 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
               email_verified: primaryEmail?.verification?.status === 'verified',
               created_at: new Date(clerkUser.createdAt).toISOString(),
             },
-          };
+          }
 
           // Add org context if available
           if (request.clerkOrgId) {
             const org = await prisma.organization.findUnique({
               where: { id: request.clerkOrgId },
-            });
+            })
 
             if (org) {
               response.organization = {
@@ -89,13 +86,13 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
                 name: org.name,
                 slug: org.slug,
                 role: request.clerkOrgRole || 'org:member',
-              };
+              }
             }
           }
 
-          return reply.status(200).send(response);
+          return reply.status(200).send(response)
         } catch (err) {
-          fastify.log.error({ err }, 'Failed to fetch user from Clerk');
+          fastify.log.error({ err }, 'Failed to fetch user from Clerk')
           return reply
             .status(500)
             .header('content-type', 'application/problem+json')
@@ -106,7 +103,7 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
                 'Failed to retrieve user information',
                 request.id
               )
-            );
+            )
         }
       }
 
@@ -118,13 +115,13 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
           email_verified: user.emailVerified,
           created_at: user.createdAt.toISOString(),
         },
-      };
+      }
 
       // Add org context if available
       if (request.clerkOrgId) {
         const org = await prisma.organization.findUnique({
           where: { id: request.clerkOrgId },
-        });
+        })
 
         if (org) {
           response.organization = {
@@ -132,31 +129,31 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
             name: org.name,
             slug: org.slug,
             role: request.clerkOrgRole || 'org:member',
-          };
+          }
         }
       }
 
       // Add user preferences if available
       const preferences = await prisma.userPreferences.findUnique({
         where: { userId: user.id },
-      });
+      })
 
       if (preferences) {
         response.preferences = {
           theme: preferences.theme,
           email_notifications: preferences.emailNotifications as Record<string, boolean>,
-        };
+        }
       } else {
         // Return defaults if no preferences exist
         response.preferences = {
           theme: 'dark',
           email_notifications: { lead_created: true, system: true },
-        };
+        }
       }
 
-      return reply.status(200).send(response);
+      return reply.status(200).send(response)
     }
-  );
+  )
 
   /**
    * GET /api/v1/users/me/organizations
@@ -170,14 +167,14 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
       preHandler: [clerkAuthMiddleware],
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      const prisma = getPrisma();
+      const prisma = getPrisma()
 
       const memberships = await prisma.member.findMany({
         where: { userId: request.clerkUserId },
         include: {
           organization: true,
         },
-      });
+      })
 
       const organizations = memberships.map((m) => ({
         id: m.organization.id,
@@ -185,11 +182,11 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
         slug: m.organization.slug,
         role: m.role,
         joined_at: m.createdAt.toISOString(),
-      }));
+      }))
 
-      return reply.status(200).send({ organizations });
+      return reply.status(200).send({ organizations })
     }
-  );
+  )
 
   /**
    * PATCH /api/v1/users/me/preferences
@@ -213,40 +210,40 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
       preHandler: [clerkAuthMiddleware],
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      const prisma = getPrisma();
-      const userId = request.clerkUserId;
+      const prisma = getPrisma()
+      const userId = request.clerkUserId
 
       if (!userId) {
         return reply.status(401).send({
           error: 'Unauthorized',
           message: 'Valid authentication required',
-        });
+        })
       }
 
       // Validate request body
-      const parseResult = UpdateUserPreferencesRequestSchema.safeParse(request.body);
+      const parseResult = UpdateUserPreferencesRequestSchema.safeParse(request.body)
       if (!parseResult.success) {
         return reply.status(400).send({
           error: 'Bad Request',
           message: 'Invalid request body',
           details: parseResult.error.errors,
-        });
+        })
       }
 
-      const { theme, email_notifications } = parseResult.data;
+      const { theme, email_notifications } = parseResult.data
 
       // Build update data
       const updateData: {
-        theme?: string;
-        emailNotifications?: object;
-      } = {};
+        theme?: string
+        emailNotifications?: object
+      } = {}
 
       if (theme !== undefined) {
-        updateData.theme = theme;
+        updateData.theme = theme
       }
 
       if (email_notifications !== undefined) {
-        updateData.emailNotifications = email_notifications;
+        updateData.emailNotifications = email_notifications
       }
 
       // Upsert preferences
@@ -258,16 +255,16 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
           emailNotifications: email_notifications || { lead_created: true, system: true },
         },
         update: updateData,
-      });
+      })
 
       return reply.status(200).send({
         preferences: {
           theme: preferences.theme,
           email_notifications: preferences.emailNotifications as Record<string, boolean>,
         },
-      });
+      })
     }
-  );
+  )
 
   /**
    * GET /api/v1/users/me/preferences
@@ -285,19 +282,19 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
       preHandler: [clerkAuthMiddleware],
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      const prisma = getPrisma();
-      const userId = request.clerkUserId;
+      const prisma = getPrisma()
+      const userId = request.clerkUserId
 
       if (!userId) {
         return reply.status(401).send({
           error: 'Unauthorized',
           message: 'Valid authentication required',
-        });
+        })
       }
 
       const preferences = await prisma.userPreferences.findUnique({
         where: { userId },
-      });
+      })
 
       if (preferences) {
         return reply.status(200).send({
@@ -305,7 +302,7 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
             theme: preferences.theme,
             email_notifications: preferences.emailNotifications as Record<string, boolean>,
           },
-        });
+        })
       }
 
       // Return defaults if no preferences exist
@@ -314,7 +311,7 @@ export default async function usersRoutes(fastify: FastifyInstance): Promise<voi
           theme: 'dark',
           email_notifications: { lead_created: true, system: true },
         },
-      });
+      })
     }
-  );
+  )
 }

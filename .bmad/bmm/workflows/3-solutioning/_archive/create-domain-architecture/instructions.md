@@ -40,15 +40,17 @@ Constitution Arch:  docs/platform/architecture.md
 Parent Arch:        {parent_architecture_path}
 
 This architecture will:
+
 - Align with Constitution architecture decisions
 - Inherit from parent architecture
 - Add entity-specific decisions
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <invoke-protocol name="discover_inputs" />
 
 <action>Extract inherited architecture constraints:
+
 1. From Constitution (docs/platform/architecture.md):
    - Core architectural principles
    - Technology stack decisions
@@ -57,8 +59,8 @@ This architecture will:
 2. From Parent ({parent_architecture_path}):
    - Domain-specific decisions
    - Integration patterns
-</action>
-</step>
+     </action>
+     </step>
 
 <step n="1" goal="Architecture Overview">
 <action>Define the architecture overview for this {entity_type_display}:
@@ -116,14 +118,16 @@ Based on entity type, focus on:
 
 Must align with Constitution tech stack.
 Only document DEVIATIONS or ADDITIONS:
+
 - Why standard tech doesn't fit
 - What alternative is chosen
 - ADR for any deviation
 
 Entity-specific technologies:
+
 - Libraries or frameworks specific to this domain
 - Tools unique to this entity's needs
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -136,11 +140,12 @@ Entity-specific technologies:
 <action>Document data architecture for this entity:
 
 Within Constitution constraints:
+
 - Data models owned by this entity
 - Database tables/collections
 - Relationships with other entities' data
 - Data access patterns
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -157,7 +162,7 @@ Within Constitution constraints:
 - Events produced
 - Events subscribed to
 - Sync vs async patterns used
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -222,14 +227,16 @@ Within Constitution constraints:
 Created: {output_folder_resolved}architecture.md
 
 Aligned with:
+
 - Constitution: docs/platform/architecture.md
 - Parent: {parent_architecture_path}
 
 **Next Steps:**
+
 1. Create epics: create-epics workflow
 2. Begin implementation based on architecture
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-</step>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
+   </step>
 
 </workflow>

@@ -1,6 +1,6 @@
 ---
-module: {{module}}
-story_id: {{story_key}}
+module: { { module } }
+story_id: { { story_key } }
 status: drafted
 dependencies: []
 # dependencies:

@@ -8,12 +8,12 @@
  * - PII scrubbing for privacy compliance
  */
 
-import * as Sentry from '@sentry/node';
-import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify';
-import { logger } from './logger.js';
+import * as Sentry from '@sentry/node'
+import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
+import { logger } from './logger.js'
 
 // Sentry DSN from environment - if not set, Sentry is disabled
-const SENTRY_DSN = process.env.SENTRY_DSN;
+const SENTRY_DSN = process.env.SENTRY_DSN
 
 /**
  * Initialize Sentry SDK
@@ -21,8 +21,8 @@ const SENTRY_DSN = process.env.SENTRY_DSN;
  */
 export function initSentry(): void {
   if (!SENTRY_DSN) {
-    logger.info('Sentry DSN not configured - error tracking disabled');
-    return;
+    logger.info('Sentry DSN not configured - error tracking disabled')
+    return
   }
 
   Sentry.init({
@@ -40,9 +40,9 @@ export function initSentry(): void {
     beforeSend(event) {
       // Remove sensitive headers
       if (event.request?.headers) {
-        delete event.request.headers['authorization'];
-        delete event.request.headers['cookie'];
-        delete event.request.headers['x-api-key'];
+        delete event.request.headers['authorization']
+        delete event.request.headers['cookie']
+        delete event.request.headers['x-api-key']
       }
 
       // Scrub user data except id
@@ -50,10 +50,10 @@ export function initSentry(): void {
         event.user = {
           id: event.user.id,
           // Remove email, name, etc.
-        };
+        }
       }
 
-      return event;
+      return event
     },
 
     // Ignore common non-error events
@@ -64,9 +64,9 @@ export function initSentry(): void {
       // User-initiated navigation
       'AbortError',
     ],
-  });
+  })
 
-  logger.info({ dsn: SENTRY_DSN.substring(0, 20) + '...' }, 'Sentry initialized');
+  logger.info({ dsn: SENTRY_DSN.substring(0, 20) + '...' }, 'Sentry initialized')
 }
 
 /**
@@ -74,12 +74,12 @@ export function initSentry(): void {
  * Call this after authentication succeeds
  */
 export function setSentryUser(userId?: string, orgId?: string): void {
-  if (!SENTRY_DSN) return;
+  if (!SENTRY_DSN) return
 
-  Sentry.setUser(userId ? { id: userId } : null);
+  Sentry.setUser(userId ? { id: userId } : null)
 
   if (orgId) {
-    Sentry.setTag('org_id', orgId);
+    Sentry.setTag('org_id', orgId)
   }
 }
 
@@ -87,9 +87,9 @@ export function setSentryUser(userId?: string, orgId?: string): void {
  * Set trace context for error correlation
  */
 export function setSentryTrace(traceId: string): void {
-  if (!SENTRY_DSN) return;
+  if (!SENTRY_DSN) return
 
-  Sentry.setTag('trace_id', traceId);
+  Sentry.setTag('trace_id', traceId)
 }
 
 /**
@@ -98,15 +98,15 @@ export function setSentryTrace(traceId: string): void {
 export function captureException(
   error: Error,
   context?: {
-    traceId?: string;
-    orgId?: string;
-    userId?: string;
-    extra?: Record<string, unknown>;
+    traceId?: string
+    orgId?: string
+    userId?: string
+    extra?: Record<string, unknown>
   }
 ): string | undefined {
   if (!SENTRY_DSN) {
-    logger.error({ err: error, context }, 'Error captured (Sentry disabled)');
-    return undefined;
+    logger.error({ err: error, context }, 'Error captured (Sentry disabled)')
+    return undefined
   }
 
   return Sentry.captureException(error, {
@@ -116,7 +116,7 @@ export function captureException(
     },
     user: context?.userId ? { id: context.userId } : undefined,
     extra: context?.extra,
-  });
+  })
 }
 
 /**
@@ -127,11 +127,11 @@ export function captureMessage(
   level: 'info' | 'warning' | 'error' = 'info'
 ): string | undefined {
   if (!SENTRY_DSN) {
-    logger.info({ message, level }, 'Message captured (Sentry disabled)');
-    return undefined;
+    logger.info({ message, level }, 'Message captured (Sentry disabled)')
+    return undefined
   }
 
-  return Sentry.captureMessage(message, level);
+  return Sentry.captureMessage(message, level)
 }
 
 /**
@@ -140,20 +140,20 @@ export function captureMessage(
  */
 export async function sentryPlugin(fastify: FastifyInstance): Promise<void> {
   if (!SENTRY_DSN) {
-    logger.info('Sentry plugin skipped - DSN not configured');
-    return;
+    logger.info('Sentry plugin skipped - DSN not configured')
+    return
   }
 
   // Add request context to Sentry scope
   fastify.addHook('preHandler', async (request: FastifyRequest) => {
-    const traceId = (request as unknown as { traceId?: string }).traceId;
-    const auth = (request as unknown as { auth?: { userId: string } }).auth;
-    const orgContext = (request as unknown as { orgContext?: { orgId: string } }).orgContext;
+    const traceId = (request as unknown as { traceId?: string }).traceId
+    const auth = (request as unknown as { auth?: { userId: string } }).auth
+    const orgContext = (request as unknown as { orgContext?: { orgId: string } }).orgContext
 
     // Set tags on current scope (Sentry v8+ API)
-    if (traceId) Sentry.setTag('trace_id', traceId);
-    if (orgContext?.orgId) Sentry.setTag('org_id', orgContext.orgId);
-    if (auth?.userId) Sentry.setUser({ id: auth.userId });
+    if (traceId) Sentry.setTag('trace_id', traceId)
+    if (orgContext?.orgId) Sentry.setTag('org_id', orgContext.orgId)
+    if (auth?.userId) Sentry.setUser({ id: auth.userId })
 
     Sentry.setExtra('request', {
       method: request.method,
@@ -162,45 +162,48 @@ export async function sentryPlugin(fastify: FastifyInstance): Promise<void> {
         'user-agent': request.headers['user-agent'],
         'content-type': request.headers['content-type'],
       },
-    });
-  });
+    })
+  })
 
   // Capture unhandled errors
-  fastify.addHook('onError', async (request: FastifyRequest, _reply: FastifyReply, error: Error) => {
-    const traceId = (request as unknown as { traceId?: string }).traceId;
-    const auth = (request as unknown as { auth?: { userId: string } }).auth;
-    const orgContext = (request as unknown as { orgContext?: { orgId: string } }).orgContext;
+  fastify.addHook(
+    'onError',
+    async (request: FastifyRequest, _reply: FastifyReply, error: Error) => {
+      const traceId = (request as unknown as { traceId?: string }).traceId
+      const auth = (request as unknown as { auth?: { userId: string } }).auth
+      const orgContext = (request as unknown as { orgContext?: { orgId: string } }).orgContext
 
-    captureException(error, {
-      traceId,
-      orgId: orgContext?.orgId,
-      userId: auth?.userId,
-      extra: {
-        method: request.method,
-        url: request.url,
-      },
-    });
-  });
+      captureException(error, {
+        traceId,
+        orgId: orgContext?.orgId,
+        userId: auth?.userId,
+        extra: {
+          method: request.method,
+          url: request.url,
+        },
+      })
+    }
+  )
 
   // Clear scope after request (Sentry v8+ API)
   fastify.addHook('onResponse', async () => {
-    Sentry.setUser(null);
-    Sentry.setTag('trace_id', undefined);
-    Sentry.setTag('org_id', undefined);
-    Sentry.setExtra('request', undefined);
-  });
+    Sentry.setUser(null)
+    Sentry.setTag('trace_id', undefined)
+    Sentry.setTag('org_id', undefined)
+    Sentry.setExtra('request', undefined)
+  })
 
-  logger.info('Sentry plugin registered');
+  logger.info('Sentry plugin registered')
 }
 
 /**
  * Flush Sentry events before shutdown
  */
 export async function closeSentry(): Promise<void> {
-  if (!SENTRY_DSN) return;
+  if (!SENTRY_DSN) return
 
-  await Sentry.close(2000);
-  logger.info('Sentry closed');
+  await Sentry.close(2000)
+  logger.info('Sentry closed')
 }
 
 export default {
@@ -211,4 +214,4 @@ export default {
   captureMessage,
   sentryPlugin,
   closeSentry,
-};
+}

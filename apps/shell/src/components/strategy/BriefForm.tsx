@@ -1,14 +1,14 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { Button } from '@xentri/ui';
-import { ChevronLeft, ChevronRight, Save, Loader2, CheckCircle } from 'lucide-react';
-import type { BriefSections, BriefSectionName } from '@xentri/ts-schema';
-import { getApiUrl, setBrief } from '../../stores/brief.js';
-import { incrementCounter, recordTiming } from '../../utils/metrics';
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { Button } from '@xentri/ui'
+import { ChevronLeft, ChevronRight, Save, Loader2, CheckCircle } from 'lucide-react'
+import type { BriefSections, BriefSectionName } from '@xentri/ts-schema'
+import { getApiUrl, setBrief } from '../../stores/brief.js'
+import { incrementCounter, recordTiming } from '../../utils/metrics'
 
 interface BriefFormProps {
-  orgId?: string;
-  onSuccess?: (briefId: string) => void;
-  onError?: (error: string) => void;
+  orgId?: string
+  onSuccess?: (briefId: string) => void
+  onError?: (error: string) => void
 }
 
 const SECTIONS: { key: BriefSectionName; title: string; description: string }[] = [
@@ -47,7 +47,7 @@ const SECTIONS: { key: BriefSectionName; title: string; description: string }[] 
     title: 'Proof',
     description: 'Why should they trust you? Share testimonials and metrics.',
   },
-];
+]
 
 const INITIAL_SECTIONS: BriefSections = {
   identity: { businessName: '', tagline: '', foundingStory: '', coreValues: [] },
@@ -57,7 +57,7 @@ const INITIAL_SECTIONS: BriefSections = {
   operations: { businessModel: '', deliveryMethod: '', keyProcesses: [] },
   goals: { shortTermGoals: [], longTermGoals: [], milestones: [] },
   proof: { testimonials: [], caseStudies: [], metrics: [] },
-};
+}
 
 /**
  * BriefForm - 7-section wizard for creating Universal Brief
@@ -66,18 +66,22 @@ const INITIAL_SECTIONS: BriefSections = {
  * Per UX Design Spec 1.3: Progressive disclosure for Brief sections
  */
 export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [sections, setSections] = useState<BriefSections>(INITIAL_SECTIONS);
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [copilotAvailable, setCopilotAvailable] = useState<boolean | null>(null);
-  const [toast, setToast] = useState<{ message: string; action?: () => void; actionLabel?: string } | null>(null);
-  const startRef = useRef<number>(performance.now());
+  const [currentStep, setCurrentStep] = useState(0)
+  const [sections, setSections] = useState<BriefSections>(INITIAL_SECTIONS)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [copilotAvailable, setCopilotAvailable] = useState<boolean | null>(null)
+  const [toast, setToast] = useState<{
+    message: string
+    action?: () => void
+    actionLabel?: string
+  } | null>(null)
+  const startRef = useRef<number>(performance.now())
 
-  const currentSection = SECTIONS[currentStep];
-  const isLastStep = currentStep === SECTIONS.length - 1;
-  const isFirstStep = currentStep === 0;
+  const currentSection = SECTIONS[currentStep]
+  const isLastStep = currentStep === SECTIONS.length - 1
+  const isFirstStep = currentStep === 0
 
   useEffect(() => {
     async function checkCopilot() {
@@ -85,44 +89,40 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
         const healthUrl =
           (window as { __XENTRI_COPILOT_HEALTH__?: string }).__XENTRI_COPILOT_HEALTH__ ||
           import.meta.env.PUBLIC_COPILOT_HEALTH_URL ||
-          '/api/v1/copilot/health';
-        const res = await fetch(healthUrl, { method: 'GET', credentials: 'include' });
-        setCopilotAvailable(res.ok);
+          '/api/v1/copilot/health'
+        const res = await fetch(healthUrl, { method: 'GET', credentials: 'include' })
+        setCopilotAvailable(res.ok)
       } catch {
-        setCopilotAvailable(false);
+        setCopilotAvailable(false)
       }
     }
-    checkCopilot();
-  }, []);
+    checkCopilot()
+  }, [])
 
   const updateSection = useCallback(
-    <K extends BriefSectionName>(
-      sectionKey: K,
-      field: string,
-      value: string | string[]
-    ) => {
+    <K extends BriefSectionName>(sectionKey: K, field: string, value: string | string[]) => {
       setSections((prev) => ({
         ...prev,
         [sectionKey]: {
           ...prev[sectionKey],
           [field]: value,
         },
-      }));
-      setSaved(false);
+      }))
+      setSaved(false)
     },
     []
-  );
+  )
 
   const handleSaveDraft = async () => {
     if (!orgId) {
-      const msg = 'No organization context';
-      setError(msg);
-      onError?.(msg);
-      return;
+      const msg = 'No organization context'
+      setError(msg)
+      onError?.(msg)
+      return
     }
 
-    setSaving(true);
-    setError(null);
+    setSaving(true)
+    setError(null)
     try {
       const response = await fetch(`${getApiUrl()}/api/v1/briefs`, {
         method: 'POST',
@@ -132,55 +132,55 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
         },
         credentials: 'include',
         body: JSON.stringify({ sections }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Failed to save brief');
+        const error = await response.json()
+        throw new Error(error.detail || 'Failed to save brief')
       }
 
-      const result = await response.json();
-      setBrief(result.data);
-      setSaved(true);
-      incrementCounter('brief_event_success');
-      recordTiming('brief_completion_ms', performance.now() - startRef.current);
+      const result = await response.json()
+      setBrief(result.data)
+      setSaved(true)
+      incrementCounter('brief_event_success')
+      recordTiming('brief_completion_ms', performance.now() - startRef.current)
 
       // Redirect to Brief view after short delay
       setTimeout(() => {
-        onSuccess?.(result.data.id);
-        window.location.href = `/strategy/brief/${result.data.id}`;
-      }, 500);
+        onSuccess?.(result.data.id)
+        window.location.href = `/strategy/brief/${result.data.id}`
+      }, 500)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to save. Please retry.';
-      setError(message);
-      onError?.(message);
-      incrementCounter('brief_event_failure');
+      const message = err instanceof Error ? err.message : 'Failed to save. Please retry.'
+      setError(message)
+      onError?.(message)
+      incrementCounter('brief_event_failure')
       setToast({
         message: 'Brief save failed. Retry?',
         action: handleSaveDraft,
         actionLabel: 'Retry',
-      });
+      })
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const handleNext = () => {
     if (!isLastStep) {
-      setCurrentStep((prev) => prev + 1);
+      setCurrentStep((prev) => prev + 1)
     } else {
-      handleSaveDraft();
+      handleSaveDraft()
     }
-  };
+  }
 
   const handlePrev = () => {
     if (!isFirstStep) {
-      setCurrentStep((prev) => prev - 1);
+      setCurrentStep((prev) => prev - 1)
     }
-  };
+  }
 
   const renderSectionFields = () => {
-    const key = currentSection.key;
+    const key = currentSection.key
 
     switch (key) {
       case 'identity':
@@ -208,11 +208,20 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
             <FormField
               label="Core Values (comma-separated)"
               value={(sections.identity?.coreValues as string[])?.join(', ') || ''}
-              onChange={(v) => updateSection('identity', 'coreValues', v.split(',').map((s) => s.trim()).filter(Boolean))}
+              onChange={(v) =>
+                updateSection(
+                  'identity',
+                  'coreValues',
+                  v
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                )
+              }
               placeholder="e.g., Innovation, Integrity, Customer Focus"
             />
           </>
-        );
+        )
 
       case 'audience':
         return (
@@ -226,7 +235,16 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
             <FormField
               label="Pain Points (comma-separated)"
               value={(sections.audience?.painPoints as string[])?.join(', ') || ''}
-              onChange={(v) => updateSection('audience', 'painPoints', v.split(',').map((s) => s.trim()).filter(Boolean))}
+              onChange={(v) =>
+                updateSection(
+                  'audience',
+                  'painPoints',
+                  v
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                )
+              }
               placeholder="e.g., Time management, Scaling challenges, Tech complexity"
             />
             <FormField
@@ -237,7 +255,7 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
               placeholder="Describe your target audience demographics..."
             />
           </>
-        );
+        )
 
       case 'offerings':
         return (
@@ -256,33 +274,50 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
                 updateSection(
                   'offerings',
                   'services',
-                  v.split('\n').filter(Boolean).map((name) => ({ name })) as unknown as string[]
+                  v
+                    .split('\n')
+                    .filter(Boolean)
+                    .map((name) => ({ name })) as unknown as string[]
                 )
               }
               multiline
               placeholder="Consulting&#10;Implementation&#10;Support"
             />
           </>
-        );
+        )
 
       case 'positioning':
         return (
           <>
             <FormField
               label="Unique Value Proposition"
-              value={(sections.positioning as { uniqueValueProposition?: string })?.uniqueValueProposition || ''}
+              value={
+                (sections.positioning as { uniqueValueProposition?: string })
+                  ?.uniqueValueProposition || ''
+              }
               onChange={(v) => updateSection('positioning', 'uniqueValueProposition', v)}
               multiline
               placeholder="What makes your business uniquely valuable to customers?"
             />
             <FormField
               label="Differentiators (comma-separated)"
-              value={((sections.positioning as { differentiators?: string[] })?.differentiators || []).join(', ')}
-              onChange={(v) => updateSection('positioning', 'differentiators', v.split(',').map((s) => s.trim()).filter(Boolean))}
+              value={(
+                (sections.positioning as { differentiators?: string[] })?.differentiators || []
+              ).join(', ')}
+              onChange={(v) =>
+                updateSection(
+                  'positioning',
+                  'differentiators',
+                  v
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                )
+              }
               placeholder="e.g., 24/7 support, Industry expertise, Custom solutions"
             />
           </>
-        );
+        )
 
       case 'operations':
         return (
@@ -300,25 +335,47 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
               placeholder="e.g., Online platform, In-person, Hybrid"
             />
           </>
-        );
+        )
 
       case 'goals':
         return (
           <>
             <FormField
               label="Short-term Goals (comma-separated)"
-              value={((sections.goals as { shortTermGoals?: string[] })?.shortTermGoals || []).join(', ')}
-              onChange={(v) => updateSection('goals', 'shortTermGoals', v.split(',').map((s) => s.trim()).filter(Boolean))}
+              value={((sections.goals as { shortTermGoals?: string[] })?.shortTermGoals || []).join(
+                ', '
+              )}
+              onChange={(v) =>
+                updateSection(
+                  'goals',
+                  'shortTermGoals',
+                  v
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                )
+              }
               placeholder="e.g., Launch new product, Reach 100 customers"
             />
             <FormField
               label="Long-term Goals (comma-separated)"
-              value={((sections.goals as { longTermGoals?: string[] })?.longTermGoals || []).join(', ')}
-              onChange={(v) => updateSection('goals', 'longTermGoals', v.split(',').map((s) => s.trim()).filter(Boolean))}
+              value={((sections.goals as { longTermGoals?: string[] })?.longTermGoals || []).join(
+                ', '
+              )}
+              onChange={(v) =>
+                updateSection(
+                  'goals',
+                  'longTermGoals',
+                  v
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                )
+              }
               placeholder="e.g., Market expansion, IPO, Industry leadership"
             />
           </>
-        );
+        )
 
       case 'proof':
         return (
@@ -326,30 +383,41 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
             <FormField
               label="Key Metrics (comma-separated)"
               value={((sections.proof as { metrics?: string[] })?.metrics || []).join(', ')}
-              onChange={(v) => updateSection('proof', 'metrics', v.split(',').map((s) => s.trim()).filter(Boolean))}
+              onChange={(v) =>
+                updateSection(
+                  'proof',
+                  'metrics',
+                  v
+                    .split(',')
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                )
+              }
               placeholder="e.g., 500+ clients, 99% satisfaction, $10M revenue"
             />
             <FormField
               label="Testimonials (one per line)"
-              value={((sections.proof as { testimonials?: string[] })?.testimonials || []).join('\n')}
-              onChange={(v) => updateSection('proof', 'testimonials', v.split('\n').filter(Boolean))}
+              value={((sections.proof as { testimonials?: string[] })?.testimonials || []).join(
+                '\n'
+              )}
+              onChange={(v) =>
+                updateSection('proof', 'testimonials', v.split('\n').filter(Boolean))
+              }
               multiline
               placeholder="Add customer quotes or testimonials..."
             />
           </>
-        );
+        )
 
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   return (
     <div style={styles.container}>
       {copilotAvailable === false && (
-        <div style={styles.infoBanner}>
-          Co-pilot unavailable; using guided form fallback.
-        </div>
+        <div style={styles.infoBanner}>Co-pilot unavailable; using guided form fallback.</div>
       )}
       {toast && (
         <div style={styles.toast}>
@@ -412,20 +480,12 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
 
       {/* Navigation */}
       <div style={styles.actions}>
-        <Button
-          variant="outline"
-          onClick={handlePrev}
-          disabled={isFirstStep || saving}
-        >
+        <Button variant="outline" onClick={handlePrev} disabled={isFirstStep || saving}>
           <ChevronLeft size={18} />
           Back
         </Button>
 
-        <Button
-          variant="outline"
-          onClick={handleSaveDraft}
-          disabled={saving}
-        >
+        <Button variant="outline" onClick={handleSaveDraft} disabled={saving}>
           {saving ? (
             <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
           ) : saved ? (
@@ -444,25 +504,19 @@ export function BriefForm({ orgId, onSuccess, onError }: BriefFormProps) {
 
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
-  );
+  )
 }
 
 interface FormFieldProps {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  multiline?: boolean;
+  label: string
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
+  multiline?: boolean
 }
 
-function FormField({
-  label,
-  value,
-  onChange,
-  placeholder,
-  multiline,
-}: FormFieldProps) {
-  const InputComponent = multiline ? 'textarea' : 'input';
+function FormField({ label, value, onChange, placeholder, multiline }: FormFieldProps) {
+  const InputComponent = multiline ? 'textarea' : 'input'
 
   return (
     <div style={styles.field}>
@@ -478,7 +532,7 @@ function FormField({
         rows={multiline ? 4 : undefined}
       />
     </div>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -624,4 +678,4 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '1.5rem',
     borderTop: '1px solid var(--color-surface-plus)',
   },
-};
+}

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 // ===================
 // Event Types (AC4)
@@ -19,33 +19,35 @@ export const EventTypeSchema = z.enum([
   'xentri.page.updated.v1',
   'xentri.content.published.v1',
   'xentri.lead.created.v1',
-]);
+])
 
-export type EventType = z.infer<typeof EventTypeSchema>;
+export type EventType = z.infer<typeof EventTypeSchema>
 
 // ===================
 // Actor Types
 // ===================
 
-export const EventActorTypeSchema = z.enum(['user', 'system', 'job']);
-export type EventActorType = z.infer<typeof EventActorTypeSchema>;
+export const EventActorTypeSchema = z.enum(['user', 'system', 'job'])
+export type EventActorType = z.infer<typeof EventActorTypeSchema>
 
 export const EventActorSchema = z.object({
   type: EventActorTypeSchema,
   id: z.string(),
-});
-export type EventActor = z.infer<typeof EventActorSchema>;
+})
+export type EventActor = z.infer<typeof EventActorSchema>
 
 // ===================
 // Event Metadata
 // ===================
 
-export const EventMetaSchema = z.object({
-  source: z.string(),
-  environment: z.enum(['local', 'staging', 'prod']).optional(),
-}).passthrough();
+export const EventMetaSchema = z
+  .object({
+    source: z.string(),
+    environment: z.enum(['local', 'staging', 'prod']).optional(),
+  })
+  .passthrough()
 
-export type EventMeta = z.infer<typeof EventMetaSchema>;
+export type EventMeta = z.infer<typeof EventMetaSchema>
 
 // ===================
 // Typed Payloads (AC4 - subtask 3.2)
@@ -56,22 +58,22 @@ export const UserSignupPayloadSchema = z.object({
   email: z.string().email(),
   name: z.string().optional(),
   auth_provider: z.enum(['email', 'google', 'github']).optional(),
-});
-export type UserSignupPayload = z.infer<typeof UserSignupPayloadSchema>;
+})
+export type UserSignupPayload = z.infer<typeof UserSignupPayloadSchema>
 
 export const UserLoginPayloadSchema = z.object({
   email: z.string().email(),
   method: z.enum(['email', 'google', 'github', 'refresh']).optional(),
-});
-export type UserLoginPayload = z.infer<typeof UserLoginPayloadSchema>;
+})
+export type UserLoginPayload = z.infer<typeof UserLoginPayloadSchema>
 
 // Organization Events
 export const OrgCreatedPayloadSchema = z.object({
   name: z.string(),
   slug: z.string(),
   owner_id: z.string(),
-});
-export type OrgCreatedPayload = z.infer<typeof OrgCreatedPayloadSchema>;
+})
+export type OrgCreatedPayload = z.infer<typeof OrgCreatedPayloadSchema>
 
 /**
  * OrgProvisionedPayload - emitted after full org provisioning completes (AC4)
@@ -83,8 +85,8 @@ export const OrgProvisionedPayloadSchema = z.object({
   owner_user_id: z.string(),
   plan: z.enum(['free', 'presencia', 'light_ops', 'business_in_motion']),
   provisioned_at: z.string().datetime(),
-});
-export type OrgProvisionedPayload = z.infer<typeof OrgProvisionedPayloadSchema>;
+})
+export type OrgProvisionedPayload = z.infer<typeof OrgProvisionedPayloadSchema>
 
 // Brief Events
 export const BriefCreatedPayloadSchema = z.object({
@@ -92,44 +94,44 @@ export const BriefCreatedPayloadSchema = z.object({
   schema_version: z.string(),
   completion_status: z.enum(['draft', 'complete']),
   sections_populated: z.array(z.string()), // e.g., ['identity', 'offerings']
-});
-export type BriefCreatedPayload = z.infer<typeof BriefCreatedPayloadSchema>;
+})
+export type BriefCreatedPayload = z.infer<typeof BriefCreatedPayloadSchema>
 
 export const BriefUpdatedPayloadSchema = z.object({
   brief_id: z.string(),
   sections_changed: z.array(z.string()).optional(),
   version: z.number().int().positive().optional(),
-});
-export type BriefUpdatedPayload = z.infer<typeof BriefUpdatedPayloadSchema>;
+})
+export type BriefUpdatedPayload = z.infer<typeof BriefUpdatedPayloadSchema>
 
 // Website Events
 export const WebsitePublishedPayloadSchema = z.object({
   site_id: z.string(),
   domain: z.string().optional(),
   pages_count: z.number().int().nonnegative().optional(),
-});
-export type WebsitePublishedPayload = z.infer<typeof WebsitePublishedPayloadSchema>;
+})
+export type WebsitePublishedPayload = z.infer<typeof WebsitePublishedPayloadSchema>
 
 export const PageUpdatedPayloadSchema = z.object({
   page_id: z.string(),
   site_id: z.string(),
   slug: z.string().optional(),
-});
-export type PageUpdatedPayload = z.infer<typeof PageUpdatedPayloadSchema>;
+})
+export type PageUpdatedPayload = z.infer<typeof PageUpdatedPayloadSchema>
 
 export const ContentPublishedPayloadSchema = z.object({
   content_id: z.string(),
   content_type: z.string().optional(),
-});
-export type ContentPublishedPayload = z.infer<typeof ContentPublishedPayloadSchema>;
+})
+export type ContentPublishedPayload = z.infer<typeof ContentPublishedPayloadSchema>
 
 // Lead Events
 export const LeadCreatedPayloadSchema = z.object({
   lead_id: z.string(),
   source: z.string().optional(),
   form_id: z.string().optional(),
-});
-export type LeadCreatedPayload = z.infer<typeof LeadCreatedPayloadSchema>;
+})
+export type LeadCreatedPayload = z.infer<typeof LeadCreatedPayloadSchema>
 
 // Payload schema map for type-safe event creation
 export const EventPayloadSchemas: Record<EventType, z.ZodTypeAny> = {
@@ -143,24 +145,24 @@ export const EventPayloadSchemas: Record<EventType, z.ZodTypeAny> = {
   'xentri.page.updated.v1': PageUpdatedPayloadSchema,
   'xentri.content.published.v1': ContentPublishedPayloadSchema,
   'xentri.lead.created.v1': LeadCreatedPayloadSchema,
-};
+}
 
 /**
  * Validates that the payload matches the expected schema for the given event type.
  * Returns an error message if validation fails, undefined if valid.
  */
 export function validateEventPayload(type: EventType, payload: unknown): string | undefined {
-  const schema = EventPayloadSchemas[type];
+  const schema = EventPayloadSchemas[type]
   if (!schema) {
-    return `No payload schema registered for event type: ${type}`;
+    return `No payload schema registered for event type: ${type}`
   }
 
-  const result = schema.safeParse(payload);
+  const result = schema.safeParse(payload)
   if (!result.success) {
-    return result.error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join('; ');
+    return result.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ')
   }
 
-  return undefined;
+  return undefined
 }
 
 // ===================
@@ -187,14 +189,14 @@ export const SystemEventSchema = z.object({
   trace_id: z.string().optional(),
   source: z.string(),
   envelope_version: z.literal('1.0'),
-});
+})
 
 export type SystemEvent<TPayload = Record<string, unknown>> = Omit<
   z.infer<typeof SystemEventSchema>,
   'payload'
 > & {
-  payload: TPayload;
-};
+  payload: TPayload
+}
 
 /**
  * Schema for creating a new event (id and timestamps auto-generated)
@@ -203,25 +205,27 @@ export type SystemEvent<TPayload = Record<string, unknown>> = Omit<
 export const CreateEventSchema = SystemEventSchema.omit({
   id: true,
   created_at: true,
-}).extend({
-  occurred_at: z.string().datetime().optional(), // defaults to now()
-}).refine(
-  (data) => {
-    const error = validateEventPayload(data.type, data.payload);
-    return error === undefined;
-  },
-  (data) => ({
-    message: validateEventPayload(data.type, data.payload) || 'Invalid payload for event type',
-    path: ['payload'],
+})
+  .extend({
+    occurred_at: z.string().datetime().optional(), // defaults to now()
   })
-);
+  .refine(
+    (data) => {
+      const error = validateEventPayload(data.type, data.payload)
+      return error === undefined
+    },
+    (data) => ({
+      message: validateEventPayload(data.type, data.payload) || 'Invalid payload for event type',
+      path: ['payload'],
+    })
+  )
 
 export type CreateEventInput<TPayload = Record<string, unknown>> = Omit<
   z.infer<typeof CreateEventSchema>,
   'payload'
 > & {
-  payload: TPayload;
-};
+  payload: TPayload
+}
 
 // ===================
 // Event Response Types
@@ -230,20 +234,20 @@ export type CreateEventInput<TPayload = Record<string, unknown>> = Omit<
 export const EventAckResponseSchema = z.object({
   event_id: z.string().uuid(),
   acknowledged: z.literal(true),
-});
-export type EventAckResponse = z.infer<typeof EventAckResponseSchema>;
+})
+export type EventAckResponse = z.infer<typeof EventAckResponseSchema>
 
 export const EventListMetaSchema = z.object({
   cursor: z.string().optional(),
   has_more: z.boolean(),
-});
-export type EventListMeta = z.infer<typeof EventListMetaSchema>;
+})
+export type EventListMeta = z.infer<typeof EventListMetaSchema>
 
 export const EventListResponseSchema = z.object({
   data: z.array(SystemEventSchema),
   meta: EventListMetaSchema,
-});
-export type EventListResponse = z.infer<typeof EventListResponseSchema>;
+})
+export type EventListResponse = z.infer<typeof EventListResponseSchema>
 
 // ===================
 // Open Loops Projection (AC5)
@@ -268,18 +272,18 @@ export type EventListResponse = z.infer<typeof EventListResponseSchema>;
  * - Query API for dashboard display
  */
 export interface OpenLoopsProjection {
-  org_id: string;
-  user_id?: string;
-  loop_type: 'follow_up' | 'unpublished_draft' | 'incomplete_brief' | 'pending_action';
-  entity_type: string;
-  entity_id: string;
-  title: string;
-  description?: string;
-  priority: 'high' | 'medium' | 'low';
-  due_date?: string;
-  source_event_id: string;
-  created_at: string;
-  resolved_at?: string;
+  org_id: string
+  user_id?: string
+  loop_type: 'follow_up' | 'unpublished_draft' | 'incomplete_brief' | 'pending_action'
+  entity_type: string
+  entity_id: string
+  title: string
+  description?: string
+  priority: 'high' | 'medium' | 'low'
+  due_date?: string
+  source_event_id: string
+  created_at: string
+  resolved_at?: string
 }
 
 // Placeholder schema (not yet validated against DB)
@@ -296,7 +300,7 @@ export const OpenLoopsProjectionSchema = z.object({
   source_event_id: z.string().uuid(),
   created_at: z.string().datetime(),
   resolved_at: z.string().datetime().optional(),
-});
+})
 
 // ===================
 // Type Guards & Utilities
@@ -306,19 +310,19 @@ export const OpenLoopsProjectionSchema = z.object({
  * Type guard for validating event type
  */
 export function isValidEventType(type: string): type is EventType {
-  return EventTypeSchema.safeParse(type).success;
+  return EventTypeSchema.safeParse(type).success
 }
 
 /**
  * Validate and parse a system event
  */
 export function parseSystemEvent(data: unknown): SystemEvent {
-  return SystemEventSchema.parse(data) as SystemEvent;
+  return SystemEventSchema.parse(data) as SystemEvent
 }
 
 /**
  * Safe parse that returns result object
  */
 export function safeParseSystemEvent(data: unknown) {
-  return SystemEventSchema.safeParse(data);
+  return SystemEventSchema.safeParse(data)
 }

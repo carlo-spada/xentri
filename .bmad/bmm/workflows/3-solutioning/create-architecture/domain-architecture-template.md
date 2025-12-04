@@ -14,10 +14,11 @@
 ## Inheritance Context
 
 This architecture inherits from:
+
 - **Constitution Architecture:** `docs/platform/architecture.md`
-{{#if parent_architecture_path}}
+  {{#if parent_architecture_path}}
 - **Parent Architecture:** `{{parent_architecture_path}}`
-{{/if}}
+  {{/if}}
 
 All Constitution architectural decisions apply.
 This document adds entity-specific decisions only.
@@ -37,7 +38,8 @@ This document adds entity-specific decisions only.
 ### Deviations from Constitution Stack
 
 | Technology | Constitution Standard | This Entity Uses | Rationale |
-|------------|----------------------|------------------|-----------|
+| ---------- | --------------------- | ---------------- | --------- |
+
 {{#each tech_deviations}}
 | {{area}} | {{standard}} | {{deviation}} | {{rationale}} |
 {{/each}}
@@ -79,7 +81,8 @@ _No deviations from Constitution technology stack._
 ### APIs Consumed
 
 | Service | Endpoint | Purpose |
-|---------|----------|---------|
+| ------- | -------- | ------- |
+
 {{#each apis_consumed}}
 | {{service}} | {{endpoint}} | {{purpose}} |
 {{/each}}
@@ -87,7 +90,8 @@ _No deviations from Constitution technology stack._
 ### Events
 
 | Event Type | Direction | Purpose |
-|------------|-----------|---------|
+| ---------- | --------- | ------- |
+
 {{#each events}}
 | {{type}} | {{direction}} | {{purpose}} |
 {{/each}}
@@ -95,6 +99,7 @@ _No deviations from Constitution technology stack._
 ---
 
 {{#if entity_specific_architecture}}
+
 ## {{entity_type_display}}-Specific Architecture
 
 {{entity_specific_architecture}}
@@ -105,6 +110,7 @@ _No deviations from Constitution technology stack._
 ## Architecture Decisions
 
 {{#each adrs}}
+
 ### ADR-{{number}}: {{title}}
 
 **Status:** {{status}}
@@ -118,7 +124,8 @@ _No deviations from Constitution technology stack._
 ## Constitution Alignment
 
 | Constitution Decision | How Implemented Here |
-|-----------------------|---------------------|
+| --------------------- | -------------------- |
+
 {{#each constitution_alignment}}
 | {{decision}} | {{implementation}} |
 {{/each}}
@@ -127,9 +134,9 @@ _No deviations from Constitution technology stack._
 
 ## Document History
 
-| Date | Version | Change | Author |
-|------|---------|--------|--------|
-| {{date}} | 1.0.0 | Initial architecture created | {{user_name}} |
+| Date     | Version | Change                       | Author        |
+| -------- | ------- | ---------------------------- | ------------- |
+| {{date}} | 1.0.0   | Initial architecture created | {{user_name}} |
 
 ---
 

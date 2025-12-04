@@ -34,8 +34,8 @@ You are about to amend the System UX Design.
 This affects ALL downstream entities' UX patterns.
 
 Routing to Constitution UX amendment workflow...
-  </output>
-  <invoke-workflow path="{system_amend_workflow}" />
+</output>
+<invoke-workflow path="{system_amend_workflow}" />
 </check>
 
 <check if="entity_type != 'constitution'">

@@ -8,13 +8,12 @@
 #
 # See: docs/platform/architecture/adr-020-sibling-dependency-law.md
 
----
 # ============================================================================
 # IDENTITY
 # ============================================================================
 id: SYS-002-STR-001-PUL-001
 type: FR
-title: "Real-time Metrics Dashboard"
+title: 'Real-time Metrics Dashboard'
 status: draft
 
 # ============================================================================
@@ -26,9 +25,9 @@ parent: SYS-002-STR-001
 
 # Full ancestry chain (auto-generated from ID parsing, read-only in practice)
 ancestry:
-  - SYS                         # Constitution (root)
-  - SYS-002                     # Strategy Category
-  - SYS-002-STR-001             # Pulse Subcategory
+  - SYS # Constitution (root)
+  - SYS-002 # Strategy Category
+  - SYS-002-STR-001 # Pulse Subcategory
 
 # ============================================================================
 # SIBLING DEPENDENCIES
@@ -37,14 +36,8 @@ ancestry:
 # This requirement's parent is SYS-002-STR-001 (Pulse subcategory).
 # So we can only depend on other Pulse-level interfaces.
 requires_interfaces:
-  - id: IC-STR-002              # Strategy Event Bus (sibling at STR level)
-    reason: "Subscribe to business metric events from Strategy domain"
-
-  # Example of an EXCEPTION (cross-branch dependency):
-  # - id: IC-FIN-001            # Finance interface - NOT a sibling!
-  #   exception: true
-  #   approved_by: "ADR-021"
-  #   justification: "Temporary bridge for revenue metrics. Migration to event-based access planned Q2."
+  - id: IC-STR-002 # Strategy Event Bus (sibling at STR level)
+    reason: 'Subscribe to business metric events from Strategy domain'
 
 # ============================================================================
 # INHERITED ACCESS
@@ -53,19 +46,19 @@ requires_interfaces:
 # This section is COMPUTED (read-only) - you don't declare these, the system
 # computes them from ancestor dependencies.
 inherited_interfaces:
-  - id: IC-SHL-001              # Shell Navigation
-    inherited_from: SYS-002     # Strategy category declared this
-  - id: IC-SHL-003              # Shell Rendering
-    inherited_from: SYS-002     # Strategy category declared this
-  - id: IC-API-001              # Core API Authentication
-    inherited_from: SYS         # Constitution declared this
+  - id: IC-SHL-001 # Shell Navigation
+    inherited_from: SYS-002 # Strategy category declared this
+  - id: IC-SHL-003 # Shell Rendering
+    inherited_from: SYS-002 # Strategy category declared this
+  - id: IC-API-001 # Core API Authentication
+    inherited_from: SYS # Constitution declared this
 
 # ============================================================================
 # PROVIDES INTERFACES
 # ============================================================================
 # Interfaces this requirement makes available to siblings
 provides_interfaces:
-  - IC-PUL-001                  # Pulse Dashboard API
+  - IC-PUL-001 # Pulse Dashboard API
 
 # ============================================================================
 # THE ACTUAL REQUIREMENT
@@ -94,31 +87,6 @@ acceptance_criteria:
 # ============================================================================
 # METADATA
 # ============================================================================
-created_at: "2025-12-03"
-updated_at: "2025-12-03"
-author: "Strategy Team"
----
-
-
-# ============================================================================
-# SIBLING EXAMPLE: Strategy Category Declaration
-# ============================================================================
-# This shows how Strategy (at SYS-002 level) declares its Shell dependency,
-# which then becomes INHERITED by all Strategy descendants.
-
-# --- (In a separate file: docs/strategy/requirements/SYS-002.requirement.yaml)
-# id: SYS-002
-# type: PR
-# title: "Strategy Category"
-# status: approved
-# parent: SYS
-#
-# # Strategy and Shell are SIBLINGS (both have SYS as parent)
-# requires_interfaces:
-#   - id: IC-SHL-001           # Shell Navigation
-#     reason: "Strategy modules integrate into main navigation"
-#   - id: IC-SHL-003           # Shell Rendering
-#     reason: "Strategy modules use shared rendering components"
-#
-# # All children of SYS-002 automatically inherit these interfaces!
-# ---
+created_at: '2025-12-03'
+updated_at: '2025-12-03'
+author: 'Strategy Team'

@@ -6,18 +6,20 @@ The Marketing category contains modules for establishing and managing a business
 
 ## Modules
 
-| Module | Purpose | Status |
-|--------|---------|--------|
-| website-builder | AI-powered website generation from Brief | Planned |
-| cms | Content management for pages, blog, portfolio | Planned |
-| lead-capture | Forms, landing pages, lead routing | Planned |
+| Module          | Purpose                                       | Status  |
+| --------------- | --------------------------------------------- | ------- |
+| website-builder | AI-powered website generation from Brief      | Planned |
+| cms             | Content management for pages, blog, portfolio | Planned |
+| lead-capture    | Forms, landing pages, lead routing            | Planned |
 
 ## Key Concepts
 
 ### Brief-Powered Content
+
 Website copy, about pages, and service descriptions are auto-generated from the Universal Brief, ensuring consistency across all touchpoints.
 
 ### Lead Capture Flow
+
 ```
 Visitor → Form → Lead Event → CRM (if enabled) → Notification
 ```
@@ -26,10 +28,10 @@ All lead data flows through the Event Backbone, enabling cross-module intelligen
 
 ## Dependencies
 
-| Depends On | Relationship |
-|------------|--------------|
-| `platform/core-api` | Authentication, event storage |
-| `strategy/universal-brief` | Content auto-population |
+| Depends On                 | Relationship                  |
+| -------------------------- | ----------------------------- |
+| `platform/core-api`        | Authentication, event storage |
+| `strategy/universal-brief` | Content auto-population       |
 
 ## Roadmap
 
@@ -37,4 +39,4 @@ This category is the focus of **Epic 3** in the product roadmap.
 
 ---
 
-*Modules in this category are planned. Documentation will be added as development begins.*
+_Modules in this category are planned. Documentation will be added as development begins._

@@ -1,12 +1,12 @@
 ---
 entity_type: constitution
 document_type: epics
-title: "Xentri System Epics"
-description: "System-wide epic structure based on Understanding + Action framework. Category/Module epics emerge organically."
-version: "2.2"
+title: 'Xentri System Epics'
+description: 'System-wide epic structure based on Understanding + Action framework. Category/Module epics emerge organically.'
+version: '2.2'
 status: approved
-created: "2025-11-28"
-updated: "2025-12-03"
+created: '2025-11-28'
+updated: '2025-12-03'
 ---
 
 # Xentri - System Epics (Constitution)
@@ -33,6 +33,7 @@ Running Costs < Revenue < Value Delivered
 ```
 
 **Organic Growth Model:**
+
 - Constitution Epics (1-4) define the **platform that builds modules**
 - Category/Module Epics emerge **organically** when the Soul identifies the next need
 - We don't pre-plan 170+ modules; we build them as they become necessary
@@ -46,6 +47,7 @@ Running Costs < Revenue < Value Delivered
 What we call the "Soul" is a **living understanding** — the Soul of the business. It's not a document users create once; it's a relationship that grows with every interaction.
 
 **Tri-State Memory Architecture:**
+
 1. **Semantic Memory:** Structured facts (identity, offerings, goals)
 2. **Episodic Memory:** What happened (decisions, outcomes, conversations)
 3. **Synthetic Memory:** Compressed wisdom derived from episodes
@@ -74,40 +76,40 @@ Each epic must prove this loop works for its scope.
 
 ### Platform Requirements Coverage
 
-| ID | Epic Coverage | Status |
-|----|---------------|--------|
-| PR-001 | Epic 1 | Complete |
-| PR-002 | Epic 1 → Epic 1.5 | Partial |
-| PR-003 | Epic 1 | Complete |
-| PR-004 | Epic 2 | Planned |
-| PR-005 | Epic 1 → Epic 1.5 | Partial |
-| PR-006 | Epic 2 | Planned |
-| PR-007 | Epic 1 | Complete |
-| PR-008 | Epic 3 | Planned |
+| ID     | Epic Coverage     | Status   |
+| ------ | ----------------- | -------- |
+| PR-001 | Epic 1            | Complete |
+| PR-002 | Epic 1 → Epic 1.5 | Partial  |
+| PR-003 | Epic 1            | Complete |
+| PR-004 | Epic 2            | Planned  |
+| PR-005 | Epic 1 → Epic 1.5 | Partial  |
+| PR-006 | Epic 2            | Planned  |
+| PR-007 | Epic 1            | Complete |
+| PR-008 | Epic 3            | Planned  |
 
 ### Integration Contracts Coverage
 
-| ID | Epic Coverage | Status |
-|----|---------------|--------|
-| IC-001 | Epic 1 | Complete |
-| IC-002 | Epic 1 → Epic 1.5 | Partial |
-| IC-003 | Epic 3 | Planned |
-| IC-004 | Epic 2 | Planned |
-| IC-005 | Epic 2 | Planned |
-| IC-006 | Epic 3 | Planned |
-| IC-007 | Epic 1.5 | Planned |
+| ID     | Epic Coverage     | Status   |
+| ------ | ----------------- | -------- |
+| IC-001 | Epic 1            | Complete |
+| IC-002 | Epic 1 → Epic 1.5 | Partial  |
+| IC-003 | Epic 3            | Planned  |
+| IC-004 | Epic 2            | Planned  |
+| IC-005 | Epic 2            | Planned  |
+| IC-006 | Epic 3            | Planned  |
+| IC-007 | Epic 1.5          | Planned  |
 
 ---
 
 ## Epic Summary
 
-| Epic | Title | Goal | Understanding | Action | Status |
-|------|-------|------|---------------|--------|--------|
-| 1 | Foundation (v1) | Secure multi-tenant infrastructure | — | Infrastructure runs | ✅ Ready for Review |
-| 1.5 | Infrastructure Migration | Bridge v1 to v2 architecture | — | v2 infrastructure ready | Planned |
-| 2 | Soul System | Xentri understands "who you are" | Identity + Offerings | First Copilot operational | Planned |
-| 3 | Tool Framework | Any module can integrate with Soul | Configuration patterns | Modules auto-personalize | Planned |
-| 4 | Fractal Proof | End-to-end loop validated | Need detection | First tool delivers value | Planned |
+| Epic | Title                    | Goal                               | Understanding          | Action                    | Status              |
+| ---- | ------------------------ | ---------------------------------- | ---------------------- | ------------------------- | ------------------- |
+| 1    | Foundation (v1)          | Secure multi-tenant infrastructure | —                      | Infrastructure runs       | ✅ Ready for Review |
+| 1.5  | Infrastructure Migration | Bridge v1 to v2 architecture       | —                      | v2 infrastructure ready   | Planned             |
+| 2    | Soul System              | Xentri understands "who you are"   | Identity + Offerings   | First Copilot operational | Planned             |
+| 3    | Tool Framework           | Any module can integrate with Soul | Configuration patterns | Modules auto-personalize  | Planned             |
+| 4    | Fractal Proof            | End-to-end loop validated          | Need detection         | First tool delivers value | Planned             |
 
 ---
 
@@ -118,6 +120,7 @@ Each epic must prove this loop works for its scope.
 **Status:** ✅ Ready for Review (all v1 stories complete; v2 gaps addressed in Epic 1.5)
 
 **Scope:**
+
 - Platform Requirements: PR-001, PR-002 (partial), PR-003, PR-005 (partial), PR-007
 - Integration Contracts: IC-001, IC-002 (partial)
 - Infrastructure Modules: shell, core-api, ts-schema, ui
@@ -126,15 +129,15 @@ Each epic must prove this loop works for its scope.
 
 ### Audit Summary (v1 → v2)
 
-| Story | Original | v2 Validity | Gap Category |
-|-------|----------|-------------|--------------|
-| 1.1 Project Init | Complete | 70% Valid | Missing Python layer, Redis |
-| 1.2 Event Backbone | Complete | 60% Valid | Missing Redis Streams transport |
-| 1.3 User Auth | Complete | 80% Valid | Missing Clerk Organizations |
-| 1.4 Org Provisioning | Complete | 50% Valid | Missing permission primitives |
-| 1.5 Shell & Nav | Complete | 60% Valid | Missing Pulse/Copilot architecture |
-| 1.6 Thin Slice | Complete | 20% Valid | Soul concept established |
-| 1.7 DevOps | Complete | 30% Valid | Railway → GKE migration |
+| Story                | Original | v2 Validity | Gap Category                       |
+| -------------------- | -------- | ----------- | ---------------------------------- |
+| 1.1 Project Init     | Complete | 70% Valid   | Missing Python layer, Redis        |
+| 1.2 Event Backbone   | Complete | 60% Valid   | Missing Redis Streams transport    |
+| 1.3 User Auth        | Complete | 80% Valid   | Missing Clerk Organizations        |
+| 1.4 Org Provisioning | Complete | 50% Valid   | Missing permission primitives      |
+| 1.5 Shell & Nav      | Complete | 60% Valid   | Missing Pulse/Copilot architecture |
+| 1.6 Thin Slice       | Complete | 20% Valid   | Soul concept established           |
+| 1.7 DevOps           | Complete | 30% Valid   | Railway → GKE migration            |
 
 **Decision:** Keep Epic 1 as historical foundation. Gaps addressed in Epic 1.5.
 
@@ -146,6 +149,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api, shell
 
 **Acceptance Criteria:**
+
 - Fresh clone runs with `pnpm install && pnpm run dev`
 - Monorepo structure: apps/shell, packages/ui, services/core-api
 - Local Postgres via Docker with RLS enabled
@@ -162,6 +166,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api, ts-schema
 
 **Acceptance Criteria:**
+
 - `system_events` table with `org_id`, `event_type`, `payload`, `timestamp`
 - RLS enforces org isolation automatically
 - Events are immutable (append-only)
@@ -177,6 +182,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api, shell
 
 **Acceptance Criteria:**
+
 - Email/password login redirects to shell
 - Google OAuth login works
 - `user_signup` and `user_login` events logged
@@ -192,6 +198,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api
 
 **Acceptance Criteria:**
+
 - Organization auto-created on signup
 - User assigned as "Owner"
 - `org_created` event logged
@@ -206,6 +213,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** shell, ui
 
 **Acceptance Criteria:**
+
 - Shell shows 7 category icons in sidebar
 - Sidebar expands active category, collapses others
 - Navigation without full page reload
@@ -222,6 +230,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** shell, core-api
 
 **Acceptance Criteria:**
+
 - User can sign up, land in shell, open Strategy, create Soul draft
 - `soul_created` event visible via org-scoped query
 - Shell shows Soul summary tile
@@ -237,6 +246,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** platform (DevOps)
 
 **Acceptance Criteria:**
+
 - CI runs lint + unit tests + type checks on PRs
 - Structured JSON logging with correlation IDs
 - Smoke test script for shell/Soul slice
@@ -254,6 +264,7 @@ Each epic must prove this loop works for its scope.
 **Action Enabled:** v2 infrastructure operational (Redis Streams, Python services, GKE, Permission system)
 
 **Scope:**
+
 - Platform Requirements: PR-002 (complete), PR-005 (complete)
 - Integration Contracts: IC-002 (complete), IC-007
 - Infrastructure Modules: core-api, ts-schema
@@ -268,6 +279,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api
 
 **Acceptance Criteria:**
+
 - Redis service added to docker-compose.yaml
 - Redis Streams configured with consumer groups
 - Dual-write pattern: events write to Redis (real-time) + Postgres (durable log)
@@ -275,6 +287,7 @@ Each epic must prove this loop works for its scope.
 - Existing event emissions migrated to new transport
 
 **Technical Notes:**
+
 - Architecture §2: Redis is the "Nervous System" transport
 - ADR-002: Event envelope schema with versioning
 
@@ -286,6 +299,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** ts-schema
 
 **Acceptance Criteria:**
+
 - Python service template at `services/strategy-copilot/`
 - `pyproject.toml` with FastAPI, LangChain, pytest dependencies
 - CI pipeline includes Python linting (ruff) and tests (pytest)
@@ -293,6 +307,7 @@ Each epic must prove this loop works for its scope.
 - Service communicates via Redis Streams (not direct HTTP)
 
 **Technical Notes:**
+
 - ADR-008: Python for Agent Layer (LLM chains, data science)
 - ADR-009: Cross-runtime contract strategy via JSON Schema bridge
 
@@ -304,6 +319,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api, ts-schema
 
 **Acceptance Criteria:**
+
 - Permission primitives defined: `view`, `edit`, `approve`, `configure`
 - `PermissionGrant` interface in ts-schema
 - Role → Permission mapping table in database
@@ -312,6 +328,7 @@ Each epic must prove this loop works for its scope.
 - 3-layer enforcement: UI gating, API middleware, database RLS
 
 **Technical Notes:**
+
 - ADR-015: Permission Enforcement Architecture
 - Fail-closed behavior: missing context = deny
 
@@ -323,6 +340,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** core-api
 
 **Acceptance Criteria:**
+
 - Clerk Organizations as source of truth for org membership
 - JWT claims include: `org_id`, `org_role`, `org_permissions`
 - Webhook handler syncs Clerk org changes to local database
@@ -330,6 +348,7 @@ Each epic must prove this loop works for its scope.
 - Owner role correctly maps to all permission primitives
 
 **Technical Notes:**
+
 - Architecture §6.E: Clerk with native Organizations support
 
 ---
@@ -340,6 +359,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** platform (DevOps)
 
 **Acceptance Criteria:**
+
 - Helm chart scaffold at `infra/helm/`
 - Category Cluster topology defined (7 Agent + 7 Tool services pattern)
 - GKE Autopilot configuration for staging environment
@@ -348,6 +368,7 @@ Each epic must prove this loop works for its scope.
 - Rollback procedure documented and tested
 
 **Technical Notes:**
+
 - ADR-004: Kubernetes First (Category Cluster Strategy)
 - Architecture §5: GKE Autopilot for "Solo Visionary" team
 
@@ -359,6 +380,7 @@ Each epic must prove this loop works for its scope.
 **Coordinates:** ts-schema
 
 **Acceptance Criteria:**
+
 - JSON Schema diff runs in CI on ts-schema changes
 - Pact consumer-driven contract tests for Node ↔ Python boundary
 - Integration test: Node emits → Redis → Python consumes → validates
@@ -366,6 +388,7 @@ Each epic must prove this loop works for its scope.
 - CI gate: schema mismatch = build failure
 
 **Technical Notes:**
+
 - ADR-009: Cross-Runtime Contract Strategy
 - Custom Zod validators (.refine()) require manual integration tests
 
@@ -379,6 +402,7 @@ Each epic must prove this loop works for its scope.
 **Action Enabled:** Strategy Copilot responds with personalized guidance
 
 **Scope:**
+
 - Platform Requirements: PR-004, PR-006
 - Integration Contracts: IC-004, IC-005
 - Infrastructure Modules: core-api, ts-schema, strategy-copilot (new)
@@ -395,6 +419,7 @@ Each epic must prove this loop works for its scope.
 **Rationale:** The Constitution documents (PRD, Architecture, UX Design, Epics) now use "Soul" terminology consistently. The existing codebase from Epic 1 still uses "Brief" naming. This story aligns the implementation with the evolved terminology before building new Soul features.
 
 **Acceptance Criteria:**
+
 - [ ] Rename `packages/ts-schema/src/brief.ts` → `packages/ts-schema/src/soul.ts`
 - [ ] Update all Zod schemas: `BriefSchema` → `SoulSchema`, `BriefSectionSchema` → `SoulSectionSchema`
 - [ ] Rename `services/core-api/src/domain/briefs/` → `services/core-api/src/domain/souls/`
@@ -409,6 +434,7 @@ Each epic must prove this loop works for its scope.
 - [ ] TypeScript compiles without errors
 
 **Files to Modify:**
+
 ```
 packages/ts-schema/src/brief.ts → soul.ts
 packages/ts-schema/src/index.ts (update exports)
@@ -420,6 +446,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 ```
 
 **Migration Notes:**
+
 - No database migration needed if table doesn't exist in production yet
 - If `briefs` table exists, create migration: `ALTER TABLE briefs RENAME TO souls`
 - Event schema version stays v1; the event type name changes
@@ -434,6 +461,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** core-api, ts-schema
 
 **Acceptance Criteria:**
+
 - Semantic Memory schema: identity, offerings, goals sections in database
 - Episodic Memory: `soul_episodes` table with vector embeddings (pgvector)
 - Synthetic Memory: `soul_synthesis` table for compressed wisdom
@@ -442,6 +470,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - ETag support for conditional requests
 
 **Technical Notes:**
+
 - ADR-006: Tri-State Memory Architecture
 - ADR-016: Soul Access Architecture
 
@@ -453,6 +482,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** strategy-copilot, core-api
 
 **Acceptance Criteria:**
+
 - Strategy Copilot Python service operational
 - Copilot reads Semantic Memory via Soul Gateway API
 - Multi-turn conversation flow (State Machine: Initiated → Conversing → Drafting)
@@ -461,6 +491,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - Conversation history stored in Episodic Memory
 
 **Technical Notes:**
+
 - State Machine §10: Soul Generation Flow
 - ADR-007: Federated Soul Registry (Global Soul + Category Context + Agent Role)
 
@@ -472,6 +503,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** strategy-copilot, core-api
 
 **Acceptance Criteria:**
+
 - Recommendation submission endpoint: `POST /api/v1/soul/recommendations`
 - Recommendation event shape per IC-005: target_section, proposed_value, evidence, confidence
 - Strategy Copilot queues recommendations for synthesis cycle
@@ -480,6 +512,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - `xentri.soul.recommendation.submitted.v1` event emitted
 
 **Technical Notes:**
+
 - ADR-016: Recommendation Submission Protocol
 - Exception: War Room sessions can approve immediately with human present
 
@@ -491,6 +524,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** strategy-copilot, core-api
 
 **Acceptance Criteria:**
+
 - User actions write to Episodic Memory automatically
 - Background "Dreaming" process (nightly) compresses episodes to Synthetic Memory
 - Dreaming process: 3 retries with exponential backoff, P3 alert on failure
@@ -498,6 +532,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - Proof: Copilot demonstrates recall of previous conversations
 
 **Technical Notes:**
+
 - ADR-006: Dreaming Process Specification
 - Trigger: Nightly cron (02:00 local), managed by Category Copilot
 
@@ -511,6 +546,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Action Enabled:** Modules auto-configure from Soul; notifications flow consistently
 
 **Scope:**
+
 - Platform Requirements: PR-008
 - Integration Contracts: IC-003, IC-006
 - Infrastructure Modules: shell, ui, core-api, ts-schema
@@ -525,6 +561,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** shell, ts-schema
 
 **Acceptance Criteria:**
+
 - Module manifest schema v2 with Soul integration fields
 - `soul_fields_read`: which Soul sections the module consumes
 - `soul_fields_contribute`: which Soul sections the module can recommend updates to
@@ -533,6 +570,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - Shell lazy-loads module bundles based on manifest
 
 **Technical Notes:**
+
 - ADR-014: Module Registration Architecture
 - Validation: JSON Schema + circular dependency check
 
@@ -544,6 +582,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** core-api, ui
 
 **Acceptance Criteria:**
+
 - Modules auto-configure from Soul on first load
 - Example: CRM pipeline stages derived from Soul's sales_cycle_length
 - Configuration persisted per-org with Soul version reference
@@ -551,6 +590,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - UI shows "Configured from your Soul" indicator
 
 **Technical Notes:**
+
 - Modules read Soul via standard API (never direct database access)
 
 ---
@@ -561,6 +601,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** ui, ts-schema, strategy-copilot
 
 **Acceptance Criteria:**
+
 - Vocabulary mapping system in ts-schema
 - Industry-specific term mappings (healthcare: "customer" → "patient")
 - `useVocabulary()` React hook for UI components
@@ -569,6 +610,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - All user-facing text uses vocabulary system (hard-coded terms = bug)
 
 **Technical Notes:**
+
 - ADR-019: Vocabulary Adaptation Architecture
 
 ---
@@ -579,6 +621,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** core-api, shell, ui
 
 **Acceptance Criteria:**
+
 - Notification event shape per IC-006: title, body, priority, scope
 - Priority-based routing: critical (immediate), high/medium (digest), low (in-app only)
 - Delivery channels: Push, Email, In-app (priority determines which)
@@ -587,6 +630,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - Pulse dashboard shows notifications by scope
 
 **Technical Notes:**
+
 - ADR-017: Notification Delivery Architecture
 - Modules emit events with notification metadata; infrastructure handles routing
 
@@ -600,6 +644,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Action Enabled:** First tool (Website Builder MVP) delivers real value
 
 **Scope:**
+
 - Platform Requirements: All PRs validated end-to-end
 - Integration Contracts: All ICs operational
 - Infrastructure Modules: shell, ui, core-api, marketing-copilot (new), website-builder (new)
@@ -614,6 +659,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** strategy-copilot
 
 **Acceptance Criteria:**
+
 - Strategy Copilot analyzes Soul and identifies "visibility gap"
 - Detection triggers when: business has offerings but no web presence
 - Copilot generates recommendation: "You should get visible online"
@@ -621,6 +667,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - Recommendation surfaces in Operational Pulse
 
 **Technical Notes:**
+
 - This proves: Soul → Copilot → Recommendation pathway
 
 ---
@@ -631,6 +678,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** shell, marketing-copilot, website-builder
 
 **Acceptance Criteria:**
+
 - Website Builder module registered via manifest
 - Module auto-configures from Soul (business name, offerings, brand voice)
 - User can create single-page website through guided flow
@@ -639,6 +687,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - Marketing Copilot provides copy suggestions based on Soul
 
 **Technical Notes:**
+
 - This proves: Recommendation → Tool → Action pathway
 - Module should feel "already configured" because of Soul
 
@@ -650,12 +699,14 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** website-builder, core-api
 
 **Acceptance Criteria:**
+
 - Website creation writes to Episodic Memory
 - Soul learns: "has_website: true", "website_url: ..."
 - Future copilot interactions reference this fact
 - Proof: Copilot says "Since you launched your website..."
 
 **Technical Notes:**
+
 - This proves: Action → Soul feedback loop
 
 ---
@@ -666,6 +717,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 **Coordinates:** strategy-copilot, marketing-copilot, sales-copilot
 
 **Acceptance Criteria:**
+
 - Website generates leads (lead capture form)
 - Lead creation event triggers Strategy Copilot analysis
 - Strategy Copilot detects: "You have leads, you need to track them"
@@ -673,6 +725,7 @@ apps/shell/src/stores/brief.ts → soul.ts
 - This proves: Tool A → Event → Copilot → Recommend Tool B
 
 **Technical Notes:**
+
 - This is the ultimate Fractal Proof: cross-domain orchestration works
 - Validates entire architecture in production use
 
@@ -680,23 +733,23 @@ apps/shell/src/stores/brief.ts → soul.ts
 
 ## Traceability Matrix
 
-| Requirement | Type | Epic | Story | Status |
-|-------------|------|------|-------|--------|
-| PR-001 | Platform | 1 | 1.1, 1.2, 1.4 | Complete |
-| PR-002 | Platform | 1 → 1.5 | 1.2, 1.5.1 | Partial → Planned |
-| PR-003 | Platform | 1, 1.5 | 1.3, 1.5.4 | Complete → Enhanced |
-| PR-004 | Platform | 2 | 2.1, 2.2 | Planned |
-| PR-005 | Platform | 1 → 1.5 | 1.4, 1.5.3 | Partial → Planned |
-| PR-006 | Platform | 2 | 2.2, 2.3 | Planned |
-| PR-007 | Platform | 1 | 1.5 | Complete |
-| PR-008 | Platform | 3 | 3.3 | Planned |
-| IC-001 | Contract | 1 | 1.2 | Complete |
-| IC-002 | Contract | 1 → 1.5 | 1.2, 1.5.1 | Partial → Planned |
-| IC-003 | Contract | 3 | 3.1 | Planned |
-| IC-004 | Contract | 2 | 2.1 | Planned |
-| IC-005 | Contract | 2 | 2.3 | Planned |
-| IC-006 | Contract | 3 | 3.4 | Planned |
-| IC-007 | Contract | 1.5 | 1.5.3 | Planned |
+| Requirement | Type     | Epic    | Story         | Status              |
+| ----------- | -------- | ------- | ------------- | ------------------- |
+| PR-001      | Platform | 1       | 1.1, 1.2, 1.4 | Complete            |
+| PR-002      | Platform | 1 → 1.5 | 1.2, 1.5.1    | Partial → Planned   |
+| PR-003      | Platform | 1, 1.5  | 1.3, 1.5.4    | Complete → Enhanced |
+| PR-004      | Platform | 2       | 2.1, 2.2      | Planned             |
+| PR-005      | Platform | 1 → 1.5 | 1.4, 1.5.3    | Partial → Planned   |
+| PR-006      | Platform | 2       | 2.2, 2.3      | Planned             |
+| PR-007      | Platform | 1       | 1.5           | Complete            |
+| PR-008      | Platform | 3       | 3.3           | Planned             |
+| IC-001      | Contract | 1       | 1.2           | Complete            |
+| IC-002      | Contract | 1 → 1.5 | 1.2, 1.5.1    | Partial → Planned   |
+| IC-003      | Contract | 3       | 3.1           | Planned             |
+| IC-004      | Contract | 2       | 2.1           | Planned             |
+| IC-005      | Contract | 2       | 2.3           | Planned             |
+| IC-006      | Contract | 3       | 3.4           | Planned             |
+| IC-007      | Contract | 1.5     | 1.5.3         | Planned             |
 
 ---
 
@@ -704,13 +757,13 @@ apps/shell/src/stores/brief.ts → soul.ts
 
 ### Infrastructure Module Coordination
 
-| Epic | shell | ui | core-api | ts-schema | strategy-copilot |
-|------|-------|-----|----------|-----------|------------------|
-| 1 | Primary | Support | Primary | Support | — |
-| 1.5 | — | — | Primary | Primary | Setup |
-| 2 | — | Support | Primary | Primary | Primary |
-| 3 | Primary | Primary | Primary | Primary | Support |
-| 4 | Primary | Primary | Support | Support | Primary |
+| Epic | shell   | ui      | core-api | ts-schema | strategy-copilot |
+| ---- | ------- | ------- | -------- | --------- | ---------------- |
+| 1    | Primary | Support | Primary  | Support   | —                |
+| 1.5  | —       | —       | Primary  | Primary   | Setup            |
+| 2    | —       | Support | Primary  | Primary   | Primary          |
+| 3    | Primary | Primary | Primary  | Primary   | Support          |
+| 4    | Primary | Primary | Support  | Support   | Primary          |
 
 **Legend:** Primary = major changes, Support = minor changes, — = no changes
 
@@ -728,11 +781,11 @@ Soul Analysis → Copilot Recommendation → New Module Epic
 
 **Example Organic Emergence:**
 
-| Soul Observation | Copilot Recommendation | Emergent Epic |
-|------------------|------------------------|---------------|
-| "User has leads but no sales tracking" | "Let's set up your CRM" | Sales → CRM Module |
-| "User closing deals but not getting paid" | "Time to invoice" | Finance → Invoicing Module |
-| "User overwhelmed by manual work" | "Let's automate your workflow" | Operations → Automation Module |
+| Soul Observation                          | Copilot Recommendation         | Emergent Epic                  |
+| ----------------------------------------- | ------------------------------ | ------------------------------ |
+| "User has leads but no sales tracking"    | "Let's set up your CRM"        | Sales → CRM Module             |
+| "User closing deals but not getting paid" | "Time to invoice"              | Finance → Invoicing Module     |
+| "User overwhelmed by manual work"         | "Let's automate your workflow" | Operations → Automation Module |
 
 **No need to pre-plan 170+ modules.** They emerge when the Soul says they're needed.
 
@@ -742,12 +795,12 @@ Soul Analysis → Copilot Recommendation → New Module Epic
 
 When creating epics for Infrastructure Modules or Categories, use cascading IDs:
 
-| Constitution Epic | Child Epic Pattern | Example |
-|-------------------|-------------------|---------|
-| Epic 1 | Epic 1-SHL-x | Epic 1-SHL-1 (Shell-specific) |
-| Epic 2 | Epic 2-API-x | Epic 2-API-1 (Core API-specific) |
-| Epic 3 | Epic 3-x | Epic 3-1, Epic 3-2 |
-| Organic | Epic O-{CAT}-x | Epic O-SAL-1 (Sales organic) |
+| Constitution Epic | Child Epic Pattern | Example                          |
+| ----------------- | ------------------ | -------------------------------- |
+| Epic 1            | Epic 1-SHL-x       | Epic 1-SHL-1 (Shell-specific)    |
+| Epic 2            | Epic 2-API-x       | Epic 2-API-1 (Core API-specific) |
+| Epic 3            | Epic 3-x           | Epic 3-1, Epic 3-2               |
+| Organic           | Epic O-{CAT}-x     | Epic O-SAL-1 (Sales organic)     |
 
 ---
 
@@ -763,6 +816,7 @@ When creating epics for Infrastructure Modules or Categories, use cascading IDs:
 6. Next recommendation is informed by enriched Soul
 
 **Economics Gate:**
+
 ```
 Running Cost per Org < Monthly Revenue per Org
 ```
@@ -773,10 +827,10 @@ Until this gate passes, we're not sustainable. Features don't matter; unit econo
 
 ## Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2025-11-28 | Carlo + AI | Initial epic structure |
-| 2.0 | 2025-12-02 | Carlo + BMAD Team | Complete restructure: Understanding + Action framework, Soul concept introduced, Epic 1 audit, Epic 1.5 migration, organic growth model |
+| Version | Date       | Author            | Changes                                                                                                                                 |
+| ------- | ---------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0     | 2025-11-28 | Carlo + AI        | Initial epic structure                                                                                                                  |
+| 2.0     | 2025-12-02 | Carlo + BMAD Team | Complete restructure: Understanding + Action framework, Soul concept introduced, Epic 1 audit, Epic 1.5 migration, organic growth model |
 
 ---
 

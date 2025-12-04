@@ -1,7 +1,7 @@
-import type { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
-import { clerkClient, getAuth } from '@clerk/fastify';
-import { problemDetails } from './orgContext.js';
-import type { ClerkJWTClaims, ClerkOrgRole } from '@xentri/ts-schema';
+import type { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify'
+import { clerkClient, getAuth } from '@clerk/fastify'
+import { problemDetails } from './orgContext.js'
+import type { ClerkJWTClaims, ClerkOrgRole } from '@xentri/ts-schema'
 
 // ===================
 // Type Augmentation
@@ -10,13 +10,13 @@ import type { ClerkJWTClaims, ClerkOrgRole } from '@xentri/ts-schema';
 declare module 'fastify' {
   interface FastifyRequest {
     /** Clerk user ID from verified session */
-    clerkUserId?: string;
+    clerkUserId?: string
     /** Active organization ID from Clerk session */
-    clerkOrgId?: string;
+    clerkOrgId?: string
     /** Role in active organization */
-    clerkOrgRole?: ClerkOrgRole;
+    clerkOrgRole?: ClerkOrgRole
     /** Full Clerk session claims */
-    clerkClaims?: ClerkJWTClaims;
+    clerkClaims?: ClerkJWTClaims
   }
 }
 
@@ -40,7 +40,7 @@ export function clerkAuthMiddleware(
   reply: FastifyReply,
   done: HookHandlerDoneFunction
 ): void {
-  const auth = getAuth(request);
+  const auth = getAuth(request)
 
   if (!auth.userId) {
     reply
@@ -53,14 +53,14 @@ export function clerkAuthMiddleware(
           'Valid authentication required. Please sign in.',
           request.id
         )
-      );
-    return;
+      )
+    return
   }
 
   // Extract claims from session
-  request.clerkUserId = auth.userId;
-  request.clerkOrgId = auth.orgId || undefined;
-  request.clerkOrgRole = auth.orgRole as ClerkOrgRole | undefined;
+  request.clerkUserId = auth.userId
+  request.clerkOrgId = auth.orgId || undefined
+  request.clerkOrgRole = auth.orgRole as ClerkOrgRole | undefined
 
   // Build claims object for downstream use
   request.clerkClaims = {
@@ -72,9 +72,9 @@ export function clerkAuthMiddleware(
     iss: '', // Not needed for internal use
     iat: 0,
     exp: 0,
-  };
+  }
 
-  done();
+  done()
 }
 
 /**
@@ -101,11 +101,11 @@ export function requireOrgContext(
           'No active organization. Please select or create an organization.',
           request.id
         )
-      );
-    return;
+      )
+    return
   }
 
-  done();
+  done()
 }
 
 /**
@@ -119,15 +119,15 @@ export function optionalClerkAuth(
   _reply: FastifyReply,
   done: HookHandlerDoneFunction
 ): void {
-  const auth = getAuth(request);
+  const auth = getAuth(request)
 
   if (auth.userId) {
-    request.clerkUserId = auth.userId;
-    request.clerkOrgId = auth.orgId || undefined;
-    request.clerkOrgRole = auth.orgRole as ClerkOrgRole | undefined;
+    request.clerkUserId = auth.userId
+    request.clerkOrgId = auth.orgId || undefined
+    request.clerkOrgRole = auth.orgRole as ClerkOrgRole | undefined
   }
 
-  done();
+  done()
 }
 
 // ===================
@@ -141,14 +141,14 @@ export function optionalClerkAuth(
  * Prefer session claims for most use cases.
  */
 export async function getClerkUser(userId: string) {
-  return clerkClient.users.getUser(userId);
+  return clerkClient.users.getUser(userId)
 }
 
 /**
  * Fetches organization details from Clerk Backend API.
  */
 export async function getClerkOrganization(orgId: string) {
-  return clerkClient.organizations.getOrganization({ organizationId: orgId });
+  return clerkClient.organizations.getOrganization({ organizationId: orgId })
 }
 
 /**
@@ -160,10 +160,10 @@ export async function isUserOrgMember(userId: string, orgId: string): Promise<bo
   try {
     const memberships = await clerkClient.users.getOrganizationMembershipList({
       userId,
-    });
+    })
 
-    return memberships.data.some((m) => m.organization.id === orgId);
+    return memberships.data.some((m) => m.organization.id === orgId)
   } catch {
-    return false;
+    return false
   }
 }

@@ -28,12 +28,13 @@ Entity Type:    Constitution
 Output Path:    docs/platform/ux-design.md
 
 This is the FOUNDATIONAL UX document that:
+
 - Establishes platform-wide UX principles
 - Defines the design system foundation
 - Sets interaction paradigms for ALL entities
 - Cannot be contradicted by ANY downstream entity
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <check if="existing UX exists at output path">
   <ask>An existing Constitution UX Design was found. Do you want to:
@@ -56,6 +57,7 @@ This is the FOUNDATIONAL UX document that:
 <note>After discovery: {product_brief_content}, {constitution_prd_content}, {constitution_architecture_content}, {existing_ux_content} available</note>
 
 <action>Extract context from loaded documents:
+
 1. From Product Brief:
    - Brand personality
    - Target users
@@ -70,8 +72,8 @@ This is the FOUNDATIONAL UX document that:
    - Technology stack (for design system compatibility)
    - Platform structure (shell, modules)
    - Multi-tenancy implications
-</action>
-</step>
+     </action>
+     </step>
 
 <step n="1" goal="UX Vision and Principles">
 <action>Begin discovery focused on PLATFORM-LEVEL UX:
@@ -80,24 +82,27 @@ This is the FOUNDATIONAL UX document that:
 This will guide every interface decision across all modules."
 
 Key questions for Constitution UX:
+
 - What should users FEEL when using this platform?
 - What are the non-negotiable UX principles?
 - What differentiates this platform's experience?
 - What accessibility standards must we meet?
-</action>
+  </action>
 
 <action>Define 5-7 core UX principles:
 Each principle should:
+
 - Be actionable (testable in reviews)
 - Apply platform-wide
 - Guide trade-off decisions
 - Have clear rationale
 
 Example principles:
+
 - "Clarity over cleverness" - Prefer obvious UI over innovative but unclear patterns
 - "Progressive disclosure" - Show essentials first, details on demand
 - "Visible automation" - Never act without explanation
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -119,17 +124,19 @@ Example principles:
 This decision affects every component across the platform."
 
 Present options based on architecture tech stack:
+
 - shadcn/ui (if React/Tailwind detected)
 - Material UI
 - Chakra UI
 - Custom design system (if strong brand requirements)
 
 For each option, explain:
+
 - Component coverage
 - Accessibility built-in
 - Theming capabilities
 - Maintenance implications
-</action>
+  </action>
 
 <action>Research current design system status:
 <WebSearch>{design_system} latest version accessibility features 2025</WebSearch>
@@ -138,18 +145,20 @@ For each option, explain:
 <ask>Which design system approach fits the platform vision?
 
 Consider:
+
 - Team familiarity
 - Customization needs
 - Brand requirements
 - Maintenance capacity</ask>
 
 <action>Document design system decision:
+
 - System chosen
 - Version (if applicable)
 - Rationale
 - Customization approach
 - Extension strategy
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -176,41 +185,43 @@ If no, I'll generate theme options based on platform personality.</ask>
   <action>Generate 3-4 color theme directions:
   Based on platform personality from Product Brief:
 
-  1. Theme Name (Personality) - Color Strategy
-  2. Theme Name (Personality) - Color Strategy
-  3. Theme Name (Personality) - Color Strategy
-  4. Theme Name (Personality) - Color Strategy
+1. Theme Name (Personality) - Color Strategy
+2. Theme Name (Personality) - Color Strategy
+3. Theme Name (Personality) - Color Strategy
+4. Theme Name (Personality) - Color Strategy
+   </action>
+
+<action>Generate HTML color theme visualizer:
+
+Create: {color_themes_html}
+
+For each theme:
+
+- Full color palette with swatches
+- Semantic colors (success, warning, error)
+- UI component examples
+- Side-by-side comparison
+- Light/dark mode if applicable
   </action>
 
-  <action>Generate HTML color theme visualizer:
-
-  Create: {color_themes_html}
-
-  For each theme:
-  - Full color palette with swatches
-  - Semantic colors (success, warning, error)
-  - UI component examples
-  - Side-by-side comparison
-  - Light/dark mode if applicable
-  </action>
-
-  <output>🎨 Color Theme Visualizer Created!
+<output>🎨 Color Theme Visualizer Created!
 
 Open: {color_themes_html}
 
 Explore the themes and tell me which direction resonates.</output>
 
-  <ask>Which color theme direction works for the platform?</ask>
+<ask>Which color theme direction works for the platform?</ask>
 </check>
 
 <action>Document complete color system:
+
 - Primary palette
 - Secondary palette
 - Semantic colors (success, warning, error, info)
 - Neutral scale
 - Usage guidelines
 - Contrast requirements for accessibility
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -223,20 +234,22 @@ Explore the themes and tell me which direction resonates.</output>
 <action>Define platform typography:
 
 Based on design system choice and brand:
+
 - Font families (heading, body, monospace)
 - Type scale (h1-h6, body sizes)
 - Font weights and usage
 - Line heights
 - Font loading strategy
-</action>
+  </action>
 
 <action>Define spacing system:
+
 - Base unit (4px or 8px)
 - Spacing scale (xs, sm, md, lg, xl, 2xl, etc.)
 - Layout grid approach
 - Container widths
 - Breakpoint definitions
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -291,10 +304,11 @@ REQUIRED PATTERNS to define:
    - Placement
    - Duration
    - Priority levels
-</action>
+     </action>
 
 <ask>For each pattern category, I'll present options and recommendations.
 Do you want to:
+
 1. Go through each pattern category one by one (thorough)
 2. Let me recommend smart defaults and override where needed (efficient)
 3. Focus on patterns most critical for your platform (focused)</ask>
@@ -315,6 +329,7 @@ Do you want to:
 This section defines requirements ALL entities must meet."
 
 Key decisions:
+
 - WCAG compliance level (A, AA, or AAA)
 - Color contrast requirements
 - Keyboard navigation standards
@@ -323,7 +338,7 @@ Key decisions:
 - Screen reader considerations
 - Touch target minimums
 - Testing strategy
-</action>
+  </action>
 
 <ask>Based on your deployment context (internal tool, public-facing, government, etc.),
 what WCAG compliance level should the platform target?
@@ -348,6 +363,7 @@ what WCAG compliance level should the platform target?
 across devices - this applies to ALL modules."
 
 Key decisions:
+
 - Breakpoint definitions
 - Desktop layout approach
 - Tablet adaptation
@@ -355,7 +371,7 @@ Key decisions:
 - Navigation patterns per device
 - Touch optimization
 - Content priority at each size
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -371,12 +387,13 @@ Key decisions:
 what downstream entities can customize and what they cannot."
 
 Define for each area:
+
 - Design system: What can children customize?
 - Colors: Can children add accent colors?
 - Typography: Extension allowed?
 - Patterns: Override permitted?
 - Accessibility: Minimum is set, can they exceed?
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -393,6 +410,7 @@ Define for each area:
 </invoke-task>
 
 <action>Assemble the complete Constitution UX Design with:
+
 - Generated frontmatter
 - UX vision and principles
 - Design system foundation
@@ -401,7 +419,7 @@ Define for each area:
 - Accessibility strategy
 - Responsive strategy
 - Inheritance guidelines
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -428,6 +446,7 @@ Define for each area:
 Created: docs/platform/ux-design.md
 
 Summary:
+
 - {principle_count} Core UX Principles
 - Design System: {design_system_choice}
 - {pattern_count} Platform-Wide UX Patterns
@@ -435,6 +454,7 @@ Summary:
 - Responsive: {breakpoint_count} Breakpoints
 
 Visual Artifacts:
+
 - Color Themes: {color_themes_html}
 - Design Directions: {design_directions_html} (if created)
 
@@ -444,6 +464,7 @@ or Business Module MUST inherit from and not contradict these decisions.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Next Steps:**
+
 1. Create Infrastructure Module UX (docs/platform/{module}/ux-design.md)
 2. Create Strategic Container UX (docs/{category}/ux-design.md)
 

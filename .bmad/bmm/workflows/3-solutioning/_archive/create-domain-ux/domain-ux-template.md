@@ -18,19 +18,21 @@
 
 ### 1.2 Inherited UX Foundation
 
-| Inherited From | Key Elements |
-|----------------|--------------|
-| Constitution | {{constitution_inheritance}} |
-| Parent | {{parent_inheritance}} |
+| Inherited From | Key Elements                 |
+| -------------- | ---------------------------- |
+| Constitution   | {{constitution_inheritance}} |
+| Parent         | {{parent_inheritance}}       |
 
 ---
 
 {{#if entity_type in ['strategic_container', 'coordination_unit', 'business_module']}}
+
 ## 2. User Personas
 
 {{user_personas}}
 
 ---
+
 {{/if}}
 
 ## 3. User Flows
@@ -39,20 +41,24 @@
 
 {{#if design_directions_html}}
 **Interactive Mockups:**
+
 - Design Direction Showcase: [ux-design-directions.html](./ux-design-directions.html)
-{{/if}}
+  {{/if}}
 
 ---
 
 {{#if entity_type == 'infrastructure_module'}}
+
 ## 4. Exposed Components
 
 {{exposed_components}}
 
 ---
+
 {{/if}}
 
 {{#if entity_type == 'strategic_container'}}
+
 ## 4. Category UX Coordination
 
 ### 4.1 Design Direction
@@ -68,9 +74,11 @@
 {{navigation_strategy}}
 
 ---
+
 {{/if}}
 
 {{#if entity_type == 'coordination_unit'}}
+
 ## 4. Module Integration UX
 
 ### 4.1 Module Orchestration
@@ -86,9 +94,11 @@
 {{integration_patterns}}
 
 ---
+
 {{/if}}
 
 {{#if entity_type == 'business_module'}}
+
 ## 4. Screen Designs
 
 {{screen_designs}}
@@ -100,6 +110,7 @@
 {{component_specifications}}
 
 ---
+
 {{/if}}
 
 ## 6. States and Interactions
@@ -150,17 +161,18 @@
 ### Visual Artifacts
 
 {{#if color_themes_html}}
+
 - **Color Theme Customization**: {{color_themes_html}}
-{{/if}}
-{{#if design_directions_html}}
+  {{/if}}
+  {{#if design_directions_html}}
 - **Design Direction Mockups**: {{design_directions_html}}
-{{/if}}
+  {{/if}}
 
 ### Version History
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| {{date}} | 1.0 | Initial {{entity_type_display}} UX Design | {{user_name}} |
+| Date     | Version | Changes                                   | Author        |
+| -------- | ------- | ----------------------------------------- | ------------- |
+| {{date}} | 1.0     | Initial {{entity_type_display}} UX Design | {{user_name}} |
 
 ---
 

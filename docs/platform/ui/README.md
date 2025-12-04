@@ -9,6 +9,7 @@
 ## Overview
 
 The UI package provides:
+
 - Shared React components (buttons, forms, dialogs, etc.)
 - Tailwind CSS v4 configuration
 - shadcn/ui component library integration
@@ -39,9 +40,9 @@ None - this is a foundational package.
 
 ## Consumed By
 
-| Module | Usage |
-|--------|-------|
-| `platform/shell` | All UI rendering |
+| Module            | Usage              |
+| ----------------- | ------------------ |
+| `platform/shell`  | All UI rendering   |
 | Future micro-apps | Consistent styling |
 
 ## Development

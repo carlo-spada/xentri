@@ -3,196 +3,219 @@
 # Defines the workflow sequence for each entity type in the federated system.
 # Replaces the old track+field path files (method-greenfield, etc.)
 
-version: "1.1"
-description: "Workflow sequences determined by entity type, not project type"
+version: '1.1'
+description: 'Workflow sequences determined by entity type, not project type'
 
 # Common phases shared across entity types
 phases:
   discovery:
-    name: "Discovery"
+    name: 'Discovery'
     optional: true
     workflows:
       - id: brainstorm-project
         optional: true
         agent: analyst
         command: brainstorm-project
-        description: "Creative exploration and ideation"
+        description: 'Creative exploration and ideation'
       - id: research
         optional: true
         agent: analyst
         command: research
-        description: "Domain/technical/competitive analysis"
+        description: 'Domain/technical/competitive analysis'
       - id: product-brief
         optional: true
         agent: analyst
         command: product-brief
-        description: "Strategic product planning"
+        description: 'Strategic product planning'
 
   planning:
-    name: "Planning"
+    name: 'Planning'
     workflows:
       - id: prd
         required: true
         agent: pm
         command: prd
-        description: "Product Requirements Document with FRs and NFRs"
+        description: 'Product Requirements Document with FRs and NFRs'
       - id: validate-prd
         recommended: true
         agent: pm
         command: validate-prd
-        description: "PRD quality and completeness validation"
+        description: 'PRD quality and completeness validation'
 
   design:
-    name: "Design"
+    name: 'Design'
     workflows:
       - id: create-ux
         conditional: if_has_ui
         agent: ux-designer
         command: create-ux
-        description: "UX/UI design and wireframes"
+        description: 'UX/UI design and wireframes'
       - id: validate-ux
         recommended: true
         conditional: if_has_ui
         agent: ux-designer
         command: validate-ux
-        description: "UX quality and usability validation"
+        description: 'UX quality and usability validation'
 
   solutioning:
-    name: "Solutioning"
+    name: 'Solutioning'
     workflows:
       - id: architecture
         required: true
         agent: architect
         command: architecture
-        description: "Technical architecture and system design"
+        description: 'Technical architecture and system design'
       - id: validate-architecture
         recommended: true
         agent: architect
         command: validate-architecture
-        description: "Architecture quality and completeness validation"
+        description: 'Architecture quality and completeness validation'
       - id: create-epics-and-stories
         required: true
         agent: pm
         command: create-epics-and-stories
-        description: "Break down PRD into implementable epics and stories"
+        description: 'Break down PRD into implementable epics and stories'
       - id: validate-epics
         recommended: true
         agent: pm
         command: validate-epics
-        description: "Epic/story quality and coverage validation"
+        description: 'Epic/story quality and coverage validation'
       - id: test-design
         recommended: true
         agent: tea
         command: test-design
-        description: "System-level testability assessment"
+        description: 'System-level testability assessment'
       - id: implementation-readiness
         required: true
         agent: architect
         command: implementation-readiness
-        description: "Final validation: PRD + UX + Architecture + Epics + Testability cohesion"
+        description: 'Final validation: PRD + UX + Architecture + Epics + Testability cohesion'
 
   implementation:
-    name: "Implementation"
+    name: 'Implementation'
     workflows:
       - id: sprint-planning
         required: true
         agent: sm
         command: sprint-planning
-        description: "Sprint planning and tracking setup"
+        description: 'Sprint planning and tracking setup'
 
 # Entity-specific workflow paths
 entity_types:
-
   constitution:
-    name: "Constitution"
-    description: "System-wide rules and standards (docs/platform/*.md)"
+    name: 'Constitution'
+    description: 'System-wide rules and standards (docs/platform/*.md)'
     workflow_sequence:
       - phase: discovery
         include: [brainstorm-project, research, product-brief]
         all_optional: true
-        note: "Product brief recommended for new constitutions"
+        note: 'Product brief recommended for new constitutions'
       - phase: planning
         include: [prd, validate-prd]
-        note: "Creates system PRD with PR-xxx and IC-xxx requirements"
+        note: 'Creates system PRD with PR-xxx and IC-xxx requirements'
       - phase: design
         include: [create-ux, validate-ux]
-        note: "System-wide UX principles and patterns"
+        note: 'System-wide UX principles and patterns'
       - phase: solutioning
-        include: [architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness]
-        note: "Cross-cutting architecture and system epics"
+        include:
+          [
+            architecture,
+            validate-architecture,
+            create-epics-and-stories,
+            validate-epics,
+            test-design,
+            implementation-readiness,
+          ]
+        note: 'Cross-cutting architecture and system epics'
       - phase: implementation
         include: [sprint-planning]
 
   infrastructure_module:
-    name: "Infrastructure Module"
-    description: "Platform modules (docs/platform/{module}/)"
+    name: 'Infrastructure Module'
+    description: 'Platform modules (docs/platform/{module}/)'
     workflow_sequence:
       - phase: discovery
         include: [research]
         all_optional: true
-        note: "Usually inherits context from Constitution"
+        note: 'Usually inherits context from Constitution'
       - phase: planning
         include: [prd, validate-prd]
-        note: "Module-specific PRD with FR-{CODE}-xxx requirements"
+        note: 'Module-specific PRD with FR-{CODE}-xxx requirements'
       - phase: design
         include: [create-ux, validate-ux]
         conditional: if_has_ui
-        note: "Only if module has UI components"
+        note: 'Only if module has UI components'
       - phase: solutioning
-        include: [architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness]
+        include:
+          [
+            architecture,
+            validate-architecture,
+            create-epics-and-stories,
+            validate-epics,
+            test-design,
+            implementation-readiness,
+          ]
       - phase: implementation
         include: [sprint-planning]
 
   strategic_container:
-    name: "Strategic Container"
-    description: "Category-level coordination (docs/{category}/)"
+    name: 'Strategic Container'
+    description: 'Category-level coordination (docs/{category}/)'
     workflow_sequence:
       - phase: discovery
         include: [brainstorm-project, research, product-brief]
         all_optional: true
-        note: "Product brief recommended for new categories"
+        note: 'Product brief recommended for new categories'
       - phase: planning
         include: [prd, validate-prd]
-        note: "Strategic PRD defining category scope and child coordination"
+        note: 'Strategic PRD defining category scope and child coordination'
       - phase: design
         include: [create-ux, validate-ux]
         optional: true
-        note: "High-level UX patterns for the category"
+        note: 'High-level UX patterns for the category'
       - phase: solutioning
         include: [architecture, validate-architecture]
-        note: "Strategic architecture - detailed epics handled at child level"
+        note: 'Strategic architecture - detailed epics handled at child level'
 
   coordination_unit:
-    name: "Coordination Unit"
-    description: "Subcategory coordination (docs/{category}/{subcategory}/)"
+    name: 'Coordination Unit'
+    description: 'Subcategory coordination (docs/{category}/{subcategory}/)'
     workflow_sequence:
       - phase: discovery
         include: [research]
         all_optional: true
       - phase: planning
         include: [prd, validate-prd]
-        note: "Coordination PRD defining subcategory scope"
+        note: 'Coordination PRD defining subcategory scope'
       - phase: design
         include: [create-ux, validate-ux]
         conditional: if_has_ui
       - phase: solutioning
         include: [architecture, validate-architecture]
-        note: "Coordination architecture - detailed epics handled at child level"
+        note: 'Coordination architecture - detailed epics handled at child level'
 
   business_module:
-    name: "Business Module"
-    description: "Terminal feature modules (docs/{cat}/{subcat}/{module}/)"
+    name: 'Business Module'
+    description: 'Terminal feature modules (docs/{cat}/{subcat}/{module}/)'
     workflow_sequence:
       - phase: discovery
         include: [research]
         all_optional: true
       - phase: planning
         include: [prd, validate-prd]
-        note: "Feature PRD with implementation-ready requirements"
+        note: 'Feature PRD with implementation-ready requirements'
       - phase: design
         include: [create-ux, validate-ux]
         conditional: if_has_ui
       - phase: solutioning
-        include: [architecture, validate-architecture, create-epics-and-stories, validate-epics, test-design, implementation-readiness]
+        include:
+          [
+            architecture,
+            validate-architecture,
+            create-epics-and-stories,
+            validate-epics,
+            test-design,
+            implementation-readiness,
+          ]
       - phase: implementation
         include: [sprint-planning]

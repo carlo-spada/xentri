@@ -10,12 +10,7 @@
       "type": "string",
       "description": "Hierarchical requirement ID encoding ancestry chain",
       "pattern": "^[A-Z]{2,4}(-[0-9]{3})?(-[A-Z]{2,4}-[0-9]{3})*$",
-      "examples": [
-        "SYS-001",
-        "SYS-002",
-        "SYS-002-STR-001",
-        "SYS-002-STR-001-PUL-001"
-      ]
+      "examples": ["SYS-001", "SYS-002", "SYS-002-STR-001", "SYS-002-STR-001-PUL-001"]
     },
     "type": {
       "type": "string",

@@ -1,64 +1,64 @@
 # System Epics Creation Workflow (Constitution)
 name: create-system-epics
-description: "Create the System Epics document (Constitution level) defining category-level outcomes and coordinating child containers through cascading epic structures."
-author: "BMad"
+description: 'Create the System Epics document (Constitution level) defining category-level outcomes and coordinating child containers through cascading epic structures.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-project_name: "{config_source}:project_name"
-output_folder: "{config_source}:output_folder"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-user_skill_level: "{config_source}:user_skill_level"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+project_name: '{config_source}:project_name'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+user_skill_level: '{config_source}:user_skill_level'
 date: system-generated
 
 # Federated hierarchy - Constitution is fixed
 entity_type: constitution
-entity_type_display: "Constitution"
-output_folder_resolved: "{project-root}/docs/platform/"
-constitution_path: "docs/platform/epics.md"
-parent_prd_path: ""
+entity_type_display: 'Constitution'
+output_folder_resolved: '{project-root}/docs/platform/'
+constitution_path: 'docs/platform/epics.md'
+parent_prd_path: ''
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-epics"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/create-system-epics'
+instructions: '{installed_path}/instructions.md'
 
 # Templates
-epics_template: "{installed_path}/constitution-epics-template.md"
+epics_template: '{installed_path}/constitution-epics-template.md'
 
 # Checklists
-checklist: "{project-root}/.bmad/bmm/checklists/constitution-epics-checklist.md"
+checklist: '{project-root}/.bmad/bmm/checklists/constitution-epics-checklist.md'
 
 # Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
-save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
-verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+frontmatter_task: '{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml'
+save_task: '{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml'
+verify_traceability_task: '{project-root}/.bmad/bmm/tasks/verify-traceability.xml'
 
 # Input file patterns
 input_file_patterns:
   constitution_prd:
-    description: "System PRD (Constitution) - required"
-    whole: "{output_folder_resolved}prd.md"
-    load_strategy: "FULL_LOAD"
+    description: 'System PRD (Constitution) - required'
+    whole: '{output_folder_resolved}prd.md'
+    load_strategy: 'FULL_LOAD'
 
   constitution_architecture:
-    description: "System Architecture - recommended"
-    whole: "{output_folder_resolved}architecture.md"
-    load_strategy: "FULL_LOAD"
+    description: 'System Architecture - recommended'
+    whole: '{output_folder_resolved}architecture.md'
+    load_strategy: 'FULL_LOAD'
 
   product_brief:
-    description: "Product Brief - optional context"
-    whole: "{output_folder_resolved}product-brief.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Product Brief - optional context'
+    whole: '{output_folder_resolved}product-brief.md'
+    load_strategy: 'FULL_LOAD'
 
   existing_epics:
-    description: "Existing epics (if updating)"
-    whole: "{output_folder_resolved}epics.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Existing epics (if updating)'
+    whole: '{output_folder_resolved}epics.md'
+    load_strategy: 'FULL_LOAD'
 
 # Output files
-default_output_file: "{output_folder_resolved}epics.md"
+default_output_file: '{output_folder_resolved}epics.md'
 
 standalone: true

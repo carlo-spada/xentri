@@ -22,7 +22,7 @@ This report will contain the validation results for [epics.md](../epics.md).
 
 ## Validation Results
 
-*Validation pending. Run the validation workflow to generate results.*
+_Validation pending. Run the validation workflow to generate results._
 
 ---
 

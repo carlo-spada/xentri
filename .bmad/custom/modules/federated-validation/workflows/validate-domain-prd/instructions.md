@@ -24,14 +24,15 @@ From the file path, determine the entity type:
 
 ```yaml
 ---
-entity_type: coordination_unit  # Must match detected type
-doc_type: prd                   # Must be "prd"
-parent: docs/platform/prd.md    # Must reference the Constitution
-scope: SOUL                     # Used for FR-{SCOPE}-xxx prefix
+entity_type: coordination_unit # Must match detected type
+doc_type: prd # Must be "prd"
+parent: docs/platform/prd.md # Must reference the Constitution
+scope: SOUL # Used for FR-{SCOPE}-xxx prefix
 ---
 ```
 
 **Pass criteria:**
+
 - Entity type matches detected type
 - Parent points to Constitution
 - Scope is defined for FR numbering
@@ -45,10 +46,11 @@ The PRD must acknowledge inherited Platform Requirements:
 
 This domain inherits all PRs from the [System Constitution](../../prd.md):
 
-| PR | How We Comply |
-|----|---------------|
-| PR-001 (RLS) | All tables include org_id |
+| PR              | How We Comply             |
+| --------------- | ------------------------- |
+| PR-001 (RLS)    | All tables include org_id |
 | PR-002 (Events) | All mutations emit events |
+
 ...
 ```
 
@@ -62,6 +64,7 @@ The PRD must declare which Integration Contracts it implements:
 ## Integration Contracts
 
 This domain implements:
+
 - IC-001: Event Envelope (producer)
 - IC-003: Module Registration
 - IC-004: Brief Access (consumer)
@@ -79,21 +82,25 @@ This domain implements:
 ### Step 6: Check Entity-Specific Rules
 
 **Infrastructure Module PRD:**
+
 - Full PRD expected (platform-level concerns)
 - FRs should focus on interfaces and contracts
 - Must trace to Constitution PRs/ICs
 
 **Strategic Container PRD:**
+
 - May be a brief rather than full PRD
 - Should set direction for coordination units
 - FRs should be high-level
 
 **Coordination Unit PRD:**
+
 - Full PRD expected
 - FRs should be implementation-ready
 - Must reference Strategic Container direction
 
 **Business Module PRD:**
+
 - Can be minimal
 - FRs should trace to Coordination Unit
 - Focus on specific implementation

@@ -1,30 +1,30 @@
 # Workflow Init - Entity-Based Project Setup
 name: workflow-init
-description: "Initialize workflow tracking for a specific entity using the federated system"
-author: "BMad"
+description: 'Initialize workflow tracking for a specific entity using the federated system'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-output_folder: "{config_source}:output_folder"
-user_name: "{config_source}:user_name"
-project_name: "{config_source}:project_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+project_name: '{config_source}:project_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/workflow-status/init"
-instructions: "{installed_path}/instructions.md"
-template: "{project-root}/.bmad/bmm/workflows/workflow-status/workflow-status-template.yaml"
+installed_path: '{project-root}/.bmad/bmm/workflows/workflow-status/init'
+instructions: '{installed_path}/instructions.md'
+template: '{project-root}/.bmad/bmm/workflows/workflow-status/workflow-status-template.yaml'
 
 # Entity workflow definitions (replaces old path files)
-entity_workflows: "{project-root}/.bmad/bmm/workflows/workflow-status/entity-workflows.yaml"
+entity_workflows: '{project-root}/.bmad/bmm/workflows/workflow-status/entity-workflows.yaml'
 
 # Shared tasks for federated entity system
 shared_tasks:
-  select_entity: "{project-root}/.bmad/bmm/tasks/select-entity.xml"
-  detect_entity_type: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
+  select_entity: '{project-root}/.bmad/bmm/tasks/select-entity.xml'
+  detect_entity_type: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
 
 # Output configuration
-default_output_file: "{output_folder}/bmm-workflow-status.yaml"
+default_output_file: '{output_folder}/bmm-workflow-status.yaml'
 
 standalone: true

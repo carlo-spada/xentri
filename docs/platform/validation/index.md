@@ -6,11 +6,11 @@
 
 ## Reports
 
-| Document | Report | Status |
-|----------|--------|--------|
-| PRD | [prd-validation-report.md](./prd-validation-report.md) | Pending |
+| Document     | Report                                                                   | Status  |
+| ------------ | ------------------------------------------------------------------------ | ------- |
+| PRD          | [prd-validation-report.md](./prd-validation-report.md)                   | Pending |
 | Architecture | [architecture-validation-report.md](./architecture-validation-report.md) | Pending |
-| UX Design | [ux-validation-report.md](./ux-validation-report.md) | Pending |
+| UX Design    | [ux-validation-report.md](./ux-validation-report.md)                     | Pending |
 
 ---
 

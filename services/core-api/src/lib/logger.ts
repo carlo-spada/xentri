@@ -8,9 +8,9 @@
  * - Log levels: error, warn, info, debug (debug only in dev)
  */
 
-import pino, { Logger, LoggerOptions } from 'pino';
-import { FastifyRequest } from 'fastify';
-import crypto from 'crypto';
+import pino, { Logger, LoggerOptions } from 'pino'
+import { FastifyRequest } from 'fastify'
+import crypto from 'crypto'
 
 // PII fields to redact from logs (NFR11)
 const PII_REDACT_PATHS = [
@@ -26,7 +26,7 @@ const PII_REDACT_PATHS = [
   'body.name',
   'body.firstName',
   'body.lastName',
-];
+]
 
 // Base logger configuration
 const baseConfig: LoggerOptions = {
@@ -40,10 +40,10 @@ const baseConfig: LoggerOptions = {
     censor: '[REDACTED]',
   },
   timestamp: pino.stdTimeFunctions.isoTime,
-};
+}
 
 // Create the base logger
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = process.env.NODE_ENV === 'development'
 
 export const logger: Logger = isDevelopment
   ? pino({
@@ -57,16 +57,16 @@ export const logger: Logger = isDevelopment
         },
       },
     })
-  : pino(baseConfig);
+  : pino(baseConfig)
 
 /**
  * Request context for correlation IDs
  */
 export interface RequestContext {
-  trace_id: string;
-  org_id?: string;
-  user_id?: string;
-  request_id: string;
+  trace_id: string
+  org_id?: string
+  user_id?: string
+  request_id: string
 }
 
 /**
@@ -75,23 +75,23 @@ export interface RequestContext {
  */
 export function extractTraceId(request: FastifyRequest): string {
   // Check for W3C traceparent header first
-  const traceparent = request.headers['traceparent'] as string | undefined;
+  const traceparent = request.headers['traceparent'] as string | undefined
   if (traceparent) {
     // traceparent format: {version}-{trace-id}-{parent-id}-{trace-flags}
-    const parts = traceparent.split('-');
+    const parts = traceparent.split('-')
     if (parts.length >= 2 && parts[1].length === 32) {
-      return parts[1];
+      return parts[1]
     }
   }
 
   // Fall back to custom x-trace-id header
-  const customTraceId = request.headers['x-trace-id'] as string | undefined;
+  const customTraceId = request.headers['x-trace-id'] as string | undefined
   if (customTraceId) {
-    return customTraceId;
+    return customTraceId
   }
 
   // Generate new trace ID if none provided
-  return crypto.randomUUID().replace(/-/g, '');
+  return crypto.randomUUID().replace(/-/g, '')
 }
 
 /**
@@ -108,12 +108,12 @@ export function createRequestLogger(
     // These will be populated from Clerk auth and org context middleware
     org_id: (request as unknown as { orgContext?: { orgId: string } }).orgContext?.orgId,
     user_id: (request as unknown as { auth?: { userId: string } }).auth?.userId,
-  };
+  }
 
   return logger.child({
     ...context,
     ...additionalContext,
-  });
+  })
 }
 
 /**
@@ -128,7 +128,7 @@ export const LogLevel = {
   WARN: 'warn',
   INFO: 'info',
   DEBUG: 'debug',
-} as const;
+} as const
 
 /**
  * Fastify logger options - use this when configuring Fastify server
@@ -146,9 +146,9 @@ export function createFastifyLoggerConfig(): LoggerOptions | boolean {
           ignore: 'pid,hostname',
         },
       },
-    };
+    }
   }
-  return baseConfig;
+  return baseConfig
 }
 
-export default logger;
+export default logger

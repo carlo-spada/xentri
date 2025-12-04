@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { WifiOff, RefreshCw } from 'lucide-react';
-import { cn } from '@xentri/ui';
+import { useEffect, useState } from 'react'
+import { WifiOff, RefreshCw } from 'lucide-react'
+import { cn } from '@xentri/ui'
 
 /**
  * Offline Banner Component
@@ -9,52 +9,52 @@ import { cn } from '@xentri/ui';
  * Uses navigator.onLine and online/offline events for detection.
  */
 export default function OfflineBanner() {
-  const [isOnline, setIsOnline] = useState(true);
-  const [isRetrying, setIsRetrying] = useState(false);
+  const [isOnline, setIsOnline] = useState(true)
+  const [isRetrying, setIsRetrying] = useState(false)
 
   useEffect(() => {
     // Initialize with current state
-    setIsOnline(navigator.onLine);
+    setIsOnline(navigator.onLine)
 
     const handleOnline = () => {
-      setIsOnline(true);
-    };
+      setIsOnline(true)
+    }
 
     const handleOffline = () => {
-      setIsOnline(false);
-    };
+      setIsOnline(false)
+    }
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   const handleRetry = async () => {
-    setIsRetrying(true);
+    setIsRetrying(true)
 
     // Try a simple fetch to verify connectivity
     try {
       const response = await fetch('/api/v1/health', {
         method: 'HEAD',
         cache: 'no-store',
-      });
+      })
 
       if (response.ok) {
-        setIsOnline(true);
+        setIsOnline(true)
       }
     } catch {
       // Still offline
     } finally {
-      setIsRetrying(false);
+      setIsRetrying(false)
     }
-  };
+  }
 
   // Don't render if online
-  if (isOnline) return null;
+  if (isOnline) return null
 
   return (
     <div
@@ -86,10 +86,7 @@ export default function OfflineBanner() {
         )}
         aria-label="Retry connection"
       >
-        <RefreshCw
-          size={14}
-          className={cn(isRetrying && 'animate-spin')}
-        />
+        <RefreshCw size={14} className={cn(isRetrying && 'animate-spin')} />
         Retry
       </button>
 
@@ -108,5 +105,5 @@ export default function OfflineBanner() {
         }
       `}</style>
     </div>
-  );
+  )
 }

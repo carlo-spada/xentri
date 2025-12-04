@@ -1,8 +1,8 @@
-import { Button } from '@xentri/ui';
-import { FileText, ArrowRight } from 'lucide-react';
+import { Button } from '@xentri/ui'
+import { FileText, ArrowRight } from 'lucide-react'
 
 interface CreateBriefCTAProps {
-  onCreateClick?: () => void;
+  onCreateClick?: () => void
 }
 
 /**
@@ -21,8 +21,8 @@ export function CreateBriefCTA({ onCreateClick }: CreateBriefCTAProps) {
       <h2 style={styles.title}>Create Your Universal Brief</h2>
 
       <p style={styles.description}>
-        Your Universal Brief is the DNA of your business. It captures who you are, what you offer, and why you matter.
-        Start here to unlock personalized tools and AI-powered insights.
+        Your Universal Brief is the DNA of your business. It captures who you are, what you offer,
+        and why you matter. Start here to unlock personalized tools and AI-powered insights.
       </p>
 
       <div style={styles.features}>
@@ -36,11 +36,7 @@ export function CreateBriefCTA({ onCreateClick }: CreateBriefCTAProps) {
         </div>
       </div>
 
-      <Button
-        onClick={onCreateClick}
-        size="lg"
-        style={{ marginTop: '1.5rem' }}
-      >
+      <Button onClick={onCreateClick} size="lg" style={{ marginTop: '1.5rem' }}>
         Start Your Brief
         <ArrowRight size={18} />
       </Button>
@@ -49,7 +45,7 @@ export function CreateBriefCTA({ onCreateClick }: CreateBriefCTAProps) {
         You can save and continue anytime. Your progress is automatically saved.
       </p>
     </div>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -116,4 +112,4 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--color-text-muted)',
     marginTop: '1rem',
   },
-};
+}

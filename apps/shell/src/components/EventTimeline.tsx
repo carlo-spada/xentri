@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import type { SystemEvent, EventListResponse } from '@xentri/ts-schema';
+import { useEffect, useState } from 'react'
+import type { SystemEvent, EventListResponse } from '@xentri/ts-schema'
 
 interface EventTimelineProps {
-  apiUrl?: string;
-  orgId?: string;
-  limit?: number;
+  apiUrl?: string
+  orgId?: string
+  limit?: number
 }
 
 /**
@@ -18,16 +18,16 @@ export function EventTimeline({
   orgId,
   limit = 10,
 }: EventTimelineProps) {
-  const [events, setEvents] = useState<SystemEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [events, setEvents] = useState<SystemEvent[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchEvents() {
       if (!orgId) {
-        setError('No organization context');
-        setLoading(false);
-        return;
+        setError('No organization context')
+        setLoading(false)
+        return
       }
 
       try {
@@ -35,49 +35,49 @@ export function EventTimeline({
           headers: {
             'x-org-id': orgId,
           },
-        });
+        })
 
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
         }
 
-        const data: EventListResponse = await response.json();
-        setEvents(data.data);
-        setError(null);
+        const data: EventListResponse = await response.json()
+        setEvents(data.data)
+        setError(null)
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to fetch events';
-        setError(message);
+        const message = err instanceof Error ? err.message : 'Failed to fetch events'
+        setError(message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
-    fetchEvents();
-  }, [apiUrl, orgId, limit]);
+    fetchEvents()
+  }, [apiUrl, orgId, limit])
 
   // Format timestamp for display
   const formatTime = (isoString: string): string => {
-    const date = new Date(isoString);
+    const date = new Date(isoString)
     return date.toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    });
-  };
+    })
+  }
 
   // Format event type for display (e.g., "xentri.user.signup.v1" → "User Signup")
   const formatEventType = (type: string): string => {
-    const parts = type.split('.');
+    const parts = type.split('.')
     if (parts.length >= 3) {
-      const action = parts.slice(1, -1).join(' ');
+      const action = parts.slice(1, -1).join(' ')
       return action
         .split(/[._]/)
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+        .join(' ')
     }
-    return type;
-  };
+    return type
+  }
 
   return (
     <div style={styles.container}>
@@ -85,15 +85,9 @@ export function EventTimeline({
 
       {loading && <p style={styles.status}>Loading events...</p>}
 
-      {error && (
-        <p style={styles.error}>
-          {error}
-        </p>
-      )}
+      {error && <p style={styles.error}>{error}</p>}
 
-      {!loading && !error && events.length === 0 && (
-        <p style={styles.status}>No events yet</p>
-      )}
+      {!loading && !error && events.length === 0 && <p style={styles.status}>No events yet</p>}
 
       {!loading && !error && events.length > 0 && (
         <ul style={styles.list}>
@@ -109,7 +103,7 @@ export function EventTimeline({
         </ul>
       )}
     </div>
-  );
+  )
 }
 
 // Inline styles using Xentri design tokens
@@ -177,4 +171,4 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#94a3b8',
     fontSize: '0.75rem',
   },
-};
+}

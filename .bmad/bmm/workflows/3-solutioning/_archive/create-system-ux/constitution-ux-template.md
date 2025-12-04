@@ -35,6 +35,7 @@
 {{color_system}}
 
 **Interactive Visualization:**
+
 - Color Theme Explorer: [ux-color-themes.html](./ux-color-themes.html)
 
 ### 3.2 Typography
@@ -138,9 +139,9 @@
 
 ### Version History
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| {{date}} | 1.0 | Initial Constitution UX Design | {{user_name}} |
+| Date     | Version | Changes                        | Author        |
+| -------- | ------- | ------------------------------ | ------------- |
+| {{date}} | 1.0     | Initial Constitution UX Design | {{user_name}} |
 
 ---
 

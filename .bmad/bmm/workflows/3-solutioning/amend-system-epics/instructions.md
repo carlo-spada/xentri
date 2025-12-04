@@ -36,6 +36,7 @@ Amending: docs/platform/epics.md
 </output>
 
 <ask>What type of amendment?
+
 1. **ADD** - Add new epic or story
 2. **MODIFY** - Change existing epic or story
 3. **REMOVE** - Remove epic or story
@@ -50,30 +51,32 @@ Enter choice (1-4):</ask>
   - [e] New Epic
   - [s] New Story to existing Epic
 
-  Enter choice:</ask>
+Enter choice:</ask>
 
-  <action>Gather details for new item:
-  - For epic: title, goal, PR/IC coverage, stories
-  - For story: which epic, title, acceptance criteria
+<action>Gather details for new item:
+
+- For epic: title, goal, PR/IC coverage, stories
+- For story: which epic, title, acceptance criteria
   </action>
-</check>
+  </check>
 
 <check if="amendment_type == 'MODIFY'">
   <ask>Which epic or story to modify?
   List current items and accept selection.</ask>
 
-  <action>Gather modification details:
-  - What is changing?
-  - Why is this change needed?
-  - New content for the item
+<action>Gather modification details:
+
+- What is changing?
+- Why is this change needed?
+- New content for the item
   </action>
-</check>
+  </check>
 
 <check if="amendment_type == 'REMOVE'">
   <ask>Which epic or story to remove?
   List current items and accept selection.</ask>
 
-  <output>⚠️ Removing items may break downstream references.</output>
+<output>⚠️ Removing items may break downstream references.</output>
 </check>
 
 <check if="amendment_type == 'REORDER'">
@@ -98,11 +101,11 @@ Enter choice (1-4):</ask>
 
 **Downstream Impact:**
 
-| Entity | Document | Impact | Action Required |
-|--------|----------|--------|-----------------|
-| shell | epics.md | {impact} | {action} |
-| core-api | epics.md | {impact} | {action} |
-| ... | ... | ... | ... |
+| Entity   | Document | Impact   | Action Required |
+| -------- | -------- | -------- | --------------- |
+| shell    | epics.md | {impact} | {action}        |
+| core-api | epics.md | {impact} | {action}        |
+| ...      | ...      | ...      | ...             |
 
 **Cascading ID Changes:**
 {list_id_changes}
@@ -116,7 +119,7 @@ Enter choice (1-4):</ask>
 
 <ask>Proceed with amendment? (y/n)</ask>
 <check if="response != 'y'">
-  <action>Exit workflow</action>
+<action>Exit workflow</action>
 </check>
 </step>
 
@@ -125,13 +128,14 @@ Enter choice (1-4):</ask>
 (This will be recorded for governance tracking)</ask>
 
 <action>Record amendment in changelog:
+
 - Date: {date}
 - Author: {user_name}
 - Change: {amendment_summary}
 - Rationale: {user_rationale}
 - Impact: {impact_summary}
-</action>
-</step>
+  </action>
+  </step>
 
 <step n="5" goal="Apply Amendment">
 <action>Apply the amendment to the document:
@@ -140,7 +144,7 @@ Enter choice (1-4):</ask>
 2. Update cascading IDs if needed
 3. Update traceability matrix
 4. Add changelog entry
-</action>
+   </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>

@@ -25,12 +25,13 @@ Date: {date}
 <ask>What architectural changes do you want to make?
 
 Options:
+
 1. Add/modify tech stack decision
 2. Add/modify architectural principle
 3. Add/modify system pattern
 4. Add/modify ADR
 5. Other (describe)</ask>
-</step>
+   </step>
 
 <step n="2" goal="Capture Change Details">
 <action>Document the proposed change:
@@ -138,11 +139,12 @@ The following downstream architectures may need updates:
 {strategic_update_list}
 
 **Recommended Actions:**
+
 1. Review each impacted document
 2. Use amend-domain-architecture for updates
 3. Validate alignment after changes
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
 
 <ask>Would you like to proceed with propagation now? (y/n)</ask>
 </step>

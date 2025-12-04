@@ -10,6 +10,7 @@
 ## Overview
 
 The Core API is the central backend service that provides:
+
 - Authentication via Clerk integration
 - Organization provisioning and management
 - Event Backbone (system_events table)
@@ -48,8 +49,8 @@ The Core API is the central backend service that provides:
 
 ## Dependencies
 
-| Module | Relationship |
-|--------|--------------|
+| Module               | Relationship                 |
+| -------------------- | ---------------------------- |
 | `platform/ts-schema` | Shared Zod schemas and types |
 
 ## Development
@@ -67,12 +68,12 @@ curl http://localhost:3000/health/ready
 
 ## API Reference
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | Basic liveness check |
-| `/health/ready` | GET | Readiness with database check |
-| `/api/v1/brief` | POST | Create Brief event |
-| `/webhooks/clerk` | POST | Clerk webhook handler |
+| Endpoint          | Method | Description                   |
+| ----------------- | ------ | ----------------------------- |
+| `/health`         | GET    | Basic liveness check          |
+| `/health/ready`   | GET    | Readiness with database check |
+| `/api/v1/brief`   | POST   | Create Brief event            |
+| `/webhooks/clerk` | POST   | Clerk webhook handler         |
 
 ## Documentation Structure
 

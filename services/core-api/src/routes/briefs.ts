@@ -1,18 +1,9 @@
-import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify';
-import { ZodError } from 'zod';
-import { BriefService } from '../domain/briefs/BriefService.js';
-import {
-  clerkAuthMiddleware,
-  requireOrgContext,
-} from '../middleware/clerkAuth.js';
-import {
-  orgContextMiddleware,
-  problemDetails,
-} from '../middleware/orgContext.js';
-import {
-  CreateBriefInputSchema,
-  UpdateBriefInputSchema,
-} from '@xentri/ts-schema';
+import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify'
+import { ZodError } from 'zod'
+import { BriefService } from '../domain/briefs/BriefService.js'
+import { clerkAuthMiddleware, requireOrgContext } from '../middleware/clerkAuth.js'
+import { orgContextMiddleware, problemDetails } from '../middleware/orgContext.js'
+import { CreateBriefInputSchema, UpdateBriefInputSchema } from '@xentri/ts-schema'
 
 /**
  * Briefs API Routes
@@ -24,11 +15,11 @@ import {
  * AC6: Event write failures surface visibly with retry option
  */
 const briefsRoutes: FastifyPluginAsync = async (fastify) => {
-  const briefService = new BriefService();
+  const briefService = new BriefService()
 
   // Apply authentication and org context middleware to all routes
-  fastify.addHook('preHandler', clerkAuthMiddleware);
-  fastify.addHook('preHandler', orgContextMiddleware);
+  fastify.addHook('preHandler', clerkAuthMiddleware)
+  fastify.addHook('preHandler', orgContextMiddleware)
 
   /**
    * POST /api/v1/briefs
@@ -46,47 +37,51 @@ const briefsRoutes: FastifyPluginAsync = async (fastify) => {
    */
   fastify.post('/api/v1/briefs', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const orgId = request.orgId!;
-      const userId = request.userId!;
-      const body = request.body as Record<string, unknown>;
+      const orgId = request.orgId!
+      const userId = request.userId!
+      const body = request.body as Record<string, unknown>
 
       // Validate input
-      const input = CreateBriefInputSchema.parse(body);
+      const input = CreateBriefInputSchema.parse(body)
 
       // Create Brief (BriefService handles event emission)
       const brief = await briefService.createBrief({
         orgId,
         userId,
         input,
-      });
+      })
 
-      reply.status(201).send({ data: brief });
+      reply.status(201).send({ data: brief })
     } catch (error) {
       if (error instanceof ZodError) {
-        return reply.status(422).send(
-          problemDetails(
-            422,
-            'Validation Error',
-            error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; '),
-            request.id
+        return reply
+          .status(422)
+          .send(
+            problemDetails(
+              422,
+              'Validation Error',
+              error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; '),
+              request.id
+            )
           )
-        );
       }
 
       // AC6: Surface event write failures visibly
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      fastify.log.error(error, 'Failed to create brief');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      fastify.log.error(error, 'Failed to create brief')
 
-      return reply.status(500).send(
-        problemDetails(
-          500,
-          'Brief Creation Failed',
-          `Failed to create brief: ${errorMessage}. Please retry.`,
-          request.id
+      return reply
+        .status(500)
+        .send(
+          problemDetails(
+            500,
+            'Brief Creation Failed',
+            `Failed to create brief: ${errorMessage}. Please retry.`,
+            request.id
+          )
         )
-      );
     }
-  });
+  })
 
   /**
    * GET /api/v1/briefs/current
@@ -102,23 +97,20 @@ const briefsRoutes: FastifyPluginAsync = async (fastify) => {
    */
   fastify.get('/api/v1/briefs/current', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const orgId = request.orgId!;
+      const orgId = request.orgId!
 
-      const brief = await briefService.getCurrentBrief({ orgId });
+      const brief = await briefService.getCurrentBrief({ orgId })
 
-      reply.send({ data: brief });
+      reply.send({ data: brief })
     } catch (error) {
-      fastify.log.error(error, 'Failed to get current brief');
-      return reply.status(500).send(
-        problemDetails(
-          500,
-          'Internal Server Error',
-          'Failed to get current brief',
-          request.id
+      fastify.log.error(error, 'Failed to get current brief')
+      return reply
+        .status(500)
+        .send(
+          problemDetails(500, 'Internal Server Error', 'Failed to get current brief', request.id)
         )
-      );
     }
-  });
+  })
 
   /**
    * GET /api/v1/briefs/:id
@@ -134,38 +126,28 @@ const briefsRoutes: FastifyPluginAsync = async (fastify) => {
    * - 500: Internal server error
    */
   fastify.get<{
-    Params: { id: string };
+    Params: { id: string }
   }>('/api/v1/briefs/:id', async (request, reply) => {
     try {
-      const orgId = request.orgId!;
-      const briefId = request.params.id;
+      const orgId = request.orgId!
+      const briefId = request.params.id
 
-      const brief = await briefService.getBrief({ briefId, orgId });
+      const brief = await briefService.getBrief({ briefId, orgId })
 
       if (!brief) {
-        return reply.status(404).send(
-          problemDetails(
-            404,
-            'Not Found',
-            `Brief not found: ${briefId}`,
-            request.id
-          )
-        );
+        return reply
+          .status(404)
+          .send(problemDetails(404, 'Not Found', `Brief not found: ${briefId}`, request.id))
       }
 
-      reply.send({ data: brief });
+      reply.send({ data: brief })
     } catch (error) {
-      fastify.log.error(error, 'Failed to get brief');
-      return reply.status(500).send(
-        problemDetails(
-          500,
-          'Internal Server Error',
-          'Failed to get brief',
-          request.id
-        )
-      );
+      fastify.log.error(error, 'Failed to get brief')
+      return reply
+        .status(500)
+        .send(problemDetails(500, 'Internal Server Error', 'Failed to get brief', request.id))
     }
-  });
+  })
 
   /**
    * PATCH /api/v1/briefs/:id
@@ -183,16 +165,16 @@ const briefsRoutes: FastifyPluginAsync = async (fastify) => {
    * - 500: Internal server error
    */
   fastify.patch<{
-    Params: { id: string };
+    Params: { id: string }
   }>('/api/v1/briefs/:id', async (request, reply) => {
     try {
-      const orgId = request.orgId!;
-      const userId = request.userId!;
-      const briefId = request.params.id;
-      const body = request.body as Record<string, unknown>;
+      const orgId = request.orgId!
+      const userId = request.userId!
+      const briefId = request.params.id
+      const body = request.body as Record<string, unknown>
 
       // Validate input
-      const input = UpdateBriefInputSchema.parse(body);
+      const input = UpdateBriefInputSchema.parse(body)
 
       // Update Brief
       const brief = await briefService.updateBrief({
@@ -200,46 +182,43 @@ const briefsRoutes: FastifyPluginAsync = async (fastify) => {
         orgId,
         userId,
         input,
-      });
+      })
 
-      reply.send({ data: brief });
+      reply.send({ data: brief })
     } catch (error) {
       if (error instanceof ZodError) {
-        return reply.status(422).send(
-          problemDetails(
-            422,
-            'Validation Error',
-            error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; '),
-            request.id
+        return reply
+          .status(422)
+          .send(
+            problemDetails(
+              422,
+              'Validation Error',
+              error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join('; '),
+              request.id
+            )
           )
-        );
       }
 
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
       // Check if it's a not found error
       if (errorMessage.includes('Brief not found')) {
-        return reply.status(404).send(
-          problemDetails(
-            404,
-            'Not Found',
-            errorMessage,
-            request.id
-          )
-        );
+        return reply.status(404).send(problemDetails(404, 'Not Found', errorMessage, request.id))
       }
 
-      fastify.log.error(error, 'Failed to update brief');
-      return reply.status(500).send(
-        problemDetails(
-          500,
-          'Internal Server Error',
-          `Failed to update brief: ${errorMessage}`,
-          request.id
+      fastify.log.error(error, 'Failed to update brief')
+      return reply
+        .status(500)
+        .send(
+          problemDetails(
+            500,
+            'Internal Server Error',
+            `Failed to update brief: ${errorMessage}`,
+            request.id
+          )
         )
-      );
     }
-  });
-};
+  })
+}
 
-export default briefsRoutes;
+export default briefsRoutes

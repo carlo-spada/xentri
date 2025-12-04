@@ -1,21 +1,21 @@
-import { atom, computed } from 'nanostores';
+import { atom, computed } from 'nanostores'
 
 /**
  * Category definition for the 7 Xentri capability categories.
  * Active categories are interactable; inactive ones show as locked.
  */
 export interface Category {
-  id: string;
-  icon: string;
-  label: string;
-  active: boolean;
-  modules?: Module[];
+  id: string
+  icon: string
+  label: string
+  active: boolean
+  modules?: Module[]
 }
 
 export interface Module {
-  id: string;
-  label: string;
-  href: string;
+  id: string
+  label: string
+  href: string
 }
 
 /**
@@ -94,18 +94,18 @@ export const CATEGORIES: Category[] = [
       { id: 'compliance', label: 'Compliance', href: '/legal/compliance' },
     ],
   },
-] as const;
+] as const
 
 /**
  * Currently expanded category in the sidebar.
  * Only one category can be expanded at a time (accordion behavior).
  */
-export const $expandedCategory = atom<string | null>(null);
+export const $expandedCategory = atom<string | null>(null)
 
 /**
  * Currently active module (for highlighting).
  */
-export const $activeModule = atom<string | null>('dashboard');
+export const $activeModule = atom<string | null>('dashboard')
 
 /**
  * Sidebar collapsed state (for responsive behavior).
@@ -113,21 +113,21 @@ export const $activeModule = atom<string | null>('dashboard');
  * - collapsed: Icon-only mode (tablet 768-1023px)
  * - hidden: Mobile drawer mode (<768px)
  */
-export type SidebarState = 'expanded' | 'collapsed' | 'hidden';
-export const $sidebarState = atom<SidebarState>('expanded');
+export type SidebarState = 'expanded' | 'collapsed' | 'hidden'
+export const $sidebarState = atom<SidebarState>('expanded')
 
 /**
  * Mobile drawer open state.
  */
-export const $mobileDrawerOpen = atom<boolean>(false);
+export const $mobileDrawerOpen = atom<boolean>(false)
 
 /**
  * Computed: Get the currently expanded category object.
  */
 export const $expandedCategoryData = computed($expandedCategory, (id) => {
-  if (!id) return null;
-  return CATEGORIES.find((c) => c.id === id) || null;
-});
+  if (!id) return null
+  return CATEGORIES.find((c) => c.id === id) || null
+})
 
 /**
  * Toggle category expansion (accordion behavior).
@@ -135,11 +135,11 @@ export const $expandedCategoryData = computed($expandedCategory, (id) => {
  * Clicking a different category expands it and collapses others.
  */
 export function toggleCategory(categoryId: string): void {
-  const current = $expandedCategory.get();
+  const current = $expandedCategory.get()
   if (current === categoryId) {
-    $expandedCategory.set(null);
+    $expandedCategory.set(null)
   } else {
-    $expandedCategory.set(categoryId);
+    $expandedCategory.set(categoryId)
   }
 }
 
@@ -147,21 +147,21 @@ export function toggleCategory(categoryId: string): void {
  * Set the active module.
  */
 export function setActiveModule(moduleId: string): void {
-  $activeModule.set(moduleId);
+  $activeModule.set(moduleId)
 }
 
 /**
  * Toggle mobile drawer.
  */
 export function toggleMobileDrawer(): void {
-  $mobileDrawerOpen.set(!$mobileDrawerOpen.get());
+  $mobileDrawerOpen.set(!$mobileDrawerOpen.get())
 }
 
 /**
  * Close mobile drawer.
  */
 export function closeMobileDrawer(): void {
-  $mobileDrawerOpen.set(false);
+  $mobileDrawerOpen.set(false)
 }
 
 /**
@@ -169,10 +169,10 @@ export function closeMobileDrawer(): void {
  */
 export function updateSidebarState(width: number): void {
   if (width >= 1024) {
-    $sidebarState.set('expanded');
+    $sidebarState.set('expanded')
   } else if (width >= 768) {
-    $sidebarState.set('collapsed');
+    $sidebarState.set('collapsed')
   } else {
-    $sidebarState.set('hidden');
+    $sidebarState.set('hidden')
   }
 }

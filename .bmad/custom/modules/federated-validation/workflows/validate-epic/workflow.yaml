@@ -1,44 +1,44 @@
 # Validate Epic Breakdown Workflow
 name: validate-epic
-description: "Validate an Epic breakdown for traceability and story quality"
-author: "BMad Builder"
+description: 'Validate an Epic breakdown for traceability and story quality'
+author: 'BMad Builder'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Federated hierarchy support (from agent level-selection)
-output_folder_resolved: "{output_folder_resolved}"
-constitution_path: "{constitution_path}"
-current_level: "{current_level}"
-current_level_name: "{current_level_name}"
-current_category: "{current_category}"
-current_subcategory: "{current_subcategory}"
-current_module: "{current_module}"
+output_folder_resolved: '{output_folder_resolved}'
+constitution_path: '{constitution_path}'
+current_level: '{current_level}'
+current_level_name: '{current_level_name}'
+current_category: '{current_category}'
+current_subcategory: '{current_subcategory}'
+current_module: '{current_module}'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-epic"
-instructions: "{installed_path}/instructions.md"
-validation: "{project-root}/.bmad/custom/modules/federated-validation/checklists/epic-checklist.md"
+installed_path: '{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-epic'
+instructions: '{installed_path}/instructions.md'
+validation: '{project-root}/.bmad/custom/modules/federated-validation/checklists/epic-checklist.md'
 
 # References
-constitution: "{project-root}/docs/platform/prd.md"
+constitution: '{project-root}/docs/platform/prd.md'
 
 # Target file (determined by agent's level selection)
 # For system epics: docs/epics.md
 # For domain epics: docs/{category}/{subcategory}/epics.md
-target_file: "{output_folder_resolved}/epics.md"
+target_file: '{output_folder_resolved}/epics.md'
 
 # Output
-report_template: "{project-root}/.bmad/custom/modules/federated-validation/templates/validation-report.md"
-default_output_file: "{project-root}/docs/proposals/validation-reports/epic-validation-{current_level_name}-{date}.md"
+report_template: '{project-root}/.bmad/custom/modules/federated-validation/templates/validation-report.md'
+default_output_file: '{project-root}/docs/proposals/validation-reports/epic-validation-{current_level_name}-{date}.md'
 
 # Validation patterns
 validation_rules:
   required_sections:
-    - "Traceability Matrix"
+    - 'Traceability Matrix'
 
   traceability:
     check_coverage: true

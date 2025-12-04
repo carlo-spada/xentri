@@ -1,10 +1,7 @@
-import { useStore } from '@nanostores/react';
-import {
-  UserButton as ClerkUserButton,
-  OrganizationSwitcher,
-} from '@clerk/astro/react';
-import { Sun, Moon, Monitor, Loader2 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useStore } from '@nanostores/react'
+import { UserButton as ClerkUserButton, OrganizationSwitcher } from '@clerk/astro/react'
+import { Sun, Moon, Monitor, Loader2 } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 import {
   $themePreference,
   $themeSaving,
@@ -12,50 +9,50 @@ import {
   initializeTheme,
   hydrateThemeFromServer,
   type ThemePreference,
-} from '../stores/theme';
-import { cn } from '@xentri/ui';
+} from '../stores/theme'
+import { cn } from '@xentri/ui'
 
 const THEME_OPTIONS: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
   { value: 'light', label: 'Light', icon: Sun },
   { value: 'dark', label: 'Dark', icon: Moon },
   { value: 'system', label: 'System', icon: Monitor },
-];
+]
 
 export default function UserMenu() {
-  const themePreference = useStore($themePreference);
-  const themeSaving = useStore($themeSaving);
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
-  const themeMenuRef = useRef<HTMLDivElement>(null);
+  const themePreference = useStore($themePreference)
+  const themeSaving = useStore($themeSaving)
+  const [showThemeMenu, setShowThemeMenu] = useState(false)
+  const themeMenuRef = useRef<HTMLDivElement>(null)
 
   // Initialize theme on mount
   useEffect(() => {
-    initializeTheme();
-    hydrateThemeFromServer();
-  }, []);
+    initializeTheme()
+    hydrateThemeFromServer()
+  }, [])
 
   // Close theme menu on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (themeMenuRef.current && !themeMenuRef.current.contains(e.target as Node)) {
-        setShowThemeMenu(false);
+        setShowThemeMenu(false)
       }
-    };
+    }
 
     if (showThemeMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showThemeMenu]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showThemeMenu])
 
   const handleThemeChange = async (theme: ThemePreference) => {
-    await setTheme(theme);
-    setShowThemeMenu(false);
-  };
+    await setTheme(theme)
+    setShowThemeMenu(false)
+  }
 
-  const CurrentThemeIcon = THEME_OPTIONS.find((t) => t.value === themePreference)?.icon || Moon;
+  const CurrentThemeIcon = THEME_OPTIONS.find((t) => t.value === themePreference)?.icon || Moon
 
   return (
     <div className="user-menu flex items-center gap-2">
@@ -92,8 +89,8 @@ export default function UserMenu() {
             aria-label="Theme options"
           >
             {THEME_OPTIONS.map((option) => {
-              const Icon = option.icon;
-              const isActive = themePreference === option.value;
+              const Icon = option.icon
+              const isActive = themePreference === option.value
 
               return (
                 <button
@@ -112,11 +109,9 @@ export default function UserMenu() {
                 >
                   <Icon size={16} />
                   <span>{option.label}</span>
-                  {isActive && (
-                    <span className="ml-auto text-xs">✓</span>
-                  )}
+                  {isActive && <span className="ml-auto text-xs">✓</span>}
                 </button>
-              );
+              )
             })}
           </div>
         )}
@@ -163,5 +158,5 @@ export default function UserMenu() {
         }}
       />
     </div>
-  );
+  )
 }

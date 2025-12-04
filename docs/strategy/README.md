@@ -6,16 +6,18 @@ The Strategy category contains modules that help businesses define their identit
 
 ## Modules
 
-| Module | Purpose | Status |
-|--------|---------|--------|
-| universal-brief | The "DNA" of a business - generated through AI conversation | Planned |
-| strategy-copilot | AI-powered strategy conversations and guidance | Planned |
-| war-room | Strategic dashboard and decision center | Planned |
+| Module           | Purpose                                                     | Status  |
+| ---------------- | ----------------------------------------------------------- | ------- |
+| universal-brief  | The "DNA" of a business - generated through AI conversation | Planned |
+| strategy-copilot | AI-powered strategy conversations and guidance              | Planned |
+| war-room         | Strategic dashboard and decision center                     | Planned |
 
 ## Key Concepts
 
 ### Universal Brief
+
 The Universal Brief is a living document that captures:
+
 - Business identity and values
 - Target customers and personas
 - Products/services offered
@@ -25,7 +27,9 @@ The Universal Brief is a living document that captures:
 Once generated, the Brief powers auto-configuration across all other modules.
 
 ### Strategy Co-pilot
+
 An AI assistant that:
+
 - Guides users through Brief creation via conversation
 - Asks clarifying questions to extract business essence
 - Suggests improvements based on industry patterns
@@ -33,10 +37,10 @@ An AI assistant that:
 
 ## Dependencies
 
-| Depends On | Relationship |
-|------------|--------------|
-| `platform/core-api` | Authentication, event storage |
-| `platform/ts-schema` | Shared type definitions |
+| Depends On           | Relationship                  |
+| -------------------- | ----------------------------- |
+| `platform/core-api`  | Authentication, event storage |
+| `platform/ts-schema` | Shared type definitions       |
 
 ## Roadmap
 
@@ -44,4 +48,4 @@ This category is the focus of **Epic 2** in the product roadmap.
 
 ---
 
-*Modules in this category are planned. Documentation will be added as development begins.*
+_Modules in this category are planned. Documentation will be added as development begins._

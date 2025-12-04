@@ -1,7 +1,8 @@
-import path from 'node:path';
-import { defineConfig } from 'prisma/config';
+import path from 'node:path'
+import { defineConfig } from 'prisma/config'
 
-const databaseUrl = process.env.DATABASE_URL || 'postgresql://xentri:xentri_dev@localhost:5432/xentri';
+const databaseUrl =
+  process.env.DATABASE_URL || 'postgresql://xentri:xentri_dev@localhost:5432/xentri'
 
 export default defineConfig({
   earlyAccess: true,
@@ -13,7 +14,7 @@ export default defineConfig({
 
   migrate: {
     async url() {
-      return databaseUrl;
+      return databaseUrl
     },
   },
-});
+})

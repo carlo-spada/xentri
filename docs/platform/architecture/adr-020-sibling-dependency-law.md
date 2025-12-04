@@ -15,8 +15,9 @@ As Xentri grows, we need to prevent dependency spaghetti while maintaining the "
 The BMAD Builder proposed a hierarchical requirement ID scheme that encodes ancestry (e.g., `SYS-002-STR-001-PUL-001`). However, a concern was raised about multi-parent inheritance—what if a module needs to depend on two different branches of the hierarchy?
 
 After architectural review, we determined that:
+
 1. Multi-parent **inheritance** is indeed problematic and should be avoided
-2. Multi-parent **dependency** is different—it's natural for modules to *use* interfaces from multiple sources
+2. Multi-parent **dependency** is different—it's natural for modules to _use_ interfaces from multiple sources
 3. The solution is to separate inheritance (identity) from dependency (usage)
 
 ## Decision
@@ -35,6 +36,7 @@ SYS-002-STR-001-PUL-001    → Pulse inherits from Strategy, needs Dashboard
 ```
 
 The ID **is** the ancestry chain. Parsing `SYS-002-STR-001-PUL-001` reveals:
+
 - Parent: `SYS-002-STR-001`
 - Grandparent: `SYS-002`
 - Root: `SYS`
@@ -90,13 +92,13 @@ For any node N to access interface I:
 ---
 # Identity
 id: SYS-002-STR-001-PUL-001
-type: FR                              # FR, PR, IC, ADR
-title: "Real-time Metrics Dashboard"
-status: draft                         # draft, approved, implemented, deprecated
+type: FR # FR, PR, IC, ADR
+title: 'Real-time Metrics Dashboard'
+status: draft # draft, approved, implemented, deprecated
 
 # Single-parent inheritance (derived from ID, explicit for clarity)
 parent: SYS-002-STR-001
-ancestry:                             # Auto-generated from ID parsing
+ancestry: # Auto-generated from ID parsing
   - SYS
   - SYS-002
   - SYS-002-STR-001
@@ -104,7 +106,7 @@ ancestry:                             # Auto-generated from ID parsing
 # Sibling dependencies (ONLY siblings allowed)
 requires_interfaces:
   - id: IC-STR-002
-    reason: "Subscribe to metric events"
+    reason: 'Subscribe to metric events'
 
 # Inherited access (read-only, computed from ancestry)
 inherited_interfaces:
@@ -153,11 +155,12 @@ For genuine exceptions (legacy systems, third-party integrations, temporary brid
 requires_interfaces:
   - id: IC-LEGACY-001
     exception: true
-    approved_by: "ADR-021"
-    justification: "Legacy billing system, migration planned Q3"
+    approved_by: 'ADR-021'
+    justification: 'Legacy billing system, migration planned Q3'
 ```
 
 **Exception requirements:**
+
 1. Must reference an approving ADR
 2. Must include justification
 3. Must be reviewed in Architecture Review
@@ -165,11 +168,11 @@ requires_interfaces:
 
 ## Enforcement
 
-| Layer | Mechanism | Behavior |
-|-------|-----------|----------|
-| **CI** | `scripts/validation/validate-dependencies.ts` | Block PR if sibling law violated |
-| **Pre-commit** | Husky hook (optional) | Local validation before commit |
-| **Review** | Architecture Review process | New sibling dependencies flagged |
+| Layer          | Mechanism                                     | Behavior                         |
+| -------------- | --------------------------------------------- | -------------------------------- |
+| **CI**         | `scripts/validation/validate-dependencies.ts` | Block PR if sibling law violated |
+| **Pre-commit** | Husky hook (optional)                         | Local validation before commit   |
+| **Review**     | Architecture Review process                   | New sibling dependencies flagged |
 
 ## Related ADRs
 

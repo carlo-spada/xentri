@@ -1,1364 +1,1616 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xentri Color Themes v2 — Blue Primary Options</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background: #0a0a0a;
-      color: #fafafa;
-      line-height: 1.6;
-    }
-
-    .header {
-      padding: 48px 40px;
-      text-align: center;
-      border-bottom: 1px solid #222;
-      background: linear-gradient(180deg, #1a1625 0%, #0a0a0a 100%);
-    }
-
-    .header h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .header p {
-      color: #888;
-      font-size: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .section-divider {
-      padding: 32px 40px;
-      background: #111;
-      border-bottom: 1px solid #222;
-    }
-
-    .section-divider h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .section-divider p {
-      color: #666;
-      font-size: 0.9rem;
-    }
-
-    /* Theme Row - Dark and Light side by side */
-    .theme-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid #222;
-    }
-
-    @media (max-width: 1000px) {
-      .theme-row { grid-template-columns: 1fr; }
-    }
-
-    .theme-card {
-      padding: 40px;
-      min-height: auto;
-    }
-
-    .theme-header {
-      margin-bottom: 24px;
-    }
-
-    .theme-badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 4px;
-      margin-bottom: 12px;
-    }
-
-    .theme-name {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .theme-description {
-      font-size: 0.85rem;
-      opacity: 0.6;
-    }
-
-    /* Color Swatches */
-    .swatches {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .swatch {
-      text-align: center;
-    }
-
-    .swatch-color {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      margin-bottom: 6px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .swatch-label {
-      font-size: 0.6rem;
-      opacity: 0.5;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .swatch-hex {
-      font-size: 0.6rem;
-      font-family: monospace;
-      opacity: 0.7;
-    }
-
-    /* Component Demos */
-    .demo-section {
-      margin-bottom: 24px;
-    }
-
-    .demo-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      opacity: 0.4;
-      margin-bottom: 10px;
-    }
-
-    /* Buttons */
-    .button-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: none;
-    }
-
-    /* Status Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 100px;
-      font-size: 0.7rem;
-      font-weight: 500;
-    }
-
-    .badge-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-    }
-
-    /* Today View Mock */
-    .today-mock {
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .today-header {
-      padding: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .today-greeting {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-
-    .today-subtitle {
-      font-size: 0.8rem;
-      opacity: 0.5;
-    }
-
-    .today-body {
-      padding: 16px;
-    }
-
-    .today-stat {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.85rem;
-    }
-
-    .today-stat:last-child {
-      border-bottom: none;
-    }
-
-    .stat-label {
-      opacity: 0.7;
-    }
-
-    .stat-value {
-      font-weight: 600;
-    }
-
-    /* Exception Card */
-    .exception-card {
-      padding: 14px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .exception-content {
-      flex: 1;
-    }
-
-    .exception-title {
-      font-weight: 500;
-      margin-bottom: 2px;
-      font-size: 0.85rem;
-    }
-
-    .exception-meta {
-      font-size: 0.7rem;
-      opacity: 0.5;
-    }
-
-    .exception-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .action-btn {
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-    }
-
-    /* ==================== */
-    /* OPTION 1: SKY BLUE */
-    /* ==================== */
-
-    /* Sky - Dark Mode */
-    .sky-dark {
-      background: #1a1625;
-      color: #e8e4f0;
-    }
-
-    .sky-dark .theme-badge {
-      background: rgba(56, 189, 248, 0.15);
-      color: #38bdf8;
-    }
-
-    .sky-dark .swatch-bg { background: #1a1625; }
-    .sky-dark .swatch-surface { background: #221d2e; }
-    .sky-dark .swatch-muted { background: #2d2640; }
-    .sky-dark .swatch-primary { background: #38bdf8; }
-    .sky-dark .swatch-secondary { background: #a78bfa; }
-    .sky-dark .swatch-success { background: #34d399; }
-    .sky-dark .swatch-warning { background: #fbbf24; }
-
-    .sky-dark .btn-primary {
-      background: #38bdf8;
-      color: #1a1625;
-    }
-    .sky-dark .btn-primary:hover { background: #7dd3fc; }
-
-    .sky-dark .btn-secondary {
-      border-color: #3d3455;
-      color: #a5a0b5;
-    }
-    .sky-dark .btn-secondary:hover { background: #2d2640; }
-
-    .sky-dark .btn-ghost { color: #a5a0b5; }
-    .sky-dark .btn-ghost:hover { background: #2d2640; }
-
-    .sky-dark .today-mock {
-      background: #221d2e;
-      border: 1px solid #2d2640;
-    }
-
-    .sky-dark .today-header { border-bottom-color: #2d2640; }
-
-    .sky-dark .exception-card {
-      background: #251f32;
-      border: 1px solid #2d2640;
-    }
-
-    .sky-dark .action-btn-primary {
-      background: #38bdf8;
-      color: #1a1625;
-    }
-
-    .sky-dark .action-btn-secondary {
-      background: #2d2640;
-      color: #a5a0b5;
-    }
-
-    .sky-dark .badge-success {
-      background: rgba(52, 211, 153, 0.15);
-      color: #34d399;
-    }
-    .sky-dark .badge-success .badge-dot { background: #34d399; }
-
-    .sky-dark .badge-warning {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-    }
-    .sky-dark .badge-warning .badge-dot { background: #fbbf24; }
-
-    .sky-dark .accent-text { color: #38bdf8; }
-    .sky-dark .secondary-text { color: #a78bfa; }
-
-    /* Sky - Light Mode */
-    .sky-light {
-      background: #faf9fc;
-      color: #1a1625;
-    }
-
-    .sky-light .theme-badge {
-      background: rgba(2, 132, 199, 0.1);
-      color: #0284c7;
-    }
-
-    .sky-light .swatch-bg { background: #faf9fc; }
-    .sky-light .swatch-surface { background: #ffffff; }
-    .sky-light .swatch-muted { background: #f3f1f6; }
-    .sky-light .swatch-primary { background: #0284c7; }
-    .sky-light .swatch-secondary { background: #7c3aed; }
-    .sky-light .swatch-success { background: #10b981; }
-    .sky-light .swatch-warning { background: #f59e0b; }
-
-    .sky-light .theme-description,
-    .sky-light .demo-label { color: #6b5f7a; }
-
-    .sky-light .swatch-label,
-    .sky-light .swatch-hex { color: #6b5f7a; }
-
-    .sky-light .btn-primary {
-      background: #0284c7;
-      color: #fff;
-    }
-    .sky-light .btn-primary:hover { background: #0369a1; }
-
-    .sky-light .btn-secondary {
-      border-color: #e4e1eb;
-      color: #6b5f7a;
-    }
-    .sky-light .btn-secondary:hover { background: #f3f1f6; }
-
-    .sky-light .btn-ghost { color: #6b5f7a; }
-    .sky-light .btn-ghost:hover { background: #f3f1f6; }
-
-    .sky-light .today-mock {
-      background: #ffffff;
-      border: 1px solid #e4e1eb;
-    }
-
-    .sky-light .today-header { border-bottom-color: #e4e1eb; }
-    .sky-light .today-subtitle { color: #8b7fa0; }
-    .sky-light .stat-label { color: #6b5f7a; }
-    .sky-light .today-stat { border-bottom-color: #f3f1f6; }
-
-    .sky-light .exception-card {
-      background: #ffffff;
-      border: 1px solid #e4e1eb;
-    }
-
-    .sky-light .exception-meta { color: #8b7fa0; }
-
-    .sky-light .action-btn-primary {
-      background: #0284c7;
-      color: #fff;
-    }
-
-    .sky-light .action-btn-secondary {
-      background: #f3f1f6;
-      color: #6b5f7a;
-    }
-
-    .sky-light .badge-success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #059669;
-    }
-    .sky-light .badge-success .badge-dot { background: #10b981; }
-
-    .sky-light .badge-warning {
-      background: rgba(245, 158, 11, 0.1);
-      color: #d97706;
-    }
-    .sky-light .badge-warning .badge-dot { background: #f59e0b; }
-
-    .sky-light .accent-text { color: #0284c7; }
-    .sky-light .secondary-text { color: #7c3aed; }
-
-    /* ==================== */
-    /* OPTION 2: BLUE */
-    /* ==================== */
-
-    /* Blue - Dark Mode */
-    .blue-dark {
-      background: #1a1625;
-      color: #e8e4f0;
-    }
-
-    .blue-dark .theme-badge {
-      background: rgba(96, 165, 250, 0.15);
-      color: #60a5fa;
-    }
-
-    .blue-dark .swatch-bg { background: #1a1625; }
-    .blue-dark .swatch-surface { background: #221d2e; }
-    .blue-dark .swatch-muted { background: #2d2640; }
-    .blue-dark .swatch-primary { background: #60a5fa; }
-    .blue-dark .swatch-secondary { background: #a78bfa; }
-    .blue-dark .swatch-success { background: #34d399; }
-    .blue-dark .swatch-warning { background: #fbbf24; }
-
-    .blue-dark .btn-primary {
-      background: #60a5fa;
-      color: #1a1625;
-    }
-    .blue-dark .btn-primary:hover { background: #93c5fd; }
-
-    .blue-dark .btn-secondary {
-      border-color: #3d3455;
-      color: #a5a0b5;
-    }
-    .blue-dark .btn-secondary:hover { background: #2d2640; }
-
-    .blue-dark .btn-ghost { color: #a5a0b5; }
-    .blue-dark .btn-ghost:hover { background: #2d2640; }
-
-    .blue-dark .today-mock {
-      background: #221d2e;
-      border: 1px solid #2d2640;
-    }
-
-    .blue-dark .today-header { border-bottom-color: #2d2640; }
-
-    .blue-dark .exception-card {
-      background: #251f32;
-      border: 1px solid #2d2640;
-    }
-
-    .blue-dark .action-btn-primary {
-      background: #60a5fa;
-      color: #1a1625;
-    }
-
-    .blue-dark .action-btn-secondary {
-      background: #2d2640;
-      color: #a5a0b5;
-    }
-
-    .blue-dark .badge-success {
-      background: rgba(52, 211, 153, 0.15);
-      color: #34d399;
-    }
-    .blue-dark .badge-success .badge-dot { background: #34d399; }
-
-    .blue-dark .badge-warning {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-    }
-    .blue-dark .badge-warning .badge-dot { background: #fbbf24; }
-
-    .blue-dark .accent-text { color: #60a5fa; }
-    .blue-dark .secondary-text { color: #a78bfa; }
-
-    /* Blue - Light Mode */
-    .blue-light {
-      background: #faf9fc;
-      color: #1a1625;
-    }
-
-    .blue-light .theme-badge {
-      background: rgba(37, 99, 235, 0.1);
-      color: #2563eb;
-    }
-
-    .blue-light .swatch-bg { background: #faf9fc; }
-    .blue-light .swatch-surface { background: #ffffff; }
-    .blue-light .swatch-muted { background: #f3f1f6; }
-    .blue-light .swatch-primary { background: #2563eb; }
-    .blue-light .swatch-secondary { background: #7c3aed; }
-    .blue-light .swatch-success { background: #10b981; }
-    .blue-light .swatch-warning { background: #f59e0b; }
-
-    .blue-light .theme-description,
-    .blue-light .demo-label { color: #6b5f7a; }
-
-    .blue-light .swatch-label,
-    .blue-light .swatch-hex { color: #6b5f7a; }
-
-    .blue-light .btn-primary {
-      background: #2563eb;
-      color: #fff;
-    }
-    .blue-light .btn-primary:hover { background: #1d4ed8; }
-
-    .blue-light .btn-secondary {
-      border-color: #e4e1eb;
-      color: #6b5f7a;
-    }
-    .blue-light .btn-secondary:hover { background: #f3f1f6; }
-
-    .blue-light .btn-ghost { color: #6b5f7a; }
-    .blue-light .btn-ghost:hover { background: #f3f1f6; }
-
-    .blue-light .today-mock {
-      background: #ffffff;
-      border: 1px solid #e4e1eb;
-    }
-
-    .blue-light .today-header { border-bottom-color: #e4e1eb; }
-    .blue-light .today-subtitle { color: #8b7fa0; }
-    .blue-light .stat-label { color: #6b5f7a; }
-    .blue-light .today-stat { border-bottom-color: #f3f1f6; }
-
-    .blue-light .exception-card {
-      background: #ffffff;
-      border: 1px solid #e4e1eb;
-    }
-
-    .blue-light .exception-meta { color: #8b7fa0; }
-
-    .blue-light .action-btn-primary {
-      background: #2563eb;
-      color: #fff;
-    }
-
-    .blue-light .action-btn-secondary {
-      background: #f3f1f6;
-      color: #6b5f7a;
-    }
-
-    .blue-light .badge-success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #059669;
-    }
-    .blue-light .badge-success .badge-dot { background: #10b981; }
-
-    .blue-light .badge-warning {
-      background: rgba(245, 158, 11, 0.1);
-      color: #d97706;
-    }
-    .blue-light .badge-warning .badge-dot { background: #f59e0b; }
-
-    .blue-light .accent-text { color: #2563eb; }
-    .blue-light .secondary-text { color: #7c3aed; }
-
-    /* ==================== */
-    /* OPTION 3: INDIGO-BLUE */
-    /* ==================== */
-
-    /* Indigo - Dark Mode */
-    .indigo-dark {
-      background: #1a1625;
-      color: #e8e4f0;
-    }
-
-    .indigo-dark .theme-badge {
-      background: rgba(129, 140, 248, 0.15);
-      color: #818cf8;
-    }
-
-    .indigo-dark .swatch-bg { background: #1a1625; }
-    .indigo-dark .swatch-surface { background: #221d2e; }
-    .indigo-dark .swatch-muted { background: #2d2640; }
-    .indigo-dark .swatch-primary { background: #818cf8; }
-    .indigo-dark .swatch-secondary { background: #a78bfa; }
-    .indigo-dark .swatch-success { background: #34d399; }
-    .indigo-dark .swatch-warning { background: #fbbf24; }
-
-    .indigo-dark .btn-primary {
-      background: #818cf8;
-      color: #1a1625;
-    }
-    .indigo-dark .btn-primary:hover { background: #a5b4fc; }
-
-    .indigo-dark .btn-secondary {
-      border-color: #3d3455;
-      color: #a5a0b5;
-    }
-    .indigo-dark .btn-secondary:hover { background: #2d2640; }
-
-    .indigo-dark .btn-ghost { color: #a5a0b5; }
-    .indigo-dark .btn-ghost:hover { background: #2d2640; }
-
-    .indigo-dark .today-mock {
-      background: #221d2e;
-      border: 1px solid #2d2640;
-    }
-
-    .indigo-dark .today-header { border-bottom-color: #2d2640; }
-
-    .indigo-dark .exception-card {
-      background: #251f32;
-      border: 1px solid #2d2640;
-    }
-
-    .indigo-dark .action-btn-primary {
-      background: #818cf8;
-      color: #1a1625;
-    }
-
-    .indigo-dark .action-btn-secondary {
-      background: #2d2640;
-      color: #a5a0b5;
-    }
-
-    .indigo-dark .badge-success {
-      background: rgba(52, 211, 153, 0.15);
-      color: #34d399;
-    }
-    .indigo-dark .badge-success .badge-dot { background: #34d399; }
-
-    .indigo-dark .badge-warning {
-      background: rgba(251, 191, 36, 0.15);
-      color: #fbbf24;
-    }
-    .indigo-dark .badge-warning .badge-dot { background: #fbbf24; }
-
-    .indigo-dark .accent-text { color: #818cf8; }
-    .indigo-dark .secondary-text { color: #a78bfa; }
-
-    /* Indigo - Light Mode */
-    .indigo-light {
-      background: #faf9fc;
-      color: #1a1625;
-    }
-
-    .indigo-light .theme-badge {
-      background: rgba(79, 70, 229, 0.1);
-      color: #4f46e5;
-    }
-
-    .indigo-light .swatch-bg { background: #faf9fc; }
-    .indigo-light .swatch-surface { background: #ffffff; }
-    .indigo-light .swatch-muted { background: #f3f1f6; }
-    .indigo-light .swatch-primary { background: #4f46e5; }
-    .indigo-light .swatch-secondary { background: #7c3aed; }
-    .indigo-light .swatch-success { background: #10b981; }
-    .indigo-light .swatch-warning { background: #f59e0b; }
-
-    .indigo-light .theme-description,
-    .indigo-light .demo-label { color: #6b5f7a; }
-
-    .indigo-light .swatch-label,
-    .indigo-light .swatch-hex { color: #6b5f7a; }
-
-    .indigo-light .btn-primary {
-      background: #4f46e5;
-      color: #fff;
-    }
-    .indigo-light .btn-primary:hover { background: #4338ca; }
-
-    .indigo-light .btn-secondary {
-      border-color: #e4e1eb;
-      color: #6b5f7a;
-    }
-    .indigo-light .btn-secondary:hover { background: #f3f1f6; }
-
-    .indigo-light .btn-ghost { color: #6b5f7a; }
-    .indigo-light .btn-ghost:hover { background: #f3f1f6; }
-
-    .indigo-light .today-mock {
-      background: #ffffff;
-      border: 1px solid #e4e1eb;
-    }
-
-    .indigo-light .today-header { border-bottom-color: #e4e1eb; }
-    .indigo-light .today-subtitle { color: #8b7fa0; }
-    .indigo-light .stat-label { color: #6b5f7a; }
-    .indigo-light .today-stat { border-bottom-color: #f3f1f6; }
-
-    .indigo-light .exception-card {
-      background: #ffffff;
-      border: 1px solid #e4e1eb;
-    }
-
-    .indigo-light .exception-meta { color: #8b7fa0; }
-
-    .indigo-light .action-btn-primary {
-      background: #4f46e5;
-      color: #fff;
-    }
-
-    .indigo-light .action-btn-secondary {
-      background: #f3f1f6;
-      color: #6b5f7a;
-    }
-
-    .indigo-light .badge-success {
-      background: rgba(16, 185, 129, 0.1);
-      color: #059669;
-    }
-    .indigo-light .badge-success .badge-dot { background: #10b981; }
-
-    .indigo-light .badge-warning {
-      background: rgba(245, 158, 11, 0.1);
-      color: #d97706;
-    }
-    .indigo-light .badge-warning .badge-dot { background: #f59e0b; }
-
-    .indigo-light .accent-text { color: #4f46e5; }
-    .indigo-light .secondary-text { color: #7c3aed; }
-
-    /* Footer */
-    .footer {
-      padding: 40px;
-      text-align: center;
-      border-top: 1px solid #222;
-      color: #666;
-      font-size: 0.875rem;
-      background: #0a0a0a;
-    }
-
-    /* Recommendation Banner */
-    .recommendation {
-      background: linear-gradient(135deg, #221d2e 0%, #2d2640 100%);
-      padding: 24px 40px;
-      border-bottom: 1px solid #3d3455;
-    }
-
-    .recommendation h3 {
-      font-size: 1rem;
-      margin-bottom: 8px;
-      color: #a78bfa;
-    }
-
-    .recommendation p {
-      color: #a5a0b5;
-      font-size: 0.9rem;
-      max-width: 800px;
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>Xentri Color System v2</h1>
-    <p>Three blue options on Dusk base — each shown in dark mode (left) and warm light mode (right)</p>
-  </div>
-
-  <!-- OPTION 1: SKY -->
-  <div class="section-divider">
-    <h2>Option 1: Sky Blue</h2>
-    <p>Bright, energetic, Linear-ish. High contrast, very "clickable" feel. Most distinct from secondary purple.</p>
-  </div>
-
-  <div class="theme-row">
-    <!-- Sky Dark -->
-    <div class="theme-card sky-dark">
-      <div class="theme-header">
-        <div class="theme-badge">Dark Mode</div>
-        <div class="theme-name">Sky Blue on Dusk</div>
-        <div class="theme-description">Primary: #38bdf8 · Secondary: #a78bfa</div>
-      </div>
-
-      <div class="swatches">
-        <div class="swatch">
-          <div class="swatch-color swatch-bg"></div>
-          <div class="swatch-label">BG</div>
-          <div class="swatch-hex">#1a1625</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xentri Color Themes v2 — Blue Primary Options</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: #0a0a0a;
+        color: #fafafa;
+        line-height: 1.6;
+      }
+
+      .header {
+        padding: 48px 40px;
+        text-align: center;
+        border-bottom: 1px solid #222;
+        background: linear-gradient(180deg, #1a1625 0%, #0a0a0a 100%);
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        color: #888;
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .section-divider {
+        padding: 32px 40px;
+        background: #111;
+        border-bottom: 1px solid #222;
+      }
+
+      .section-divider h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .section-divider p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      /* Theme Row - Dark and Light side by side */
+      .theme-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-bottom: 1px solid #222;
+      }
+
+      @media (max-width: 1000px) {
+        .theme-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .theme-card {
+        padding: 40px;
+        min-height: auto;
+      }
+
+      .theme-header {
+        margin-bottom: 24px;
+      }
+
+      .theme-badge {
+        display: inline-block;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 4px;
+        margin-bottom: 12px;
+      }
+
+      .theme-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .theme-description {
+        font-size: 0.85rem;
+        opacity: 0.6;
+      }
+
+      /* Color Swatches */
+      .swatches {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+
+      .swatch {
+        text-align: center;
+      }
+
+      .swatch-color {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        margin-bottom: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .swatch-label {
+        font-size: 0.6rem;
+        opacity: 0.5;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .swatch-hex {
+        font-size: 0.6rem;
+        font-family: monospace;
+        opacity: 0.7;
+      }
+
+      /* Component Demos */
+      .demo-section {
+        margin-bottom: 24px;
+      }
+
+      .demo-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.4;
+        margin-bottom: 10px;
+      }
+
+      /* Buttons */
+      .button-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: none;
+      }
+
+      /* Status Badges */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 500;
+      }
+
+      .badge-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+      }
+
+      /* Today View Mock */
+      .today-mock {
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .today-header {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .today-greeting {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .today-subtitle {
+        font-size: 0.8rem;
+        opacity: 0.5;
+      }
+
+      .today-body {
+        padding: 16px;
+      }
+
+      .today-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.85rem;
+      }
+
+      .today-stat:last-child {
+        border-bottom: none;
+      }
+
+      .stat-label {
+        opacity: 0.7;
+      }
+
+      .stat-value {
+        font-weight: 600;
+      }
+
+      /* Exception Card */
+      .exception-card {
+        padding: 14px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .exception-content {
+        flex: 1;
+      }
+
+      .exception-title {
+        font-weight: 500;
+        margin-bottom: 2px;
+        font-size: 0.85rem;
+      }
+
+      .exception-meta {
+        font-size: 0.7rem;
+        opacity: 0.5;
+      }
+
+      .exception-actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      .action-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* ==================== */
+      /* OPTION 1: SKY BLUE */
+      /* ==================== */
+
+      /* Sky - Dark Mode */
+      .sky-dark {
+        background: #1a1625;
+        color: #e8e4f0;
+      }
+
+      .sky-dark .theme-badge {
+        background: rgba(56, 189, 248, 0.15);
+        color: #38bdf8;
+      }
+
+      .sky-dark .swatch-bg {
+        background: #1a1625;
+      }
+      .sky-dark .swatch-surface {
+        background: #221d2e;
+      }
+      .sky-dark .swatch-muted {
+        background: #2d2640;
+      }
+      .sky-dark .swatch-primary {
+        background: #38bdf8;
+      }
+      .sky-dark .swatch-secondary {
+        background: #a78bfa;
+      }
+      .sky-dark .swatch-success {
+        background: #34d399;
+      }
+      .sky-dark .swatch-warning {
+        background: #fbbf24;
+      }
+
+      .sky-dark .btn-primary {
+        background: #38bdf8;
+        color: #1a1625;
+      }
+      .sky-dark .btn-primary:hover {
+        background: #7dd3fc;
+      }
+
+      .sky-dark .btn-secondary {
+        border-color: #3d3455;
+        color: #a5a0b5;
+      }
+      .sky-dark .btn-secondary:hover {
+        background: #2d2640;
+      }
+
+      .sky-dark .btn-ghost {
+        color: #a5a0b5;
+      }
+      .sky-dark .btn-ghost:hover {
+        background: #2d2640;
+      }
+
+      .sky-dark .today-mock {
+        background: #221d2e;
+        border: 1px solid #2d2640;
+      }
+
+      .sky-dark .today-header {
+        border-bottom-color: #2d2640;
+      }
+
+      .sky-dark .exception-card {
+        background: #251f32;
+        border: 1px solid #2d2640;
+      }
+
+      .sky-dark .action-btn-primary {
+        background: #38bdf8;
+        color: #1a1625;
+      }
+
+      .sky-dark .action-btn-secondary {
+        background: #2d2640;
+        color: #a5a0b5;
+      }
+
+      .sky-dark .badge-success {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+      }
+      .sky-dark .badge-success .badge-dot {
+        background: #34d399;
+      }
+
+      .sky-dark .badge-warning {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+      }
+      .sky-dark .badge-warning .badge-dot {
+        background: #fbbf24;
+      }
+
+      .sky-dark .accent-text {
+        color: #38bdf8;
+      }
+      .sky-dark .secondary-text {
+        color: #a78bfa;
+      }
+
+      /* Sky - Light Mode */
+      .sky-light {
+        background: #faf9fc;
+        color: #1a1625;
+      }
+
+      .sky-light .theme-badge {
+        background: rgba(2, 132, 199, 0.1);
+        color: #0284c7;
+      }
+
+      .sky-light .swatch-bg {
+        background: #faf9fc;
+      }
+      .sky-light .swatch-surface {
+        background: #ffffff;
+      }
+      .sky-light .swatch-muted {
+        background: #f3f1f6;
+      }
+      .sky-light .swatch-primary {
+        background: #0284c7;
+      }
+      .sky-light .swatch-secondary {
+        background: #7c3aed;
+      }
+      .sky-light .swatch-success {
+        background: #10b981;
+      }
+      .sky-light .swatch-warning {
+        background: #f59e0b;
+      }
+
+      .sky-light .theme-description,
+      .sky-light .demo-label {
+        color: #6b5f7a;
+      }
+
+      .sky-light .swatch-label,
+      .sky-light .swatch-hex {
+        color: #6b5f7a;
+      }
+
+      .sky-light .btn-primary {
+        background: #0284c7;
+        color: #fff;
+      }
+      .sky-light .btn-primary:hover {
+        background: #0369a1;
+      }
+
+      .sky-light .btn-secondary {
+        border-color: #e4e1eb;
+        color: #6b5f7a;
+      }
+      .sky-light .btn-secondary:hover {
+        background: #f3f1f6;
+      }
+
+      .sky-light .btn-ghost {
+        color: #6b5f7a;
+      }
+      .sky-light .btn-ghost:hover {
+        background: #f3f1f6;
+      }
+
+      .sky-light .today-mock {
+        background: #ffffff;
+        border: 1px solid #e4e1eb;
+      }
+
+      .sky-light .today-header {
+        border-bottom-color: #e4e1eb;
+      }
+      .sky-light .today-subtitle {
+        color: #8b7fa0;
+      }
+      .sky-light .stat-label {
+        color: #6b5f7a;
+      }
+      .sky-light .today-stat {
+        border-bottom-color: #f3f1f6;
+      }
+
+      .sky-light .exception-card {
+        background: #ffffff;
+        border: 1px solid #e4e1eb;
+      }
+
+      .sky-light .exception-meta {
+        color: #8b7fa0;
+      }
+
+      .sky-light .action-btn-primary {
+        background: #0284c7;
+        color: #fff;
+      }
+
+      .sky-light .action-btn-secondary {
+        background: #f3f1f6;
+        color: #6b5f7a;
+      }
+
+      .sky-light .badge-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+      }
+      .sky-light .badge-success .badge-dot {
+        background: #10b981;
+      }
+
+      .sky-light .badge-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+      }
+      .sky-light .badge-warning .badge-dot {
+        background: #f59e0b;
+      }
+
+      .sky-light .accent-text {
+        color: #0284c7;
+      }
+      .sky-light .secondary-text {
+        color: #7c3aed;
+      }
+
+      /* ==================== */
+      /* OPTION 2: BLUE */
+      /* ==================== */
+
+      /* Blue - Dark Mode */
+      .blue-dark {
+        background: #1a1625;
+        color: #e8e4f0;
+      }
+
+      .blue-dark .theme-badge {
+        background: rgba(96, 165, 250, 0.15);
+        color: #60a5fa;
+      }
+
+      .blue-dark .swatch-bg {
+        background: #1a1625;
+      }
+      .blue-dark .swatch-surface {
+        background: #221d2e;
+      }
+      .blue-dark .swatch-muted {
+        background: #2d2640;
+      }
+      .blue-dark .swatch-primary {
+        background: #60a5fa;
+      }
+      .blue-dark .swatch-secondary {
+        background: #a78bfa;
+      }
+      .blue-dark .swatch-success {
+        background: #34d399;
+      }
+      .blue-dark .swatch-warning {
+        background: #fbbf24;
+      }
+
+      .blue-dark .btn-primary {
+        background: #60a5fa;
+        color: #1a1625;
+      }
+      .blue-dark .btn-primary:hover {
+        background: #93c5fd;
+      }
+
+      .blue-dark .btn-secondary {
+        border-color: #3d3455;
+        color: #a5a0b5;
+      }
+      .blue-dark .btn-secondary:hover {
+        background: #2d2640;
+      }
+
+      .blue-dark .btn-ghost {
+        color: #a5a0b5;
+      }
+      .blue-dark .btn-ghost:hover {
+        background: #2d2640;
+      }
+
+      .blue-dark .today-mock {
+        background: #221d2e;
+        border: 1px solid #2d2640;
+      }
+
+      .blue-dark .today-header {
+        border-bottom-color: #2d2640;
+      }
+
+      .blue-dark .exception-card {
+        background: #251f32;
+        border: 1px solid #2d2640;
+      }
+
+      .blue-dark .action-btn-primary {
+        background: #60a5fa;
+        color: #1a1625;
+      }
+
+      .blue-dark .action-btn-secondary {
+        background: #2d2640;
+        color: #a5a0b5;
+      }
+
+      .blue-dark .badge-success {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+      }
+      .blue-dark .badge-success .badge-dot {
+        background: #34d399;
+      }
+
+      .blue-dark .badge-warning {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+      }
+      .blue-dark .badge-warning .badge-dot {
+        background: #fbbf24;
+      }
+
+      .blue-dark .accent-text {
+        color: #60a5fa;
+      }
+      .blue-dark .secondary-text {
+        color: #a78bfa;
+      }
+
+      /* Blue - Light Mode */
+      .blue-light {
+        background: #faf9fc;
+        color: #1a1625;
+      }
+
+      .blue-light .theme-badge {
+        background: rgba(37, 99, 235, 0.1);
+        color: #2563eb;
+      }
+
+      .blue-light .swatch-bg {
+        background: #faf9fc;
+      }
+      .blue-light .swatch-surface {
+        background: #ffffff;
+      }
+      .blue-light .swatch-muted {
+        background: #f3f1f6;
+      }
+      .blue-light .swatch-primary {
+        background: #2563eb;
+      }
+      .blue-light .swatch-secondary {
+        background: #7c3aed;
+      }
+      .blue-light .swatch-success {
+        background: #10b981;
+      }
+      .blue-light .swatch-warning {
+        background: #f59e0b;
+      }
+
+      .blue-light .theme-description,
+      .blue-light .demo-label {
+        color: #6b5f7a;
+      }
+
+      .blue-light .swatch-label,
+      .blue-light .swatch-hex {
+        color: #6b5f7a;
+      }
+
+      .blue-light .btn-primary {
+        background: #2563eb;
+        color: #fff;
+      }
+      .blue-light .btn-primary:hover {
+        background: #1d4ed8;
+      }
+
+      .blue-light .btn-secondary {
+        border-color: #e4e1eb;
+        color: #6b5f7a;
+      }
+      .blue-light .btn-secondary:hover {
+        background: #f3f1f6;
+      }
+
+      .blue-light .btn-ghost {
+        color: #6b5f7a;
+      }
+      .blue-light .btn-ghost:hover {
+        background: #f3f1f6;
+      }
+
+      .blue-light .today-mock {
+        background: #ffffff;
+        border: 1px solid #e4e1eb;
+      }
+
+      .blue-light .today-header {
+        border-bottom-color: #e4e1eb;
+      }
+      .blue-light .today-subtitle {
+        color: #8b7fa0;
+      }
+      .blue-light .stat-label {
+        color: #6b5f7a;
+      }
+      .blue-light .today-stat {
+        border-bottom-color: #f3f1f6;
+      }
+
+      .blue-light .exception-card {
+        background: #ffffff;
+        border: 1px solid #e4e1eb;
+      }
+
+      .blue-light .exception-meta {
+        color: #8b7fa0;
+      }
+
+      .blue-light .action-btn-primary {
+        background: #2563eb;
+        color: #fff;
+      }
+
+      .blue-light .action-btn-secondary {
+        background: #f3f1f6;
+        color: #6b5f7a;
+      }
+
+      .blue-light .badge-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+      }
+      .blue-light .badge-success .badge-dot {
+        background: #10b981;
+      }
+
+      .blue-light .badge-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+      }
+      .blue-light .badge-warning .badge-dot {
+        background: #f59e0b;
+      }
+
+      .blue-light .accent-text {
+        color: #2563eb;
+      }
+      .blue-light .secondary-text {
+        color: #7c3aed;
+      }
+
+      /* ==================== */
+      /* OPTION 3: INDIGO-BLUE */
+      /* ==================== */
+
+      /* Indigo - Dark Mode */
+      .indigo-dark {
+        background: #1a1625;
+        color: #e8e4f0;
+      }
+
+      .indigo-dark .theme-badge {
+        background: rgba(129, 140, 248, 0.15);
+        color: #818cf8;
+      }
+
+      .indigo-dark .swatch-bg {
+        background: #1a1625;
+      }
+      .indigo-dark .swatch-surface {
+        background: #221d2e;
+      }
+      .indigo-dark .swatch-muted {
+        background: #2d2640;
+      }
+      .indigo-dark .swatch-primary {
+        background: #818cf8;
+      }
+      .indigo-dark .swatch-secondary {
+        background: #a78bfa;
+      }
+      .indigo-dark .swatch-success {
+        background: #34d399;
+      }
+      .indigo-dark .swatch-warning {
+        background: #fbbf24;
+      }
+
+      .indigo-dark .btn-primary {
+        background: #818cf8;
+        color: #1a1625;
+      }
+      .indigo-dark .btn-primary:hover {
+        background: #a5b4fc;
+      }
+
+      .indigo-dark .btn-secondary {
+        border-color: #3d3455;
+        color: #a5a0b5;
+      }
+      .indigo-dark .btn-secondary:hover {
+        background: #2d2640;
+      }
+
+      .indigo-dark .btn-ghost {
+        color: #a5a0b5;
+      }
+      .indigo-dark .btn-ghost:hover {
+        background: #2d2640;
+      }
+
+      .indigo-dark .today-mock {
+        background: #221d2e;
+        border: 1px solid #2d2640;
+      }
+
+      .indigo-dark .today-header {
+        border-bottom-color: #2d2640;
+      }
+
+      .indigo-dark .exception-card {
+        background: #251f32;
+        border: 1px solid #2d2640;
+      }
+
+      .indigo-dark .action-btn-primary {
+        background: #818cf8;
+        color: #1a1625;
+      }
+
+      .indigo-dark .action-btn-secondary {
+        background: #2d2640;
+        color: #a5a0b5;
+      }
+
+      .indigo-dark .badge-success {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+      }
+      .indigo-dark .badge-success .badge-dot {
+        background: #34d399;
+      }
+
+      .indigo-dark .badge-warning {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+      }
+      .indigo-dark .badge-warning .badge-dot {
+        background: #fbbf24;
+      }
+
+      .indigo-dark .accent-text {
+        color: #818cf8;
+      }
+      .indigo-dark .secondary-text {
+        color: #a78bfa;
+      }
+
+      /* Indigo - Light Mode */
+      .indigo-light {
+        background: #faf9fc;
+        color: #1a1625;
+      }
+
+      .indigo-light .theme-badge {
+        background: rgba(79, 70, 229, 0.1);
+        color: #4f46e5;
+      }
+
+      .indigo-light .swatch-bg {
+        background: #faf9fc;
+      }
+      .indigo-light .swatch-surface {
+        background: #ffffff;
+      }
+      .indigo-light .swatch-muted {
+        background: #f3f1f6;
+      }
+      .indigo-light .swatch-primary {
+        background: #4f46e5;
+      }
+      .indigo-light .swatch-secondary {
+        background: #7c3aed;
+      }
+      .indigo-light .swatch-success {
+        background: #10b981;
+      }
+      .indigo-light .swatch-warning {
+        background: #f59e0b;
+      }
+
+      .indigo-light .theme-description,
+      .indigo-light .demo-label {
+        color: #6b5f7a;
+      }
+
+      .indigo-light .swatch-label,
+      .indigo-light .swatch-hex {
+        color: #6b5f7a;
+      }
+
+      .indigo-light .btn-primary {
+        background: #4f46e5;
+        color: #fff;
+      }
+      .indigo-light .btn-primary:hover {
+        background: #4338ca;
+      }
+
+      .indigo-light .btn-secondary {
+        border-color: #e4e1eb;
+        color: #6b5f7a;
+      }
+      .indigo-light .btn-secondary:hover {
+        background: #f3f1f6;
+      }
+
+      .indigo-light .btn-ghost {
+        color: #6b5f7a;
+      }
+      .indigo-light .btn-ghost:hover {
+        background: #f3f1f6;
+      }
+
+      .indigo-light .today-mock {
+        background: #ffffff;
+        border: 1px solid #e4e1eb;
+      }
+
+      .indigo-light .today-header {
+        border-bottom-color: #e4e1eb;
+      }
+      .indigo-light .today-subtitle {
+        color: #8b7fa0;
+      }
+      .indigo-light .stat-label {
+        color: #6b5f7a;
+      }
+      .indigo-light .today-stat {
+        border-bottom-color: #f3f1f6;
+      }
+
+      .indigo-light .exception-card {
+        background: #ffffff;
+        border: 1px solid #e4e1eb;
+      }
+
+      .indigo-light .exception-meta {
+        color: #8b7fa0;
+      }
+
+      .indigo-light .action-btn-primary {
+        background: #4f46e5;
+        color: #fff;
+      }
+
+      .indigo-light .action-btn-secondary {
+        background: #f3f1f6;
+        color: #6b5f7a;
+      }
+
+      .indigo-light .badge-success {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+      }
+      .indigo-light .badge-success .badge-dot {
+        background: #10b981;
+      }
+
+      .indigo-light .badge-warning {
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+      }
+      .indigo-light .badge-warning .badge-dot {
+        background: #f59e0b;
+      }
+
+      .indigo-light .accent-text {
+        color: #4f46e5;
+      }
+      .indigo-light .secondary-text {
+        color: #7c3aed;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 40px;
+        text-align: center;
+        border-top: 1px solid #222;
+        color: #666;
+        font-size: 0.875rem;
+        background: #0a0a0a;
+      }
+
+      /* Recommendation Banner */
+      .recommendation {
+        background: linear-gradient(135deg, #221d2e 0%, #2d2640 100%);
+        padding: 24px 40px;
+        border-bottom: 1px solid #3d3455;
+      }
+
+      .recommendation h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        color: #a78bfa;
+      }
+
+      .recommendation p {
+        color: #a5a0b5;
+        font-size: 0.9rem;
+        max-width: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Xentri Color System v2</h1>
+      <p>
+        Three blue options on Dusk base — each shown in dark mode (left) and warm light mode (right)
+      </p>
+    </div>
+
+    <!-- OPTION 1: SKY -->
+    <div class="section-divider">
+      <h2>Option 1: Sky Blue</h2>
+      <p>
+        Bright, energetic, Linear-ish. High contrast, very "clickable" feel. Most distinct from
+        secondary purple.
+      </p>
+    </div>
+
+    <div class="theme-row">
+      <!-- Sky Dark -->
+      <div class="theme-card sky-dark">
+        <div class="theme-header">
+          <div class="theme-badge">Dark Mode</div>
+          <div class="theme-name">Sky Blue on Dusk</div>
+          <div class="theme-description">Primary: #38bdf8 · Secondary: #a78bfa</div>
         </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-surface"></div>
-          <div class="swatch-label">Surface</div>
-          <div class="swatch-hex">#221d2e</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-primary"></div>
-          <div class="swatch-label">Primary</div>
-          <div class="swatch-hex">#38bdf8</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-secondary"></div>
-          <div class="swatch-label">Secondary</div>
-          <div class="swatch-hex">#a78bfa</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-success"></div>
-          <div class="swatch-label">Success</div>
-          <div class="swatch-hex">#34d399</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-warning"></div>
-          <div class="swatch-label">Warning</div>
-          <div class="swatch-hex">#fbbf24</div>
-        </div>
-      </div>
 
-      <div class="demo-section">
-        <div class="demo-label">Buttons & Badges</div>
-        <div class="button-row">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-secondary">Undo</button>
-          <button class="btn btn-ghost">Skip</button>
-          <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
-          <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">"Today" View</div>
-        <div class="today-mock">
-          <div class="today-header">
-            <div class="today-greeting">Good morning, Carlo</div>
-            <div class="today-subtitle">You're all caught up</div>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="swatch-color swatch-bg"></div>
+            <div class="swatch-label">BG</div>
+            <div class="swatch-hex">#1a1625</div>
           </div>
-          <div class="today-body">
-            <div class="today-stat">
-              <span class="stat-label">New leads</span>
-              <span class="stat-value accent-text">3</span>
+          <div class="swatch">
+            <div class="swatch-color swatch-surface"></div>
+            <div class="swatch-label">Surface</div>
+            <div class="swatch-hex">#221d2e</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-primary"></div>
+            <div class="swatch-label">Primary</div>
+            <div class="swatch-hex">#38bdf8</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-secondary"></div>
+            <div class="swatch-label">Secondary</div>
+            <div class="swatch-hex">#a78bfa</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-success"></div>
+            <div class="swatch-label">Success</div>
+            <div class="swatch-hex">#34d399</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-warning"></div>
+            <div class="swatch-label">Warning</div>
+            <div class="swatch-hex">#fbbf24</div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Buttons & Badges</div>
+          <div class="button-row">
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-secondary">Undo</button>
+            <button class="btn btn-ghost">Skip</button>
+            <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
+            <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">"Today" View</div>
+          <div class="today-mock">
+            <div class="today-header">
+              <div class="today-greeting">Good morning, Carlo</div>
+              <div class="today-subtitle">You're all caught up</div>
             </div>
-            <div class="today-stat">
-              <span class="stat-label">Auto follow-ups</span>
-              <span class="stat-value">2</span>
+            <div class="today-body">
+              <div class="today-stat">
+                <span class="stat-label">New leads</span>
+                <span class="stat-value accent-text">3</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Auto follow-ups</span>
+                <span class="stat-value">2</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Exceptions</span>
+                <span class="stat-value secondary-text">1</span>
+              </div>
             </div>
-            <div class="today-stat">
-              <span class="stat-label">Exceptions</span>
-              <span class="stat-value secondary-text">1</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Exception Card</div>
+          <div class="exception-card">
+            <div class="exception-content">
+              <div class="exception-title">New lead: Sarah Martinez</div>
+              <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+            </div>
+            <div class="exception-actions">
+              <button class="action-btn action-btn-primary">Send</button>
+              <button class="action-btn action-btn-secondary">Edit</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="demo-section">
-        <div class="demo-label">Exception Card</div>
-        <div class="exception-card">
-          <div class="exception-content">
-            <div class="exception-title">New lead: Sarah Martinez</div>
-            <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+      <!-- Sky Light -->
+      <div class="theme-card sky-light">
+        <div class="theme-header">
+          <div class="theme-badge">Light Mode</div>
+          <div class="theme-name">Sky Blue on Warm Light</div>
+          <div class="theme-description">Primary: #0284c7 · Secondary: #7c3aed</div>
+        </div>
+
+        <div class="swatches">
+          <div class="swatch">
+            <div class="swatch-color swatch-bg"></div>
+            <div class="swatch-label">BG</div>
+            <div class="swatch-hex">#faf9fc</div>
           </div>
-          <div class="exception-actions">
-            <button class="action-btn action-btn-primary">Send</button>
-            <button class="action-btn action-btn-secondary">Edit</button>
+          <div class="swatch">
+            <div class="swatch-color swatch-surface"></div>
+            <div class="swatch-label">Surface</div>
+            <div class="swatch-hex">#ffffff</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-primary"></div>
+            <div class="swatch-label">Primary</div>
+            <div class="swatch-hex">#0284c7</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-secondary"></div>
+            <div class="swatch-label">Secondary</div>
+            <div class="swatch-hex">#7c3aed</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-success"></div>
+            <div class="swatch-label">Success</div>
+            <div class="swatch-hex">#10b981</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-warning"></div>
+            <div class="swatch-label">Warning</div>
+            <div class="swatch-hex">#f59e0b</div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Buttons & Badges</div>
+          <div class="button-row">
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-secondary">Undo</button>
+            <button class="btn btn-ghost">Skip</button>
+            <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
+            <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">"Today" View</div>
+          <div class="today-mock">
+            <div class="today-header">
+              <div class="today-greeting">Good morning, Carlo</div>
+              <div class="today-subtitle">You're all caught up</div>
+            </div>
+            <div class="today-body">
+              <div class="today-stat">
+                <span class="stat-label">New leads</span>
+                <span class="stat-value accent-text">3</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Auto follow-ups</span>
+                <span class="stat-value">2</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Exceptions</span>
+                <span class="stat-value secondary-text">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Exception Card</div>
+          <div class="exception-card">
+            <div class="exception-content">
+              <div class="exception-title">New lead: Sarah Martinez</div>
+              <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+            </div>
+            <div class="exception-actions">
+              <button class="action-btn action-btn-primary">Send</button>
+              <button class="action-btn action-btn-secondary">Edit</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Sky Light -->
-    <div class="theme-card sky-light">
-      <div class="theme-header">
-        <div class="theme-badge">Light Mode</div>
-        <div class="theme-name">Sky Blue on Warm Light</div>
-        <div class="theme-description">Primary: #0284c7 · Secondary: #7c3aed</div>
-      </div>
-
-      <div class="swatches">
-        <div class="swatch">
-          <div class="swatch-color swatch-bg"></div>
-          <div class="swatch-label">BG</div>
-          <div class="swatch-hex">#faf9fc</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-surface"></div>
-          <div class="swatch-label">Surface</div>
-          <div class="swatch-hex">#ffffff</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-primary"></div>
-          <div class="swatch-label">Primary</div>
-          <div class="swatch-hex">#0284c7</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-secondary"></div>
-          <div class="swatch-label">Secondary</div>
-          <div class="swatch-hex">#7c3aed</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-success"></div>
-          <div class="swatch-label">Success</div>
-          <div class="swatch-hex">#10b981</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-warning"></div>
-          <div class="swatch-label">Warning</div>
-          <div class="swatch-hex">#f59e0b</div>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">Buttons & Badges</div>
-        <div class="button-row">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-secondary">Undo</button>
-          <button class="btn btn-ghost">Skip</button>
-          <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
-          <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">"Today" View</div>
-        <div class="today-mock">
-          <div class="today-header">
-            <div class="today-greeting">Good morning, Carlo</div>
-            <div class="today-subtitle">You're all caught up</div>
-          </div>
-          <div class="today-body">
-            <div class="today-stat">
-              <span class="stat-label">New leads</span>
-              <span class="stat-value accent-text">3</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Auto follow-ups</span>
-              <span class="stat-value">2</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Exceptions</span>
-              <span class="stat-value secondary-text">1</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">Exception Card</div>
-        <div class="exception-card">
-          <div class="exception-content">
-            <div class="exception-title">New lead: Sarah Martinez</div>
-            <div class="exception-meta">Via form · 2h ago · Draft ready</div>
-          </div>
-          <div class="exception-actions">
-            <button class="action-btn action-btn-primary">Send</button>
-            <button class="action-btn action-btn-secondary">Edit</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- OPTION 2: BLUE -->
-  <div class="section-divider">
-    <h2>Option 2: Classic Blue</h2>
-    <p>Classic, trustworthy, Stripe-ish. The "safe" choice that signals reliability. Good balance.</p>
-  </div>
-
-  <div class="theme-row">
-    <!-- Blue Dark -->
-    <div class="theme-card blue-dark">
-      <div class="theme-header">
-        <div class="theme-badge">Dark Mode</div>
-        <div class="theme-name">Classic Blue on Dusk</div>
-        <div class="theme-description">Primary: #60a5fa · Secondary: #a78bfa</div>
-      </div>
-
-      <div class="swatches">
-        <div class="swatch">
-          <div class="swatch-color swatch-bg"></div>
-          <div class="swatch-label">BG</div>
-          <div class="swatch-hex">#1a1625</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-surface"></div>
-          <div class="swatch-label">Surface</div>
-          <div class="swatch-hex">#221d2e</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-primary"></div>
-          <div class="swatch-label">Primary</div>
-          <div class="swatch-hex">#60a5fa</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-secondary"></div>
-          <div class="swatch-label">Secondary</div>
-          <div class="swatch-hex">#a78bfa</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-success"></div>
-          <div class="swatch-label">Success</div>
-          <div class="swatch-hex">#34d399</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-warning"></div>
-          <div class="swatch-label">Warning</div>
-          <div class="swatch-hex">#fbbf24</div>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">Buttons & Badges</div>
-        <div class="button-row">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-secondary">Undo</button>
-          <button class="btn btn-ghost">Skip</button>
-          <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
-          <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">"Today" View</div>
-        <div class="today-mock">
-          <div class="today-header">
-            <div class="today-greeting">Good morning, Carlo</div>
-            <div class="today-subtitle">You're all caught up</div>
-          </div>
-          <div class="today-body">
-            <div class="today-stat">
-              <span class="stat-label">New leads</span>
-              <span class="stat-value accent-text">3</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Auto follow-ups</span>
-              <span class="stat-value">2</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Exceptions</span>
-              <span class="stat-value secondary-text">1</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">Exception Card</div>
-        <div class="exception-card">
-          <div class="exception-content">
-            <div class="exception-title">New lead: Sarah Martinez</div>
-            <div class="exception-meta">Via form · 2h ago · Draft ready</div>
-          </div>
-          <div class="exception-actions">
-            <button class="action-btn action-btn-primary">Send</button>
-            <button class="action-btn action-btn-secondary">Edit</button>
-          </div>
-        </div>
-      </div>
+    <!-- OPTION 2: BLUE -->
+    <div class="section-divider">
+      <h2>Option 2: Classic Blue</h2>
+      <p>
+        Classic, trustworthy, Stripe-ish. The "safe" choice that signals reliability. Good balance.
+      </p>
     </div>
 
-    <!-- Blue Light -->
-    <div class="theme-card blue-light">
-      <div class="theme-header">
-        <div class="theme-badge">Light Mode</div>
-        <div class="theme-name">Classic Blue on Warm Light</div>
-        <div class="theme-description">Primary: #2563eb · Secondary: #7c3aed</div>
-      </div>
+    <div class="theme-row">
+      <!-- Blue Dark -->
+      <div class="theme-card blue-dark">
+        <div class="theme-header">
+          <div class="theme-badge">Dark Mode</div>
+          <div class="theme-name">Classic Blue on Dusk</div>
+          <div class="theme-description">Primary: #60a5fa · Secondary: #a78bfa</div>
+        </div>
 
-      <div class="swatches">
-        <div class="swatch">
-          <div class="swatch-color swatch-bg"></div>
-          <div class="swatch-label">BG</div>
-          <div class="swatch-hex">#faf9fc</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-surface"></div>
-          <div class="swatch-label">Surface</div>
-          <div class="swatch-hex">#ffffff</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-primary"></div>
-          <div class="swatch-label">Primary</div>
-          <div class="swatch-hex">#2563eb</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-secondary"></div>
-          <div class="swatch-label">Secondary</div>
-          <div class="swatch-hex">#7c3aed</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-success"></div>
-          <div class="swatch-label">Success</div>
-          <div class="swatch-hex">#10b981</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-warning"></div>
-          <div class="swatch-label">Warning</div>
-          <div class="swatch-hex">#f59e0b</div>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">Buttons & Badges</div>
-        <div class="button-row">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-secondary">Undo</button>
-          <button class="btn btn-ghost">Skip</button>
-          <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
-          <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">"Today" View</div>
-        <div class="today-mock">
-          <div class="today-header">
-            <div class="today-greeting">Good morning, Carlo</div>
-            <div class="today-subtitle">You're all caught up</div>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="swatch-color swatch-bg"></div>
+            <div class="swatch-label">BG</div>
+            <div class="swatch-hex">#1a1625</div>
           </div>
-          <div class="today-body">
-            <div class="today-stat">
-              <span class="stat-label">New leads</span>
-              <span class="stat-value accent-text">3</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Auto follow-ups</span>
-              <span class="stat-value">2</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Exceptions</span>
-              <span class="stat-value secondary-text">1</span>
-            </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-surface"></div>
+            <div class="swatch-label">Surface</div>
+            <div class="swatch-hex">#221d2e</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-primary"></div>
+            <div class="swatch-label">Primary</div>
+            <div class="swatch-hex">#60a5fa</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-secondary"></div>
+            <div class="swatch-label">Secondary</div>
+            <div class="swatch-hex">#a78bfa</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-success"></div>
+            <div class="swatch-label">Success</div>
+            <div class="swatch-hex">#34d399</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-warning"></div>
+            <div class="swatch-label">Warning</div>
+            <div class="swatch-hex">#fbbf24</div>
           </div>
         </div>
-      </div>
 
-      <div class="demo-section">
-        <div class="demo-label">Exception Card</div>
-        <div class="exception-card">
-          <div class="exception-content">
-            <div class="exception-title">New lead: Sarah Martinez</div>
-            <div class="exception-meta">Via form · 2h ago · Draft ready</div>
-          </div>
-          <div class="exception-actions">
-            <button class="action-btn action-btn-primary">Send</button>
-            <button class="action-btn action-btn-secondary">Edit</button>
+        <div class="demo-section">
+          <div class="demo-label">Buttons & Badges</div>
+          <div class="button-row">
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-secondary">Undo</button>
+            <button class="btn btn-ghost">Skip</button>
+            <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
+            <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- OPTION 3: INDIGO-BLUE -->
-  <div class="section-divider">
-    <h2>Option 3: Indigo-Blue</h2>
-    <p>Bridges toward purple, most cohesive with secondary. Unique, less "corporate blue". Distinctive but still trustworthy.</p>
-  </div>
-
-  <div class="theme-row">
-    <!-- Indigo Dark -->
-    <div class="theme-card indigo-dark">
-      <div class="theme-header">
-        <div class="theme-badge">Dark Mode</div>
-        <div class="theme-name">Indigo-Blue on Dusk</div>
-        <div class="theme-description">Primary: #818cf8 · Secondary: #a78bfa</div>
-      </div>
-
-      <div class="swatches">
-        <div class="swatch">
-          <div class="swatch-color swatch-bg"></div>
-          <div class="swatch-label">BG</div>
-          <div class="swatch-hex">#1a1625</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-surface"></div>
-          <div class="swatch-label">Surface</div>
-          <div class="swatch-hex">#221d2e</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-primary"></div>
-          <div class="swatch-label">Primary</div>
-          <div class="swatch-hex">#818cf8</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-secondary"></div>
-          <div class="swatch-label">Secondary</div>
-          <div class="swatch-hex">#a78bfa</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-success"></div>
-          <div class="swatch-label">Success</div>
-          <div class="swatch-hex">#34d399</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-warning"></div>
-          <div class="swatch-label">Warning</div>
-          <div class="swatch-hex">#fbbf24</div>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">Buttons & Badges</div>
-        <div class="button-row">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-secondary">Undo</button>
-          <button class="btn btn-ghost">Skip</button>
-          <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
-          <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">"Today" View</div>
-        <div class="today-mock">
-          <div class="today-header">
-            <div class="today-greeting">Good morning, Carlo</div>
-            <div class="today-subtitle">You're all caught up</div>
-          </div>
-          <div class="today-body">
-            <div class="today-stat">
-              <span class="stat-label">New leads</span>
-              <span class="stat-value accent-text">3</span>
+        <div class="demo-section">
+          <div class="demo-label">"Today" View</div>
+          <div class="today-mock">
+            <div class="today-header">
+              <div class="today-greeting">Good morning, Carlo</div>
+              <div class="today-subtitle">You're all caught up</div>
             </div>
-            <div class="today-stat">
-              <span class="stat-label">Auto follow-ups</span>
-              <span class="stat-value">2</span>
+            <div class="today-body">
+              <div class="today-stat">
+                <span class="stat-label">New leads</span>
+                <span class="stat-value accent-text">3</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Auto follow-ups</span>
+                <span class="stat-value">2</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Exceptions</span>
+                <span class="stat-value secondary-text">1</span>
+              </div>
             </div>
-            <div class="today-stat">
-              <span class="stat-label">Exceptions</span>
-              <span class="stat-value secondary-text">1</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Exception Card</div>
+          <div class="exception-card">
+            <div class="exception-content">
+              <div class="exception-title">New lead: Sarah Martinez</div>
+              <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+            </div>
+            <div class="exception-actions">
+              <button class="action-btn action-btn-primary">Send</button>
+              <button class="action-btn action-btn-secondary">Edit</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="demo-section">
-        <div class="demo-label">Exception Card</div>
-        <div class="exception-card">
-          <div class="exception-content">
-            <div class="exception-title">New lead: Sarah Martinez</div>
-            <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+      <!-- Blue Light -->
+      <div class="theme-card blue-light">
+        <div class="theme-header">
+          <div class="theme-badge">Light Mode</div>
+          <div class="theme-name">Classic Blue on Warm Light</div>
+          <div class="theme-description">Primary: #2563eb · Secondary: #7c3aed</div>
+        </div>
+
+        <div class="swatches">
+          <div class="swatch">
+            <div class="swatch-color swatch-bg"></div>
+            <div class="swatch-label">BG</div>
+            <div class="swatch-hex">#faf9fc</div>
           </div>
-          <div class="exception-actions">
-            <button class="action-btn action-btn-primary">Send</button>
-            <button class="action-btn action-btn-secondary">Edit</button>
+          <div class="swatch">
+            <div class="swatch-color swatch-surface"></div>
+            <div class="swatch-label">Surface</div>
+            <div class="swatch-hex">#ffffff</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-primary"></div>
+            <div class="swatch-label">Primary</div>
+            <div class="swatch-hex">#2563eb</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-secondary"></div>
+            <div class="swatch-label">Secondary</div>
+            <div class="swatch-hex">#7c3aed</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-success"></div>
+            <div class="swatch-label">Success</div>
+            <div class="swatch-hex">#10b981</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-warning"></div>
+            <div class="swatch-label">Warning</div>
+            <div class="swatch-hex">#f59e0b</div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Buttons & Badges</div>
+          <div class="button-row">
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-secondary">Undo</button>
+            <button class="btn btn-ghost">Skip</button>
+            <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
+            <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">"Today" View</div>
+          <div class="today-mock">
+            <div class="today-header">
+              <div class="today-greeting">Good morning, Carlo</div>
+              <div class="today-subtitle">You're all caught up</div>
+            </div>
+            <div class="today-body">
+              <div class="today-stat">
+                <span class="stat-label">New leads</span>
+                <span class="stat-value accent-text">3</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Auto follow-ups</span>
+                <span class="stat-value">2</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Exceptions</span>
+                <span class="stat-value secondary-text">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Exception Card</div>
+          <div class="exception-card">
+            <div class="exception-content">
+              <div class="exception-title">New lead: Sarah Martinez</div>
+              <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+            </div>
+            <div class="exception-actions">
+              <button class="action-btn action-btn-primary">Send</button>
+              <button class="action-btn action-btn-secondary">Edit</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Indigo Light -->
-    <div class="theme-card indigo-light">
-      <div class="theme-header">
-        <div class="theme-badge">Light Mode</div>
-        <div class="theme-name">Indigo-Blue on Warm Light</div>
-        <div class="theme-description">Primary: #4f46e5 · Secondary: #7c3aed</div>
-      </div>
+    <!-- OPTION 3: INDIGO-BLUE -->
+    <div class="section-divider">
+      <h2>Option 3: Indigo-Blue</h2>
+      <p>
+        Bridges toward purple, most cohesive with secondary. Unique, less "corporate blue".
+        Distinctive but still trustworthy.
+      </p>
+    </div>
 
-      <div class="swatches">
-        <div class="swatch">
-          <div class="swatch-color swatch-bg"></div>
-          <div class="swatch-label">BG</div>
-          <div class="swatch-hex">#faf9fc</div>
+    <div class="theme-row">
+      <!-- Indigo Dark -->
+      <div class="theme-card indigo-dark">
+        <div class="theme-header">
+          <div class="theme-badge">Dark Mode</div>
+          <div class="theme-name">Indigo-Blue on Dusk</div>
+          <div class="theme-description">Primary: #818cf8 · Secondary: #a78bfa</div>
         </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-surface"></div>
-          <div class="swatch-label">Surface</div>
-          <div class="swatch-hex">#ffffff</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-primary"></div>
-          <div class="swatch-label">Primary</div>
-          <div class="swatch-hex">#4f46e5</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-secondary"></div>
-          <div class="swatch-label">Secondary</div>
-          <div class="swatch-hex">#7c3aed</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-success"></div>
-          <div class="swatch-label">Success</div>
-          <div class="swatch-hex">#10b981</div>
-        </div>
-        <div class="swatch">
-          <div class="swatch-color swatch-warning"></div>
-          <div class="swatch-label">Warning</div>
-          <div class="swatch-hex">#f59e0b</div>
-        </div>
-      </div>
 
-      <div class="demo-section">
-        <div class="demo-label">Buttons & Badges</div>
-        <div class="button-row">
-          <button class="btn btn-primary">Approve</button>
-          <button class="btn btn-secondary">Undo</button>
-          <button class="btn btn-ghost">Skip</button>
-          <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
-          <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
-        </div>
-      </div>
-
-      <div class="demo-section">
-        <div class="demo-label">"Today" View</div>
-        <div class="today-mock">
-          <div class="today-header">
-            <div class="today-greeting">Good morning, Carlo</div>
-            <div class="today-subtitle">You're all caught up</div>
+        <div class="swatches">
+          <div class="swatch">
+            <div class="swatch-color swatch-bg"></div>
+            <div class="swatch-label">BG</div>
+            <div class="swatch-hex">#1a1625</div>
           </div>
-          <div class="today-body">
-            <div class="today-stat">
-              <span class="stat-label">New leads</span>
-              <span class="stat-value accent-text">3</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Auto follow-ups</span>
-              <span class="stat-value">2</span>
-            </div>
-            <div class="today-stat">
-              <span class="stat-label">Exceptions</span>
-              <span class="stat-value secondary-text">1</span>
-            </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-surface"></div>
+            <div class="swatch-label">Surface</div>
+            <div class="swatch-hex">#221d2e</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-primary"></div>
+            <div class="swatch-label">Primary</div>
+            <div class="swatch-hex">#818cf8</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-secondary"></div>
+            <div class="swatch-label">Secondary</div>
+            <div class="swatch-hex">#a78bfa</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-success"></div>
+            <div class="swatch-label">Success</div>
+            <div class="swatch-hex">#34d399</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-warning"></div>
+            <div class="swatch-label">Warning</div>
+            <div class="swatch-hex">#fbbf24</div>
           </div>
         </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Buttons & Badges</div>
+          <div class="button-row">
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-secondary">Undo</button>
+            <button class="btn btn-ghost">Skip</button>
+            <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
+            <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">"Today" View</div>
+          <div class="today-mock">
+            <div class="today-header">
+              <div class="today-greeting">Good morning, Carlo</div>
+              <div class="today-subtitle">You're all caught up</div>
+            </div>
+            <div class="today-body">
+              <div class="today-stat">
+                <span class="stat-label">New leads</span>
+                <span class="stat-value accent-text">3</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Auto follow-ups</span>
+                <span class="stat-value">2</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Exceptions</span>
+                <span class="stat-value secondary-text">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Exception Card</div>
+          <div class="exception-card">
+            <div class="exception-content">
+              <div class="exception-title">New lead: Sarah Martinez</div>
+              <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+            </div>
+            <div class="exception-actions">
+              <button class="action-btn action-btn-primary">Send</button>
+              <button class="action-btn action-btn-secondary">Edit</button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="demo-section">
-        <div class="demo-label">Exception Card</div>
-        <div class="exception-card">
-          <div class="exception-content">
-            <div class="exception-title">New lead: Sarah Martinez</div>
-            <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+      <!-- Indigo Light -->
+      <div class="theme-card indigo-light">
+        <div class="theme-header">
+          <div class="theme-badge">Light Mode</div>
+          <div class="theme-name">Indigo-Blue on Warm Light</div>
+          <div class="theme-description">Primary: #4f46e5 · Secondary: #7c3aed</div>
+        </div>
+
+        <div class="swatches">
+          <div class="swatch">
+            <div class="swatch-color swatch-bg"></div>
+            <div class="swatch-label">BG</div>
+            <div class="swatch-hex">#faf9fc</div>
           </div>
-          <div class="exception-actions">
-            <button class="action-btn action-btn-primary">Send</button>
-            <button class="action-btn action-btn-secondary">Edit</button>
+          <div class="swatch">
+            <div class="swatch-color swatch-surface"></div>
+            <div class="swatch-label">Surface</div>
+            <div class="swatch-hex">#ffffff</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-primary"></div>
+            <div class="swatch-label">Primary</div>
+            <div class="swatch-hex">#4f46e5</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-secondary"></div>
+            <div class="swatch-label">Secondary</div>
+            <div class="swatch-hex">#7c3aed</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-success"></div>
+            <div class="swatch-label">Success</div>
+            <div class="swatch-hex">#10b981</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color swatch-warning"></div>
+            <div class="swatch-label">Warning</div>
+            <div class="swatch-hex">#f59e0b</div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Buttons & Badges</div>
+          <div class="button-row">
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-secondary">Undo</button>
+            <button class="btn btn-ghost">Skip</button>
+            <span class="badge badge-success"><span class="badge-dot"></span> Done</span>
+            <span class="badge badge-warning"><span class="badge-dot"></span> Review</span>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">"Today" View</div>
+          <div class="today-mock">
+            <div class="today-header">
+              <div class="today-greeting">Good morning, Carlo</div>
+              <div class="today-subtitle">You're all caught up</div>
+            </div>
+            <div class="today-body">
+              <div class="today-stat">
+                <span class="stat-label">New leads</span>
+                <span class="stat-value accent-text">3</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Auto follow-ups</span>
+                <span class="stat-value">2</span>
+              </div>
+              <div class="today-stat">
+                <span class="stat-label">Exceptions</span>
+                <span class="stat-value secondary-text">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-section">
+          <div class="demo-label">Exception Card</div>
+          <div class="exception-card">
+            <div class="exception-content">
+              <div class="exception-title">New lead: Sarah Martinez</div>
+              <div class="exception-meta">Via form · 2h ago · Draft ready</div>
+            </div>
+            <div class="exception-actions">
+              <button class="action-btn action-btn-primary">Send</button>
+              <button class="action-btn action-btn-secondary">Edit</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="recommendation">
-    <h3>My Recommendation: Option 2 (Classic Blue)</h3>
-    <p>It balances trust (blue = reliable) with distinctiveness (purple base + violet secondary). Clear separation between primary and secondary. Works beautifully in both modes. Not too "corporate" thanks to the warm Dusk base, but trustworthy enough to handle people's business data.</p>
-  </div>
+    <div class="recommendation">
+      <h3>My Recommendation: Option 2 (Classic Blue)</h3>
+      <p>
+        It balances trust (blue = reliable) with distinctiveness (purple base + violet secondary).
+        Clear separation between primary and secondary. Works beautifully in both modes. Not too
+        "corporate" thanks to the warm Dusk base, but trustworthy enough to handle people's business
+        data.
+      </p>
+    </div>
 
-  <div class="footer">
-    <p>Xentri UX Design Workshop — Color Theme Exploration v2</p>
-    <p style="margin-top: 8px; opacity: 0.6;">Open in browser. Pick the blue that feels right for "trustworthy but warm."</p>
-  </div>
-</body>
+    <div class="footer">
+      <p>Xentri UX Design Workshop — Color Theme Exploration v2</p>
+      <p style="margin-top: 8px; opacity: 0.6">
+        Open in browser. Pick the blue that feels right for "trustworthy but warm."
+      </p>
+    </div>
+  </body>
 </html>

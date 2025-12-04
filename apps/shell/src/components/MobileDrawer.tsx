@@ -1,42 +1,38 @@
-import { useStore } from '@nanostores/react';
-import { X } from 'lucide-react';
-import { useEffect, useCallback } from 'react';
-import {
-  CATEGORIES,
-  $mobileDrawerOpen,
-  closeMobileDrawer,
-} from '../stores/navigation';
-import SidebarCategory from './SidebarCategory';
+import { useStore } from '@nanostores/react'
+import { X } from 'lucide-react'
+import { useEffect, useCallback } from 'react'
+import { CATEGORIES, $mobileDrawerOpen, closeMobileDrawer } from '../stores/navigation'
+import SidebarCategory from './SidebarCategory'
 
 export default function MobileDrawer() {
-  const isOpen = useStore($mobileDrawerOpen);
+  const isOpen = useStore($mobileDrawerOpen)
 
   // Close on escape key
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      closeMobileDrawer();
+      closeMobileDrawer()
     }
-  }, []);
+  }, [])
 
   // Handle outside click
   const handleBackdropClick = () => {
-    closeMobileDrawer();
-  };
+    closeMobileDrawer()
+  }
 
   // Add/remove event listeners
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'hidden'
     }
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [isOpen, handleKeyDown]);
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [isOpen, handleKeyDown])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="mobile-drawer-container fixed inset-0 z-50 md:hidden">
@@ -104,5 +100,5 @@ export default function MobileDrawer() {
         }
       `}</style>
     </div>
-  );
+  )
 }

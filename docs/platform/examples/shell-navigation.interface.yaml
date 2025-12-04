@@ -3,14 +3,13 @@
 # Interfaces define contracts that sibling requirements can depend on.
 # See: docs/platform/architecture/adr-020-sibling-dependency-law.md
 
----
 # ============================================================================
 # IDENTITY
 # ============================================================================
 id: IC-SHL-001
 type: IC
-title: "Shell Navigation"
-version: "1.0.0"
+title: 'Shell Navigation'
+version: '1.0.0'
 status: stable
 
 # ============================================================================
@@ -18,10 +17,10 @@ status: stable
 # ============================================================================
 # Which requirement provides this interface.
 # This determines who can depend on it (must be siblings of the provider).
-provider: SYS-001               # Shell (Constitution level)
+provider: SYS-001 # Shell (Constitution level)
 
 # Visibility: who can see and depend on this interface
-visibility: sibling             # Available to Constitution-level siblings
+visibility: sibling # Available to Constitution-level siblings
 
 # ============================================================================
 # CONTRACT DEFINITION
@@ -34,58 +33,58 @@ contract:
   # Methods exposed by this interface
   methods:
     - name: registerRoute
-      description: "Register a new route for a micro-app"
+      description: 'Register a new route for a micro-app'
       params:
         - name: path
           type: string
           description: "URL path pattern (e.g., '/strategy/pulse')"
         - name: component
           type: ReactComponent
-          description: "React component to render at this path"
+          description: 'React component to render at this path'
         - name: meta
           type: RouteMeta
-          description: "Metadata including title, icon, permissions"
+          description: 'Metadata including title, icon, permissions'
       returns:
         type: RouteHandle
-        description: "Handle for managing the registered route"
+        description: 'Handle for managing the registered route'
 
     - name: navigate
-      description: "Navigate to a different route"
+      description: 'Navigate to a different route'
       params:
         - name: path
           type: string
-          description: "Target path to navigate to"
+          description: 'Target path to navigate to'
         - name: options
           type: NavigateOptions
           optional: true
-          description: "Navigation options (replace, state, etc.)"
+          description: 'Navigation options (replace, state, etc.)'
       returns:
         type: void
 
     - name: getCurrentRoute
-      description: "Get information about the current route"
+      description: 'Get information about the current route'
       params: []
       returns:
         type: RouteInfo
-        description: "Current route path, params, and metadata"
+        description: 'Current route path, params, and metadata'
 
   # Events emitted by this interface
   events:
     - name: navigation.requested
-      description: "Emitted when navigation is requested but not yet completed"
+      description: 'Emitted when navigation is requested but not yet completed'
       payload:
         from: string
         to: string
         triggeredBy: string
 
     - name: navigation.completed
-      description: "Emitted after navigation DOM update is complete"
+      description: 'Emitted after navigation DOM update is complete'
       payload:
         path: string
         duration_ms: number
 
     - name: navigation.blocked
-      description: "Emitted when navigation is blocked (e.g., unsaved changes)"
+      description: 'Emitted when navigation is blocked (e.g., unsaved changes)'
       payload:
         from: string
         to: string
@@ -93,45 +92,44 @@ contract:
 
   # Guarantees this interface provides
   guarantees:
-    - "Route registration is idempotent - registering the same path twice has no effect"
-    - "Navigation events fire BEFORE DOM update begins"
-    - "getCurrentRoute always returns a valid RouteInfo object"
-    - "All navigation is async and can be awaited"
+    - 'Route registration is idempotent - registering the same path twice has no effect'
+    - 'Navigation events fire BEFORE DOM update begins'
+    - 'getCurrentRoute always returns a valid RouteInfo object'
+    - 'All navigation is async and can be awaited'
 
   # Type definitions referenced by this interface
   types:
     RouteMeta:
       title: string
       icon: string
-      permissions: string[]
-      breadcrumb?: string
+      permissions: array
+      breadcrumb: string
 
     NavigateOptions:
-      replace?: boolean
-      state?: Record<string, unknown>
-      skipGuards?: boolean
+      replace: boolean
+      state: object
+      skipGuards: boolean
 
     RouteInfo:
       path: string
-      params: Record<string, string>
-      query: Record<string, string>
-      meta: RouteMeta
+      params: object
+      query: object
+      meta: object
 
 # ============================================================================
 # VERSIONING
 # ============================================================================
 changelog:
-  - version: "1.0.0"
-    date: "2025-11-25"
+  - version: '1.0.0'
+    date: '2025-11-25'
     changes:
-      - "Initial interface definition"
-      - "Added registerRoute, navigate, getCurrentRoute methods"
-      - "Added navigation events"
+      - 'Initial interface definition'
+      - 'Added registerRoute, navigate, getCurrentRoute methods'
+      - 'Added navigation events'
 
 # ============================================================================
 # METADATA
 # ============================================================================
-created_at: "2025-11-25"
-updated_at: "2025-12-03"
-author: "Platform Team"
----
+created_at: '2025-11-25'
+updated_at: '2025-12-03'
+author: 'Platform Team'

@@ -4,7 +4,16 @@
   "title": "Constitution Document Frontmatter",
   "description": "Schema for validating Constitution-level document frontmatter in docs/platform/",
   "type": "object",
-  "required": ["entity_type", "document_type", "title", "description", "version", "status", "created", "updated"],
+  "required": [
+    "entity_type",
+    "document_type",
+    "title",
+    "description",
+    "version",
+    "status",
+    "created",
+    "updated"
+  ],
   "properties": {
     "entity_type": {
       "type": "string",

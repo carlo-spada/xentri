@@ -1,57 +1,58 @@
 # Validate Domain PRD Workflow
 name: validate-domain-prd
-description: "Validate a Category/Subcategory/Module PRD against the Federated Requirements Model"
-author: "BMad Builder"
+description: 'Validate a Category/Subcategory/Module PRD against the Federated Requirements Model'
+author: 'BMad Builder'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Federated hierarchy support (from agent level-selection)
-output_folder_resolved: "{output_folder_resolved}"
-constitution_path: "{constitution_path}"
-current_level: "{current_level}"
-current_level_name: "{current_level_name}"
-current_category: "{current_category}"
-current_subcategory: "{current_subcategory}"
-current_module: "{current_module}"
+output_folder_resolved: '{output_folder_resolved}'
+constitution_path: '{constitution_path}'
+current_level: '{current_level}'
+current_level_name: '{current_level_name}'
+current_category: '{current_category}'
+current_subcategory: '{current_subcategory}'
+current_module: '{current_module}'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-domain-prd"
-instructions: "{installed_path}/instructions.md"
-validation: "{project-root}/.bmad/custom/modules/federated-validation/checklists/domain-prd-checklist.md"
+installed_path: '{project-root}/.bmad/custom/modules/federated-validation/workflows/validate-domain-prd'
+instructions: '{installed_path}/instructions.md'
+validation: '{project-root}/.bmad/custom/modules/federated-validation/checklists/domain-prd-checklist.md'
 
 # Constitution reference (for inheritance checking)
-constitution: "{project-root}/docs/platform/prd.md"
+constitution: '{project-root}/docs/platform/prd.md'
 
 # Target file (determined by agent's level selection)
-target_file: "{output_folder_resolved}/prd.md"
+target_file: '{output_folder_resolved}/prd.md'
 
 # Output
-report_template: "{project-root}/.bmad/custom/modules/federated-validation/templates/validation-report.md"
-default_output_file: "{project-root}/docs/proposals/validation-reports/domain-prd-validation-{current_level_name}-{date}.md"
+report_template: '{project-root}/.bmad/custom/modules/federated-validation/templates/validation-report.md'
+default_output_file: '{project-root}/docs/proposals/validation-reports/domain-prd-validation-{current_level_name}-{date}.md'
 
 # Validation patterns
 validation_rules:
   frontmatter:
     required_fields:
-      - entity_type: ["infrastructure_module", "strategic_container", "coordination_unit", "business_module"]
-      - doc_type: "prd"
-      - parent: "docs/platform/prd.md"
+      - entity_type:
+          ['infrastructure_module', 'strategic_container', 'coordination_unit', 'business_module']
+      - doc_type: 'prd'
+      - parent: 'docs/platform/prd.md'
 
   content:
     must_contain:
       - pattern: "FR-[A-Z]+-\\d{3}"
-        description: "Functional Requirements with scope prefix"
+        description: 'Functional Requirements with scope prefix'
         minimum: 1
 
     should_contain:
       - pattern: "Inherits.*PR-\\d{3}"
-        description: "Reference to inherited Platform Requirements"
+        description: 'Reference to inherited Platform Requirements'
       - pattern: "Implements.*IC-\\d{3}"
-        description: "Declaration of implemented Integration Contracts"
+        description: 'Declaration of implemented Integration Contracts'
 
 standalone: true
 template: false

@@ -13,6 +13,7 @@ Validate an Epic breakdown to ensure complete traceability between requirements 
 ### Step 1: Identify Scope
 
 Determine if this is:
+
 - **System Epics** (`docs/platform/epics.md`) - traces to PR-xxx and IC-xxx
 - **Entity Epics** (`docs/{category}/{subcategory}/epics.md`) - traces to FR-{SCOPE}-xxx
 
@@ -23,12 +24,12 @@ Look for a section titled "Traceability Matrix" with format:
 ```markdown
 ## Traceability Matrix
 
-| Requirement | Epic | Stories | Status |
-|-------------|------|---------|--------|
-| PR-001 | 1 | 1.2 | Complete |
-| PR-002 | 1 | 1.2, 1.6 | Complete |
-| IC-001 | 1 | 1.2 | Complete |
-| FR-SHELL-001 | 2 | 2.1, 2.3 | Planned |
+| Requirement  | Epic | Stories  | Status   |
+| ------------ | ---- | -------- | -------- |
+| PR-001       | 1    | 1.2      | Complete |
+| PR-002       | 1    | 1.2, 1.6 | Complete |
+| IC-001       | 1    | 1.2      | Complete |
+| FR-SHELL-001 | 2    | 2.1, 2.3 | Planned  |
 ```
 
 **If missing:** Flag as FAIL - traceability matrix is required.
@@ -36,17 +37,20 @@ Look for a section titled "Traceability Matrix" with format:
 ### Step 3: Validate Coverage
 
 **For System Epics:**
+
 1. Extract all PR-xxx from `docs/platform/prd.md`
 2. Extract all IC-xxx from `docs/platform/prd.md`
 3. Check each appears in the traceability matrix
 
 **For Entity Epics:**
+
 1. Extract all FR-{SCOPE}-xxx from the entity's prd.md
 2. Check each appears in the traceability matrix
 
 ### Step 4: Validate Stories
 
 For each story referenced in the matrix:
+
 1. Verify the story exists in sprint-artifacts or within the epics file
 2. Verify the story follows format: "As a... I want... So that..."
 3. Verify acceptance criteria are numbered and testable
@@ -54,11 +58,13 @@ For each story referenced in the matrix:
 ### Step 5: Check for Orphans
 
 **Orphaned Requirements:**
+
 - Requirements not in the matrix (no stories)
 - Flag as WARNING if status is "Planned"
 - Flag as ERROR if status is "Complete" but no stories
 
 **Orphaned Stories:**
+
 - Stories not in the matrix (no requirements)
 - Flag as ERROR - every story must justify its existence
 
@@ -78,18 +84,21 @@ Go through `epic-checklist.md` and mark each item.
 ## Coverage Summary
 
 | Type | Total | Covered | Coverage |
-|------|-------|---------|----------|
-| PRs | 8 | 8 | 100% |
-| ICs | 6 | 5 | 83% |
-| FRs | 0 | 0 | N/A |
+| ---- | ----- | ------- | -------- |
+| PRs  | 8     | 8       | 100%     |
+| ICs  | 6     | 5       | 83%      |
+| FRs  | 0     | 0       | N/A      |
 
 ## Orphaned Requirements
+
 [List any requirements without stories]
 
 ## Orphaned Stories
+
 [List any stories without requirements]
 
 ## Recommendations
+
 [Suggested fixes]
 ```
 

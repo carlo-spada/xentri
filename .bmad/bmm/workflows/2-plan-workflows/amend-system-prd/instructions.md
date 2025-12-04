@@ -34,8 +34,8 @@ Proceed with caution.
 
 <ask>Do you understand this will affect all downstream entities? (yes/no)</ask>
 <check if="response != 'yes'">
-  <output>Amendment cancelled for safety.</output>
-  <action>Exit workflow</action>
+<output>Amendment cancelled for safety.</output>
+<action>Exit workflow</action>
 </check>
 </step>
 
@@ -47,7 +47,7 @@ What type of amendment do you want to make?
 2. **Modify** - Change existing PR-xxx or IC-xxx
 3. **Remove** - Remove existing PR-xxx or IC-xxx
 4. **Other** - Modify other sections (NFRs, Governance, etc.)
-</output>
+   </output>
 
 <ask>Select amendment type (1-4):</ask>
 <action>Store as amendment_type</action>
@@ -61,7 +61,7 @@ is a BREAKING CHANGE. Downstream entities may depend on
 these requirements.
 
 Impact analysis will identify all affected documents.
-  </output>
+</output>
 </check>
 </step>
 
@@ -76,8 +76,8 @@ Impact analysis will identify all affected documents.
 
 Include rationale for why this is needed.</ask>
 
-  <action>Generate next available ID (PR-xxx or IC-xxx)</action>
-  <action>Draft the new requirement/contract</action>
+<action>Generate next available ID (PR-xxx or IC-xxx)</action>
+<action>Draft the new requirement/contract</action>
 </check>
 
 <check if="amendment_type == 2 (Modify)">
@@ -86,14 +86,14 @@ Include rationale for why this is needed.</ask>
   <output>Current Integration Contracts:
 {list_ic_xxx}</output>
 
-  <ask>Which item do you want to modify? (enter ID)</ask>
-  <action>Load current content for that ID</action>
+<ask>Which item do you want to modify? (enter ID)</ask>
+<action>Load current content for that ID</action>
 
-  <output>Current content:
+<output>Current content:
 {current_content}</output>
 
-  <ask>What change do you want to make?</ask>
-  <action>Draft the modification</action>
+<ask>What change do you want to make?</ask>
+<action>Draft the modification</action>
 </check>
 
 <check if="amendment_type == 3 (Remove)">
@@ -102,13 +102,13 @@ Include rationale for why this is needed.</ask>
   <output>Current Integration Contracts:
 {list_ic_xxx}</output>
 
-  <ask>Which item do you want to remove? (enter ID)</ask>
-  <action>Load current content for that ID</action>
+<ask>Which item do you want to remove? (enter ID)</ask>
+<action>Load current content for that ID</action>
 
-  <output>You are about to remove:
+<output>You are about to remove:
 {current_content}</output>
 
-  <ask>Provide justification for removal:</ask>
+<ask>Provide justification for removal:</ask>
 </check>
 
 <check if="amendment_type == 4 (Other)">
@@ -117,8 +117,8 @@ Include rationale for why this is needed.</ask>
 2. Governance Rules
 3. Other (specify)</ask>
 
-  <action>Load relevant section</action>
-  <ask>Describe the change:</ask>
+<action>Load relevant section</action>
+<ask>Describe the change:</ask>
 </check>
 </step>
 
@@ -152,16 +152,17 @@ The following downstream documents will be affected:
 {affected_documents}
 
 You must:
+
 1. Review each affected document
 2. Plan updates to maintain consistency
 3. Consider staged rollout
-  </output>
+   </output>
 
-  <ask>Do you still want to proceed? (yes/no)</ask>
-  <check if="response != 'yes'">
-    <output>Amendment cancelled.</output>
-    <action>Exit workflow</action>
-  </check>
+<ask>Do you still want to proceed? (yes/no)</ask>
+<check if="response != 'yes'">
+<output>Amendment cancelled.</output>
+<action>Exit workflow</action>
+</check>
 </check>
 </step>
 
@@ -189,11 +190,12 @@ You must:
 {rationale}
 
 **Downstream Impact:**
+
 - {affected_count} documents affected
 - Breaking: {breaking_count}
 - Requiring Update: {update_count}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <ask>Review the amendment. Options:
 [a] Approve and apply
@@ -220,7 +222,7 @@ You must:
 2. Update version number
 3. Add entry to Document History
 4. Update the 'updated' date in frontmatter
-</action>
+   </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{prd_path}</param>
@@ -262,6 +264,7 @@ Updated: docs/platform/prd.md
 Amendment logged: docs/platform/amendment-log.md
 
 **Suggested Commit Message:**
+
 ```
 docs(constitution): {amendment_summary}
 
@@ -272,15 +275,16 @@ Impact: {affected_count} downstream documents
 ```
 
 **Next Steps:**
+
 1. Review affected downstream documents:
-{affected_documents_list}
+   {affected_documents_list}
 
 2. Update each document to maintain consistency
 
 3. Run validation:
    `validate-prd` for each affected PRD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-</step>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
+   </step>
 
 </workflow>

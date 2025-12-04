@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import Fastify from 'fastify';
-import { Webhook } from 'svix';
-import clerkWebhookRoutes from './clerk.js';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import Fastify from 'fastify'
+import { Webhook } from 'svix'
+import clerkWebhookRoutes from './clerk.js'
 
 // Mock dependencies
 vi.mock('../../infra/db.js', () => ({
@@ -12,8 +12,8 @@ vi.mock('../../infra/db.js', () => ({
         organization: {
           upsert: vi.fn().mockResolvedValue({ id: 'org_123', name: 'Test Org', slug: 'test-org' }),
         },
-      };
-      return fn(tx);
+      }
+      return fn(tx)
     }),
     user: {
       upsert: vi.fn().mockResolvedValue({ id: 'user_123', email: 'test@example.com' }),
@@ -27,13 +27,13 @@ vi.mock('../../infra/db.js', () => ({
       count: vi.fn().mockResolvedValue(1),
     },
   })),
-}));
+}))
 
 vi.mock('../../domain/events/EventService.js', () => ({
   eventService: {
     createEvent: vi.fn().mockResolvedValue({ event_id: 'evt_123', acknowledged: true }),
   },
-}));
+}))
 
 vi.mock('../../domain/orgs/OrgProvisioningService.js', () => ({
   orgProvisioningService: {
@@ -44,31 +44,31 @@ vi.mock('../../domain/orgs/OrgProvisioningService.js', () => ({
       alreadyProvisioned: false,
     }),
   },
-}));
+}))
 
 // Mock svix Webhook verification
 vi.mock('svix', () => ({
   Webhook: vi.fn().mockImplementation(() => ({
     verify: vi.fn().mockImplementation((payload) => JSON.parse(payload)),
   })),
-}));
+}))
 
 describe('Clerk Webhook Routes', () => {
-  let app: ReturnType<typeof Fastify>;
+  let app: ReturnType<typeof Fastify>
 
   beforeEach(async () => {
     // Set required env var
-    process.env.CLERK_WEBHOOK_SECRET = 'whsec_test_secret';
+    process.env.CLERK_WEBHOOK_SECRET = 'whsec_test_secret'
 
-    app = Fastify();
-    await app.register(clerkWebhookRoutes);
-    await app.ready();
-  });
+    app = Fastify()
+    await app.register(clerkWebhookRoutes)
+    await app.ready()
+  })
 
   afterEach(async () => {
-    await app.close();
-    vi.clearAllMocks();
-  });
+    await app.close()
+    vi.clearAllMocks()
+  })
 
   describe('POST /api/v1/webhooks/clerk', () => {
     const validHeaders = {
@@ -76,7 +76,7 @@ describe('Clerk Webhook Routes', () => {
       'svix-timestamp': '1234567890',
       'svix-signature': 'v1,signature',
       'content-type': 'application/json',
-    };
+    }
 
     it('should return 400 if svix headers are missing', async () => {
       const response = await app.inject({
@@ -84,37 +84,35 @@ describe('Clerk Webhook Routes', () => {
         url: '/api/v1/webhooks/clerk',
         payload: { type: 'user.created', data: {} },
         headers: { 'content-type': 'application/json' },
-      });
+      })
 
-      expect(response.statusCode).toBe(400);
-      expect(JSON.parse(response.body)).toEqual({ error: 'Missing svix headers' });
-    });
+      expect(response.statusCode).toBe(400)
+      expect(JSON.parse(response.body)).toEqual({ error: 'Missing svix headers' })
+    })
 
     it('should handle user.created webhook', async () => {
       const payload = {
         type: 'user.created',
         data: {
           id: 'user_123',
-          email_addresses: [
-            { id: 'email_1', email_address: 'test@example.com' },
-          ],
+          email_addresses: [{ id: 'email_1', email_address: 'test@example.com' }],
           primary_email_address_id: 'email_1',
           first_name: 'Test',
           last_name: 'User',
           created_at: Date.now(),
         },
-      };
+      }
 
       const response = await app.inject({
         method: 'POST',
         url: '/api/v1/webhooks/clerk',
         payload,
         headers: validHeaders,
-      });
+      })
 
-      expect(response.statusCode).toBe(200);
-      expect(JSON.parse(response.body)).toEqual({ received: true });
-    });
+      expect(response.statusCode).toBe(200)
+      expect(JSON.parse(response.body)).toEqual({ received: true })
+    })
 
     it('should handle organization.created webhook', async () => {
       const payload = {
@@ -126,18 +124,18 @@ describe('Clerk Webhook Routes', () => {
           created_by: 'user_123',
           created_at: Date.now(),
         },
-      };
+      }
 
       const response = await app.inject({
         method: 'POST',
         url: '/api/v1/webhooks/clerk',
         payload,
         headers: validHeaders,
-      });
+      })
 
-      expect(response.statusCode).toBe(200);
-      expect(JSON.parse(response.body)).toEqual({ received: true });
-    });
+      expect(response.statusCode).toBe(200)
+      expect(JSON.parse(response.body)).toEqual({ received: true })
+    })
 
     it('should handle session.created webhook', async () => {
       const payload = {
@@ -149,48 +147,48 @@ describe('Clerk Webhook Routes', () => {
           created_at: Date.now(),
           last_active_organization_id: 'org_123',
         },
-      };
+      }
 
       const response = await app.inject({
         method: 'POST',
         url: '/api/v1/webhooks/clerk',
         payload,
         headers: validHeaders,
-      });
+      })
 
-      expect(response.statusCode).toBe(200);
-      expect(JSON.parse(response.body)).toEqual({ received: true });
-    });
+      expect(response.statusCode).toBe(200)
+      expect(JSON.parse(response.body)).toEqual({ received: true })
+    })
 
     it('should handle unrecognized event types gracefully', async () => {
       const payload = {
         type: 'unknown.event',
         data: {},
-      };
+      }
 
       const response = await app.inject({
         method: 'POST',
         url: '/api/v1/webhooks/clerk',
         payload,
         headers: validHeaders,
-      });
+      })
 
-      expect(response.statusCode).toBe(200);
-      expect(JSON.parse(response.body)).toEqual({ received: true });
-    });
+      expect(response.statusCode).toBe(200)
+      expect(JSON.parse(response.body)).toEqual({ received: true })
+    })
 
     it('should return 500 if webhook secret is not configured', async () => {
-      delete process.env.CLERK_WEBHOOK_SECRET;
+      delete process.env.CLERK_WEBHOOK_SECRET
 
       const response = await app.inject({
         method: 'POST',
         url: '/api/v1/webhooks/clerk',
         payload: { type: 'user.created', data: {} },
         headers: validHeaders,
-      });
+      })
 
-      expect(response.statusCode).toBe(500);
-      expect(JSON.parse(response.body)).toEqual({ error: 'Webhook not configured' });
-    });
-  });
-});
+      expect(response.statusCode).toBe(500)
+      expect(JSON.parse(response.body)).toEqual({ error: 'Webhook not configured' })
+    })
+  })
+})

@@ -1,42 +1,42 @@
 # System Epics Validation Workflow (Constitution)
 name: validate-system-epics
-description: "Validate the System Epics document (Constitution level) for completeness, traceability, and quality."
-author: "BMad"
+description: 'Validate the System Epics document (Constitution level) for completeness, traceability, and quality.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Federated hierarchy - Constitution is fixed
 entity_type: constitution
-entity_type_display: "Constitution"
-output_folder_resolved: "{project-root}/docs/platform/"
+entity_type_display: 'Constitution'
+output_folder_resolved: '{project-root}/docs/platform/'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-epics"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/validate-system-epics'
+instructions: '{installed_path}/instructions.md'
 
 # Checklist
-checklist: "{project-root}/.bmad/bmm/checklists/constitution-epics-checklist.md"
+checklist: '{project-root}/.bmad/bmm/checklists/constitution-epics-checklist.md'
 
 # Shared tasks
-verify_traceability_task: "{project-root}/.bmad/bmm/tasks/verify-traceability.xml"
+verify_traceability_task: '{project-root}/.bmad/bmm/tasks/verify-traceability.xml'
 
 # Input file patterns
 input_file_patterns:
   epics_to_validate:
-    description: "System Epics to validate"
-    whole: "{output_folder_resolved}epics.md"
-    load_strategy: "FULL_LOAD"
+    description: 'System Epics to validate'
+    whole: '{output_folder_resolved}epics.md'
+    load_strategy: 'FULL_LOAD'
 
   constitution_prd:
-    description: "System PRD for traceability check"
-    whole: "{output_folder_resolved}prd.md"
-    load_strategy: "FULL_LOAD"
+    description: 'System PRD for traceability check'
+    whole: '{output_folder_resolved}prd.md'
+    load_strategy: 'FULL_LOAD'
 
 # Output
-validation_report_path: "{output_folder_resolved}validation-reports/"
+validation_report_path: '{output_folder_resolved}validation-reports/'
 
 standalone: true

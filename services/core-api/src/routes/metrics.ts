@@ -1,5 +1,5 @@
-import type { FastifyPluginAsync } from 'fastify';
-import os from 'os';
+import type { FastifyPluginAsync } from 'fastify'
+import os from 'os'
 
 // Minimal metrics endpoint for smoke/ops checks
 const metricsRoutes: FastifyPluginAsync = async (fastify) => {
@@ -10,8 +10,8 @@ const metricsRoutes: FastifyPluginAsync = async (fastify) => {
       memory: process.memoryUsage(),
       load: os.loadavg(),
       pid: process.pid,
-    };
-  });
-};
+    }
+  })
+}
 
-export default metricsRoutes;
+export default metricsRoutes

@@ -26,8 +26,9 @@ Found existing workflow tracking:
 - Progress: {{completion_summary}}
 
 To check progress: /bmad:bmm:workflows:workflow-status
-  </output>
-  <ask>Would you like to:
+</output>
+<ask>Would you like to:
+
 1. **View status** - Check progress on this entity
 2. **New entity** - Initialize workflow for a different entity
 3. **Reset** - Archive and start fresh for this entity
@@ -64,13 +65,14 @@ Choice [1/2/3]:</ask>
 The BMad Method tracks progress per ENTITY.
 
 What is an Entity?
-- Constitution: System-wide rules (docs/platform/*.md)
+
+- Constitution: System-wide rules (docs/platform/\*.md)
 - Infrastructure Module: Platform components (shell, ui, core-api, etc.)
 - Strategic Container: Business categories (strategy, marketing, etc.)
 - Coordination Unit: Subcategories within categories
 - Business Module: Feature modules within subcategories
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <invoke-task name="select-entity">
   <param name="prompt_user">true</param>
@@ -150,7 +152,7 @@ Before diving into planning, you can optionally explore:
 2. 🔍 **Research** - Domain/competitive/technical analysis
 
 Enter numbers (e.g., "1,2" or "all" or "none"):</ask>
-  </check>
+</check>
 
   <check if="entity_type != constitution AND entity_type != strategic_container">
     <ask>Include discovery research?
@@ -158,13 +160,14 @@ Enter numbers (e.g., "1,2" or "all" or "none"):</ask>
 1. 🔍 **Research** - Domain/technical analysis
 
 Enter "1" or "none":</ask>
-  </check>
+</check>
 
-  <action>Parse selections and set:
+<action>Parse selections and set:
+
 - brainstorm_requested
 - research_requested
   </action>
-</check>
+  </check>
 
 <template-output>brainstorm_requested</template-output>
 <template-output>research_requested</template-output>
@@ -200,8 +203,8 @@ Code: {entity_code}
   <action>Generate YAML from template with all variables</action>
   <action>Save to {output_folder}/bmm-workflow-status.yaml</action>
 
-  <action>Identify first non-completed workflow as next_workflow</action>
-  <action>Look up agent for next_workflow</action>
+<action>Identify first non-completed workflow as next_workflow</action>
+<action>Look up agent for next_workflow</action>
 
   <output>
 ✅ **Created:** {output_folder}/bmm-workflow-status.yaml
@@ -217,7 +220,7 @@ Code: {entity_code}
 To check progress: /bmad:bmm:workflows:workflow-status
 
 Happy building! 🚀
-  </output>
+</output>
 </check>
 
 <check if="n">

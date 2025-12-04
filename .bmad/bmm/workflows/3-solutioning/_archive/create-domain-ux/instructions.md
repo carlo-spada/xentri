@@ -44,12 +44,13 @@ Parent UX:      {parent_ux_path}
 Constitution:   docs/platform/ux-design.md
 
 This UX Design will:
+
 - Inherit from {parent_ux_path}
 - Inherit Constitution UX principles
 - Add designs specific to this scope
 - NOT contradict parent or Constitution
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <check if="existing UX exists at output path">
   <ask>An existing UX Design was found at this level. Do you want to:
@@ -71,6 +72,7 @@ This UX Design will:
 <note>Available: {constitution_ux_content}, {parent_ux_content}, {entity_prd_content}, {entity_architecture_content}, {existing_ux_content}</note>
 
 <action>Extract inherited UX context:
+
 1. Load Constitution UX (docs/platform/ux-design.md)
    - Design system foundation
    - Color system
@@ -89,7 +91,7 @@ This UX Design will:
    - Functional requirements
 
 4. Summarize inheritance context for user
-</action>
+   </action>
 
 <output>
 📜 Inherited UX Context Summary:
@@ -101,6 +103,7 @@ From Constitution:
 - Accessibility: WCAG {wcag_level}
 
 From Parent ({parent_ux_path}):
+
 - Design Direction: {parent_direction}
 - Custom Patterns: {parent_customizations}
 
@@ -122,11 +125,11 @@ For {entity_type_display}, focus on:
   - What error states need UX design?
   - How does it follow Constitution patterns?
 
-  Key questions:
-  "What UI components does this module provide?"
-  "What loading/error states need design?"
-  "What developer experience considerations exist?"
-  </action>
+Key questions:
+"What UI components does this module provide?"
+"What loading/error states need design?"
+"What developer experience considerations exist?"
+</action>
 </check>
 
 <check if="entity_type == 'strategic_container'">
@@ -136,11 +139,11 @@ For {entity_type_display}, focus on:
   - What design direction fits this category?
   - How do children within this category share UX patterns?
 
-  Key questions:
-  "What business outcomes does this category's UX deliver?"
-  "What unifies the experience across child modules?"
-  "What user personas use this category?"
-  </action>
+Key questions:
+"What business outcomes does this category's UX deliver?"
+"What unifies the experience across child modules?"
+"What user personas use this category?"
+</action>
 </check>
 
 <check if="entity_type == 'coordination_unit'">
@@ -150,11 +153,11 @@ For {entity_type_display}, focus on:
   - What component patterns are shared?
   - How does navigation work between modules?
 
-  Key questions:
-  "How do users flow between modules in this subcategory?"
-  "What shared UI patterns exist?"
-  "What coordination is needed between module UIs?"
-  </action>
+Key questions:
+"How do users flow between modules in this subcategory?"
+"What shared UI patterns exist?"
+"What coordination is needed between module UIs?"
+</action>
 </check>
 
 <check if="entity_type == 'business_module'">
@@ -164,11 +167,11 @@ For {entity_type_display}, focus on:
   - What states (loading, error, empty) need design?
   - What custom components are needed?
 
-  Key questions:
-  "What does the user see when using this feature?"
-  "What is the step-by-step flow?"
-  "What feedback do users get at each step?"
-  </action>
+Key questions:
+"What does the user see when using this feature?"
+"What is the step-by-step flow?"
+"What feedback do users get at each step?"
+</action>
 </check>
 
 <action>Generate content for ux_purpose and scope_definition sections</action>
@@ -184,16 +187,18 @@ For {entity_type_display}, focus on:
 <action>Define the users of this entity:
 
 For user-facing entities, understand:
+
 - Primary user personas
 - User goals and motivations
 - User skill levels
 - Device preferences
 - Pain points to address
-</action>
+  </action>
 
 <ask>Who are the primary users of this {entity_type_display}?
 
 Describe:
+
 - Who they are
 - What they're trying to accomplish
 - Their technical comfort level
@@ -210,12 +215,13 @@ Describe:
 <action>Design the user flows for this entity:
 
 Based on PRD requirements at this level, identify:
+
 - Primary user journeys
 - Screen sequence for each journey
 - Decision points and branching
 - Error handling
 - Success states
-</action>
+  </action>
 
 <check if="entity_type == 'infrastructure_module'">
   <action>For infrastructure, focus on:
@@ -252,22 +258,23 @@ Based on PRD requirements at this level, identify:
   - Transitions and feedback
   </action>
 
-  <action>Generate design direction mockups:
-  Create: {design_directions_html}
+<action>Generate design direction mockups:
+Create: {design_directions_html}
 
-  Show 3-4 approaches for key screens with:
-  - Different layout options
-  - Information hierarchy variations
-  - Interaction pattern alternatives
+Show 3-4 approaches for key screens with:
+
+- Different layout options
+- Information hierarchy variations
+- Interaction pattern alternatives
   </action>
 
-  <output>🎨 Design Direction Mockups Created!
+<output>🎨 Design Direction Mockups Created!
 
 Open: {design_directions_html}
 
 Explore the design approaches and tell me which resonates.</output>
 
-  <ask>Which design direction works for this module?</ask>
+<ask>Which design direction works for this module?</ask>
 </check>
 
 <invoke-task name="save-with-checkpoint">
@@ -281,6 +288,7 @@ Explore the design approaches and tell me which resonates.</output>
 <action>Specify custom components needed for this module:
 
 For components not covered by the design system:
+
 - Component purpose
 - Anatomy (elements)
 - States (default, hover, focus, disabled, loading, error)
@@ -288,7 +296,7 @@ For components not covered by the design system:
 - Props/configuration
 - Accessibility requirements
 - Usage examples
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -301,16 +309,17 @@ For components not covered by the design system:
 <check if="entity_type == 'infrastructure_module'">
   <action>Document exposed UX components:
 
-  **Exposed Components:**
-  What components does this module provide?
-  - Component API
-  - Theme integration
-  - Accessibility features
-  - Usage guidelines
+**Exposed Components:**
+What components does this module provide?
 
-  **Consumed Patterns:**
-  What Constitution patterns does this module use?
-  </action>
+- Component API
+- Theme integration
+- Accessibility features
+- Usage guidelines
+
+**Consumed Patterns:**
+What Constitution patterns does this module use?
+</action>
 
   <invoke-task name="save-with-checkpoint">
     <param name="file_path">{default_output_file}</param>
@@ -322,15 +331,15 @@ For components not covered by the design system:
 <check if="entity_type == 'strategic_container'">
   <action>Document category-level UX coordination:
 
-  **Category Design Direction:**
-  Visual approach for this business domain
+**Category Design Direction:**
+Visual approach for this business domain
 
-  **Child Coordination Guidelines:**
-  How children should share UX patterns
+**Child Coordination Guidelines:**
+How children should share UX patterns
 
-  **Navigation Strategy:**
-  How users move within this category
-  </action>
+**Navigation Strategy:**
+How users move within this category
+</action>
 
   <invoke-task name="save-with-checkpoint">
     <param name="file_path">{default_output_file}</param>
@@ -342,15 +351,15 @@ For components not covered by the design system:
 <check if="entity_type == 'coordination_unit'">
   <action>Document module integration UX:
 
-  **Module Orchestration:**
-  How modules appear and flow together
+**Module Orchestration:**
+How modules appear and flow together
 
-  **Shared Components:**
-  Components used across child modules
+**Shared Components:**
+Components used across child modules
 
-  **Integration Patterns:**
-  UX for cross-module workflows
-  </action>
+**Integration Patterns:**
+UX for cross-module workflows
+</action>
 
   <invoke-task name="save-with-checkpoint">
     <param name="file_path">{default_output_file}</param>
@@ -364,12 +373,13 @@ For components not covered by the design system:
 <action>Document all states and interaction patterns:
 
 For this {entity_type_display}, specify:
+
 - Loading states (skeletons, spinners, progress)
 - Error states (inline, modal, page-level)
 - Empty states (first use, no results, cleared)
 - Success states (confirmation, next steps)
 - Transitions (enter, exit, between states)
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -382,13 +392,14 @@ For this {entity_type_display}, specify:
 <action>Document accessibility implementation for this entity:
 
 Based on Constitution WCAG {wcag_level} requirement:
+
 - Keyboard navigation for all interactions
 - Focus management
 - ARIA labels
 - Screen reader considerations
 - Color contrast verification
 - Touch target sizes
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -401,12 +412,13 @@ Based on Constitution WCAG {wcag_level} requirement:
 <action>Document responsive behavior for this entity:
 
 Based on Constitution breakpoints:
+
 - Desktop behavior
 - Tablet adaptation
 - Mobile adaptation
 - Content priority changes
 - Navigation changes
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -445,6 +457,7 @@ Based on Constitution breakpoints:
 </invoke-task>
 
 <action>Assemble the complete Domain UX Design with:
+
 - Generated frontmatter with inheritance reference
 - UX purpose and scope
 - User personas (if applicable)
@@ -454,7 +467,7 @@ Based on Constitution breakpoints:
 - States and interactions
 - Accessibility implementation
 - Responsive behavior
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -497,11 +510,12 @@ Based on Constitution breakpoints:
 Created: {output_folder_resolved}ux-design.md
 
 Summary:
+
 - {flow_count} User Flows documented
 - {component_count} Component Specifications
 - Inherits from: {parent_ux_path}
 - Validated against: Constitution + Parent UX
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Next Steps:**
 </output>

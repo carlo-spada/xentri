@@ -34,8 +34,9 @@ No downstream entity may contradict these requirements.
 
 ### PR Summary
 
-| ID | Requirement | Enforcement |
-|----|-------------|-------------|
+| ID  | Requirement | Enforcement |
+| --- | ----------- | ----------- |
+
 {{#each platform_requirements_table}}
 | {{id}} | {{summary}} | {{enforcement}} |
 {{/each}}
@@ -51,8 +52,9 @@ All modules MUST implement these contracts as specified.
 
 ### IC Summary
 
-| ID | Contract | Version |
-|----|----------|---------|
+| ID  | Contract | Version |
+| --- | -------- | ------- |
+
 {{#each integration_contracts_table}}
 | {{id}} | {{name}} | {{version}} |
 {{/each}}
@@ -98,9 +100,9 @@ Impact: {what downstream entities are affected}
 
 ## Document History
 
-| Date | Version | Change | Author |
-|------|---------|--------|--------|
-| {{date}} | 1.0.0 | Initial Constitution created | {{user_name}} |
+| Date     | Version | Change                       | Author        |
+| -------- | ------- | ---------------------------- | ------------- |
+| {{date}} | 1.0.0   | Initial Constitution created | {{user_name}} |
 
 ---
 

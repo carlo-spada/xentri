@@ -41,15 +41,17 @@ Constitution Epics: docs/platform/epics.md
 Parent Epics:       {parent_epics_path}
 
 This epic structure will:
+
 - Align with Constitution epic outcomes
 - Inherit cascading IDs from parent
 - Add entity-specific stories and details
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <invoke-protocol name="discover_inputs" />
 
 <action>Extract inherited epic context:
+
 1. From Constitution (docs/platform/epics.md):
    - Epic structure and IDs
    - PR-xxx and IC-xxx mappings
@@ -58,8 +60,8 @@ This epic structure will:
 2. From Parent ({parent_epics_path}):
    - Parent epic IDs to inherit from
    - Scope boundaries
-</action>
-</step>
+     </action>
+     </step>
 
 <step n="1" goal="Extract Entity Requirements">
 <action>Extract requirements from this entity's PRD:
@@ -122,19 +124,22 @@ Based on entity type:
 <action>Determine which parent epics this entity contributes to:
 
 **Cascading Epic ID Pattern:**
+
 - Constitution Epic 1 → This entity uses Epic 1-x
 - Constitution Epic 2 → This entity uses Epic 2-x
 - Parent Epic 1-1 → This entity uses Epic 1-1-x
 
 For each entity FR, identify:
+
 1. Which Constitution epic it relates to
 2. What cascading ID to use
 3. What stories are needed
 
 Example mapping:
+
 - FR-API-001 relates to Constitution Epic 2 (User Authentication)
 - This entity creates Epic 2-1 with implementation stories
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -183,12 +188,13 @@ Based on entity type, structure epics appropriately:
   - UI/UX implementation epics
   - Each epic delivers user value
 
-  **CRITICAL: User Value Check**
-  Every epic must answer: "What can users DO after this epic?"
-  - ❌ WRONG: "Database layer complete"
-  - ✅ RIGHT: "Users can create and manage content"
+**CRITICAL: User Value Check**
+Every epic must answer: "What can users DO after this epic?"
+
+- ❌ WRONG: "Database layer complete"
+- ✅ RIGHT: "Users can create and manage content"
   </action>
-</check>
+  </check>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -206,6 +212,7 @@ Based on entity type, structure epics appropriately:
 **Goal:** What does this epic deliver for this entity?
 
 **FR Coverage:**
+
 - FR-xxx, FR-xxx mapped to this epic
 
 **Stories:**
@@ -227,9 +234,10 @@ Story {{parent_id}}-{{local_id}}.2: ...
 [Continue for all stories]
 
 **Coordination Points:**
+
 - How does this epic interact with siblings?
 - What does parent need to know?
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -286,18 +294,21 @@ Story {{parent_id}}-{{local_id}}.2: ...
 Created: {output_folder_resolved}epics.md
 
 Aligned with:
+
 - Constitution: docs/platform/epics.md
 - Parent: {parent_epics_path}
 
 **Cascading IDs Used:**
+
 - Epic {{parent_id}}-1, Epic {{parent_id}}-2, ...
 
 **Next Steps:**
+
 1. Create stories: create-story workflow
 2. Begin sprint planning
 3. Start implementation with dev-story workflow
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-</step>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
+   </step>
 
 </workflow>

@@ -9,19 +9,20 @@
 <overview>
 This workflow migrates existing documentation to the Five Entity Types federated model:
 
-| Entity Type | Path Pattern | Purpose |
-|-------------|--------------|---------|
-| Constitution | `docs/platform/*.md` | System-wide rules (PR/IC) |
-| Infrastructure Module | `docs/platform/{module}/` | Platform services |
-| Strategic Container | `docs/{category}/` | Business category coordination |
-| Coordination Unit | `docs/{cat}/{subcat}/` | Subcategory orchestration |
-| Business Module | `docs/{cat}/{subcat}/{mod}/` | Feature implementation |
+| Entity Type           | Path Pattern                 | Purpose                        |
+| --------------------- | ---------------------------- | ------------------------------ |
+| Constitution          | `docs/platform/*.md`         | System-wide rules (PR/IC)      |
+| Infrastructure Module | `docs/platform/{module}/`    | Platform services              |
+| Strategic Container   | `docs/{category}/`           | Business category coordination |
+| Coordination Unit     | `docs/{cat}/{subcat}/`       | Subcategory orchestration      |
+| Business Module       | `docs/{cat}/{subcat}/{mod}/` | Feature implementation         |
 
 **Migration adds:**
+
 - Proper frontmatter with entity type, parent references
 - Inheritance validation markers
 - Requirement ID prefixes (FR-xxx, PR-xxx, IC-xxx)
-</overview>
+  </overview>
 
 <step n="1" goal="Greet and explain migration scope">
 
@@ -31,6 +32,7 @@ This workflow migrates existing documentation to the Five Entity Types federated
 Hello {user_name}! I'll help migrate your documentation to the Five Entity Types model.
 
 **What this workflow does:**
+
 1. Scans `{output_folder}` for existing documentation
 2. Detects entity type for each document based on path
 3. Adds/updates frontmatter with proper metadata
@@ -99,7 +101,8 @@ Hello {user_name}! I'll help migrate your documentation to the Five Entity Types
 **Scan Results:**
 
 | Location | Documents Found | Entity Type (Detected) |
-|----------|-----------------|------------------------|
+| -------- | --------------- | ---------------------- |
+
 {{#each scanned_locations}}
 | {{path}} | {{doc_count}} | {{detected_entity_type}} |
 {{/each}}
@@ -123,17 +126,19 @@ Hello {user_name}! I'll help migrate your documentation to the Five Entity Types
 **Frontmatter Analysis:**
 
 | Document | Entity Type | Status | Issues |
-|----------|-------------|--------|--------|
+| -------- | ----------- | ------ | ------ |
+
 {{#each analyzed_docs}}
 | {{path}} | {{entity_type}} | {{status}} | {{issues}} |
 {{/each}}
 
 **Summary:**
+
 - Compliant: {{compliant_count}}
 - Missing frontmatter: {{missing_count}}
 - Incomplete frontmatter: {{incomplete_count}}
 - Wrong entity type: {{wrong_type_count}}
-</output>
+  </output>
 
 <check if="all compliant">
   <output>All documents are already federation-compliant! No migration needed.</output>
@@ -159,17 +164,20 @@ Hello {user_name}! I'll help migrate your documentation to the Five Entity Types
 Current: {{current_frontmatter || 'None'}}
 
 Proposed:
+
 ```yaml
 ---
-entity_type: {{proposed_entity_type}}
-entity_type_display: {{proposed_display_name}}
-parent: {{proposed_parent_path}}
-fr_prefix: {{proposed_fr_prefix}}
-created: {{created_date}}
-migrated: {{migration_date}}
+entity_type: { { proposed_entity_type } }
+entity_type_display: { { proposed_display_name } }
+parent: { { proposed_parent_path } }
+fr_prefix: { { proposed_fr_prefix } }
+created: { { created_date } }
+migrated: { { migration_date } }
 ---
 ```
+
 ---
+
 {{/each}}
 </output>
 
@@ -177,6 +185,7 @@ migrated: {{migration_date}}
 Review the proposed changes above.
 
 Options:
+
 1. **Apply all changes** - Migrate all documents
 2. **Selective migration** - Choose which documents to migrate
 3. **Dry run only** - Generate report without modifying files
@@ -250,6 +259,7 @@ Your choice [1/2/3/4]:
     <check if="options.fix_inheritance_violations == false">
       <action>Mark for manual review</action>
     </check>
+
   </check>
 </substep>
 
@@ -296,27 +306,28 @@ Completed: {{success_count}}/{{total_count}}
 
 ## Executive Summary
 
-| Metric | Count |
-|--------|-------|
-| Documents Scanned | {{total_scanned}} |
-| Already Compliant | {{already_compliant}} |
-| Migrated Successfully | {{migrated_count}} |
-| Failed | {{failed_count}} |
-| Manual Review Needed | {{review_count}} |
+| Metric                | Count                 |
+| --------------------- | --------------------- |
+| Documents Scanned     | {{total_scanned}}     |
+| Already Compliant     | {{already_compliant}} |
+| Migrated Successfully | {{migrated_count}}    |
+| Failed                | {{failed_count}}      |
+| Manual Review Needed  | {{review_count}}      |
 
 ## Entity Type Distribution
 
-| Entity Type | Count |
-|-------------|-------|
-| Constitution | {{constitution_count}} |
+| Entity Type           | Count                    |
+| --------------------- | ------------------------ |
+| Constitution          | {{constitution_count}}   |
 | Infrastructure Module | {{infrastructure_count}} |
-| Strategic Container | {{strategic_count}} |
-| Coordination Unit | {{coordination_count}} |
-| Business Module | {{business_count}} |
+| Strategic Container   | {{strategic_count}}      |
+| Coordination Unit     | {{coordination_count}}   |
+| Business Module       | {{business_count}}       |
 
 ## Changes Applied
 
 {{#each changes}}
+
 ### {{path}}
 
 **Entity Type:** {{entity_type}}
@@ -327,22 +338,25 @@ Completed: {{success_count}}/{{total_count}}
 {{#if violations}}
 **Inheritance Violations:**
 {{#each violations}}
+
 - {{this}}
-{{/each}}
-{{/if}}
+  {{/each}}
+  {{/if}}
 
 ---
+
 {{/each}}
 
 ## Manual Review Items
 
 {{#if review_items}}
 {{#each review_items}}
+
 - [ ] {{path}}: {{issue}}
-{{/each}}
-{{else}}
-No manual review items.
-{{/if}}
+      {{/each}}
+      {{else}}
+      No manual review items.
+      {{/if}}
 
 ## Next Steps
 
@@ -355,7 +369,7 @@ No manual review items.
 
 ---
 
-*Generated by migrate-to-federation workflow*
+_Generated by migrate-to-federation workflow_
 </template>
 
 <action>Save report to {migration_report_path}</action>
@@ -366,6 +380,7 @@ No manual review items.
 Report saved to: {migration_report_path}
 
 **Summary:**
+
 - Scanned: {{total_scanned}} documents
 - Migrated: {{migrated_count}} documents
 - Failures: {{failed_count}}

@@ -21,17 +21,17 @@
  *   });
  */
 
-import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql';
-import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
-import { execSync } from 'child_process';
+import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testcontainers/postgresql'
+import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import pg from 'pg'
+import { execSync } from 'child_process'
 
-const { Pool } = pg;
+const { Pool } = pg
 
-let container: StartedPostgreSqlContainer | null = null;
-let prisma: PrismaClient | null = null;
-let pool: pg.Pool | null = null;
+let container: StartedPostgreSqlContainer | null = null
+let prisma: PrismaClient | null = null
+let pool: pg.Pool | null = null
 
 /**
  * Starts a PostgreSQL container and runs migrations.
@@ -42,14 +42,10 @@ export async function setupPostgres(): Promise<string> {
     .withDatabase('xentri_test')
     .withUsername('test')
     .withPassword('test')
-    .withCommand([
-      'postgres',
-      '-c', 'row_security=on',
-      '-c', 'log_statement=none',
-    ])
-    .start();
+    .withCommand(['postgres', '-c', 'row_security=on', '-c', 'log_statement=none'])
+    .start()
 
-  const connectionString = container.getConnectionUri();
+  const connectionString = container.getConnectionUri()
 
   // Run migrations
   execSync('npx prisma migrate deploy', {
@@ -59,17 +55,17 @@ export async function setupPostgres(): Promise<string> {
     },
     cwd: process.cwd(),
     stdio: 'pipe',
-  });
+  })
 
   // Create Prisma client with pg adapter (Prisma 7.0+)
-  pool = new Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
+  pool = new Pool({ connectionString })
+  const adapter = new PrismaPg(pool)
 
-  prisma = new PrismaClient({ adapter });
+  prisma = new PrismaClient({ adapter })
 
-  await prisma.$connect();
+  await prisma.$connect()
 
-  return connectionString;
+  return connectionString
 }
 
 /**
@@ -78,18 +74,18 @@ export async function setupPostgres(): Promise<string> {
  */
 export async function teardownPostgres(): Promise<void> {
   if (prisma) {
-    await prisma.$disconnect();
-    prisma = null;
+    await prisma.$disconnect()
+    prisma = null
   }
 
   if (pool) {
-    await pool.end();
-    pool = null;
+    await pool.end()
+    pool = null
   }
 
   if (container) {
-    await container.stop();
-    container = null;
+    await container.stop()
+    container = null
   }
 }
 
@@ -99,23 +95,23 @@ export async function teardownPostgres(): Promise<void> {
  */
 export function getTestPrismaClient(): PrismaClient {
   if (!prisma) {
-    throw new Error('Postgres container not initialized. Call setupPostgres() first.');
+    throw new Error('Postgres container not initialized. Call setupPostgres() first.')
   }
-  return prisma;
+  return prisma
 }
 
 /**
  * Sets the org context for RLS queries.
  */
 export async function setOrgContext(orgId: string): Promise<void> {
-  const client = getTestPrismaClient();
-  await client.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+  const client = getTestPrismaClient()
+  await client.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 }
 
 /**
  * Clears the org context.
  */
 export async function clearOrgContext(): Promise<void> {
-  const client = getTestPrismaClient();
-  await client.$executeRaw`SELECT set_config('app.current_org_id', '', true)`;
+  const client = getTestPrismaClient()
+  await client.$executeRaw`SELECT set_config('app.current_org_id', '', true)`
 }

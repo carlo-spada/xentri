@@ -64,9 +64,9 @@ Enter choice (1-4):</ask>
   - [e] New Epic (must inherit from Constitution/parent epic)
   - [s] New Story to existing Epic
 
-  Enter choice:</ask>
+Enter choice:</ask>
 
-  <action>Gather details:
+<action>Gather details:
 
 - For epic: parent epic ID, local ID, title, goal, FR coverage
 - For story: which epic, title, acceptance criteria
@@ -81,7 +81,7 @@ Enter choice (1-4):</ask>
 <check if="amendment_type == 'MODIFY'">
   <ask>Which epic or story to modify?</ask>
 
-  <action>Gather modification details:
+<action>Gather modification details:
 
 - What is changing?
 - Why is this change needed?
@@ -93,7 +93,7 @@ Enter choice (1-4):</ask>
 <check if="amendment_type == 'REMOVE'">
   <ask>Which epic or story to remove?</ask>
 
-  <output>⚠️ Removing items may affect child entities (if any).</output>
+<output>⚠️ Removing items may affect child entities (if any).</output>
 </check>
 
 <check if="amendment_type == 'REORDER'">
@@ -114,7 +114,7 @@ Enter choice (1-4):</ask>
 
 The amendment cannot contradict Constitution or parent epics.
 Please revise the amendment.</output>
-  <goto step="2">Revise amendment</goto>
+<goto step="2">Revise amendment</goto>
 </check>
 
 <output>✅ Amendment passes inheritance validation</output>
@@ -149,7 +149,7 @@ Please revise the amendment.</output>
 
 <ask>Proceed with amendment? (y/n)</ask>
 <check if="response != 'y'">
-  <action>Exit workflow</action>
+<action>Exit workflow</action>
 </check>
 </step>
 
@@ -162,7 +162,7 @@ Please revise the amendment.</output>
 2. Maintain cascading ID integrity
 3. Update traceability matrix
 4. Add changelog entry
-</action>
+   </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -187,8 +187,8 @@ Rationale: {user_rationale}
 
 **Changelog Entry Added:**
 
-| Date | Author | Change | Rationale |
-|------|--------|--------|-----------|
+| Date   | Author      | Change   | Rationale   |
+| ------ | ----------- | -------- | ----------- |
 | {date} | {user_name} | {change} | {rationale} |
 
 **Follow-up Actions:**

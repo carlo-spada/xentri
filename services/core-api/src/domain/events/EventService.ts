@@ -1,8 +1,8 @@
-import { randomUUID } from 'crypto';
-import type { PrismaClient } from '@prisma/client';
-import type { Prisma as PrismaNamespace } from '@prisma/client';
-import pkg from '@prisma/client';
-const { Prisma } = pkg;
+import { randomUUID } from 'crypto'
+import type { PrismaClient } from '@prisma/client'
+import type { Prisma as PrismaNamespace } from '@prisma/client'
+import pkg from '@prisma/client'
+const { Prisma } = pkg
 import {
   CreateEventSchema,
   type CreateEventInput,
@@ -11,23 +11,23 @@ import {
   type EventAckResponse,
   type EventListMeta,
   EventPayloadSchemas,
-} from '@xentri/ts-schema';
-import { getPrisma } from '../../infra/db.js';
+} from '@xentri/ts-schema'
+import { getPrisma } from '../../infra/db.js'
 
 // ===================
 // Types
 // ===================
 
 export interface ListEventsOptions {
-  type?: EventType;
-  since?: Date;
-  limit?: number;
-  cursor?: string;
+  type?: EventType
+  since?: Date
+  limit?: number
+  cursor?: string
 }
 
 export interface ListEventsResult {
-  data: SystemEvent[];
-  meta: EventListMeta;
+  data: SystemEvent[]
+  meta: EventListMeta
 }
 
 // ===================
@@ -35,10 +35,10 @@ export interface ListEventsResult {
 // ===================
 
 export class EventService {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient
 
   constructor(prisma?: PrismaClient) {
-    this.prisma = prisma || getPrisma();
+    this.prisma = prisma || getPrisma()
   }
 
   /**
@@ -51,32 +51,25 @@ export class EventService {
    * @param orgId - Organization ID for RLS context
    * @returns Event acknowledgment with event_id
    */
-  async createEvent(
-    input: CreateEventInput,
-    orgId: string
-  ): Promise<EventAckResponse> {
+  async createEvent(input: CreateEventInput, orgId: string): Promise<EventAckResponse> {
     // Validate input with Zod
-    const validated = CreateEventSchema.parse(input);
+    const validated = CreateEventSchema.parse(input)
 
     // Enforce typed payload schema for the specific event type
-    const typedPayloadSchema = EventPayloadSchemas[validated.type];
+    const typedPayloadSchema = EventPayloadSchemas[validated.type]
     if (typedPayloadSchema) {
-      typedPayloadSchema.parse(validated.payload);
+      typedPayloadSchema.parse(validated.payload)
     }
 
     // Generate ID and dedupe_key if not provided
-    const eventId = randomUUID();
-    const dedupeKey =
-      validated.dedupe_key ||
-      `${validated.type}:${validated.org_id}:${Date.now()}`;
-    const occurredAt = validated.occurred_at
-      ? new Date(validated.occurred_at)
-      : new Date();
+    const eventId = randomUUID()
+    const dedupeKey = validated.dedupe_key || `${validated.type}:${validated.org_id}:${Date.now()}`
+    const occurredAt = validated.occurred_at ? new Date(validated.occurred_at) : new Date()
 
     // Execute in transaction with RLS context
     await this.prisma.$transaction(async (tx) => {
       // Set org context for RLS
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 
       // Insert event (using raw SQL to match column names exactly)
       await tx.$executeRaw`
@@ -115,13 +108,13 @@ export class EventService {
           ${validated.source},
           ${validated.envelope_version}
         )
-      `;
-    });
+      `
+    })
 
     return {
       event_id: eventId,
       acknowledged: true,
-    };
+    }
   }
 
   /**
@@ -134,75 +127,72 @@ export class EventService {
    * @param options - Filtering and pagination options
    * @returns Paginated list of events
    */
-  async listEvents(
-    orgId: string,
-    options: ListEventsOptions = {}
-  ): Promise<ListEventsResult> {
-    const { type, since, limit = 20, cursor } = options;
+  async listEvents(orgId: string, options: ListEventsOptions = {}): Promise<ListEventsResult> {
+    const { type, since, limit = 20, cursor } = options
 
     // Decode cursor (base64 encoded timestamp:id)
-    let cursorTimestamp: Date | null = null;
-    let cursorId: string | null = null;
+    let cursorTimestamp: Date | null = null
+    let cursorId: string | null = null
     if (cursor) {
       try {
-        const decoded = Buffer.from(cursor, 'base64').toString('utf-8');
-        const [ts, id] = decoded.split(':');
-        cursorTimestamp = new Date(ts);
-        cursorId = id;
+        const decoded = Buffer.from(cursor, 'base64').toString('utf-8')
+        const [ts, id] = decoded.split(':')
+        cursorTimestamp = new Date(ts)
+        cursorId = id
       } catch {
         // Invalid cursor, ignore
       }
     }
 
     // Fetch one extra to determine has_more
-    const fetchLimit = Math.min(limit, 100) + 1;
+    const fetchLimit = Math.min(limit, 100) + 1
 
     // Build dynamic SQL fragments using Prisma.sql
-    const whereConditions: PrismaNamespace.Sql[] = [Prisma.sql`org_id = ${orgId}`];
+    const whereConditions: PrismaNamespace.Sql[] = [Prisma.sql`org_id = ${orgId}`]
 
     if (type) {
-      whereConditions.push(Prisma.sql`event_type = ${type}`);
+      whereConditions.push(Prisma.sql`event_type = ${type}`)
     }
 
     if (since) {
-      whereConditions.push(Prisma.sql`occurred_at >= ${since}`);
+      whereConditions.push(Prisma.sql`occurred_at >= ${since}`)
     }
 
     if (cursorTimestamp && cursorId) {
-      whereConditions.push(
-        Prisma.sql`(occurred_at, id) < (${cursorTimestamp}, ${cursorId})`
-      );
+      whereConditions.push(Prisma.sql`(occurred_at, id) < (${cursorTimestamp}, ${cursorId})`)
     }
 
     const whereClause =
       whereConditions.length > 0
         ? Prisma.sql`WHERE ${Prisma.join(whereConditions, ' AND ')}`
-        : Prisma.sql``;
+        : Prisma.sql``
 
     // Build and execute query
     const events = await this.prisma.$transaction(async (tx) => {
       // Set org context for RLS
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 
       // Execute parameterized query with proper SQL fragments
-      const rows = await tx.$queryRaw<Array<{
-        id: string;
-        event_type: string;
-        occurred_at: Date;
-        created_at: Date;
-        org_id: string;
-        user_id: string | null;
-        actor_type: string;
-        actor_id: string;
-        payload_schema: string;
-        payload: Record<string, unknown>;
-        meta: Record<string, unknown> | null;
-        dedupe_key: string | null;
-        correlation_id: string | null;
-        trace_id: string | null;
-        source: string;
-        envelope_version: string;
-      }>>`
+      const rows = await tx.$queryRaw<
+        Array<{
+          id: string
+          event_type: string
+          occurred_at: Date
+          created_at: Date
+          org_id: string
+          user_id: string | null
+          actor_type: string
+          actor_id: string
+          payload_schema: string
+          payload: Record<string, unknown>
+          meta: Record<string, unknown> | null
+          dedupe_key: string | null
+          correlation_id: string | null
+          trace_id: string | null
+          source: string
+          envelope_version: string
+        }>
+      >`
         SELECT
           id,
           event_type,
@@ -224,21 +214,21 @@ export class EventService {
         ${whereClause}
         ORDER BY occurred_at DESC, id DESC
         LIMIT ${fetchLimit}
-      `;
+      `
 
-      return rows;
-    });
+      return rows
+    })
 
     // Determine if there are more results
-    const hasMore = events.length > limit;
-    const data = hasMore ? events.slice(0, limit) : events;
+    const hasMore = events.length > limit
+    const data = hasMore ? events.slice(0, limit) : events
 
     // Generate next cursor from last item
-    let nextCursor: string | undefined;
+    let nextCursor: string | undefined
     if (hasMore && data.length > 0) {
-      const lastEvent = data[data.length - 1];
-      const cursorData = `${lastEvent.occurred_at.toISOString()}:${lastEvent.id}`;
-      nextCursor = Buffer.from(cursorData).toString('base64');
+      const lastEvent = data[data.length - 1]
+      const cursorData = `${lastEvent.occurred_at.toISOString()}:${lastEvent.id}`
+      nextCursor = Buffer.from(cursorData).toString('base64')
     }
 
     // Transform to SystemEvent format
@@ -257,16 +247,16 @@ export class EventService {
       payload: row.payload,
       meta: row.meta
         ? {
-          source: (row.meta as Record<string, unknown>).source as string,
-          ...(row.meta as Record<string, unknown>),
-        }
+            source: (row.meta as Record<string, unknown>).source as string,
+            ...(row.meta as Record<string, unknown>),
+          }
         : undefined,
       dedupe_key: row.dedupe_key || undefined,
       correlation_id: row.correlation_id || undefined,
       trace_id: row.trace_id || undefined,
       source: row.source,
       envelope_version: '1.0' as const,
-    }));
+    }))
 
     return {
       data: transformedData,
@@ -274,9 +264,9 @@ export class EventService {
         cursor: nextCursor,
         has_more: hasMore,
       },
-    };
+    }
   }
 }
 
 // Export singleton instance
-export const eventService = new EventService();
+export const eventService = new EventService()

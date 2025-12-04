@@ -50,7 +50,7 @@ so that **the system is observable, deployable with zero downtime, and quality g
 - [x] **Task 5: Railway Deployment Configuration** (AC: 4) ✅ **COMPLETE**
   - [x] 5.1 Create `services/core-api/railway.toml` with build command, start command, health check
   - [x] 5.2 Create `apps/shell/railway.toml` with Astro build/start, static asset handling
-  - [x] 5.3 Document environment variables in `docs/deployment-plan.md` (DATABASE_URL, CLERK_*, etc.)
+  - [x] 5.3 Document environment variables in `docs/deployment-plan.md` (DATABASE*URL, CLERK*\*, etc.)
   - [x] 5.4 Configure zero-downtime deploys via rolling update strategy
 - [x] 5.5 Add Railway-specific Dockerfile optimizations (multi-stage build, minimal image)
 - [x] 5.6 Create `docs/k8s-migration-runbook.md` stub with migration triggers (ADR-004)
@@ -89,9 +89,10 @@ so that **the system is observable, deployable with zero downtime, and quality g
 ### Technical Specifications
 
 **Pino Logger Configuration:**
+
 ```typescript
 // services/core-api/src/lib/logger.ts
-import pino from 'pino';
+import pino from 'pino'
 
 export const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
@@ -100,7 +101,7 @@ export const logger = pino({
   },
   redact: ['req.headers.authorization', 'req.headers.cookie', 'email', 'name'],
   timestamp: pino.stdTimeFunctions.isoTime,
-});
+})
 
 // Request context enrichment
 export function createRequestLogger(req: FastifyRequest) {
@@ -109,19 +110,20 @@ export function createRequestLogger(req: FastifyRequest) {
     org_id: req.orgContext?.orgId,
     user_id: req.auth?.userId,
     request_id: req.id,
-  });
+  })
 }
 ```
 
 **Health Check Endpoint:**
+
 ```typescript
 // services/core-api/src/routes/health.ts
-import { FastifyInstance } from 'fastify';
-import { prisma } from '../lib/prisma';
+import { FastifyInstance } from 'fastify'
+import { prisma } from '../lib/prisma'
 
 export async function healthRoutes(app: FastifyInstance) {
   app.get('/api/v1/health', async (req, reply) => {
-    const dbHealthy = await prisma.$queryRaw`SELECT 1`.then(() => true).catch(() => false);
+    const dbHealthy = await prisma.$queryRaw`SELECT 1`.then(() => true).catch(() => false)
 
     return reply.send({
       status: dbHealthy ? 'healthy' : 'degraded',
@@ -130,12 +132,13 @@ export async function healthRoutes(app: FastifyInstance) {
       checks: {
         database: dbHealthy ? 'ok' : 'fail',
       },
-    });
-  });
+    })
+  })
 }
 ```
 
 **Railway Config (core-api):**
+
 ```toml
 # services/core-api/railway.toml
 [build]
@@ -153,6 +156,7 @@ internalPort = 3000
 ```
 
 **CI Pipeline Enhancement:**
+
 ```yaml
 # .github/workflows/ci.yml additions
 jobs:
@@ -191,6 +195,7 @@ jobs:
 ### Project Structure Notes
 
 **Files to Create (still missing):**
+
 ```
 services/core-api/
 ├── src/
@@ -206,6 +211,7 @@ docs/
 ```
 
 **Files that Exist (verified):**
+
 ```
 services/core-api/
 ├── src/routes/health.ts                   ✅ EXISTS - /health and /health/ready endpoints
@@ -227,6 +233,7 @@ docs/
 ```
 
 **Files to Modify:**
+
 ```
 .github/workflows/ci.yml                   (add coverage threshold check)
 services/core-api/src/server.ts            (integrate custom logger with correlation IDs)
@@ -255,12 +262,14 @@ CLAUDE.md                                  (add deployment and observability com
 **Decision:** Deploy to Railway (PaaS) for bootstrapping, migrate to Kubernetes when triggered.
 
 **Migration Triggers:**
+
 - Monthly spend > $500
 - Compliance requirement (SOC2, GDPR DPA)
 - First paying customer (Redis HA becomes critical)
 - Any written SLA commitment
 
 **Constraints:**
+
 1. Docker-first: Standard Dockerfile, no Nixpacks
 2. Redis with Volume: Attached volume for Streams persistence
 3. Config as Code: All settings in railway.toml files
@@ -270,14 +279,14 @@ CLAUDE.md                                  (add deployment and observability com
 
 ### NFR Alignment
 
-| NFR | Target | How Achieved |
-|-----|--------|--------------|
-| NFR24 | Structured JSON logs | Pino logger with correlation IDs |
-| NFR25 | Error tracking | Sentry SDK with stack traces |
+| NFR   | Target                 | How Achieved                           |
+| ----- | ---------------------- | -------------------------------------- |
+| NFR24 | Structured JSON logs   | Pino logger with correlation IDs       |
+| NFR25 | Error tracking         | Sentry SDK with stack traces           |
 | NFR26 | Performance monitoring | OpenTelemetry traces, metrics endpoint |
-| NFR28 | Alerting | Sentry alerts, Railway health checks |
-| NFR29 | >70% test coverage | Vitest coverage thresholds in CI |
-| NFR1 | Shell load <2s | Smoke test timing assertions |
+| NFR28 | Alerting               | Sentry alerts, Railway health checks   |
+| NFR29 | >70% test coverage     | Vitest coverage thresholds in CI       |
+| NFR1  | Shell load <2s         | Smoke test timing assertions           |
 
 ### Edge Cases
 
@@ -316,6 +325,7 @@ CLAUDE.md                                  (add deployment and observability com
 ### Debug Log References
 
 ### Completion Notes List
+
 - 🚀 Smoke pipeline now boots core-api and shell in CI, waits for health, and runs smoke tests against live endpoints.
 - ✅ Added `/api/v1/metrics` endpoint for basic process metrics and CI checks.
 - 🛡️ Coverage gate widened to include all core-api sources; thresholds remain at 70%.
@@ -325,6 +335,7 @@ CLAUDE.md                                  (add deployment and observability com
 - 🛰️ Astro SSR logging now routed through Pino middleware for server requests with trace IDs.
 
 ### File List
+
 - .github/workflows/ci.yml
 - scripts/smoke-test.ts
 - services/core-api/src/server.ts
@@ -340,12 +351,12 @@ CLAUDE.md                                  (add deployment and observability com
 
 ### Acceptance Criteria Coverage
 
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | ✅ Met | CI runs lint/typecheck/test with 70% thresholds across core-api sources (.github/workflows/ci.yml; services/core-api/vitest.config.ts:10-38). |
+| AC  | Status | Evidence                                                                                                                                                                                                                                                            |
+| --- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC1 | ✅ Met | CI runs lint/typecheck/test with 70% thresholds across core-api sources (.github/workflows/ci.yml; services/core-api/vitest.config.ts:10-38).                                                                                                                       |
 | AC2 | ✅ Met | Structured Pino logging with trace_id/org_id/user_id; Sentry conditional; Clerk plugin optional for smoke (services/core-api/src/lib/logger.ts; services/core-api/src/middleware/tracing.ts; services/core-api/src/lib/sentry.ts; services/core-api/src/server.ts). |
-| AC3 | ✅ Met | Smoke test boots core-api and shell in CI, waits for health, verifies RLS, immutability, Brief event, and shell/health endpoints (.github/workflows/ci.yml; scripts/smoke-test.ts). |
-| AC4 | ✅ Met | Railway config-as-code and Dockerfile support rolling deploys (services/core-api/railway.toml; services/core-api/Dockerfile). |
+| AC3 | ✅ Met | Smoke test boots core-api and shell in CI, waits for health, verifies RLS, immutability, Brief event, and shell/health endpoints (.github/workflows/ci.yml; scripts/smoke-test.ts).                                                                                 |
+| AC4 | ✅ Met | Railway config-as-code and Dockerfile support rolling deploys (services/core-api/railway.toml; services/core-api/Dockerfile).                                                                                                                                       |
 
 ### Remaining Risks / Notes
 
@@ -356,14 +367,14 @@ CLAUDE.md                                  (add deployment and observability com
 
 ## Change Log
 
-| Date | Author | Change |
-|------|--------|--------|
-| 2025-11-27 | SM Agent (Bob) | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, ADR-004, and Story 1.6 learnings |
-| 2025-11-27 | SM Agent (Bob) | Updated task checkboxes based on validation; added validation summary with blocking items |
-| 2025-11-27 | Dev Agent (Amelia) | Added Senior Developer Review (AI) with findings and action items |
+| Date       | Author             | Change                                                                                                                                   |
+| ---------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| 2025-11-27 | SM Agent (Bob)     | Initial draft created in #yolo mode from tech-spec-epic-1, architecture.md, ADR-004, and Story 1.6 learnings                             |
+| 2025-11-27 | SM Agent (Bob)     | Updated task checkboxes based on validation; added validation summary with blocking items                                                |
+| 2025-11-27 | Dev Agent (Amelia) | Added Senior Developer Review (AI) with findings and action items                                                                        |
 | 2025-11-27 | Dev Agent (Amelia) | Re-review CORRECTED: Deployment crashing. Fixed Dockerfile (pnpm deploy), documented PUBLIC_CLERK_PUBLISHABLE_KEY. Status → in-progress. |
-| 2025-11-28 | Dev Agent (Amelia) | Senior Developer Review (AI) - Changes requested on smoke test coverage |
-| 2025-11-28 | Dev Agent (Amelia) | Implemented smoke gating, metrics endpoint, observability doc; status → review |
+| 2025-11-28 | Dev Agent (Amelia) | Senior Developer Review (AI) - Changes requested on smoke test coverage                                                                  |
+| 2025-11-28 | Dev Agent (Amelia) | Implemented smoke gating, metrics endpoint, observability doc; status → review                                                           |
 
 ## Senior Developer Review (AI)
 
@@ -373,6 +384,7 @@ CLAUDE.md                                  (add deployment and observability com
 **Summary:** AC1/AC2/AC3 not satisfied. Core API will fail to start, coverage gates below 70%, and smoke test skips required shell/Brief path in CI.
 
 ### Key Findings
+
 - [High] Core API fails to compile: `crypto` used for `genReqId` without import, preventing server start and logging/Sentry activation (services/core-api/src/server.ts:1-25).
 - [High] Coverage gate below NFR29/AC1: Vitest thresholds set to 20–30% and documented as such; CI will not block sub-70% coverage (services/core-api/vitest.config.ts:21-30, docs/testing-strategy.md:95-105).
 - [High] Smoke test does not exercise shell/Brief flow in CI: script inserts DB rows directly and skips shell/API checks when services aren’t running in CI (scripts/smoke-test.ts:304-341, 377-420).
@@ -380,48 +392,54 @@ CLAUDE.md                                  (add deployment and observability com
 
 ### Acceptance Criteria Coverage
 
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | Missing | Coverage thresholds at 20/30% instead of 70% (services/core-api/vitest.config.ts:21-30; docs/testing-strategy.md:95-105). |
+| AC  | Status  | Evidence                                                                                                                                                                |
+| --- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC1 | Missing | Coverage thresholds at 20/30% instead of 70% (services/core-api/vitest.config.ts:21-30; docs/testing-strategy.md:95-105).                                               |
 | AC2 | Missing | Core API logging pipeline fails to start due to missing `crypto` import for `genReqId`, so structured logging/Sentry cannot run (services/core-api/src/server.ts:1-25). |
-| AC3 | Missing | Smoke test bypasses real signup→Brief flow and skips shell/API checks in CI when services unavailable (scripts/smoke-test.ts:304-341, 377-420). |
-| AC4 | Met | Railway config as code present for zero-downtime deploy path (services/core-api/railway.toml). |
+| AC3 | Missing | Smoke test bypasses real signup→Brief flow and skips shell/API checks in CI when services unavailable (scripts/smoke-test.ts:304-341, 377-420).                         |
+| AC4 | Met     | Railway config as code present for zero-downtime deploy path (services/core-api/railway.toml).                                                                          |
 
 ### Task Validation
 
-| Task | Marked As | Verified As | Evidence |
-|------|-----------|-------------|----------|
-| 1.5 Add test coverage threshold check | Done | Not Done | Thresholds set to 20–30%, not 70% (services/core-api/vitest.config.ts:21-30). |
-| 2.1-2.5 Structured logging with correlation IDs | Done | Blocked | Server fails to start (missing `crypto` import) so logger/tracing never run (services/core-api/src/server.ts:1-25). |
-| 3.1-3.5 Error tracking with Sentry | Done | Partial | SDK wired but blocked by server start failure; no runtime verification (services/core-api/src/server.ts:1-25). |
-| 4.1-4.5 Smoke test extensions | Done | Partial | Script inserts DB records instead of exercising shell/Brief; CI skips when services absent (scripts/smoke-test.ts:304-341, 377-420). |
-| 7.2 Coverage thresholds in vitest.config.ts | Done | Not Done | Thresholds below NFR29 target (services/core-api/vitest.config.ts:21-30). |
+| Task                                            | Marked As | Verified As | Evidence                                                                                                                             |
+| ----------------------------------------------- | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 1.5 Add test coverage threshold check           | Done      | Not Done    | Thresholds set to 20–30%, not 70% (services/core-api/vitest.config.ts:21-30).                                                        |
+| 2.1-2.5 Structured logging with correlation IDs | Done      | Blocked     | Server fails to start (missing `crypto` import) so logger/tracing never run (services/core-api/src/server.ts:1-25).                  |
+| 3.1-3.5 Error tracking with Sentry              | Done      | Partial     | SDK wired but blocked by server start failure; no runtime verification (services/core-api/src/server.ts:1-25).                       |
+| 4.1-4.5 Smoke test extensions                   | Done      | Partial     | Script inserts DB records instead of exercising shell/Brief; CI skips when services absent (scripts/smoke-test.ts:304-341, 377-420). |
+| 7.2 Coverage thresholds in vitest.config.ts     | Done      | Not Done    | Thresholds below NFR29 target (services/core-api/vitest.config.ts:21-30).                                                            |
 
 ### Test Coverage and Gaps
+
 - Coverage gates set to 20–30%; AC/NFR requires ≥70% (services/core-api/vitest.config.ts:21-30).
 - Smoke test skips shell/API timing in CI and doesn’t drive signup→Brief via HTTP (scripts/smoke-test.ts:304-341, 377-420).
 - Coverage artifacts committed locally (packages/ts-schema/coverage, services/core-api/coverage) should be removed/ignored.
 
 ### Architectural Alignment
+
 - Railway config as code remains aligned with ADR-004 (services/core-api/railway.toml).
 - Logging/observability not operational until server start issue is fixed.
 
 ### Security Notes
+
 - Sentry DSN optional; current server start failure prevents error capture.
 - PII redaction paths present in logger config but unverified due to startup failure.
 
 ### Best-Practices and References
+
 - Pino structured logging with request-scoped IDs per NFR24 once server starts (services/core-api/src/lib/logger.ts).
 - Sentry Astro integration gated on env vars (apps/shell/astro.config.mjs).
 
 ### Action Items
 
 **Code Changes Required**
+
 - [ ] [High] Import `crypto` for `genReqId` so Fastify can start and logging/Sentry operate (services/core-api/src/server.ts:1-25).
 - [ ] [High] Raise coverage thresholds to ≥70% and ensure CI fails below target (services/core-api/vitest.config.ts:21-30; docs/testing-strategy.md:95-105).
 - [ ] [High] Make smoke test drive shell/API signup→Brief path (no DB shortcuts) and fail in CI when flow/timing budgets regress (scripts/smoke-test.ts:304-341, 377-420).
 
 **Advisory Notes**
+
 - Note: Clean or git-ignore generated coverage outputs (packages/ts-schema/coverage, services/core-api/coverage) to prevent drift.
 
 ---
@@ -442,19 +460,19 @@ Local validation was incorrectly marked as APPROVE. Production deployment is cra
 
 ### Previous Review Findings - Resolution Status
 
-| Finding | Previous Status | Current Status |
-|---------|-----------------|----------------|
-| Missing `crypto` import in server.ts | HIGH - Blocked | ✅ FIXED locally (server.ts:6) |
-| Coverage thresholds 20-30% vs 70% | HIGH - Blocked | ✅ FIXED (vitest.config.ts:33-38) |
-| Smoke test skips shell/Brief flow | HIGH - Blocked | ⚠️ EXISTS but not validated in prod |
+| Finding                              | Previous Status | Current Status                      |
+| ------------------------------------ | --------------- | ----------------------------------- |
+| Missing `crypto` import in server.ts | HIGH - Blocked  | ✅ FIXED locally (server.ts:6)      |
+| Coverage thresholds 20-30% vs 70%    | HIGH - Blocked  | ✅ FIXED (vitest.config.ts:33-38)   |
+| Smoke test skips shell/Brief flow    | HIGH - Blocked  | ⚠️ EXISTS but not validated in prod |
 
 ### NEW Blocking Issues (Production Deployment)
 
-| # | Severity | Issue | Root Cause | Fix |
-|---|----------|-------|------------|-----|
-| 1 | **HIGH** | Container crash: `Cannot find package 'fastify'` | pnpm hoisting breaks when copying only service node_modules | Use `pnpm deploy` for self-contained output |
-| 2 | **HIGH** | Health check 500: missing publishable key | `PUBLIC_CLERK_PUBLISHABLE_KEY` not set (only `CLERK_PUBLISHABLE_KEY`) | Set both env var forms in Railway |
-| 3 | **MEDIUM** | No prod smoke test evidence | Smoke test only ran locally, not against deployed API/shell | Redeploy and verify health endpoints |
+| #   | Severity   | Issue                                            | Root Cause                                                            | Fix                                         |
+| --- | ---------- | ------------------------------------------------ | --------------------------------------------------------------------- | ------------------------------------------- |
+| 1   | **HIGH**   | Container crash: `Cannot find package 'fastify'` | pnpm hoisting breaks when copying only service node_modules           | Use `pnpm deploy` for self-contained output |
+| 2   | **HIGH**   | Health check 500: missing publishable key        | `PUBLIC_CLERK_PUBLISHABLE_KEY` not set (only `CLERK_PUBLISHABLE_KEY`) | Set both env var forms in Railway           |
+| 3   | **MEDIUM** | No prod smoke test evidence                      | Smoke test only ran locally, not against deployed API/shell           | Redeploy and verify health endpoints        |
 
 ### Fixes Applied This Session
 
@@ -494,12 +512,12 @@ Local validation was incorrectly marked as APPROVE. Production deployment is cra
 
 ### AC Status (Pending Production Verification)
 
-| AC | Local | Production | Notes |
-|----|-------|------------|-------|
-| AC1 | ✅ | ⚠️ Pending | CI gates work, need deploy to pass |
-| AC2 | ✅ | ⚠️ Pending | Logging implemented, needs running service |
-| AC3 | ✅ | ❌ Blocked | Smoke test can't run if service crashes |
-| AC4 | ✅ | ❌ Blocked | Zero-downtime meaningless if service won't start |
+| AC  | Local | Production | Notes                                            |
+| --- | ----- | ---------- | ------------------------------------------------ |
+| AC1 | ✅    | ⚠️ Pending | CI gates work, need deploy to pass               |
+| AC2 | ✅    | ⚠️ Pending | Logging implemented, needs running service       |
+| AC3 | ✅    | ❌ Blocked | Smoke test can't run if service crashes          |
+| AC4 | ✅    | ❌ Blocked | Zero-downtime meaningless if service won't start |
 
 ---
 
@@ -515,18 +533,18 @@ After debugging pnpm v10 + Docker deployment issues, the core-api is now success
 
 ### Deployment Status
 
-| Endpoint | Status | Response |
-|----------|--------|----------|
-| `GET /health` | ✅ 200 | `{"status":"ok"}` |
+| Endpoint            | Status | Response                                     |
+| ------------------- | ------ | -------------------------------------------- |
+| `GET /health`       | ✅ 200 | `{"status":"ok"}`                            |
 | `GET /health/ready` | ✅ 200 | `{"status":"ok","checks":{"database":"ok"}}` |
 
 **Live URL:** https://core-api-production-8016.up.railway.app
 
 ### Issues Resolved
 
-| Issue | Root Cause | Fix |
-|-------|------------|-----|
-| `Cannot find package 'fastify'` | pnpm v10 changed `deploy` command behavior | Added `--legacy` flag to `pnpm deploy` |
+| Issue                                         | Root Cause                                                               | Fix                                                      |
+| --------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------- |
+| `Cannot find package 'fastify'`               | pnpm v10 changed `deploy` command behavior                               | Added `--legacy` flag to `pnpm deploy`                   |
 | `Cannot find module '.prisma/client/default'` | pnpm deploy's postinstall generates Prisma client to wrong relative path | Copy `.prisma` from workspace root to deployed directory |
 
 ### Dockerfile Fixes Applied
@@ -541,12 +559,12 @@ RUN cp -r /app/node_modules/.pnpm/@prisma+client*/node_modules/.prisma /app/depl
 
 ### Final AC Status
 
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | ✅ Met | CI runs lint/typecheck/test with 70% coverage thresholds; failing checks block merge |
+| AC  | Status | Evidence                                                                                  |
+| --- | ------ | ----------------------------------------------------------------------------------------- |
+| AC1 | ✅ Met | CI runs lint/typecheck/test with 70% coverage thresholds; failing checks block merge      |
 | AC2 | ✅ Met | Pino JSON logging with `trace_id`, `org_id`, `user_id`; Sentry integration (DSN optional) |
-| AC3 | ✅ Met | Smoke test validates RLS isolation, health endpoints respond < 300ms |
-| AC4 | ✅ Met | Railway deployment working with zero-downtime rolling updates |
+| AC3 | ✅ Met | Smoke test validates RLS isolation, health endpoints respond < 300ms                      |
+| AC4 | ✅ Met | Railway deployment working with zero-downtime rolling updates                             |
 
 ### Verification Commands
 
@@ -577,28 +595,29 @@ curl -s https://core-api-production-8016.up.railway.app/health/ready
 **Summary:** Smoke test never starts core-api/shell in CI and seeds Brief/events directly, so AC3 is unvalidated. Coverage gate skips core runtime code. Story context file not found; proceeded without it.
 
 ### Key Findings
+
 - [High] Smoke test hits localhost without starting services; CI job builds only, so shell/API checks will fail or be skipped—AC3 not validated (.github/workflows/ci.yml:121-173; scripts/smoke-test.ts:314-375).
 - [High] Brief flow “validation” writes directly to DB/events instead of exercising signup→Brief over HTTP, leaving AC3 untested (scripts/smoke-test.ts:378-435).
 - [Medium] Coverage thresholds exclude routes/domain, weakening the CI quality gate for AC1 (services/core-api/vitest.config.ts:13-37).
 
 ### Acceptance Criteria Coverage
 
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | Implemented | CI runs lint/typecheck/test on PRs; vitest thresholds set to 70% ( .github/workflows/ci.yml:64-120; services/core-api/vitest.config.ts:33-38). |
+| AC  | Status      | Evidence                                                                                                                                                                                                    |
+| --- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC1 | Implemented | CI runs lint/typecheck/test on PRs; vitest thresholds set to 70% ( .github/workflows/ci.yml:64-120; services/core-api/vitest.config.ts:33-38).                                                              |
 | AC2 | Implemented | Pino logger + tracing + Sentry hooks add trace/org/user context (services/core-api/src/lib/logger.ts:1-117; services/core-api/src/middleware/tracing.ts:28-83; services/core-api/src/lib/sentry.ts:22-194). |
-| AC3 | Missing | Smoke test does not start services and seeds DB/events directly, so shell/API path is never exercised ( .github/workflows/ci.yml:121-173; scripts/smoke-test.ts:314-435). |
-| AC4 | Implemented | Railway config-as-code and Dockerfile use pnpm deploy with health checks for rolling deploy path (services/core-api/railway.toml; services/core-api/Dockerfile). |
+| AC3 | Missing     | Smoke test does not start services and seeds DB/events directly, so shell/API path is never exercised ( .github/workflows/ci.yml:121-173; scripts/smoke-test.ts:314-435).                                   |
+| AC4 | Implemented | Railway config-as-code and Dockerfile use pnpm deploy with health checks for rolling deploy path (services/core-api/railway.toml; services/core-api/Dockerfile).                                            |
 
 ### Task Validation
 
-| Task | Marked As | Verified As | Evidence |
-|------|-----------|-------------|----------|
-| Task 1: CI quality gates | Done | Partial (no service startup in smoke; coverage scope narrow) | .github/workflows/ci.yml:64-173; services/core-api/vitest.config.ts:13-37 |
-| Task 2: Structured logging | Done | Verified | services/core-api/src/lib/logger.ts:1-117; services/core-api/src/middleware/tracing.ts:28-83 |
-| Task 3: Error tracking | Done | Verified (conditional on DSN) | services/core-api/src/lib/sentry.ts:22-194; apps/shell/astro.config.mjs:1-36 |
-| Task 4: Smoke test scope | Done | Not Done (no HTTP flow, relies on DB inserts) | scripts/smoke-test.ts:314-435; .github/workflows/ci.yml:121-173 |
-| Task 5: Railway deployment config | Done | Verified | services/core-api/railway.toml:1-29; services/core-api/Dockerfile:1-76 |
+| Task                              | Marked As | Verified As                                                  | Evidence                                                                                     |
+| --------------------------------- | --------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Task 1: CI quality gates          | Done      | Partial (no service startup in smoke; coverage scope narrow) | .github/workflows/ci.yml:64-173; services/core-api/vitest.config.ts:13-37                    |
+| Task 2: Structured logging        | Done      | Verified                                                     | services/core-api/src/lib/logger.ts:1-117; services/core-api/src/middleware/tracing.ts:28-83 |
+| Task 3: Error tracking            | Done      | Verified (conditional on DSN)                                | services/core-api/src/lib/sentry.ts:22-194; apps/shell/astro.config.mjs:1-36                 |
+| Task 4: Smoke test scope          | Done      | Not Done (no HTTP flow, relies on DB inserts)                | scripts/smoke-test.ts:314-435; .github/workflows/ci.yml:121-173                              |
+| Task 5: Railway deployment config | Done      | Verified                                                     | services/core-api/railway.toml:1-29; services/core-api/Dockerfile:1-76                       |
 
 ### Test Coverage and Gaps
 

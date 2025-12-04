@@ -158,7 +158,7 @@ This workflow creates the Epic structure for your entity.
 **Coordination:**
 
 - Dependencies and integration points
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>

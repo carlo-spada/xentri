@@ -12,26 +12,26 @@ All events use the `SystemEvent` envelope:
 ```typescript
 interface SystemEvent<TPayload = unknown> {
   // Identity
-  id: string;                    // UUID v7 (time-ordered)
-  type: string;                  // Event type (IC-002 format)
+  id: string // UUID v7 (time-ordered)
+  type: string // Event type (IC-002 format)
 
   // Payload
-  payload: TPayload;             // Event-specific data
+  payload: TPayload // Event-specific data
 
   // Context
-  org_id: string;                // Tenant isolation
-  actor_id: string;              // Who triggered (user or system)
-  actor_type: 'user' | 'system' | 'copilot';
+  org_id: string // Tenant isolation
+  actor_id: string // Who triggered (user or system)
+  actor_type: 'user' | 'system' | 'copilot'
 
   // Tracing
-  correlation_id?: string;       // Links related events
-  causation_id?: string;         // Event that caused this
-  trace_id: string;              // Distributed tracing
+  correlation_id?: string // Links related events
+  causation_id?: string // Event that caused this
+  trace_id: string // Distributed tracing
 
   // Metadata
-  version: string;               // Schema version (e.g., "v1")
-  created_at: string;            // ISO8601 timestamp
-  idempotency_key?: string;      // For deduplication
+  version: string // Schema version (e.g., "v1")
+  created_at: string // ISO8601 timestamp
+  idempotency_key?: string // For deduplication
 }
 ```
 
@@ -41,15 +41,16 @@ interface SystemEvent<TPayload = unknown> {
 
 Format: `xentri.{category}.{entity}.{action}.{version}`
 
-| Component | Description | Example |
-|-----------|-------------|---------|
-| `xentri` | Namespace prefix | Always "xentri" |
-| `category` | Business category | `finance`, `sales`, `strategy` |
-| `entity` | Domain entity | `invoice`, `deal`, `soul` |
-| `action` | What happened | `created`, `updated`, `approved` |
-| `version` | Schema version | `v1`, `v2` |
+| Component  | Description       | Example                          |
+| ---------- | ----------------- | -------------------------------- |
+| `xentri`   | Namespace prefix  | Always "xentri"                  |
+| `category` | Business category | `finance`, `sales`, `strategy`   |
+| `entity`   | Domain entity     | `invoice`, `deal`, `soul`        |
+| `action`   | What happened     | `created`, `updated`, `approved` |
+| `version`  | Schema version    | `v1`, `v2`                       |
 
 **Examples:**
+
 - `xentri.finance.invoice.created.v1`
 - `xentri.sales.deal.stage_changed.v1`
 - `xentri.strategy.soul.updated.v1`
@@ -66,10 +67,10 @@ Emitted when a new Soul is created for an organization.
 
 ```typescript
 interface SoulCreatedPayload {
-  soul_id: string;
-  business_type: string;
-  industry: string;
-  sections_initialized: string[];
+  soul_id: string
+  business_type: string
+  industry: string
+  sections_initialized: string[]
 }
 ```
 
@@ -79,11 +80,11 @@ Emitted when Soul content changes.
 
 ```typescript
 interface SoulUpdatedPayload {
-  soul_id: string;
-  section: string;           // Which section changed
-  previous_version: string;
-  new_version: string;
-  change_source: 'user' | 'copilot' | 'recommendation';
+  soul_id: string
+  section: string // Which section changed
+  previous_version: string
+  new_version: string
+  change_source: 'user' | 'copilot' | 'recommendation'
 }
 ```
 
@@ -93,11 +94,11 @@ Emitted when a module suggests a Soul update (IC-005).
 
 ```typescript
 interface RecommendationPayload {
-  target_section: string;
-  recommendation: string;
-  evidence: string[];
-  confidence: number;        // 0.0 - 1.0
-  source_module: string;
+  target_section: string
+  recommendation: string
+  evidence: string[]
+  confidence: number // 0.0 - 1.0
+  source_module: string
 }
 ```
 
@@ -109,10 +110,10 @@ interface RecommendationPayload {
 
 ```typescript
 interface OrgCreatedPayload {
-  org_id: string;
-  name: string;
-  owner_id: string;
-  tier: 'free' | 'presencia' | 'light_ops' | 'professional' | 'business' | 'enterprise';
+  org_id: string
+  name: string
+  owner_id: string
+  tier: 'free' | 'presencia' | 'light_ops' | 'professional' | 'business' | 'enterprise'
 }
 ```
 
@@ -120,10 +121,10 @@ interface OrgCreatedPayload {
 
 ```typescript
 interface MemberAddedPayload {
-  org_id: string;
-  user_id: string;
-  role: string;
-  invited_by: string;
+  org_id: string
+  user_id: string
+  role: string
+  invited_by: string
 }
 ```
 
@@ -135,11 +136,11 @@ interface MemberAddedPayload {
 
 ```typescript
 interface ModuleRegisteredPayload {
-  module_id: string;
-  module_name: string;
-  category: string;
-  version: string;
-  capabilities: string[];
+  module_id: string
+  module_name: string
+  category: string
+  version: string
+  capabilities: string[]
 }
 ```
 

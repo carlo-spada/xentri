@@ -14,6 +14,7 @@
 **Rationale:** The evolution from "Brief" to "Soul" reflects a deeper understanding of the concept — it's not just a document users create once, but a living relationship that grows with every interaction.
 
 **Changes Made:**
+
 - ✅ `product-brief.md` → `product-soul.md`
 - ✅ IC-004: `GET /api/v1/soul/{section}`
 - ✅ All Constitution docs now use "Soul" consistently
@@ -27,6 +28,7 @@
 ### 1.1 Adopt Soul Terminology ✅
 
 **Changes:**
+
 - Renamed `product-brief.md` → `product-soul.md`
 - Updated all API references to use `/api/v1/soul/{section}`
 - Updated all "Brief-Aware" → "Soul-Aware" in ux-design.md
@@ -36,15 +38,16 @@
 ### 1.2 Fix product-soul.md Frontmatter ✅
 
 **New frontmatter:**
+
 ```yaml
 entity_type: constitution
 document_type: product_soul
-title: "Xentri Product Soul"
-description: "The foundational vision document for Xentri."
-version: "1.0.0"
+title: 'Xentri Product Soul'
+description: 'The foundational vision document for Xentri.'
+version: '1.0.0'
 status: draft
-created: "2025-11-28"
-updated: "2025-12-03"
+created: '2025-11-28'
+updated: '2025-12-03'
 ```
 
 ### 1.3 Sync PRD Version Numbers ✅
@@ -54,6 +57,7 @@ updated: "2025-12-03"
 ### 1.4 Update pulse.md ✅
 
 **Changes:**
+
 - "brand"/"Brand" → "Marketing" throughout
 - "Last Updated" → 2025-12-03
 - "Universal Brief" → "Universal Soul"
@@ -64,6 +68,7 @@ updated: "2025-12-03"
 **Decision:** Both PRD and Architecture demoted to `status: draft` until validation reports are generated.
 
 **Changes:**
+
 - `prd.md`: status → draft
 - `architecture.md`: status → draft (was already)
 - `ux-design.md`: status → draft
@@ -75,6 +80,7 @@ updated: "2025-12-03"
 ### 2.1 Consolidate PR/IC Definitions ✅
 
 **Changes:**
+
 - `epics.md` now references PRD for definitions
 - Only tracks coverage and status, not duplicate definitions
 - Added "Single Source of Truth" note with link to PRD
@@ -82,6 +88,7 @@ updated: "2025-12-03"
 ### 2.2 Create Validation Reports Directory ✅
 
 **Created:**
+
 ```
 docs/platform/validation/
 ├── README.md                           # Explains validation process
@@ -93,6 +100,7 @@ docs/platform/validation/
 ### 2.3 Create Research Directory ✅
 
 **Created:**
+
 ```
 docs/platform/research/
 ├── README.md                    # Research index
@@ -113,19 +121,20 @@ docs/platform/research/
 
 These require tooling investment and should be tracked as tech debt:
 
-| Improvement | Effort | Benefit | Tracking |
-|-------------|--------|---------|----------|
-| **YAML schema validation** | Medium | Automated frontmatter compliance | Create GitHub issue |
-| **Pre-commit hooks** | Medium | Catch inconsistencies before commit | Create GitHub issue |
-| **Link validation in CI** | Medium | Detect broken cross-references | Create GitHub issue |
-| **Module doc scaffolds** | High | Fill TODO items in core-api, shell, etc. | Epic 2+ backlog |
-| **Single-source event schema** | Medium | Define SystemEvent once, reference everywhere | Architecture ADR |
+| Improvement                    | Effort | Benefit                                       | Tracking            |
+| ------------------------------ | ------ | --------------------------------------------- | ------------------- |
+| **YAML schema validation**     | Medium | Automated frontmatter compliance              | Create GitHub issue |
+| **Pre-commit hooks**           | Medium | Catch inconsistencies before commit           | Create GitHub issue |
+| **Link validation in CI**      | Medium | Detect broken cross-references                | Create GitHub issue |
+| **Module doc scaffolds**       | High   | Fill TODO items in core-api, shell, etc.      | Epic 2+ backlog     |
+| **Single-source event schema** | Medium | Define SystemEvent once, reference everywhere | Architecture ADR    |
 
 ---
 
 ## Summary of Changes
 
 ### Files Modified
+
 - `docs/platform/prd.md` — Soul terminology, status → draft
 - `docs/platform/architecture.md` — Soul terminology
 - `docs/platform/ux-design.md` — Soul terminology, status → draft
@@ -136,6 +145,7 @@ These require tooling investment and should be tracked as tech debt:
 - `docs/bmm-workflow-status.yaml` — product-soul references
 
 ### Files Created
+
 - `docs/platform/product-soul.md` — New file (renamed from product-brief.md)
 - `docs/platform/validation/README.md`
 - `docs/platform/validation/prd-validation-report.md`
@@ -147,20 +157,21 @@ These require tooling investment and should be tracked as tech debt:
 - `docs/platform/research/user-research.md`
 
 ### Files Deleted
+
 - `docs/platform/product-brief.md` — Replaced by product-soul.md
 
 ---
 
 ## Success Criteria — Priority 1-2 ACHIEVED
 
-| Criterion | Status |
-|-----------|--------|
-| ✅ Zero terminology conflicts | "Soul" used consistently |
-| ✅ Consistent frontmatter | All Constitution docs follow same pattern |
-| ✅ Single source of truth | PR/IC defined once in PRD |
-| ✅ No broken references | All internal links resolve |
-| ✅ No stale dates | All "Last Updated" fields accurate |
-| ✅ Complete directory structure | validation/, research/ exist |
+| Criterion                       | Status                                    |
+| ------------------------------- | ----------------------------------------- |
+| ✅ Zero terminology conflicts   | "Soul" used consistently                  |
+| ✅ Consistent frontmatter       | All Constitution docs follow same pattern |
+| ✅ Single source of truth       | PR/IC defined once in PRD                 |
+| ✅ No broken references         | All internal links resolve                |
+| ✅ No stale dates               | All "Last Updated" fields accurate        |
+| ✅ Complete directory structure | validation/, research/ exist              |
 
 ---
 
@@ -174,22 +185,22 @@ The terminology and consistency fixes above addressed **symptoms**. The root cau
 
 ### Duplication Audit
 
-| Content | prd.md | architecture.md | epics.md | Severity |
-|---------|--------|-----------------|----------|----------|
-| `SystemEvent` interface | Lines 1043-1077 | Lines 137-161 | - | **HIGH** |
-| Tri-State Memory explanation | Lines 872-901 | Lines 206-234 | Lines 47-53 | **HIGH** |
-| Pulse filtering logic | Lines 222-269 | Lines 339-403 | - | **LOW** (legitimate) |
+| Content                      | prd.md          | architecture.md | epics.md    | Severity             |
+| ---------------------------- | --------------- | --------------- | ----------- | -------------------- |
+| `SystemEvent` interface      | Lines 1043-1077 | Lines 137-161   | -           | **HIGH**             |
+| Tri-State Memory explanation | Lines 872-901   | Lines 206-234   | Lines 47-53 | **HIGH**             |
+| Pulse filtering logic        | Lines 222-269   | Lines 339-403   | -           | **LOW** (legitimate) |
 
 ### Solution: Document Ownership Contracts
 
 Created `docs/platform/document-contracts.yaml` — defines what each document OWNS exclusively:
 
-| Document | Owns Exclusively | References From |
-|----------|------------------|-----------------|
-| **prd.md** | PR-xxx, IC-xxx definitions, business rationale | architecture, ux-design, epics |
-| **architecture.md** | ADR-xxx, TypeScript interfaces, technical patterns | prd, epics |
-| **ux-design.md** | Colors, typography, components, accessibility | prd, architecture |
-| **epics.md** | Story breakdown, traceability matrix, sequencing | prd, architecture |
+| Document            | Owns Exclusively                                   | References From                |
+| ------------------- | -------------------------------------------------- | ------------------------------ |
+| **prd.md**          | PR-xxx, IC-xxx definitions, business rationale     | architecture, ux-design, epics |
+| **architecture.md** | ADR-xxx, TypeScript interfaces, technical patterns | prd, epics                     |
+| **ux-design.md**    | Colors, typography, components, accessibility      | prd, architecture              |
+| **epics.md**        | Story breakdown, traceability matrix, sequencing   | prd, architecture              |
 
 ### Implementation Phases
 
@@ -198,12 +209,14 @@ Created `docs/platform/document-contracts.yaml` — defines what each document O
 Add authoritative source pointers to existing duplications:
 
 **epics.md** (line ~71):
+
 ```markdown
 > **Authoritative Source:** [PRD §Platform Requirements Index](./prd.md#platform-requirements-index)
 > Requirement DEFINITIONS live exclusively in prd.md. Stories trace by ID only.
 ```
 
 **prd.md** (before SystemEvent interface):
+
 ```markdown
 > **Implementation Note:** The authoritative TypeScript specification lives in
 > [ADR-002](./architecture.md#adr-002-event-envelope--schema). This is for reader convenience.
@@ -235,23 +248,31 @@ Create `scripts/validation/check-doc-duplication.ts`:
 
 ```typescript
 const RULES = [
-  { pattern: /interface\s+\w+\s*\{/g, forbiddenIn: ['prd.md'], message: 'TS interfaces → architecture.md' },
+  {
+    pattern: /interface\s+\w+\s*\{/g,
+    forbiddenIn: ['prd.md'],
+    message: 'TS interfaces → architecture.md',
+  },
   { pattern: /^###\s+(PR|IC)-\d{3}/gm, forbiddenIn: ['epics.md'], message: 'Definitions → prd.md' },
-  { pattern: /#[0-9a-fA-F]{6}/g, forbiddenIn: ['prd.md', 'architecture.md'], message: 'Colors → ux-design.md' },
-];
+  {
+    pattern: /#[0-9a-fA-F]{6}/g,
+    forbiddenIn: ['prd.md', 'architecture.md'],
+    message: 'Colors → ux-design.md',
+  },
+]
 ```
 
 Add CI workflow and pre-commit hook.
 
 ### Success Criteria — Phase 4
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Duplicate TypeScript interfaces | 2+ | 0 |
+| Metric                              | Current   | Target  |
+| ----------------------------------- | --------- | ------- |
+| Duplicate TypeScript interfaces     | 2+        | 0       |
 | Requirement definitions in epics.md | Full text | ID only |
-| Documents with reference blocks | 0 | 4/4 |
-| CI validation coverage | 0% | 100% |
-| Time to update shared concept | 2-4 files | 1 file |
+| Documents with reference blocks     | 0         | 4/4     |
+| CI validation coverage              | 0%        | 100%    |
+| Time to update shared concept       | 2-4 files | 1 file  |
 
 ### Created Artifacts
 

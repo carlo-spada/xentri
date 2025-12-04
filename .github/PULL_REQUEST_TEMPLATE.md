@@ -10,6 +10,7 @@
 ## Module(s) Affected
 
 <!-- Check all that apply -->
+
 - [ ] `platform/orchestration` - Cross-cutting infrastructure
 - [ ] `platform/core-api` - Core API service
 - [ ] `platform/shell` - Astro application shell
@@ -40,6 +41,7 @@
 <!-- The cross-module-check workflow will automatically detect and comment if needed -->
 
 If this PR affects multiple modules:
+
 - [ ] I have considered the impact on each affected module
 - [ ] Cross-module dependencies are documented (GitHub Issue linked if applicable)
 - [ ] Contract tests pass (if changing `ts-schema`)

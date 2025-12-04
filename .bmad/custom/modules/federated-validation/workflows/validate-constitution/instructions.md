@@ -18,17 +18,19 @@ Check the YAML frontmatter at the top of the file:
 
 ```yaml
 ---
-entity_type: constitution  # MUST be "constitution"
-doc_type: prd              # MUST be "prd"
-title: "..."               # Should include "Constitution" or "System PRD"
+entity_type: constitution # MUST be "constitution"
+doc_type: prd # MUST be "prd"
+title: '...' # Should include "Constitution" or "System PRD"
 ---
 ```
 
 **Pass criteria:**
+
 - `entity_type: constitution` is present
 - `doc_type: prd` is present
 
 **Fail criteria:**
+
 - Missing frontmatter
 - Wrong entity_type or doc_type
 
@@ -70,6 +72,7 @@ Verify the Constitution does NOT contain domain-specific requirements:
 Go through `constitution-checklist.md` item by item:
 
 For each item:
+
 - Mark as ✅ if satisfied
 - Mark as ❌ if not satisfied
 - Add notes explaining the finding
@@ -94,19 +97,23 @@ Create a validation report at `docs/proposals/validation-reports/constitution-re
 ## Findings
 
 ### Platform Requirements
-| ID | Description | Status |
-|----|-------------|--------|
-| PR-001 | ... | ✅ |
+
+| ID     | Description | Status |
+| ------ | ----------- | ------ |
+| PR-001 | ...         | ✅     |
 
 ### Integration Contracts
-| ID | Description | Status |
-|----|-------------|--------|
-| IC-001 | ... | ✅ |
+
+| ID     | Description | Status |
+| ------ | ----------- | ------ |
+| IC-001 | ...         | ✅     |
 
 ### Checklist Results
+
 [Filled checklist here]
 
 ## Recommendations
+
 [List any improvements needed]
 ```
 

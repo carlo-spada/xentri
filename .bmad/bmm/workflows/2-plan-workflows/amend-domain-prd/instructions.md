@@ -26,14 +26,15 @@
     <action>Exit workflow</action>
   </check>
 
-  <action>Load PRD from {output_folder_resolved}prd.md</action>
-  <action>Set prd_path to {output_folder_resolved}prd.md</action>
+<action>Load PRD from {output_folder_resolved}prd.md</action>
+<action>Set prd_path to {output_folder_resolved}prd.md</action>
 
   <check if="file not found">
     <output>❌ PRD not found at {prd_path}
 
     Use create-domain-prd workflow to create it first.</output>
     <action>Exit workflow</action>
+
   </check>
 
   <output>
@@ -55,7 +56,7 @@ What type of amendment do you want to make?
 2. **Modify** - Change existing requirements
 3. **Remove** - Remove existing requirements
 4. **Other** - Modify scope, interfaces, or other sections
-</output>
+   </output>
 
 <ask>Select amendment type (1-4):</ask>
 <action>Store as amendment_type</action>
@@ -70,36 +71,36 @@ Remember:
 - Must use prefix {fr_prefix}-xxx
 - Must not contradict parent ({parent_prd_path})
 - Must not contradict Constitution
-</ask>
+  </ask>
 
   <action>Generate next available FR ID</action>
   <action>Draft the new requirement(s)</action>
-</check>
+  </check>
 
 <check if="amendment_type == 2 (Modify)">
   <output>Current Functional Requirements:
 {list_fr_xxx}</output>
 
-  <ask>Which requirement do you want to modify? (enter ID)</ask>
-  <action>Load current content</action>
+<ask>Which requirement do you want to modify? (enter ID)</ask>
+<action>Load current content</action>
 
-  <output>Current:
+<output>Current:
 {current_content}</output>
 
-  <ask>What change do you want to make?</ask>
-  <action>Draft modification</action>
+<ask>What change do you want to make?</ask>
+<action>Draft modification</action>
 </check>
 
 <check if="amendment_type == 3 (Remove)">
   <output>Current Functional Requirements:
 {list_fr_xxx}</output>
 
-  <ask>Which requirement do you want to remove? (enter ID)</ask>
+<ask>Which requirement do you want to remove? (enter ID)</ask>
 
-  <output>You are about to remove:
+<output>You are about to remove:
 {current_content}</output>
 
-  <ask>Provide justification:</ask>
+<ask>Provide justification:</ask>
 </check>
 
 <check if="amendment_type == 4 (Other)">
@@ -110,7 +111,7 @@ Remember:
 4. Traceability
 </output>
 
-  <ask>Which section? Describe the change:</ask>
+<ask>Which section? Describe the change:</ask>
 </check>
 </step>
 
@@ -132,9 +133,9 @@ You must either:
 
 1. Modify your amendment to not contradict
 2. First amend the parent PRD (requires higher-level change)
-  </output>
+   </output>
 
-  <ask>What would you like to do?
+<ask>What would you like to do?
 [m] Modify amendment
 [c] Cancel
 </ask>
@@ -172,12 +173,12 @@ You must either:
 
 Affected documents:
 {affected_documents}
-  </output>
+</output>
 
-  <ask>Proceed anyway? (yes/no)</ask>
-  <check if="response != 'yes'">
-    <action>Exit workflow</action>
-  </check>
+<ask>Proceed anyway? (yes/no)</ask>
+<check if="response != 'yes'">
+<action>Exit workflow</action>
+</check>
 </check>
 </step>
 
@@ -196,7 +197,7 @@ infrastructure modules may CONSUME interfaces this module EXPOSES.
 2. Check their "Consumed Interfaces" sections
 3. Identify references to this module's exposed interfaces
 4. Flag any that reference changed items
-</action>
+   </action>
 
 <invoke-task name="impact-analysis">
   <param name="document_path">{prd_path}</param>

@@ -1,34 +1,34 @@
 # Domain Architecture Amendment Workflow
 name: amend-domain-architecture
-description: "Amend domain architecture documents with parent alignment verification and impact analysis."
-author: "BMad"
+description: 'Amend domain architecture documents with parent alignment verification and impact analysis.'
+author: 'BMad'
 
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
-entity_type: "{entity_type}"
-entity_type_display: "{entity_type_display}"
-output_folder_resolved: "{output_folder_resolved}"
-architecture_path: "{output_folder_resolved}architecture.md"
-parent_architecture_path: "{parent_architecture_path}"
-constitution_architecture_path: "docs/platform/architecture.md"
+entity_type: '{entity_type}'
+entity_type_display: '{entity_type_display}'
+output_folder_resolved: '{output_folder_resolved}'
+architecture_path: '{output_folder_resolved}architecture.md'
+parent_architecture_path: '{parent_architecture_path}'
+constitution_architecture_path: 'docs/platform/architecture.md'
 
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-architecture"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/amend-domain-architecture'
+instructions: '{installed_path}/instructions.md'
 
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-impact_analysis_task: "{project-root}/.bmad/bmm/tasks/impact-analysis.xml"
-validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
-save_checkpoint_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+impact_analysis_task: '{project-root}/.bmad/bmm/tasks/impact-analysis.xml'
+validate_inheritance_task: '{project-root}/.bmad/bmm/tasks/validate-inheritance.xml'
+save_checkpoint_task: '{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml'
 
-checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md"
-checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md"
-checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md"
-checklist_business: "{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md"
+checklist_infrastructure: '{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md'
+checklist_strategic: '{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md'
+checklist_coordination: '{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md'
+checklist_business: '{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md'
 
-amendment_log_path: "{output_folder_resolved}amendment-log.md"
+amendment_log_path: '{output_folder_resolved}amendment-log.md'
 
 template: false
 standalone: true

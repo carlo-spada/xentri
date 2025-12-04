@@ -9,6 +9,7 @@
 ## Overview
 
 The Core API service is the primary backend for Xentri, handling:
+
 - Event persistence and querying
 - Soul data management
 - Authentication/authorization enforcement
@@ -18,13 +19,13 @@ The Core API service is the primary backend for Xentri, handling:
 
 ## Technology Stack
 
-| Component | Technology | Version |
-|-----------|------------|---------|
-| Runtime | Node.js | 24.x LTS |
-| Framework | Fastify | 5.x |
-| ORM | Prisma | 7.x |
-| Database | PostgreSQL | 16.x |
-| Auth | Clerk | 2.x |
+| Component | Technology | Version  |
+| --------- | ---------- | -------- |
+| Runtime   | Node.js    | 24.x LTS |
+| Framework | Fastify    | 5.x      |
+| ORM       | Prisma     | 7.x      |
+| Database  | PostgreSQL | 16.x     |
+| Auth      | Clerk      | 2.x      |
 
 ---
 
@@ -61,12 +62,12 @@ Every request includes `org_id` from JWT claims:
 
 ```typescript
 // Middleware extracts org_id from Clerk JWT
-const orgId = req.auth.orgId;
+const orgId = req.auth.orgId
 
 // All queries automatically scoped
 const events = await prisma.systemEvent.findMany({
-  where: { org_id: orgId }
-});
+  where: { org_id: orgId },
+})
 ```
 
 RLS policies enforce isolation at the database level as a defense-in-depth measure.
@@ -80,11 +81,11 @@ async function createInvoice(data) {
   // 1. Write to system_events first
   await eventService.emit({
     type: 'xentri.finance.invoice.created.v1',
-    payload: data
-  });
+    payload: data,
+  })
 
   // 2. Then write to domain table
-  return prisma.invoice.create({ data });
+  return prisma.invoice.create({ data })
 }
 ```
 

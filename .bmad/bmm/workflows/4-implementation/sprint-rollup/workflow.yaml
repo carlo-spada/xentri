@@ -1,24 +1,24 @@
 name: sprint-rollup
-description: "Aggregate sprint status from all modules into orchestration-level dashboard for cross-module visibility"
-author: "BMad"
+description: 'Aggregate sprint status from all modules into orchestration-level dashboard for cross-module visibility'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-base_output_folder: "{config_source}:output_folder"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+base_output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # This workflow operates at orchestration level (cross-module)
-manifest_file: "{project-root}/docs/manifest.yaml"
-orchestration_folder: "{base_output_folder}/platform/orchestration"
+manifest_file: '{project-root}/docs/manifest.yaml'
+orchestration_folder: '{base_output_folder}/platform/orchestration'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/4-implementation/sprint-rollup"
-template: "{installed_path}/dashboard-template.md"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/4-implementation/sprint-rollup'
+template: '{installed_path}/dashboard-template.md'
+instructions: '{installed_path}/instructions.md'
 
 # Output configuration
-default_output_file: "{orchestration_folder}/sprint-dashboard.md"
+default_output_file: '{orchestration_folder}/sprint-dashboard.md'
 
 standalone: true

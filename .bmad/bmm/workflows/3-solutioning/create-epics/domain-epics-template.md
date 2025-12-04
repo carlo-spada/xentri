@@ -1,13 +1,13 @@
 ---
-entity_type: "{{entity_type}}"
+entity_type: '{{entity_type}}'
 document_type: epics
-title: "{{entity_name}} - Epics"
-version: "1.0"
-date: "{{date}}"
-author: "{{user_name}}"
+title: '{{entity_name}} - Epics'
+version: '1.0'
+date: '{{date}}'
+author: '{{user_name}}'
 status: draft
-parent_epics: "{{parent_epics_path}}"
-constitution_epics: "docs/platform/epics.md"
+parent_epics: '{{parent_epics_path}}'
+constitution_epics: 'docs/platform/epics.md'
 ---
 
 # {{entity_name}} Epics
@@ -24,6 +24,7 @@ constitution_epics: "docs/platform/epics.md"
 This document defines the epic structure for {{entity_name}}, inheriting from and aligning with the Constitution epics and parent entity epics.
 
 **Cascading Epic Pattern:**
+
 - Parent Epic ID: {{parent_epic_base}}
 - This entity uses: Epic {{parent_epic_base}}-x
 
@@ -33,8 +34,9 @@ This document defines the epic structure for {{entity_name}}, inheriting from an
 
 ### Functional Requirements
 
-| ID | Requirement | Epic Coverage |
-|----|-------------|---------------|
+| ID  | Requirement | Epic Coverage |
+| --- | ----------- | ------------- |
+
 {{#each functional_requirements}}
 | {{id}} | {{description}} | Epic {{epic_ref}} |
 {{/each}}
@@ -44,7 +46,8 @@ This document defines the epic structure for {{entity_name}}, inheriting from an
 ## Parent Epic Mapping
 
 | Constitution Epic | Parent Epic | This Entity Epic | Contribution |
-|-------------------|-------------|------------------|--------------|
+| ----------------- | ----------- | ---------------- | ------------ |
+
 {{#each epic_mapping}}
 | Epic {{constitution_id}} | Epic {{parent_id}} | Epic {{local_id}} | {{contribution}} |
 {{/each}}
@@ -54,7 +57,8 @@ This document defines the epic structure for {{entity_name}}, inheriting from an
 ## Epic Summary
 
 | Epic ID | Title | Goal | FR Coverage |
-|---------|-------|------|-------------|
+| ------- | ----- | ---- | ----------- |
+
 {{#each epics}}
 | {{id}} | {{title}} | {{goal}} | {{fr_coverage}} |
 {{/each}}
@@ -62,12 +66,14 @@ This document defines the epic structure for {{entity_name}}, inheriting from an
 ---
 
 {{#each epics}}
+
 ## Epic {{id}}: {{title}}
 
 **Inherits From:** Constitution Epic {{constitution_epic}}
 **Goal:** {{goal}}
 
 **Scope:**
+
 - Functional Requirements: {{fr_coverage}}
 - Components Involved: {{components}}
 
@@ -76,6 +82,7 @@ This document defines the epic structure for {{entity_name}}, inheriting from an
 ### Stories
 
 {{#each stories}}
+
 #### Story {{../id}}.{{number}}: {{title}}
 
 As a {{user_type}},
@@ -111,7 +118,8 @@ So that {{value_benefit}}.
 ## Traceability Matrix
 
 | FR ID | Description | Epic | Story | Status |
-|-------|-------------|------|-------|--------|
+| ----- | ----------- | ---- | ----- | ------ |
+
 {{#each traceability}}
 | {{fr_id}} | {{description}} | Epic {{epic}} | Story {{story}} | {{status}} |
 {{/each}}
@@ -123,7 +131,8 @@ So that {{value_benefit}}.
 ### Constitution Alignment
 
 | Constitution Epic | This Entity Contribution | Alignment Status |
-|-------------------|-------------------------|------------------|
+| ----------------- | ------------------------ | ---------------- |
+
 {{#each constitution_alignment}}
 | Epic {{constitution_id}} | {{contribution}} | {{status}} |
 {{/each}}
@@ -131,7 +140,8 @@ So that {{value_benefit}}.
 ### Parent Alignment
 
 | Parent Epic | This Entity Extension | Alignment Status |
-|-------------|----------------------|------------------|
+| ----------- | --------------------- | ---------------- |
+
 {{#each parent_alignment}}
 | Epic {{parent_id}} | {{extension}} | {{status}} |
 {{/each}}
@@ -140,9 +150,9 @@ So that {{value_benefit}}.
 
 ## Revision History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{date}} | {{user_name}} | Initial epic structure |
+| Version | Date     | Author        | Changes                |
+| ------- | -------- | ------------- | ---------------------- |
+| 1.0     | {{date}} | {{user_name}} | Initial epic structure |
 
 ---
 

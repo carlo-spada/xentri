@@ -1,5 +1,5 @@
-import { Menu } from 'lucide-react';
-import { toggleMobileDrawer } from '../stores/navigation';
+import { Menu } from 'lucide-react'
+import { toggleMobileDrawer } from '../stores/navigation'
 
 export default function MobileMenuButton() {
   return (
@@ -13,5 +13,5 @@ export default function MobileMenuButton() {
     >
       <Menu size={24} />
     </button>
-  );
+  )
 }

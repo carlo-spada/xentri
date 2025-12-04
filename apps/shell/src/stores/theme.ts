@@ -1,4 +1,4 @@
-import { atom, computed } from 'nanostores';
+import { atom, computed } from 'nanostores'
 
 /**
  * Theme preference values.
@@ -6,22 +6,22 @@ import { atom, computed } from 'nanostores';
  * - dark: Force dark mode
  * - system: Follow system preference
  */
-export type ThemePreference = 'light' | 'dark' | 'system';
+export type ThemePreference = 'light' | 'dark' | 'system'
 
 /**
  * Resolved theme (actual applied theme).
  */
-export type ResolvedTheme = 'light' | 'dark';
+export type ResolvedTheme = 'light' | 'dark'
 
 /**
  * User's theme preference.
  */
-export const $themePreference = atom<ThemePreference>('dark');
+export const $themePreference = atom<ThemePreference>('dark')
 
 /**
  * System's color scheme preference.
  */
-export const $systemTheme = atom<ResolvedTheme>('dark');
+export const $systemTheme = atom<ResolvedTheme>('dark')
 
 /**
  * Resolved theme based on preference and system setting.
@@ -30,25 +30,25 @@ export const $resolvedTheme = computed(
   [$themePreference, $systemTheme],
   (preference, system): ResolvedTheme => {
     if (preference === 'system') {
-      return system;
+      return system
     }
-    return preference;
+    return preference
   }
-);
+)
 
 /**
  * Key for localStorage persistence.
  */
-const THEME_STORAGE_KEY = 'xentri-theme';
+const THEME_STORAGE_KEY = 'xentri-theme'
 
 /**
  * Whether theme is currently being saved to server.
  */
-export const $themeSaving = atom<boolean>(false);
+export const $themeSaving = atom<boolean>(false)
 
 function persistLocalTheme(theme: ThemePreference): void {
   try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
   } catch {
     // Ignore storage failures (private mode, etc.)
   }
@@ -57,18 +57,15 @@ function persistLocalTheme(theme: ThemePreference): void {
 /**
  * Set theme preference and optionally persist to server.
  */
-export async function setTheme(
-  theme: ThemePreference,
-  persist: boolean = true
-): Promise<void> {
-  $themePreference.set(theme);
-  applyTheme($resolvedTheme.get());
+export async function setTheme(theme: ThemePreference, persist: boolean = true): Promise<void> {
+  $themePreference.set(theme)
+  applyTheme($resolvedTheme.get())
   if (typeof window !== 'undefined') {
-    persistLocalTheme(theme);
+    persistLocalTheme(theme)
   }
 
   if (persist) {
-    await persistTheme(theme);
+    await persistTheme(theme)
   }
 }
 
@@ -77,15 +74,15 @@ export async function setTheme(
  * Adds/removes 'dark' class on <html> element.
  */
 export function applyTheme(theme: ResolvedTheme): void {
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined') return
 
-  const root = document.documentElement;
+  const root = document.documentElement
   if (theme === 'dark') {
-    root.classList.add('dark');
-    root.classList.remove('light');
+    root.classList.add('dark')
+    root.classList.remove('light')
   } else {
-    root.classList.add('light');
-    root.classList.remove('dark');
+    root.classList.add('light')
+    root.classList.remove('dark')
   }
 }
 
@@ -95,33 +92,33 @@ export function applyTheme(theme: ResolvedTheme): void {
 export function initializeTheme(userPreference?: ThemePreference): void {
   // Detect system preference
   if (typeof window !== 'undefined') {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    $systemTheme.set(mediaQuery.matches ? 'dark' : 'light');
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    $systemTheme.set(mediaQuery.matches ? 'dark' : 'light')
 
     // Listen for system preference changes
     mediaQuery.addEventListener('change', (e) => {
-      $systemTheme.set(e.matches ? 'dark' : 'light');
+      $systemTheme.set(e.matches ? 'dark' : 'light')
       if ($themePreference.get() === 'system') {
-        applyTheme(e.matches ? 'dark' : 'light');
+        applyTheme(e.matches ? 'dark' : 'light')
       }
-    });
+    })
   }
 
   // Set user preference if provided
   if (userPreference) {
-    $themePreference.set(userPreference);
-    persistLocalTheme(userPreference);
+    $themePreference.set(userPreference)
+    persistLocalTheme(userPreference)
   }
 
   // Apply initial theme
-  applyTheme($resolvedTheme.get());
+  applyTheme($resolvedTheme.get())
 }
 
 /**
  * Persist theme preference to server.
  */
 async function persistTheme(theme: ThemePreference): Promise<void> {
-  $themeSaving.set(true);
+  $themeSaving.set(true)
   try {
     const response = await fetch('/api/v1/users/me/preferences', {
       method: 'PATCH',
@@ -130,15 +127,15 @@ async function persistTheme(theme: ThemePreference): Promise<void> {
       },
       body: JSON.stringify({ theme }),
       credentials: 'include',
-    });
+    })
 
     if (!response.ok) {
-      console.error('Failed to persist theme preference');
+      console.error('Failed to persist theme preference')
     }
   } catch (error) {
-    console.error('Error persisting theme preference:', error);
+    console.error('Error persisting theme preference:', error)
   } finally {
-    $themeSaving.set(false);
+    $themeSaving.set(false)
   }
 }
 
@@ -148,9 +145,9 @@ async function persistTheme(theme: ThemePreference): Promise<void> {
  */
 export function loadThemeFromUser(theme?: string): void {
   if (theme && ['light', 'dark', 'system'].includes(theme)) {
-    $themePreference.set(theme as ThemePreference);
-    persistLocalTheme(theme as ThemePreference);
-    applyTheme($resolvedTheme.get());
+    $themePreference.set(theme as ThemePreference)
+    persistLocalTheme(theme as ThemePreference)
+    applyTheme($resolvedTheme.get())
   }
 }
 
@@ -162,19 +159,19 @@ export async function hydrateThemeFromServer(): Promise<void> {
   try {
     const response = await fetch('/api/v1/users/me/preferences', {
       credentials: 'include',
-    });
+    })
 
     if (!response.ok) {
-      return;
+      return
     }
 
-    const data = await response.json();
-    const theme = data?.preferences?.theme as ThemePreference | undefined;
+    const data = await response.json()
+    const theme = data?.preferences?.theme as ThemePreference | undefined
 
     if (theme && ['light', 'dark', 'system'].includes(theme)) {
-      $themePreference.set(theme);
-      persistLocalTheme(theme);
-      applyTheme($resolvedTheme.get());
+      $themePreference.set(theme)
+      persistLocalTheme(theme)
+      applyTheme($resolvedTheme.get())
     }
   } catch {
     // Ignore failures; fallback to existing preference/system

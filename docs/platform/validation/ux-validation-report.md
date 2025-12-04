@@ -10,6 +10,7 @@
 ## Overview
 
 This validation report will document the review of the System UX Design against:
+
 - Design principle coverage
 - Component specification completeness
 - Accessibility compliance

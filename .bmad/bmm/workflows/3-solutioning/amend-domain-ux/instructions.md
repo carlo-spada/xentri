@@ -32,7 +32,7 @@
   <output>❌ UX Design not found at {ux_path}
 
 Use create-domain-ux workflow to create it first.</output>
-  <action>Exit workflow</action>
+<action>Exit workflow</action>
 </check>
 
 <output>
@@ -54,7 +54,7 @@ What type of amendment do you want to make?
 2. **Modify** - Change existing UX design
 3. **Remove** - Remove existing UX element
 4. **Other** - Modify states, accessibility, responsive behavior
-</output>
+   </output>
 
 <ask>Select amendment type (1-4):</ask>
 <action>Store as amendment_type</action>
@@ -71,28 +71,28 @@ Remember:
 - Should be appropriate for {entity_type_display}</ask>
 
   <action>Draft the new content</action>
-</check>
+  </check>
 
 <check if="amendment_type == 2 (Modify)">
   <output>Current UX sections:
 {list_sections}</output>
 
-  <ask>Which section do you want to modify?</ask>
-  <action>Load current content</action>
+<ask>Which section do you want to modify?</ask>
+<action>Load current content</action>
 
-  <output>Current:
+<output>Current:
 {current_content}</output>
 
-  <ask>What change do you want to make?</ask>
-  <action>Draft modification</action>
+<ask>What change do you want to make?</ask>
+<action>Draft modification</action>
 </check>
 
 <check if="amendment_type == 3 (Remove)">
   <output>Current UX elements:
 {list_elements}</output>
 
-  <ask>What do you want to remove?</ask>
-  <action>Identify element to remove</action>
+<ask>What do you want to remove?</ask>
+<action>Identify element to remove</action>
 </check>
 
 <check if="amendment_type == 4 (Other)">
@@ -104,7 +104,7 @@ For {entity_type_display} UX, this might include:
 - Accessibility improvements
 - Responsive behavior changes
 - Integration updates</ask>
-</check>
+  </check>
 
 </step>
 
@@ -127,9 +127,9 @@ You must either:
 
 1. Modify your amendment to not contradict
 2. First amend the parent UX (requires higher-level change)
-  </output>
+   </output>
 
-  <ask>What would you like to do?
+<ask>What would you like to do?
 [m] Modify amendment
 [c] Cancel</ask>
 
@@ -166,12 +166,12 @@ You must either:
 
 Affected documents:
 {affected_documents}
-  </output>
+</output>
 
-  <ask>Proceed anyway? (yes/no)</ask>
-  <check if="response != 'yes'">
-    <action>Exit workflow</action>
-  </check>
+<ask>Proceed anyway? (yes/no)</ask>
+<check if="response != 'yes'">
+<action>Exit workflow</action>
+</check>
 </check>
 </step>
 

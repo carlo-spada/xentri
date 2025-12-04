@@ -15,47 +15,47 @@ The UI package provides a shared component library based on shadcn/ui, customize
 
 ### Layout
 
-| Component | Description | Import |
-|-----------|-------------|--------|
-| `Card` | Content container with variants | `@xentri/ui/card` |
-| `Panel` | Sidebar/overlay panels | `@xentri/ui/panel` |
-| `Grid` | Responsive grid layouts | `@xentri/ui/grid` |
-| `Stack` | Vertical/horizontal stacking | `@xentri/ui/stack` |
+| Component | Description                     | Import             |
+| --------- | ------------------------------- | ------------------ |
+| `Card`    | Content container with variants | `@xentri/ui/card`  |
+| `Panel`   | Sidebar/overlay panels          | `@xentri/ui/panel` |
+| `Grid`    | Responsive grid layouts         | `@xentri/ui/grid`  |
+| `Stack`   | Vertical/horizontal stacking    | `@xentri/ui/stack` |
 
 ### Navigation
 
-| Component | Description | Import |
-|-----------|-------------|--------|
-| `Sidebar` | Main navigation sidebar | `@xentri/ui/sidebar` |
-| `Breadcrumb` | Path navigation | `@xentri/ui/breadcrumb` |
-| `Tabs` | Tab navigation | `@xentri/ui/tabs` |
-| `CommandPalette` | Cmd+K search | `@xentri/ui/command` |
+| Component        | Description             | Import                  |
+| ---------------- | ----------------------- | ----------------------- |
+| `Sidebar`        | Main navigation sidebar | `@xentri/ui/sidebar`    |
+| `Breadcrumb`     | Path navigation         | `@xentri/ui/breadcrumb` |
+| `Tabs`           | Tab navigation          | `@xentri/ui/tabs`       |
+| `CommandPalette` | Cmd+K search            | `@xentri/ui/command`    |
 
 ### Forms
 
-| Component | Description | Import |
-|-----------|-------------|--------|
-| `Input` | Text input with variants | `@xentri/ui/input` |
-| `Select` | Dropdown selection | `@xentri/ui/select` |
-| `Checkbox` | Boolean input | `@xentri/ui/checkbox` |
-| `Switch` | Toggle switch | `@xentri/ui/switch` |
-| `DatePicker` | Date selection | `@xentri/ui/date-picker` |
+| Component    | Description              | Import                   |
+| ------------ | ------------------------ | ------------------------ |
+| `Input`      | Text input with variants | `@xentri/ui/input`       |
+| `Select`     | Dropdown selection       | `@xentri/ui/select`      |
+| `Checkbox`   | Boolean input            | `@xentri/ui/checkbox`    |
+| `Switch`     | Toggle switch            | `@xentri/ui/switch`      |
+| `DatePicker` | Date selection           | `@xentri/ui/date-picker` |
 
 ### Feedback
 
-| Component | Description | Import |
-|-----------|-------------|--------|
-| `Toast` | Notification toasts | `@xentri/ui/toast` |
-| `Alert` | Inline alerts | `@xentri/ui/alert` |
-| `Badge` | Status badges | `@xentri/ui/badge` |
+| Component  | Description         | Import                |
+| ---------- | ------------------- | --------------------- |
+| `Toast`    | Notification toasts | `@xentri/ui/toast`    |
+| `Alert`    | Inline alerts       | `@xentri/ui/alert`    |
+| `Badge`    | Status badges       | `@xentri/ui/badge`    |
 | `Progress` | Progress indicators | `@xentri/ui/progress` |
 
 ### Data Display
 
-| Component | Description | Import |
-|-----------|-------------|--------|
-| `Table` | Data tables | `@xentri/ui/table` |
-| `Avatar` | User avatars | `@xentri/ui/avatar` |
+| Component | Description    | Import               |
+| --------- | -------------- | -------------------- |
+| `Table`   | Data tables    | `@xentri/ui/table`   |
+| `Avatar`  | User avatars   | `@xentri/ui/avatar`  |
 | `Tooltip` | Hover tooltips | `@xentri/ui/tooltip` |
 
 ---
@@ -95,10 +95,10 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter
-} from '@xentri/ui/card';
+  CardFooter,
+} from '@xentri/ui/card'
 
-<Card>
+;<Card>
   <CardHeader>
     <CardTitle>Invoice #247</CardTitle>
     <CardDescription>Due in 5 days</CardDescription>
@@ -115,19 +115,15 @@ import {
 ### Form
 
 ```tsx
-import { Input } from '@xentri/ui/input';
-import { Label } from '@xentri/ui/label';
-import { Button } from '@xentri/ui/button';
+import { Input } from '@xentri/ui/input'
+import { Label } from '@xentri/ui/label'
+import { Button } from '@xentri/ui/button'
 
-<form onSubmit={handleSubmit}>
+;<form onSubmit={handleSubmit}>
   <div className="space-y-4">
     <div>
       <Label htmlFor="email">Email</Label>
-      <Input
-        id="email"
-        type="email"
-        placeholder="you@example.com"
-      />
+      <Input id="email" type="email" placeholder="you@example.com" />
     </div>
     <Button type="submit">Submit</Button>
   </div>
@@ -137,18 +133,18 @@ import { Button } from '@xentri/ui/button';
 ### Toast
 
 ```tsx
-import { useToast } from '@xentri/ui/toast';
+import { useToast } from '@xentri/ui/toast'
 
 function MyComponent() {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
   const handleSave = async () => {
-    await save();
+    await save()
     toast({
       title: 'Saved',
       description: 'Your changes have been saved.',
-    });
-  };
+    })
+  }
 }
 ```
 
@@ -161,15 +157,15 @@ function MyComponent() {
 Displays actionable items requiring attention:
 
 ```tsx
-import { ExceptionCard } from '@xentri/ui/exception-card';
+import { ExceptionCard } from '@xentri/ui/exception-card'
 
-<ExceptionCard
+;<ExceptionCard
   type="warning"
   title="Invoice Overdue"
   description="Invoice #247 is 30 days past due"
   action={{
-    label: "Send Reminder",
-    onClick: handleReminder
+    label: 'Send Reminder',
+    onClick: handleReminder,
   }}
 />
 ```
@@ -179,9 +175,9 @@ import { ExceptionCard } from '@xentri/ui/exception-card';
 Shows automation level:
 
 ```tsx
-import { AutonomyBadge } from '@xentri/ui/autonomy-badge';
+import { AutonomyBadge } from '@xentri/ui/autonomy-badge'
 
-<AutonomyBadge level="assisted" />
+;<AutonomyBadge level="assisted" />
 // Levels: manual | assisted | supervised | autonomous
 ```
 
@@ -190,9 +186,9 @@ import { AutonomyBadge } from '@xentri/ui/autonomy-badge';
 Configures automation policies:
 
 ```tsx
-import { PolicySlider } from '@xentri/ui/policy-slider';
+import { PolicySlider } from '@xentri/ui/policy-slider'
 
-<PolicySlider
+;<PolicySlider
   label="Auto-send invoice reminders"
   value={policy.invoiceReminders}
   onChange={(value) => updatePolicy('invoiceReminders', value)}
@@ -206,7 +202,7 @@ import { PolicySlider } from '@xentri/ui/policy-slider';
 Components are pre-installed in the monorepo. Import from `@xentri/ui`:
 
 ```tsx
-import { Button, Card, Input } from '@xentri/ui';
+import { Button, Card, Input } from '@xentri/ui'
 ```
 
 For new shadcn/ui components, use the CLI:

@@ -1,81 +1,81 @@
 # Domain Architecture Creation Workflow
 name: create-domain-architecture
-description: "Create Architecture document for domain entities: Infrastructure Module, Strategic Container, Coordination Unit, or Business Module. Inherits from parent architecture and Constitution."
-author: "BMad"
+description: 'Create Architecture document for domain entities: Infrastructure Module, Strategic Container, Coordination Unit, or Business Module. Inherits from parent architecture and Constitution.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-project_name: "{config_source}:project_name"
-output_folder: "{config_source}:output_folder"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
-document_output_language: "{config_source}:document_output_language"
-user_skill_level: "{config_source}:user_skill_level"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+project_name: '{config_source}:project_name'
+output_folder: '{config_source}:output_folder'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
+document_output_language: '{config_source}:document_output_language'
+user_skill_level: '{config_source}:user_skill_level'
 date: system-generated
 
 # Federated hierarchy - determined at runtime
-entity_type: "{entity_type}"
-entity_type_display: "{entity_type_display}"
-output_folder_resolved: "{output_folder_resolved}"
-parent_architecture_path: "{parent_architecture_path}"
-constitution_architecture_path: "docs/platform/architecture.md"
+entity_type: '{entity_type}'
+entity_type_display: '{entity_type_display}'
+output_folder_resolved: '{output_folder_resolved}'
+parent_architecture_path: '{parent_architecture_path}'
+constitution_architecture_path: 'docs/platform/architecture.md'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-architecture"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/3-solutioning/create-domain-architecture'
+instructions: '{installed_path}/instructions.md'
 
 # Templates
-architecture_template: "{installed_path}/domain-architecture-template.md"
+architecture_template: '{installed_path}/domain-architecture-template.md'
 
 # Shared resources from main architecture workflow
-decision_catalog: "{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/decision-catalog.yaml"
-architecture_patterns: "{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/architecture-patterns.yaml"
+decision_catalog: '{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/decision-catalog.yaml'
+architecture_patterns: '{project-root}/.bmad/bmm/workflows/3-solutioning/architecture/architecture-patterns.yaml'
 
 # Entity-specific checklists
-checklist_infrastructure: "{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md"
-checklist_strategic: "{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md"
-checklist_coordination: "{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md"
-checklist_business: "{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md"
+checklist_infrastructure: '{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md'
+checklist_strategic: '{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md'
+checklist_coordination: '{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md'
+checklist_business: '{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md'
 
 # Validation - schema resolved based on entity type
 validation:
   schema_map:
-    infrastructure_module: "{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md"
-    strategic_container: "{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md"
-    coordination_unit: "{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md"
-    business_module: "{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md"
+    infrastructure_module: '{project-root}/.bmad/bmm/checklists/infrastructure-architecture-checklist.md'
+    strategic_container: '{project-root}/.bmad/bmm/checklists/strategic-architecture-checklist.md'
+    coordination_unit: '{project-root}/.bmad/bmm/checklists/coordination-architecture-checklist.md'
+    business_module: '{project-root}/.bmad/bmm/checklists/business-architecture-checklist.md'
   required: true
-  on_fail: "warn_and_offer_fix"
+  on_fail: 'warn_and_offer_fix'
 
 # Shared tasks
-detect_entity_task: "{project-root}/.bmad/bmm/tasks/detect-entity-type.xml"
-frontmatter_task: "{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml"
-save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
-validate_inheritance_task: "{project-root}/.bmad/bmm/tasks/validate-inheritance.xml"
+detect_entity_task: '{project-root}/.bmad/bmm/tasks/detect-entity-type.xml'
+frontmatter_task: '{project-root}/.bmad/bmm/tasks/generate-frontmatter.xml'
+save_task: '{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml'
+validate_inheritance_task: '{project-root}/.bmad/bmm/tasks/validate-inheritance.xml'
 
 # Input file patterns
 input_file_patterns:
   constitution_architecture:
-    description: "System Architecture (always loaded)"
-    whole: "{project-root}/docs/platform/architecture.md"
-    load_strategy: "FULL_LOAD"
+    description: 'System Architecture (always loaded)'
+    whole: '{project-root}/docs/platform/architecture.md'
+    load_strategy: 'FULL_LOAD'
 
   parent_architecture:
-    description: "Parent Architecture for inheritance"
-    whole: "{parent_architecture_path}"
-    load_strategy: "FULL_LOAD"
+    description: 'Parent Architecture for inheritance'
+    whole: '{parent_architecture_path}'
+    load_strategy: 'FULL_LOAD'
 
   entity_prd:
     description: "This entity's PRD"
-    whole: "{output_folder_resolved}prd.md"
-    load_strategy: "FULL_LOAD"
+    whole: '{output_folder_resolved}prd.md'
+    load_strategy: 'FULL_LOAD'
 
   existing_architecture:
-    description: "Existing architecture (if updating)"
-    whole: "{output_folder_resolved}architecture.md"
-    load_strategy: "FULL_LOAD"
+    description: 'Existing architecture (if updating)'
+    whole: '{output_folder_resolved}architecture.md'
+    load_strategy: 'FULL_LOAD'
 
 # Output files
-default_output_file: "{output_folder_resolved}architecture.md"
+default_output_file: '{output_folder_resolved}architecture.md'
 
 standalone: true

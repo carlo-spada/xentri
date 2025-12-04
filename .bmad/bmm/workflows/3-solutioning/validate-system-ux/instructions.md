@@ -13,7 +13,7 @@
   <output>❌ Constitution UX Design not found at {ux_path}
 
 Use create-system-ux workflow to create it first.</output>
-  <action>Exit workflow</action>
+<action>Exit workflow</action>
 </check>
 
 <action>Load the validation checklist from {checklist}</action>
@@ -26,14 +26,15 @@ Validating: docs/platform/ux-design.md
 Entity Type: Constitution
 
 This validation checks:
+
 - Structural completeness
 - UX pattern coverage
 - Visual foundation completeness
 - Accessibility strategy
 - Inheritance guidelines
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-</step>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
+  </step>
 
 <step n="1" goal="Structural Validation">
 <action>Check each item in the Structural Completeness section:
@@ -74,11 +75,12 @@ This validation checks:
 - Notification patterns
 
 For each pattern, verify:
+
 - Clear specification
 - Usage guidance
 - Accessibility considerations
 - Example implementation
-</action>
+  </action>
 
 <action>Record pass/fail for each item</action>
 </step>
@@ -101,22 +103,25 @@ For each pattern, verify:
 <action>Check visual foundation completeness:
 
 Color System:
+
 - Complete palette
 - Semantic color usage
 - Accessibility considerations
 - Dark mode strategy (if applicable)
 
 Typography:
+
 - Font families with fallbacks
 - Type scale defined
 - Font weights documented
 - Line heights specified
 
 Spacing:
+
 - Base unit defined
 - Spacing scale documented
 - Layout grid approach
-</action>
+  </action>
 
 <action>Record pass/fail for each item</action>
 </step>
@@ -157,16 +162,16 @@ Spacing:
 📊 CONSTITUTION UX VALIDATION RESULTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-| Category | Pass | Fail | Warn |
-|----------|------|------|------|
-| Structural | {pass} | {fail} | {warn} |
-| Content | {pass} | {fail} | {warn} |
-| Platform Patterns | {pass} | {fail} | {warn} |
-| Accessibility | {pass} | {fail} | {warn} |
-| Visual Foundation | {pass} | {fail} | {warn} |
-| Inheritance | {pass} | {fail} | {warn} |
-| Visual Artifacts | {pass} | {fail} | {warn} |
-| **TOTAL** | {total_pass} | {total_fail} | {total_warn} |
+| Category          | Pass         | Fail         | Warn         |
+| ----------------- | ------------ | ------------ | ------------ |
+| Structural        | {pass}       | {fail}       | {warn}       |
+| Content           | {pass}       | {fail}       | {warn}       |
+| Platform Patterns | {pass}       | {fail}       | {warn}       |
+| Accessibility     | {pass}       | {fail}       | {warn}       |
+| Visual Foundation | {pass}       | {fail}       | {warn}       |
+| Inheritance       | {pass}       | {fail}       | {warn}       |
+| Visual Artifacts  | {pass}       | {fail}       | {warn}       |
+| **TOTAL**         | {total_pass} | {total_fail} | {total_warn} |
 
 **Pass Rate:** {pass_rate}%
 **Status:** {status}
@@ -179,8 +184,8 @@ Spacing:
 
 Issues requiring attention:
 {failed_items_list}
-  </output>
-  <ask>Would you like to address these issues now? (y/n)</ask>
+</output>
+<ask>Would you like to address these issues now? (y/n)</ask>
 </check>
 
 <check if="pass_rate >= 80">

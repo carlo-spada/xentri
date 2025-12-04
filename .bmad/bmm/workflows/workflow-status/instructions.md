@@ -55,6 +55,7 @@ This will guide you through entity selection and create your workflow path.</out
 <action>Parse YAML file and extract entity context:</action>
 
 Parse these fields:
+
 - entity_type
 - entity_type_display
 - entity_path
@@ -75,7 +76,7 @@ Parse these fields:
 - Find first workflow with status != file path and != skipped and != n/a
 - This is the NEXT workflow to work on
 - Look up agent from entity-workflows.yaml
-</step>
+  </step>
 
 <step n="3" goal="Display current status and options">
 <action>Load entity-workflows.yaml to get phase information</action>
@@ -93,11 +94,14 @@ Parse these fields:
 **Progress:**
 
 {{#each phases}}
+
 ### {{phase_name}}
+
 {{#each workflows_in_phase}}
+
 - {{workflow_name}} ({{agent}}): {{status_display}}
-{{/each}}
-{{/each}}
+  {{/each}}
+  {{/each}}
 
 ## 🎯 Next Steps
 
@@ -108,9 +112,10 @@ Parse these fields:
 {{#if optional_workflows_available}}
 **Optional Workflows Available:**
 {{#each optional_workflows}}
+
 - {{workflow_name}} ({{agent}}) - {{status}}
-{{/each}}
-{{/if}}
+  {{/each}}
+  {{/if}}
 
 {{#if parent_prd_path}}
 💡 **Context:** Parent PRD at {{parent_prd_path}}
@@ -122,9 +127,9 @@ Parse these fields:
 <ask>What would you like to do?
 
 1. **Start next workflow** - {{next_workflow_name}} ({{next_agent}})
-{{#if optional_workflows_available}}
+   {{#if optional_workflows_available}}
 2. **Run optional workflow** - Choose from available options
-{{/if}}
+   {{/if}}
 3. **View full status YAML** - See complete status file
 4. **Update workflow status** - Mark a workflow as completed or skipped
 5. **Exit** - Return to agent

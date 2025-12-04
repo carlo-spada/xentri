@@ -48,8 +48,8 @@ This PRD will:
 - Inherit from {parent_prd_path}
 - Add requirements specific to this scope
 - NOT contradict parent or Constitution
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <check if="existing PRD exists at output path">
   <ask>An existing PRD was found at this level. Do you want to:
@@ -83,7 +83,7 @@ This PRD will:
    - Note what parent already covers
 
 3. Summarize inheritance context for user
-</action>
+   </action>
 
 <output>
 📜 Inherited Context Summary:
@@ -116,11 +116,11 @@ For {entity_type_display}, focus on:
   - What is the implementation scope?
   - How does it support the Constitution's requirements?
 
-  Key questions:
-  "What does this module do for the platform?"
-  "What APIs or interfaces does it expose?"
-  "What other modules does it depend on?"
-  </action>
+Key questions:
+"What does this module do for the platform?"
+"What APIs or interfaces does it expose?"
+"What other modules does it depend on?"
+</action>
 </check>
 
 <check if="entity_type == 'strategic_container'">
@@ -130,11 +130,11 @@ For {entity_type_display}, focus on:
   - What subcategories (Coordination Units) will it contain?
   - How do children coordinate within this category?
 
-  Key questions:
-  "What business outcomes does this category deliver?"
-  "What are the major subdivisions of this capability?"
-  "How do you see modules within this category working together?"
-  </action>
+Key questions:
+"What business outcomes does this category deliver?"
+"What are the major subdivisions of this capability?"
+"How do you see modules within this category working together?"
+</action>
 </check>
 
 <check if="entity_type == 'coordination_unit'">
@@ -144,11 +144,11 @@ For {entity_type_display}, focus on:
   - How do modules integrate within this unit?
   - What are the shared concerns across child modules?
 
-  Key questions:
-  "What specific aspect of {category} does this handle?"
-  "What modules will belong to this subcategory?"
-  "What shared patterns or integrations exist?"
-  </action>
+Key questions:
+"What specific aspect of {category} does this handle?"
+"What modules will belong to this subcategory?"
+"What shared patterns or integrations exist?"
+</action>
 </check>
 
 <check if="entity_type == 'business_module'">
@@ -158,11 +158,11 @@ For {entity_type_display}, focus on:
   - What user stories or jobs-to-be-done does it address?
   - How does it integrate with sibling modules?
 
-  Key questions:
-  "What does this module do for the user?"
-  "What problem does it solve?"
-  "What are the key user workflows?"
-  </action>
+Key questions:
+"What does this module do for the user?"
+"What problem does it solve?"
+"What are the key user workflows?"
+</action>
 </check>
 
 <action>Generate content for entity_purpose and scope_definition sections</action>
@@ -191,7 +191,7 @@ IMPORTANT:
 - FRs must be ADDITIVE to parent requirements
 - FRs must NOT contradict inherited constraints
 - FRs should be at appropriate altitude for this entity type
-</action>
+  </action>
 
 <check if="entity_type == 'infrastructure_module'">
   <action>Infrastructure Module FRs focus on:
@@ -200,8 +200,8 @@ IMPORTANT:
   - Integration points with other modules
   - Implementation of Constitution requirements
 
-  Use: FR-{entity_code}-xxx format
-  </action>
+Use: FR-{entity_code}-xxx format
+</action>
 </check>
 
 <check if="entity_type == 'strategic_container'">
@@ -211,8 +211,8 @@ IMPORTANT:
   - Shared behaviors for all children
   - Strategic alignment requirements
 
-  Use: FR-{entity_code}-xxx format
-  </action>
+Use: FR-{entity_code}-xxx format
+</action>
 </check>
 
 <check if="entity_type == 'coordination_unit'">
@@ -222,8 +222,8 @@ IMPORTANT:
   - Shared integration patterns
   - Data/event flow between modules
 
-  Use: FR-{category_code}-{entity_code}-xxx format
-  </action>
+Use: FR-{category_code}-{entity_code}-xxx format
+</action>
 </check>
 
 <check if="entity_type == 'business_module'">
@@ -233,8 +233,8 @@ IMPORTANT:
   - User stories and acceptance criteria
   - Integration with sibling modules
 
-  Use: FR-{category_code}-{subcategory_code}-{entity_code}-xxx format
-  </action>
+Use: FR-{category_code}-{subcategory_code}-{entity_code}-xxx format
+</action>
 </check>
 
 <action>Guide requirement discovery:
@@ -250,7 +250,7 @@ IMPORTANT:
 
 4. Write clear, testable FRs
    Format: [Actor] can [capability] [context if needed]
-</action>
+   </action>
 
 <action>Generate content for functional_requirements section</action>
 
@@ -266,8 +266,8 @@ IMPORTANT:
 <check if="entity_type == 'infrastructure_module'">
   <action>Document exposed and consumed interfaces:
 
-  **Exposed Interfaces:**
-  What does this module provide to others?
+**Exposed Interfaces:**
+What does this module provide to others?
 
 - API endpoints
 - Event types emitted
@@ -299,8 +299,8 @@ IMPORTANT:
 <check if="entity_type == 'strategic_container'">
   <action>Document strategic alignment and child coordination:
 
-  **Strategic Alignment:**
-  How does this category align with platform strategy?
+**Strategic Alignment:**
+How does this category align with platform strategy?
 
 - Business goals supported
 - Success metrics
@@ -331,8 +331,8 @@ IMPORTANT:
 <check if="entity_type == 'coordination_unit'">
   <action>Document module orchestration and integration:
 
-  **Module Orchestration:**
-  How are child modules coordinated?
+**Module Orchestration:**
+How are child modules coordinated?
 
 - Workflow patterns
 - Data flow between modules
@@ -371,7 +371,7 @@ Consider:
 - Security requirements beyond platform minimum
 - Specific scalability needs
 - Domain-specific compliance
-</action>
+  </action>
 
 <check if="entity has specific NFRs">
   <invoke-task name="save-with-checkpoint">
@@ -422,7 +422,7 @@ Consider:
 - Functional Requirements ({fr_prefix}-xxx)
 - Entity-specific sections
 - Entity-specific NFRs (if any)
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -469,7 +469,7 @@ Summary:
 - {fr_count} Functional Requirements ({fr_prefix}-xxx)
 - Inherits from: {parent_prd_path}
 - Validated against: Constitution + Parent PRD
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Next Steps:**
 </output>

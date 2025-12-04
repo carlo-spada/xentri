@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import { Button } from '@xentri/ui';
-import { Edit, CheckCircle, Circle, Loader2, ArrowLeft } from 'lucide-react';
-import type { Brief, BriefSectionName, BriefSections } from '@xentri/ts-schema';
-import { getApiUrl, setBrief } from '../../stores/brief.js';
+import { useEffect, useState } from 'react'
+import { Button } from '@xentri/ui'
+import { Edit, CheckCircle, Circle, Loader2, ArrowLeft } from 'lucide-react'
+import type { Brief, BriefSectionName, BriefSections } from '@xentri/ts-schema'
+import { getApiUrl, setBrief } from '../../stores/brief.js'
 
 interface BriefViewProps {
-  briefId: string;
-  orgId?: string;
+  briefId: string
+  orgId?: string
 }
 
 const SECTION_CONFIG: {
-  key: BriefSectionName;
-  title: string;
-  icon: string;
-  fields: { key: string; label: string; isArray?: boolean }[];
+  key: BriefSectionName
+  title: string
+  icon: string
+  fields: { key: string; label: string; isArray?: boolean }[]
 }[] = [
   {
     key: 'identity',
@@ -85,7 +85,7 @@ const SECTION_CONFIG: {
       { key: 'metrics', label: 'Key Metrics', isArray: true },
     ],
   },
-];
+]
 
 /**
  * BriefView - Displays all 7 sections of the Universal Brief
@@ -93,16 +93,16 @@ const SECTION_CONFIG: {
  * Story 1.6, Task 5: Brief view page
  */
 export function BriefView({ briefId, orgId }: BriefViewProps) {
-  const [brief, setBriefState] = useState<Brief | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [brief, setBriefState] = useState<Brief | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchBrief() {
       if (!orgId) {
-        setError('No organization context');
-        setLoading(false);
-        return;
+        setError('No organization context')
+        setLoading(false)
+        return
       }
 
       try {
@@ -111,28 +111,28 @@ export function BriefView({ briefId, orgId }: BriefViewProps) {
             'x-org-id': orgId,
           },
           credentials: 'include',
-        });
+        })
 
         if (!response.ok) {
           if (response.status === 404) {
-            throw new Error('Brief not found');
+            throw new Error('Brief not found')
           }
-          throw new Error(`HTTP ${response.status}`);
+          throw new Error(`HTTP ${response.status}`)
         }
 
-        const data = await response.json();
-        setBriefState(data.data);
-        setBrief(data.data);
+        const data = await response.json()
+        setBriefState(data.data)
+        setBrief(data.data)
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to load brief';
-        setError(message);
+        const message = err instanceof Error ? err.message : 'Failed to load brief'
+        setError(message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
-    fetchBrief();
-  }, [briefId, orgId]);
+    fetchBrief()
+  }, [briefId, orgId])
 
   if (loading) {
     return (
@@ -141,41 +141,41 @@ export function BriefView({ briefId, orgId }: BriefViewProps) {
         <span>Loading Brief...</span>
         <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </div>
-    );
+    )
   }
 
   if (error) {
     return (
       <div style={styles.error}>
         <p>{error}</p>
-        <Button variant="outline" onClick={() => window.location.href = '/strategy'}>
+        <Button variant="outline" onClick={() => (window.location.href = '/strategy')}>
           <ArrowLeft size={16} />
           Back to Strategy
         </Button>
       </div>
-    );
+    )
   }
 
   if (!brief) {
-    return null;
+    return null
   }
 
-  const businessName = brief.sections?.identity?.businessName || 'Your Business';
+  const businessName = brief.sections?.identity?.businessName || 'Your Business'
 
   const renderFieldValue = (
     section: BriefSections[BriefSectionName],
     fieldKey: string,
     isArray?: boolean
   ) => {
-    const value = (section as Record<string, unknown>)?.[fieldKey];
+    const value = (section as Record<string, unknown>)?.[fieldKey]
 
     if (!value) {
-      return <span style={styles.emptyValue}>Not set</span>;
+      return <span style={styles.emptyValue}>Not set</span>
     }
 
     if (isArray && Array.isArray(value)) {
       if (value.length === 0) {
-        return <span style={styles.emptyValue}>None added</span>;
+        return <span style={styles.emptyValue}>None added</span>
       }
       // Handle services/products which are objects
       if (typeof value[0] === 'object' && value[0] !== null) {
@@ -187,7 +187,7 @@ export function BriefView({ briefId, orgId }: BriefViewProps) {
               </li>
             ))}
           </ul>
-        );
+        )
       }
       return (
         <ul style={styles.list}>
@@ -197,11 +197,11 @@ export function BriefView({ briefId, orgId }: BriefViewProps) {
             </li>
           ))}
         </ul>
-      );
+      )
     }
 
-    return <span style={styles.fieldValue}>{String(value)}</span>;
-  };
+    return <span style={styles.fieldValue}>{String(value)}</span>
+  }
 
   return (
     <div style={styles.container}>
@@ -240,9 +240,9 @@ export function BriefView({ briefId, orgId }: BriefViewProps) {
       {/* Sections */}
       <div style={styles.sections}>
         {SECTION_CONFIG.map((sectionConfig) => {
-          const sectionData = brief.sections?.[sectionConfig.key];
-          const status = brief.sectionStatus?.[sectionConfig.key];
-          const isReady = status === 'ready';
+          const sectionData = brief.sections?.[sectionConfig.key]
+          const status = brief.sectionStatus?.[sectionConfig.key]
+          const isReady = status === 'ready'
 
           return (
             <section key={sectionConfig.key} style={styles.section}>
@@ -277,11 +277,11 @@ export function BriefView({ briefId, orgId }: BriefViewProps) {
                 ))}
               </div>
             </section>
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -422,4 +422,4 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--color-text-primary)',
     marginBottom: '0.25rem',
   },
-};
+}

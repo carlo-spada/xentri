@@ -8,6 +8,7 @@
 ## Overview
 
 The `ts-schema` package defines the "contract" between frontend and backend:
+
 - TypeScript interfaces for compile-time safety
 - Zod schemas for runtime validation
 - Shared constants and enums
@@ -41,7 +42,7 @@ packages/ts-schema/
 
 ```typescript
 // src/events/envelope.ts
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const SystemEventSchema = z.object({
   id: z.string().uuid(),
@@ -56,18 +57,18 @@ export const SystemEventSchema = z.object({
   version: z.string(),
   created_at: z.string().datetime(),
   idempotency_key: z.string().optional(),
-});
+})
 
 export type SystemEvent<T = unknown> = z.infer<typeof SystemEventSchema> & {
-  payload: T;
-};
+  payload: T
+}
 ```
 
 ### Soul Schemas
 
 ```typescript
 // src/soul/identity.ts
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const IdentitySectionSchema = z.object({
   business_name: z.string().min(1),
@@ -76,9 +77,9 @@ export const IdentitySectionSchema = z.object({
   founding_date: z.string().optional(),
   mission: z.string().optional(),
   values: z.array(z.string()).optional(),
-});
+})
 
-export type IdentitySection = z.infer<typeof IdentitySectionSchema>;
+export type IdentitySection = z.infer<typeof IdentitySectionSchema>
 
 // src/soul/index.ts
 export const SoulSchema = z.object({
@@ -90,9 +91,9 @@ export const SoulSchema = z.object({
     goals: GoalsSectionSchema,
     operational: OperationalSectionSchema,
   }),
-});
+})
 
-export type Soul = z.infer<typeof SoulSchema>;
+export type Soul = z.infer<typeof SoulSchema>
 ```
 
 ---
@@ -107,18 +108,18 @@ export const CreateEventRequestSchema = z.object({
   type: z.string(),
   payload: z.record(z.unknown()),
   idempotency_key: z.string().optional(),
-});
+})
 
-export type CreateEventRequest = z.infer<typeof CreateEventRequestSchema>;
+export type CreateEventRequest = z.infer<typeof CreateEventRequestSchema>
 
 export const ListEventsQuerySchema = z.object({
   type: z.string().optional(),
   since: z.string().datetime().optional(),
   limit: z.coerce.number().min(1).max(1000).default(100),
   cursor: z.string().optional(),
-});
+})
 
-export type ListEventsQuery = z.infer<typeof ListEventsQuerySchema>;
+export type ListEventsQuery = z.infer<typeof ListEventsQuerySchema>
 ```
 
 ### Response Schemas
@@ -130,12 +131,12 @@ export const EventResponseSchema = z.object({
   type: z.string(),
   payload: z.unknown(),
   created_at: z.string().datetime(),
-});
+})
 
 export const ListEventsResponseSchema = z.object({
   events: z.array(EventResponseSchema),
   next_cursor: z.string().nullable(),
-});
+})
 ```
 
 ---
@@ -145,8 +146,8 @@ export const ListEventsResponseSchema = z.object({
 ### In Backend (Fastify)
 
 ```typescript
-import { CreateEventRequestSchema } from '@xentri/ts-schema';
-import { z } from 'zod';
+import { CreateEventRequestSchema } from '@xentri/ts-schema'
+import { z } from 'zod'
 
 // Route validation
 app.post('/api/v1/events', {
@@ -154,32 +155,32 @@ app.post('/api/v1/events', {
     body: CreateEventRequestSchema,
   },
   handler: async (req, reply) => {
-    const event = req.body; // Type-safe!
+    const event = req.body // Type-safe!
     // ...
-  }
-});
+  },
+})
 ```
 
 ### In Frontend (React)
 
 ```typescript
-import { Soul, SoulSchema } from '@xentri/ts-schema';
+import { Soul, SoulSchema } from '@xentri/ts-schema'
 
 async function fetchSoul(): Promise<Soul> {
-  const response = await fetch('/api/v1/soul');
-  const data = await response.json();
+  const response = await fetch('/api/v1/soul')
+  const data = await response.json()
 
   // Runtime validation
-  return SoulSchema.parse(data);
+  return SoulSchema.parse(data)
 }
 ```
 
 ### Form Validation
 
 ```typescript
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IdentitySectionSchema } from '@xentri/ts-schema';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { IdentitySectionSchema } from '@xentri/ts-schema'
 
 function IdentityForm() {
   const form = useForm({
@@ -189,7 +190,7 @@ function IdentityForm() {
       business_type: 'service',
       industry: '',
     },
-  });
+  })
 
   // Form is type-safe and validated
 }
@@ -209,18 +210,13 @@ export const CATEGORIES = [
   'operations',
   'team',
   'legal',
-] as const;
+] as const
 
-export type Category = typeof CATEGORIES[number];
+export type Category = (typeof CATEGORIES)[number]
 
-export const AUTONOMY_LEVELS = [
-  'manual',
-  'assisted',
-  'supervised',
-  'autonomous',
-] as const;
+export const AUTONOMY_LEVELS = ['manual', 'assisted', 'supervised', 'autonomous'] as const
 
-export type AutonomyLevel = typeof AUTONOMY_LEVELS[number];
+export type AutonomyLevel = (typeof AUTONOMY_LEVELS)[number]
 
 export const TIERS = [
   'free',
@@ -229,9 +225,9 @@ export const TIERS = [
   'professional',
   'business',
   'enterprise',
-] as const;
+] as const
 
-export type Tier = typeof TIERS[number];
+export type Tier = (typeof TIERS)[number]
 ```
 
 ---
@@ -260,7 +256,7 @@ app.get('/api/v2/soul', handleV2);
 
 ```typescript
 // src/soul/__tests__/identity.test.ts
-import { IdentitySectionSchema } from '../identity';
+import { IdentitySectionSchema } from '../identity'
 
 describe('IdentitySectionSchema', () => {
   it('validates valid identity', () => {
@@ -268,21 +264,21 @@ describe('IdentitySectionSchema', () => {
       business_name: 'Acme Corp',
       business_type: 'service',
       industry: 'consulting',
-    };
+    }
 
-    expect(() => IdentitySectionSchema.parse(valid)).not.toThrow();
-  });
+    expect(() => IdentitySectionSchema.parse(valid)).not.toThrow()
+  })
 
   it('rejects invalid business_type', () => {
     const invalid = {
       business_name: 'Acme Corp',
       business_type: 'invalid',
       industry: 'consulting',
-    };
+    }
 
-    expect(() => IdentitySectionSchema.parse(invalid)).toThrow();
-  });
-});
+    expect(() => IdentitySectionSchema.parse(invalid)).toThrow()
+  })
+})
 ```
 
 ---

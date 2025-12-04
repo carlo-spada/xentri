@@ -1,14 +1,201 @@
 # Document Ownership Contracts
 # =============================
 #
-# This file defines the SINGLE SOURCE OF TRUTH for what each Constitution document OWNS.
+# This file defines the SINGLE SOURCE OF TRUTH for:
+# 1. What documents each ENTITY LEVEL has (all levels have all 5 document types)
+# 2. What each document OWNS at Constitution level
+# 3. How content types are scoped at each entity level
 #
-# GOVERNANCE RULE: Before adding content to any Constitution document, consult this file.
+# GOVERNANCE RULE: Before adding content to any document, consult this file.
 # If the content type is owned by another document, REFERENCE it instead of duplicating.
 #
-# Version: 1.0
+# Version: 1.1
 # Created: 2025-12-03
+# Updated: 2025-12-03
 # Status: Active
+
+# =============================================================================
+# ENTITY DOCUMENT STRUCTURE
+# =============================================================================
+#
+# CRITICAL: Every entity level has its own COMPLETE document set.
+# Entities are INDEPENDENT. They inherit CONSTRAINTS from parents, not CONTENT.
+# Each entity builds its own interfaces, screens, components, and stories.
+#
+# This follows ADR-020 (Sibling Dependency Law):
+# - Single-parent inheritance for identity/constraints
+# - Each entity has its own scoped content
+# - Children can ADD requirements, never CONTRADICT parent constraints
+
+entity_documents:
+  # ---------------------------------------------------------------------------
+  # Constitution (docs/platform/)
+  # ---------------------------------------------------------------------------
+  constitution:
+    path_pattern: 'docs/platform/'
+    has_documents:
+      - prd.md
+      - architecture.md
+      - ux-design.md
+      - epics.md
+      - product-soul.md
+    content_scope:
+      requirements: 'PR-xxx (Platform Requirements)'
+      interfaces: 'IC-xxx (Integration Contracts)'
+      decisions: 'ADR-xxx (Architecture Decision Records)'
+      scope: 'System-wide rules that ALL entities must follow'
+    inherits_from: null
+    provides_to_children:
+      - 'Design tokens (colors, typography, spacing)'
+      - 'System patterns (RLS, events, multi-tenancy)'
+      - 'API conventions (Problem Details, naming)'
+      - 'Security model (auth, permissions)'
+      - 'Base components (from packages/ui)'
+
+  # ---------------------------------------------------------------------------
+  # Infrastructure Module (docs/platform/{module}/)
+  # ---------------------------------------------------------------------------
+  infrastructure_module:
+    path_pattern: 'docs/platform/{module}/'
+    has_documents:
+      - README.md # Module overview (replaces separate docs in small modules)
+      - prd.md # Or section in README for small modules
+      - architecture.md # Or section in README for small modules
+      - ux-design.md # If module has UI
+      - epics.md # Module implementation stories
+      - product-soul.md # Recommended: module identity
+    content_scope:
+      requirements: 'FR-{MOD}-xxx (e.g., FR-SHL-001, FR-API-001)'
+      interfaces: 'Module-specific interfaces that siblings can depend on'
+      decisions: 'Module-internal patterns (reference Constitution ADRs)'
+      scope: 'Platform infrastructure that other entities depend on'
+    inherits_constraints_from:
+      - constitution
+    builds_own:
+      - 'Module-specific interfaces'
+      - 'Module-specific screens/components'
+      - 'Module-specific API endpoints'
+      - 'Module-specific stories'
+    examples:
+      - shell
+      - core-api
+      - ts-schema
+      - ui
+
+  # ---------------------------------------------------------------------------
+  # Strategic Container (docs/{category}/)
+  # ---------------------------------------------------------------------------
+  strategic_container:
+    path_pattern: 'docs/{category}/'
+    has_documents:
+      - README.md
+      - prd.md
+      - architecture.md
+      - ux-design.md
+      - epics.md
+      - product-soul.md # Recommended: category identity/voice
+    content_scope:
+      requirements: 'FR-{CAT}-xxx (e.g., FR-STR-001, FR-FIN-001)'
+      interfaces: 'Category-level interfaces'
+      decisions: 'Category patterns (must align with Constitution ADRs)'
+      scope: 'Category-wide coordination and shared patterns'
+    inherits_constraints_from:
+      - constitution
+    builds_own:
+      - 'Category-specific SPA'
+      - 'Category-specific Copilot'
+      - 'Category-level patterns'
+      - 'Category coordination model'
+    examples:
+      - strategy
+      - finance
+      - marketing
+      - sales
+      - operations
+      - team
+      - legal
+
+  # ---------------------------------------------------------------------------
+  # Coordination Unit (docs/{category}/{subcategory}/)
+  # ---------------------------------------------------------------------------
+  coordination_unit:
+    path_pattern: 'docs/{category}/{subcategory}/'
+    has_documents:
+      - README.md
+      - prd.md
+      - architecture.md
+      - ux-design.md
+      - epics.md
+      - product-soul.md # Recommended
+    content_scope:
+      requirements: 'FR-{CAT}-{SUB}-xxx (e.g., FR-STR-PUL-001)'
+      interfaces: 'Subcategory interfaces'
+      decisions: 'Subcategory coordination patterns'
+      scope: 'Coordinate modules within subcategory'
+    inherits_constraints_from:
+      - constitution
+      - parent_container # The category
+    builds_own:
+      - 'Subcategory-specific flows'
+      - 'Shared components for child modules'
+      - 'Subcategory coordination logic'
+    examples:
+      - strategy/pulse
+      - strategy/soul
+      - finance/ledger
+      - sales/pipeline
+
+  # ---------------------------------------------------------------------------
+  # Business Module (docs/{category}/{subcategory}/{module}/)
+  # ---------------------------------------------------------------------------
+  business_module:
+    path_pattern: 'docs/{category}/{subcategory}/{module}/'
+    has_documents:
+      - README.md
+      - prd.md
+      - architecture.md
+      - ux-design.md
+      - epics.md
+      - product-soul.md # Recommended
+    content_scope:
+      requirements: 'FR-{CAT}-{SUB}-{MOD}-xxx'
+      interfaces: 'Module interfaces (available to siblings per ADR-020)'
+      decisions: 'Module-internal implementation patterns'
+      scope: 'Feature implementation, user-facing functionality'
+    inherits_constraints_from:
+      - constitution
+      - parent_container # The category
+      - parent_coordination # The subcategory
+    builds_own:
+      - 'Module-specific screens'
+      - 'Module-specific components'
+      - 'Module-specific API routes'
+      - 'Module-specific stories'
+    note: 'This is where features actually get built. Full independence within inherited constraints.'
+
+# =============================================================================
+# KEY PRINCIPLE: INHERIT CONSTRAINTS, BUILD CONTENT
+# =============================================================================
+#
+# What children INHERIT (constraints they must follow):
+#   - Design tokens from Constitution UX-Design
+#   - System patterns from Constitution Architecture (ADRs)
+#   - Security model from Constitution Architecture
+#   - API conventions from Constitution Architecture
+#   - Base components from packages/ui
+#
+# What children BUILD (their own content):
+#   - Their own requirements (FR-xxx scoped to their level)
+#   - Their own interfaces (for siblings to depend on)
+#   - Their own screens and components (using inherited tokens/components)
+#   - Their own stories (implementing their requirements)
+#   - Their own patterns (within inherited constraints)
+#
+# Example: Pulse Module (docs/strategy/pulse/)
+#   - INHERITS: Design tokens, SystemEvent schema, RLS patterns, Button component
+#   - BUILDS: Pulse dashboard screens, PulseItem display, metric charts, FR-STR-PUL-xxx
+#
+# =============================================================================
 
 # =============================================================================
 # OWNERSHIP RULES
@@ -27,182 +214,182 @@ contracts:
   # PRD (prd.md) - WHAT and WHY
   # ---------------------------------------------------------------------------
   prd:
-    purpose: "Business requirements, user value, success criteria"
+    purpose: 'Business requirements, user value, success criteria'
     owns_exclusively:
       - requirement_definitions:
-          pattern: "PR-xxx, IC-xxx"
-          description: "Full requirement text, rationale, acceptance criteria"
-          canonical_section: "Platform Requirements Index"
+          pattern: 'PR-xxx, IC-xxx'
+          description: 'Full requirement text, rationale, acceptance criteria'
+          canonical_section: 'Platform Requirements Index'
 
       - business_context:
-          description: "Why we build, who benefits, problem statement"
+          description: 'Why we build, who benefits, problem statement'
           examples:
-            - "Executive Summary"
-            - "Product Scope"
-            - "Success Criteria"
-            - "Personalization Principle"
+            - 'Executive Summary'
+            - 'Product Scope'
+            - 'Success Criteria'
+            - 'Personalization Principle'
 
       - user_experience_principles:
-          description: "High-level UX philosophy (WHAT users experience)"
-          note: "Visual specs live in ux-design.md"
+          description: 'High-level UX philosophy (WHAT users experience)'
+          note: 'Visual specs live in ux-design.md'
 
       - subscription_model:
-          description: "Pricing tiers, billing philosophy"
+          description: 'Pricing tiers, billing philosophy'
 
       - sla_definitions:
-          description: "Response time expectations, availability tiers"
+          description: 'Response time expectations, availability tiers'
 
     references_from:
-      - architecture: "For HOW technical decisions support requirements"
-      - ux-design: "For VISUAL implementation of UX principles"
-      - epics: "For COVERAGE mapping of requirements"
+      - architecture: 'For HOW technical decisions support requirements'
+      - ux-design: 'For VISUAL implementation of UX principles'
+      - epics: 'For COVERAGE mapping of requirements'
 
     forbidden:
-      - typescript_interfaces: "Belongs to architecture.md"
-      - visual_specifications: "Belongs to ux-design.md"
-      - implementation_details: "Belongs to architecture.md"
+      - typescript_interfaces: 'Belongs to architecture.md'
+      - visual_specifications: 'Belongs to ux-design.md'
+      - implementation_details: 'Belongs to architecture.md'
 
   # ---------------------------------------------------------------------------
   # Architecture (architecture.md) - HOW (Technical)
   # ---------------------------------------------------------------------------
   architecture:
-    purpose: "Technical decisions, patterns, interfaces, ADRs"
+    purpose: 'Technical decisions, patterns, interfaces, ADRs'
     owns_exclusively:
       - adr_definitions:
-          pattern: "ADR-xxx"
-          description: "Full ADR text with context, decision, implications"
-          canonical_section: "Architecture Decision Records"
+          pattern: 'ADR-xxx'
+          description: 'Full ADR text with context, decision, implications'
+          canonical_section: 'Architecture Decision Records'
 
       - typescript_interfaces:
-          description: "All TypeScript type definitions, schemas, contracts"
+          description: 'All TypeScript type definitions, schemas, contracts'
           examples:
-            - "SystemEvent interface (IC-001 implementation)"
-            - "PulseItem interface"
-            - "StoryArc interface"
-            - "PermissionGrant interface"
-          note: "These are the ONLY authoritative TypeScript definitions"
+            - 'SystemEvent interface (IC-001 implementation)'
+            - 'PulseItem interface'
+            - 'StoryArc interface'
+            - 'PermissionGrant interface'
+          note: 'These are the ONLY authoritative TypeScript definitions'
 
       - technical_patterns:
-          description: "Implementation patterns, data flows, service topology"
+          description: 'Implementation patterns, data flows, service topology'
           examples:
-            - "Event envelope schema (ADR-002)"
-            - "Tri-State Memory implementation (ADR-006)"
-            - "RLS patterns (ADR-003)"
-            - "Cross-runtime contracts (ADR-009)"
+            - 'Event envelope schema (ADR-002)'
+            - 'Tri-State Memory implementation (ADR-006)'
+            - 'RLS patterns (ADR-003)'
+            - 'Cross-runtime contracts (ADR-009)'
 
       - infrastructure:
-          description: "Deployment, scaling, observability"
+          description: 'Deployment, scaling, observability'
 
       - api_specifications:
-          description: "Endpoint definitions, request/response shapes"
+          description: 'Endpoint definitions, request/response shapes'
 
     references_from:
-      - prd: "For WHAT requirements the architecture fulfills"
-      - epics: "For WHEN features are implemented"
+      - prd: 'For WHAT requirements the architecture fulfills'
+      - epics: 'For WHEN features are implemented'
 
     forbidden:
-      - requirement_definitions: "Reference PR-xxx from prd.md"
-      - visual_specifications: "Belongs to ux-design.md"
-      - business_rationale: "Brief context OK, full rationale in prd.md"
+      - requirement_definitions: 'Reference PR-xxx from prd.md'
+      - visual_specifications: 'Belongs to ux-design.md'
+      - business_rationale: 'Brief context OK, full rationale in prd.md'
 
   # ---------------------------------------------------------------------------
   # UX Design (ux-design.md) - HOW (Visual/Interaction)
   # ---------------------------------------------------------------------------
   ux_design:
-    purpose: "Visual design, interaction patterns, accessibility"
+    purpose: 'Visual design, interaction patterns, accessibility'
     owns_exclusively:
       - visual_specifications:
-          description: "Colors, typography, spacing, themes"
+          description: 'Colors, typography, spacing, themes'
           examples:
-            - "Color palettes (hex values)"
-            - "Typography scale"
-            - "Spacing system"
-            - "Theme definitions"
+            - 'Color palettes (hex values)'
+            - 'Typography scale'
+            - 'Spacing system'
+            - 'Theme definitions'
 
       - component_specifications:
-          description: "UI component behavior, states, variants"
+          description: 'UI component behavior, states, variants'
           examples:
-            - "Exception Card states"
-            - "Toast patterns"
-            - "Modal behavior"
-            - "Button hierarchy"
+            - 'Exception Card states'
+            - 'Toast patterns'
+            - 'Modal behavior'
+            - 'Button hierarchy'
 
       - interaction_patterns:
-          description: "How users interact with the system"
+          description: 'How users interact with the system'
           examples:
-            - "Chronicle View layout"
-            - "Navigation flow"
-            - "Copilot widget behavior"
+            - 'Chronicle View layout'
+            - 'Navigation flow'
+            - 'Copilot widget behavior'
 
       - accessibility:
-          description: "WCAG compliance, screen reader support"
+          description: 'WCAG compliance, screen reader support'
 
       - responsive_strategy:
-          description: "Breakpoints, layout adaptations"
+          description: 'Breakpoints, layout adaptations'
 
     references_from:
-      - prd: "For UX principles and user goals"
-      - architecture: "For data structures that inform UI (PulseItem, StoryArc)"
+      - prd: 'For UX principles and user goals'
+      - architecture: 'For data structures that inform UI (PulseItem, StoryArc)'
 
     forbidden:
-      - business_requirements: "Reference PR-xxx from prd.md"
-      - typescript_interfaces: "Reference from architecture.md"
-      - api_definitions: "Reference from architecture.md"
+      - business_requirements: 'Reference PR-xxx from prd.md'
+      - typescript_interfaces: 'Reference from architecture.md'
+      - api_definitions: 'Reference from architecture.md'
 
   # ---------------------------------------------------------------------------
   # Epics (epics.md) - WHEN and HOW MUCH
   # ---------------------------------------------------------------------------
   epics:
-    purpose: "Work breakdown, traceability, implementation sequence"
+    purpose: 'Work breakdown, traceability, implementation sequence'
     owns_exclusively:
       - epic_definitions:
-          description: "Epic goals, stories, acceptance criteria"
+          description: 'Epic goals, stories, acceptance criteria'
           note: "Stories trace TO requirements, don't redefine them"
 
       - traceability_matrix:
-          description: "Which stories cover which requirements"
-          note: "References PR-xxx and IC-xxx by ID only"
+          description: 'Which stories cover which requirements'
+          note: 'References PR-xxx and IC-xxx by ID only'
 
       - implementation_sequence:
-          description: "Order of epics, dependencies between stories"
+          description: 'Order of epics, dependencies between stories'
 
       - coordination_model:
-          description: "Which modules participate in which epic"
+          description: 'Which modules participate in which epic'
 
     references_from:
-      - prd: "For requirement definitions (PR-xxx, IC-xxx)"
-      - architecture: "For ADR references in stories"
+      - prd: 'For requirement definitions (PR-xxx, IC-xxx)'
+      - architecture: 'For ADR references in stories'
 
     forbidden:
-      - requirement_definitions: "NEVER repeat PR-xxx text; reference by ID"
-      - typescript_interfaces: "Reference ADR from architecture.md"
+      - requirement_definitions: 'NEVER repeat PR-xxx text; reference by ID'
+      - typescript_interfaces: 'Reference ADR from architecture.md'
       - architectural_decisions: "Reference ADR-xxx, don't explain"
 
   # ---------------------------------------------------------------------------
   # Product Soul (product-soul.md) - WHO WE ARE
   # ---------------------------------------------------------------------------
   product_soul:
-    purpose: "Foundational vision, values, brand identity"
+    purpose: 'Foundational vision, values, brand identity'
     owns_exclusively:
       - vision_statement:
           description: "The 'why' behind Xentri"
 
       - brand_values:
-          description: "Core values, personality traits"
+          description: 'Core values, personality traits'
 
       - pricing_philosophy:
-          description: "High-level pricing approach"
-          note: "Detailed tiers in prd.md"
+          description: 'High-level pricing approach'
+          note: 'Detailed tiers in prd.md'
 
       - market_positioning:
-          description: "How we differentiate"
+          description: 'How we differentiate'
 
     references_from:
-      - prd: "For detailed requirements implementing the vision"
+      - prd: 'For detailed requirements implementing the vision'
 
     forbidden:
-      - detailed_requirements: "Belongs to prd.md"
-      - technical_decisions: "Belongs to architecture.md"
+      - detailed_requirements: 'Belongs to prd.md'
+      - technical_decisions: 'Belongs to architecture.md'
 
 # =============================================================================
 # CONTENT THAT SPANS DOCUMENTS (Legitimate Overlap)
@@ -221,17 +408,17 @@ contracts:
 
 legitimate_overlap:
   pulse_hierarchy:
-    prd: "Business logic, filtering rules, user experience goals"
-    architecture: "PulseItem interface, API endpoints, data flow"
-    ux_design: "Visual presentation, Chronicle vs Efficiency views"
+    prd: 'Business logic, filtering rules, user experience goals'
+    architecture: 'PulseItem interface, API endpoints, data flow'
+    ux_design: 'Visual presentation, Chronicle vs Efficiency views'
 
   story_arcs:
-    architecture: "StoryArc interface, arc lifecycle, APIs"
-    ux_design: "Visual presentation, progress bars, arc types"
+    architecture: 'StoryArc interface, arc lifecycle, APIs'
+    ux_design: 'Visual presentation, progress bars, arc types'
 
   copilot_widget:
-    architecture: "Context resolution, state persistence, APIs"
-    ux_design: "Visual states, positioning, interaction modes"
+    architecture: 'Context resolution, state persistence, APIs'
+    ux_design: 'Visual states, positioning, interaction modes'
 
 # =============================================================================
 # REFERENCE PATTERNS
@@ -266,23 +453,23 @@ reference_patterns:
 # These rules can be enforced by CI/validation scripts.
 
 validation_rules:
-  - name: "No TypeScript in PRD"
+  - name: 'No TypeScript in PRD'
     pattern: "interface.*\\{"
-    forbidden_in: ["prd.md"]
-    message: "TypeScript interfaces belong in architecture.md"
+    forbidden_in: ['prd.md']
+    message: 'TypeScript interfaces belong in architecture.md'
 
-  - name: "No requirement definitions in Epics"
+  - name: 'No requirement definitions in Epics'
     pattern: "^### (PR|IC)-\\d{3}"
-    forbidden_in: ["epics.md"]
-    message: "Requirement definitions belong in prd.md; reference by ID only"
+    forbidden_in: ['epics.md']
+    message: 'Requirement definitions belong in prd.md; reference by ID only'
 
-  - name: "No hex colors outside UX Design"
-    pattern: "#[0-9a-fA-F]{6}"
-    forbidden_in: ["prd.md", "architecture.md", "epics.md"]
-    message: "Color specifications belong in ux-design.md"
+  - name: 'No hex colors outside UX Design'
+    pattern: '#[0-9a-fA-F]{6}'
+    forbidden_in: ['prd.md', 'architecture.md', 'epics.md']
+    message: 'Color specifications belong in ux-design.md'
 
-  - name: "No visual specs in Architecture"
-    pattern: "(px|rem|font-size|line-height)"
-    forbidden_in: ["architecture.md"]
-    allowed_context: ["code blocks for CSS variables only"]
-    message: "Visual specifications belong in ux-design.md"
+  - name: 'No visual specs in Architecture'
+    pattern: '(px|rem|font-size|line-height)'
+    forbidden_in: ['architecture.md']
+    allowed_context: ['code blocks for CSS variables only']
+    message: 'Visual specifications belong in ux-design.md'

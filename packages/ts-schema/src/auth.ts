@@ -1,30 +1,30 @@
-export type UserRole = 'owner' | 'admin' | 'member' | 'viewer' | string;
+export type UserRole = 'owner' | 'admin' | 'member' | 'viewer' | string
 
 /**
  * Legacy user claims type (for backwards compatibility)
  * @deprecated Use ClerkJWTClaims for Clerk-based authentication
  */
 export type UserClaims = {
-  sub: string;
-  email?: string;
-  org_id: string;
-  role: UserRole;
-  iss: string;
-  aud?: string;
-  exp: number;
-  iat?: number;
-};
+  sub: string
+  email?: string
+  org_id: string
+  role: UserRole
+  iss: string
+  aud?: string
+  exp: number
+  iat?: number
+}
 
 export type ServiceTokenClaims = {
-  sub: string;
-  iss: string;
-  aud: string | string[];
-  org_id: string;
-  scope: string[];
-  trace_id?: string;
-  exp: number;
-  iat?: number;
-};
+  sub: string
+  iss: string
+  aud: string | string[]
+  org_id: string
+  scope: string[]
+  trace_id?: string
+  exp: number
+  iat?: number
+}
 
 // ===================
 // Clerk JWT Claims (Story 1.3)
@@ -35,7 +35,7 @@ export type ServiceTokenClaims = {
  * - 'org:admin' - Full org management access
  * - 'org:member' - Standard member access
  */
-export type ClerkOrgRole = 'org:admin' | 'org:member';
+export type ClerkOrgRole = 'org:admin' | 'org:member'
 
 /**
  * Clerk JWT claims structure.
@@ -47,37 +47,37 @@ export type ClerkOrgRole = 'org:admin' | 'org:member';
  */
 export interface ClerkJWTClaims {
   /** Clerk user ID (e.g., 'user_2abc123...') */
-  sub: string;
+  sub: string
 
   /** User's primary email address */
-  email: string;
+  email: string
 
   /** Active organization ID (present when org selected) */
-  org_id?: string;
+  org_id?: string
 
   /** Role in active organization */
-  org_role?: ClerkOrgRole;
+  org_role?: ClerkOrgRole
 
   /** Fine-grained permissions in active organization */
-  org_permissions?: string[];
+  org_permissions?: string[]
 
   /** Organization slug (if configured in JWT template) */
-  org_slug?: string;
+  org_slug?: string
 
   /** Token issuer (Clerk instance URL) */
-  iss: string;
+  iss: string
 
   /** Token audience */
-  aud?: string;
+  aud?: string
 
   /** Token issued at (Unix timestamp) */
-  iat: number;
+  iat: number
 
   /** Token expiration (Unix timestamp) */
-  exp: number;
+  exp: number
 
   /** Not before (Unix timestamp) */
-  nbf?: number;
+  nbf?: number
 }
 
 /**
@@ -87,15 +87,15 @@ export interface ClerkJWTClaims {
  * This maps to our internal role system.
  */
 export function clerkRoleToUserRole(clerkRole: ClerkOrgRole | undefined): UserRole {
-  if (!clerkRole) return 'member';
+  if (!clerkRole) return 'member'
 
   switch (clerkRole) {
     case 'org:admin':
-      return 'admin';
+      return 'admin'
     case 'org:member':
-      return 'member';
+      return 'member'
     default:
-      return 'member';
+      return 'member'
   }
 }
 
@@ -105,5 +105,5 @@ export function clerkRoleToUserRole(clerkRole: ClerkOrgRole | undefined): UserRo
 export function hasActiveOrg(
   claims: ClerkJWTClaims
 ): claims is ClerkJWTClaims & { org_id: string; org_role: ClerkOrgRole } {
-  return typeof claims.org_id === 'string' && claims.org_id.length > 0;
+  return typeof claims.org_id === 'string' && claims.org_id.length > 0
 }

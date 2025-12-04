@@ -1,6 +1,6 @@
-import { randomUUID } from 'crypto';
-import type { PrismaClient } from '@prisma/client';
-import { getPrisma } from '../../infra/db.js';
+import { randomUUID } from 'crypto'
+import type { PrismaClient } from '@prisma/client'
+import { getPrisma } from '../../infra/db.js'
 import {
   type Brief,
   type BriefSections,
@@ -14,32 +14,32 @@ import {
   determineSectionStatus,
   calculateCompletionStatus,
   getPopulatedSections,
-} from '@xentri/ts-schema';
+} from '@xentri/ts-schema'
 
 // ===================
 // Types
 // ===================
 
 export interface CreateBriefParams {
-  orgId: string;
-  userId: string;
-  input: CreateBriefInput;
+  orgId: string
+  userId: string
+  input: CreateBriefInput
 }
 
 export interface UpdateBriefParams {
-  briefId: string;
-  orgId: string;
-  userId: string;
-  input: UpdateBriefInput;
+  briefId: string
+  orgId: string
+  userId: string
+  input: UpdateBriefInput
 }
 
 export interface GetBriefParams {
-  briefId: string;
-  orgId: string;
+  briefId: string
+  orgId: string
 }
 
 export interface GetCurrentBriefParams {
-  orgId: string;
+  orgId: string
 }
 
 // ===================
@@ -56,10 +56,10 @@ export interface GetCurrentBriefParams {
  * - Updating Brief sections with status tracking
  */
 export class BriefService {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient
 
   constructor(prisma?: PrismaClient) {
-    this.prisma = prisma || getPrisma();
+    this.prisma = prisma || getPrisma()
   }
 
   /**
@@ -70,28 +70,28 @@ export class BriefService {
    * @throws Error if event write fails (surfaced to user per AC6)
    */
   async createBrief(params: CreateBriefParams): Promise<Brief> {
-    const { orgId, userId, input } = params;
-    const briefId = randomUUID();
-    const now = new Date();
+    const { orgId, userId, input } = params
+    const briefId = randomUUID()
+    const now = new Date()
 
     // Parse and validate sections
-    const sections = BriefSectionsSchema.parse(input.sections || {});
+    const sections = BriefSectionsSchema.parse(input.sections || {})
 
     // Calculate section statuses
-    const sectionStatus: BriefSectionStatusMap = {};
+    const sectionStatus: BriefSectionStatusMap = {}
     for (const name of BRIEF_SECTION_NAMES) {
-      sectionStatus[name] = determineSectionStatus(name, sections);
+      sectionStatus[name] = determineSectionStatus(name, sections)
     }
 
     // Calculate overall completion status
-    const completionStatus = calculateCompletionStatus(sectionStatus);
+    const completionStatus = calculateCompletionStatus(sectionStatus)
 
     // Get populated sections for event payload
-    const sectionsPopulated = getPopulatedSections(sections);
+    const sectionsPopulated = getPopulatedSections(sections)
 
     const result = await this.prisma.$transaction(async (tx) => {
       // Set org context for RLS
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 
       // Create the Brief
       await tx.$executeRaw`
@@ -116,7 +116,7 @@ export class BriefService {
           ${now},
           ${now}
         )
-      `;
+      `
 
       // Emit brief.created event (AC2)
       const payload: BriefCreatedPayload = {
@@ -124,7 +124,7 @@ export class BriefService {
         schema_version: input.schemaVersion || '1.0',
         completion_status: completionStatus,
         sections_populated: sectionsPopulated,
-      };
+      }
 
       await tx.$executeRaw`
         INSERT INTO system_events (
@@ -163,7 +163,7 @@ export class BriefService {
           '1.0'
         )
         ON CONFLICT (dedupe_key) DO NOTHING
-      `;
+      `
 
       return {
         id: briefId,
@@ -175,32 +175,32 @@ export class BriefService {
         completionStatus,
         createdAt: now.toISOString(),
         updatedAt: now.toISOString(),
-      };
-    });
+      }
+    })
 
-    return result;
+    return result
   }
 
   /**
    * Gets a Brief by ID (RLS enforced).
    */
   async getBrief(params: GetBriefParams): Promise<Brief | null> {
-    const { briefId, orgId } = params;
+    const { briefId, orgId } = params
 
     const result = await this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 
       const rows = await tx.$queryRaw<
         Array<{
-          id: string;
-          org_id: string;
-          user_id: string;
-          schema_version: string;
-          sections: BriefSections;
-          section_status: BriefSectionStatusMap;
-          completion_status: string;
-          created_at: Date;
-          updated_at: Date;
+          id: string
+          org_id: string
+          user_id: string
+          schema_version: string
+          sections: BriefSections
+          section_status: BriefSectionStatusMap
+          completion_status: string
+          created_at: Date
+          updated_at: Date
         }>
       >`
         SELECT
@@ -216,14 +216,14 @@ export class BriefService {
         FROM briefs
         WHERE id = ${briefId}
         LIMIT 1
-      `;
+      `
 
-      return rows[0] || null;
-    });
+      return rows[0] || null
+    })
 
-    if (!result) return null;
+    if (!result) return null
 
-    return this.mapRowToBrief(result);
+    return this.mapRowToBrief(result)
   }
 
   /**
@@ -231,22 +231,22 @@ export class BriefService {
    * Returns null if no Brief exists.
    */
   async getCurrentBrief(params: GetCurrentBriefParams): Promise<Brief | null> {
-    const { orgId } = params;
+    const { orgId } = params
 
     const result = await this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 
       const rows = await tx.$queryRaw<
         Array<{
-          id: string;
-          org_id: string;
-          user_id: string;
-          schema_version: string;
-          sections: BriefSections;
-          section_status: BriefSectionStatusMap;
-          completion_status: string;
-          created_at: Date;
-          updated_at: Date;
+          id: string
+          org_id: string
+          user_id: string
+          schema_version: string
+          sections: BriefSections
+          section_status: BriefSectionStatusMap
+          completion_status: string
+          created_at: Date
+          updated_at: Date
         }>
       >`
         SELECT
@@ -262,14 +262,14 @@ export class BriefService {
         FROM briefs
         ORDER BY created_at DESC
         LIMIT 1
-      `;
+      `
 
-      return rows[0] || null;
-    });
+      return rows[0] || null
+    })
 
-    if (!result) return null;
+    if (!result) return null
 
-    return this.mapRowToBrief(result);
+    return this.mapRowToBrief(result)
   }
 
   /**
@@ -277,60 +277,56 @@ export class BriefService {
    * Recalculates section status and emits brief.updated event.
    */
   async updateBrief(params: UpdateBriefParams): Promise<Brief> {
-    const { briefId, orgId, userId, input } = params;
-    const now = new Date();
+    const { briefId, orgId, userId, input } = params
+    const now = new Date()
 
     const result = await this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 
       // Get current brief
       const currentRows = await tx.$queryRaw<
         Array<{
-          id: string;
-          org_id: string;
-          user_id: string;
-          schema_version: string;
-          sections: BriefSections;
-          section_status: BriefSectionStatusMap;
-          completion_status: string;
-          created_at: Date;
-          updated_at: Date;
+          id: string
+          org_id: string
+          user_id: string
+          schema_version: string
+          sections: BriefSections
+          section_status: BriefSectionStatusMap
+          completion_status: string
+          created_at: Date
+          updated_at: Date
         }>
       >`
         SELECT * FROM briefs WHERE id = ${briefId} LIMIT 1
-      `;
+      `
 
-      const current = currentRows[0];
+      const current = currentRows[0]
       if (!current) {
-        throw new Error(`Brief not found: ${briefId}`);
+        throw new Error(`Brief not found: ${briefId}`)
       }
 
       // Merge sections
       const updatedSections = input.sections
         ? { ...current.sections, ...input.sections }
-        : current.sections;
+        : current.sections
 
       // Recalculate section statuses
-      const updatedSectionStatus: BriefSectionStatusMap = {};
+      const updatedSectionStatus: BriefSectionStatusMap = {}
       for (const name of BRIEF_SECTION_NAMES) {
         updatedSectionStatus[name] =
-          input.sectionStatus?.[name] ||
-          determineSectionStatus(name, updatedSections);
+          input.sectionStatus?.[name] || determineSectionStatus(name, updatedSections)
       }
 
       // Calculate completion status
       const updatedCompletionStatus =
-        input.completionStatus || calculateCompletionStatus(updatedSectionStatus);
+        input.completionStatus || calculateCompletionStatus(updatedSectionStatus)
 
       // Determine which sections changed
-      const sectionsChanged: string[] = [];
+      const sectionsChanged: string[] = []
       if (input.sections) {
         for (const name of BRIEF_SECTION_NAMES) {
-          if (
-            JSON.stringify(current.sections[name]) !==
-            JSON.stringify(updatedSections[name])
-          ) {
-            sectionsChanged.push(name);
+          if (JSON.stringify(current.sections[name]) !== JSON.stringify(updatedSections[name])) {
+            sectionsChanged.push(name)
           }
         }
       }
@@ -344,7 +340,7 @@ export class BriefService {
           completion_status = ${updatedCompletionStatus},
           updated_at = ${now}
         WHERE id = ${briefId}
-      `;
+      `
 
       // Emit brief.updated event
       if (sectionsChanged.length > 0) {
@@ -377,9 +373,9 @@ export class BriefService {
             ${userId},
             'brief.updated@1.0',
             ${JSON.stringify({
-          brief_id: briefId,
-          sections_changed: sectionsChanged,
-        })}::jsonb,
+              brief_id: briefId,
+              sections_changed: sectionsChanged,
+            })}::jsonb,
             NULL,
             ${`brief-updated:${briefId}:${now.getTime()}`},
             NULL,
@@ -387,7 +383,7 @@ export class BriefService {
             'brief-service',
             '1.0'
           )
-        `;
+        `
       }
 
       return {
@@ -400,22 +396,22 @@ export class BriefService {
         completionStatus: updatedCompletionStatus as BriefCompletionStatus,
         createdAt: current.created_at.toISOString(),
         updatedAt: now.toISOString(),
-      };
-    });
+      }
+    })
 
-    return result;
+    return result
   }
 
   private mapRowToBrief(row: {
-    id: string;
-    org_id: string;
-    user_id: string;
-    schema_version: string;
-    sections: BriefSections;
-    section_status: BriefSectionStatusMap;
-    completion_status: string;
-    created_at: Date;
-    updated_at: Date;
+    id: string
+    org_id: string
+    user_id: string
+    schema_version: string
+    sections: BriefSections
+    section_status: BriefSectionStatusMap
+    completion_status: string
+    created_at: Date
+    updated_at: Date
   }): Brief {
     return {
       id: row.id,
@@ -427,9 +423,9 @@ export class BriefService {
       completionStatus: row.completion_status as BriefCompletionStatus,
       createdAt: row.created_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),
-    };
+    }
   }
 }
 
 // Export singleton instance
-export const briefService = new BriefService();
+export const briefService = new BriefService()

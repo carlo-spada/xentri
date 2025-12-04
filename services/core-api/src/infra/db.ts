@@ -1,20 +1,20 @@
-import type { PrismaClient as PrismaClientType } from '@prisma/client';
-import pkg from '@prisma/client';
+import type { PrismaClient as PrismaClientType } from '@prisma/client'
+import pkg from '@prisma/client'
 
-const { PrismaClient } = pkg;
+const { PrismaClient } = pkg
 // Re-export type for usage in this file
-type PrismaClient = PrismaClientType;
-import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
+type PrismaClient = PrismaClientType
+import { PrismaPg } from '@prisma/adapter-pg'
+import pg from 'pg'
 
-const { Pool } = pg;
+const { Pool } = pg
 
 /**
  * Singleton Prisma client instance.
  * Use getPrisma() to get the client instance.
  */
-let prisma: PrismaClient | null = null;
-let pool: pg.Pool | null = null;
+let prisma: PrismaClient | null = null
+let pool: pg.Pool | null = null
 
 /**
  * Creates a PrismaClient with the pg adapter.
@@ -24,27 +24,24 @@ export function createPrismaClient(connectionString?: string): PrismaClient {
   const dbUrl =
     connectionString ||
     process.env.DATABASE_URL ||
-    'postgresql://xentri:xentri_dev@localhost:5432/xentri';
+    'postgresql://xentri:xentri_dev@localhost:5432/xentri'
 
-  const pgPool = new Pool({ connectionString: dbUrl });
-  pool = pgPool;
+  const pgPool = new Pool({ connectionString: dbUrl })
+  pool = pgPool
 
-  const adapter = new PrismaPg(pgPool);
+  const adapter = new PrismaPg(pgPool)
 
   return new PrismaClient({
     adapter,
-    log:
-      process.env.NODE_ENV === 'development'
-        ? ['query', 'error', 'warn']
-        : ['error'],
-  });
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  })
 }
 
 export function getPrisma(): PrismaClient {
   if (!prisma) {
-    prisma = createPrismaClient();
+    prisma = createPrismaClient()
   }
-  return prisma;
+  return prisma
 }
 
 /**
@@ -53,16 +50,16 @@ export function getPrisma(): PrismaClient {
  * The `true` flag makes it transaction-scoped (fails closed on new connection).
  */
 export async function setOrgContext(orgId: string): Promise<void> {
-  const client = getPrisma();
-  await client.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+  const client = getPrisma()
+  await client.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
 }
 
 /**
  * Clears the org context.
  */
 export async function clearOrgContext(): Promise<void> {
-  const client = getPrisma();
-  await client.$executeRaw`SELECT set_config('app.current_org_id', '', true)`;
+  const client = getPrisma()
+  await client.$executeRaw`SELECT set_config('app.current_org_id', '', true)`
 }
 
 /**
@@ -71,11 +68,11 @@ export async function clearOrgContext(): Promise<void> {
  */
 export async function disconnectDb(): Promise<void> {
   if (prisma) {
-    await prisma.$disconnect();
-    prisma = null;
+    await prisma.$disconnect()
+    prisma = null
   }
   if (pool) {
-    await pool.end();
-    pool = null;
+    await pool.end()
+    pool = null
   }
 }

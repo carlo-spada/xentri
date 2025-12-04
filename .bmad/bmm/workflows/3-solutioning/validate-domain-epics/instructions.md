@@ -80,16 +80,16 @@ Validate document structure against selected checklist.
 **Constitution Alignment:**
 
 | Constitution Epic | This Entity Contribution | Status |
-|-------------------|-------------------------|--------|
-| Epic 1 | ... | ✅/❌ |
-| ... | ... | ... |
+| ----------------- | ------------------------ | ------ |
+| Epic 1            | ...                      | ✅/❌  |
+| ...               | ...                      | ...    |
 
 **Parent Alignment:**
 
 | Parent Epic | This Entity Extension | Status |
-|-------------|----------------------|--------|
-| Epic X-Y | Epic X-Y-Z | ✅/❌ |
-| ... | ... | ... |
+| ----------- | --------------------- | ------ |
+| Epic X-Y    | Epic X-Y-Z            | ✅/❌  |
+| ...         | ...                   | ...    |
 
 **Cascading ID Validation:**
 
@@ -113,10 +113,10 @@ Validate document structure against selected checklist.
 
 **FR Coverage:**
 
-| FR ID | Description | Epic | Story | Status |
-|-------|-------------|------|-------|--------|
-| FR-xxx | ... | ... | ... | ✅/❌ |
-| ... | ... | ... | ... | ... |
+| FR ID  | Description | Epic | Story | Status |
+| ------ | ----------- | ---- | ----- | ------ |
+| FR-xxx | ...         | ...  | ...   | ✅/❌  |
+| ...    | ...         | ...  | ...   | ...    |
 
 **Coverage Summary:**
 
@@ -191,13 +191,13 @@ Validator: {user_name}
 
 **Summary:**
 
-| Category | Pass | Fail | Warn |
-|----------|------|------|------|
-| Structural | X | X | X |
-| Inheritance | X | X | X |
-| Traceability | X | X | X |
-| Quality | X | X | X |
-| **TOTAL** | X | X | X |
+| Category     | Pass | Fail | Warn |
+| ------------ | ---- | ---- | ---- |
+| Structural   | X    | X    | X    |
+| Inheritance  | X    | X    | X    |
+| Traceability | X    | X    | X    |
+| Quality      | X    | X    | X    |
+| **TOTAL**    | X    | X    | X    |
 
 **Critical Issues:** {list_critical_issues}
 
@@ -207,7 +207,7 @@ Validator: {user_name}
 
 <ask>Save validation report to file? (y/n)</ask>
 <check if="response == 'y'">
-  <action>Save report to {validation_report_path}epics-validation-{entity_name}-{date}.md</action>
+<action>Save report to {validation_report_path}epics-validation-{entity_name}-{date}.md</action>
 </check>
 </step>
 

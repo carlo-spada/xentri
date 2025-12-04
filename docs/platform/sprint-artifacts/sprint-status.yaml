@@ -28,7 +28,7 @@ category: platform
 #   - backlog, drafted, ready-for-dev, in-progress, review, done
 
 epic_status:
-  epic-1: ready-for-review              # Foundation & Access - Ready for review
+  epic-1: ready-for-review # Foundation & Access - Ready for review
 
 # Future epics will be defined after PRD and Architecture revision.
 # See epics.md for placeholder list.
@@ -37,7 +37,6 @@ epic_status:
 development_status:
   1-1-project-initialization-infrastructure: done
   1-7-devops-observability-test-readiness: done
-
 # Epic 1 completion summary (stories distributed across modules):
 # - platform (DevOps): 1-1 (done), 1-7 (done)
 # - core-api: 1-2, 1-3, 1-4, 1-6 (all done)

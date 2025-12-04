@@ -1,26 +1,26 @@
-import type { PrismaClient } from '@prisma/client';
-import { getPrisma } from '../../infra/db.js';
-import type { OrgProvisionedPayload, Plan } from '@xentri/ts-schema';
+import type { PrismaClient } from '@prisma/client'
+import { getPrisma } from '../../infra/db.js'
+import type { OrgProvisionedPayload, Plan } from '@xentri/ts-schema'
 
-const MAX_RETRIES = 3;
-const BASE_BACKOFF_MS = 100;
+const MAX_RETRIES = 3
+const BASE_BACKOFF_MS = 100
 
 // ===================
 // Types
 // ===================
 
 export interface ProvisionOrgInput {
-  clerkOrgId: string;
-  clerkUserId: string;
-  orgName: string;
-  orgSlug: string;
+  clerkOrgId: string
+  clerkUserId: string
+  orgName: string
+  orgSlug: string
 }
 
 export interface ProvisionOrgResult {
-  orgId: string;
-  settingsId: string;
-  memberId: string;
-  alreadyProvisioned: boolean;
+  orgId: string
+  settingsId: string
+  memberId: string
+  alreadyProvisioned: boolean
 }
 
 // ===================
@@ -38,10 +38,10 @@ export interface ProvisionOrgResult {
  * - Transaction safety: rollback on failure (AC7)
  */
 export class OrgProvisioningService {
-  private prisma: PrismaClient;
+  private prisma: PrismaClient
 
   constructor(prisma?: PrismaClient) {
-    this.prisma = prisma || getPrisma();
+    this.prisma = prisma || getPrisma()
   }
 
   /**
@@ -54,17 +54,17 @@ export class OrgProvisioningService {
    * @returns Provisioning result with IDs and idempotency flag
    */
   async provisionOrg(input: ProvisionOrgInput): Promise<ProvisionOrgResult> {
-    const { clerkOrgId, clerkUserId, orgName, orgSlug } = input;
+    const { clerkOrgId, clerkUserId, orgName, orgSlug } = input
     const preExistingSettings = await this.prisma.orgSettings.findUnique({
       where: { orgId: clerkOrgId },
-    });
+    })
 
-    let lastError: unknown;
+    let lastError: unknown
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
       try {
         // Full provisioning in a transaction (AC7) with healing for partial runs
         const result = await this.prisma.$transaction(async (tx) => {
-          await tx.$executeRaw`SELECT set_config('app.current_org_id', ${clerkOrgId}, true)`;
+          await tx.$executeRaw`SELECT set_config('app.current_org_id', ${clerkOrgId}, true)`
 
           // 1. Ensure organization exists (idempotent upsert)
           await tx.organization.upsert({
@@ -79,7 +79,7 @@ export class OrgProvisioningService {
               name: orgName,
               slug: orgSlug,
             },
-          });
+          })
 
           // 2. Ensure org_settings exist (heal if partial)
           const settings = await tx.orgSettings.upsert({
@@ -93,7 +93,7 @@ export class OrgProvisioningService {
               features: {},
               preferences: {},
             },
-          });
+          })
 
           // 3. Ensure owner membership exists (heal if missing)
           const membership = await tx.member.upsert({
@@ -112,17 +112,17 @@ export class OrgProvisioningService {
               userId: clerkUserId,
               role: 'owner',
             },
-          });
+          })
 
           // 4. Emit provisioned event in-transaction (deduped on dedupe_key)
-          const provisionedAt = new Date();
+          const provisionedAt = new Date()
           const payload: OrgProvisionedPayload = {
             org_id: clerkOrgId,
             org_name: orgName,
             owner_user_id: clerkUserId,
             plan: 'free' as Plan,
             provisioned_at: provisionedAt.toISOString(),
-          };
+          }
 
           await tx.$executeRaw`
             INSERT INTO system_events (
@@ -161,32 +161,32 @@ export class OrgProvisioningService {
               '1.0'
             )
             ON CONFLICT (dedupe_key) DO NOTHING
-          `;
+          `
 
-          return { settings, membership };
-        });
+          return { settings, membership }
+        })
 
         console.log(
           `[OrgProvisioning] Provisioned: ${clerkOrgId}, settings: ${result.settings.id}, attempt: ${attempt}`
-        );
+        )
 
         return {
           orgId: clerkOrgId,
           settingsId: result.settings.id,
           memberId: result.membership.id,
           alreadyProvisioned: Boolean(preExistingSettings),
-        };
-      } catch (err) {
-        lastError = err;
-        if (attempt === MAX_RETRIES) {
-          break;
         }
-        const delay = BASE_BACKOFF_MS * 2 ** (attempt - 1);
-        await this.sleep(delay);
+      } catch (err) {
+        lastError = err
+        if (attempt === MAX_RETRIES) {
+          break
+        }
+        const delay = BASE_BACKOFF_MS * 2 ** (attempt - 1)
+        await this.sleep(delay)
       }
     }
 
-    throw lastError instanceof Error ? lastError : new Error('Provisioning failed');
+    throw lastError instanceof Error ? lastError : new Error('Provisioning failed')
   }
 
   /**
@@ -195,11 +195,11 @@ export class OrgProvisioningService {
    */
   async getOrgSettings(orgId: string) {
     return this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
       return tx.orgSettings.findUnique({
         where: { orgId },
-      });
-    });
+      })
+    })
   }
 
   /**
@@ -207,21 +207,21 @@ export class OrgProvisioningService {
    */
   async updateOrgPreferences(orgId: string, preferences: Record<string, unknown>) {
     return this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`;
+      await tx.$executeRaw`SELECT set_config('app.current_org_id', ${orgId}, true)`
       return tx.orgSettings.update({
         where: { orgId },
         data: {
           preferences: preferences as object,
           updatedAt: new Date(),
         },
-      });
-    });
+      })
+    })
   }
 
   private async sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }
 
 // Export singleton instance
-export const orgProvisioningService = new OrgProvisioningService();
+export const orgProvisioningService = new OrgProvisioningService()

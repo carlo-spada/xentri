@@ -9,6 +9,7 @@
 **Approach:** Progressive Technique Flow — systematic exploration of 5 key architectural aspects
 
 **Techniques Selected:**
+
 1. First Principles Thinking — for Workflow Architecture
 2. Morphological Analysis — for Contract Inheritance Model
 3. Structured Mind Mapping — for Reference Block Injection
@@ -20,6 +21,7 @@
 **Topic:** Full Workflow Integration for SSOT (Single Source of Truth) enforcement across Xentri's federated documentation hierarchy
 
 **Session Goals:**
+
 - Design architecture that enforces SSOT at documentation creation time
 - Enable multiple Claude instances to implement in parallel
 - Create comprehensive specification document for implementation
@@ -40,12 +42,12 @@
 
 #### First Principles Established
 
-| Principle | Implication |
-|-----------|-------------|
-| **Entity-First Discovery** | Every workflow begins with "Which entity?" — Step 0 before any other action |
-| **Additive-Only Inheritance** | Parent path contains ALL inherited truth. Children ADD, never CHANGE or DELETE |
-| **Inheritance ≠ Dependency** | Inheritance is identity (ID chain). Dependency is contract (interfaces) |
-| **Sibling Dependency Law** | Nodes only declare dependencies on siblings. Cross-branch via ancestor inheritance |
+| Principle                     | Implication                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------------------- |
+| **Entity-First Discovery**    | Every workflow begins with "Which entity?" — Step 0 before any other action        |
+| **Additive-Only Inheritance** | Parent path contains ALL inherited truth. Children ADD, never CHANGE or DELETE     |
+| **Inheritance ≠ Dependency**  | Inheritance is identity (ID chain). Dependency is contract (interfaces)            |
+| **Sibling Dependency Law**    | Nodes only declare dependencies on siblings. Cross-branch via ancestor inheritance |
 
 #### Two-Step Guided Entity Selection
 
@@ -59,6 +61,7 @@ Maximum ~26 options at any step. Scalable to 150+ entities.
 **Format:** `{ANCESTOR_CHAIN}-{TYPE}-{SEQ}`
 
 **Examples:**
+
 ```
 SYS-PR-001                    → Constitution Platform Requirement #1
 SYS-STR-PR-001                → Strategy Platform Requirement #1 (inherits SYS)
@@ -67,6 +70,7 @@ SYS-STR-PUL-COP-FR-001        → Copilot FR #1 (inherits SYS-STR-PUL)
 ```
 
 **ID encodes inheritance chain.** Parsing `SYS-STR-PUL` tells you:
+
 - Entity: Pulse (child of Strategy, child of System)
 - Inherits from: `SYS-STR` (Strategy) → `SYS` (Constitution)
 
@@ -211,12 +215,12 @@ FUNCTION resolve_dependency(node, interface_id):
 
 #### Workflow Validation Rules
 
-| Rule | Check | On Failure |
-|------|-------|------------|
+| Rule                                 | Check                                                          | On Failure                                                                    |
+| ------------------------------------ | -------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | **Sibling-Only requires_interfaces** | Each `requires_interfaces` entry must be provided by a sibling | "IC-XXX is not provided by a sibling. Declare at ancestor level or redesign." |
-| **Valid Inheritance** | `inherits` must reference an atom from direct parent entity | "Cannot inherit from non-parent. Check entity hierarchy." |
-| **No Contradiction** | Atom cannot modify/delete inherited requirements | "Atoms are additive only. Cannot change inherited requirement." |
-| **ID Format** | ID must match `{ANCESTOR_CHAIN}-{TYPE}-{SEQ}` pattern | "Invalid ID format. Expected: SYS-STR-PUL-FR-001" |
+| **Valid Inheritance**                | `inherits` must reference an atom from direct parent entity    | "Cannot inherit from non-parent. Check entity hierarchy."                     |
+| **No Contradiction**                 | Atom cannot modify/delete inherited requirements               | "Atoms are additive only. Cannot change inherited requirement."               |
+| **ID Format**                        | ID must match `{ANCESTOR_CHAIN}-{TYPE}-{SEQ}` pattern          | "Invalid ID format. Expected: SYS-STR-PUL-FR-001"                             |
 
 #### Filesystem as Index
 
@@ -238,13 +242,13 @@ glob: docs/platform/_atoms/SYS-IC-*.md
 
 #### Decisions Captured
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| ID Scheme | Ancestry-encoded hierarchical | ID = provenance, no separate metadata |
-| Multi-parent | NOT SUPPORTED for inheritance | Inheritance is identity; use interfaces for dependencies |
-| Cross-branch deps | Via ancestor inheritance only | Sibling Dependency Law maintains clean silos |
-| Index files | NOT NEEDED | Filesystem glob + ID convention = index |
-| Atom storage | Centralized in `docs/platform/_atoms/` | Single source of truth |
+| Decision          | Choice                                 | Rationale                                                |
+| ----------------- | -------------------------------------- | -------------------------------------------------------- |
+| ID Scheme         | Ancestry-encoded hierarchical          | ID = provenance, no separate metadata                    |
+| Multi-parent      | NOT SUPPORTED for inheritance          | Inheritance is identity; use interfaces for dependencies |
+| Cross-branch deps | Via ancestor inheritance only          | Sibling Dependency Law maintains clean silos             |
+| Index files       | NOT NEEDED                             | Filesystem glob + ID convention = index                  |
+| Atom storage      | Centralized in `docs/platform/_atoms/` | Single source of truth                                   |
 
 ### Session 2: Contract Inheritance Model (Morphological Analysis)
 

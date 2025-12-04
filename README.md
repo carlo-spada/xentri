@@ -11,6 +11,7 @@ It solves "tab fatigue" and "setup paralysis" by using a **Strategy Co-pilot** t
 **Live API:** https://core-api-production-8016.up.railway.app
 
 **What's Working:**
+
 - Turborepo 2.6.1 monorepo with pnpm workspaces
 - Astro 5.16.0 Shell with React 19.2.0 islands
 - Core API (Fastify 5.6.2 + Prisma 7.0.1) - deployed on Railway
@@ -52,13 +53,13 @@ pnpm run dev
 
 ## Technology Stack
 
-| Layer | Technologies |
-|-------|-------------|
-| **Frontend** | Astro (Shell) + React (Micro-Apps) + Vite |
-| **Backend** | Dockerized Microservices (Node.js, Python) |
-| **Data** | Postgres (Multi-tenant via RLS), Redis (Event Bus) |
-| **Automation** | n8n (Workflow Orchestration) |
-| **Repo** | Turborepo (Monorepo management) |
+| Layer          | Technologies                                       |
+| -------------- | -------------------------------------------------- |
+| **Frontend**   | Astro (Shell) + React (Micro-Apps) + Vite          |
+| **Backend**    | Dockerized Microservices (Node.js, Python)         |
+| **Data**       | Postgres (Multi-tenant via RLS), Redis (Event Bus) |
+| **Automation** | n8n (Workflow Orchestration)                       |
+| **Repo**       | Turborepo (Monorepo management)                    |
 
 ---
 
@@ -76,15 +77,15 @@ This project is architected to scale from 1 to 1,000,000 users without a rewrite
 
 ## Roadmap
 
-| Phase | Tier | Focus |
-|-------|------|-------|
-| **v0.1** | Free | **Strategy Co-pilot + Universal Soul**. The entry point that generates business clarity. |
-| **v0.2** | Presencia ($10) | **Marketing**. Website Builder, CMS, and Lead Capture auto-configured from the Soul. |
-| **v0.3** | Light Ops ($30) | **Sales & Pipeline**. CRM, Quotes, and Follow-ups. |
-| **v0.4** | Business in Motion ($90) | **Finance & Accounting**. Invoicing, Payments, and the "Open Loops" view. |
+| Phase    | Tier                     | Focus                                                                                    |
+| -------- | ------------------------ | ---------------------------------------------------------------------------------------- |
+| **v0.1** | Free                     | **Strategy Co-pilot + Universal Soul**. The entry point that generates business clarity. |
+| **v0.2** | Presencia ($10)          | **Marketing**. Website Builder, CMS, and Lead Capture auto-configured from the Soul.     |
+| **v0.3** | Light Ops ($30)          | **Sales & Pipeline**. CRM, Quotes, and Follow-ups.                                       |
+| **v0.4** | Business in Motion ($90) | **Finance & Accounting**. Invoicing, Payments, and the "Open Loops" view.                |
 
 ---
 
 ## License
 
-*TBD*
+_TBD_

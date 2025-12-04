@@ -96,6 +96,7 @@ so that **I have a private, fully-configured workspace for my business data**.
 ### Technical Specifications
 
 **Provisioning Flow:**
+
 ```
 1. Clerk `user.created` webhook → Creates Clerk Organization → Triggers `organization.created` webhook
 2. `organization.created` webhook → OrgProvisioningService.provisionOrg()
@@ -155,11 +156,11 @@ USING (
 
 ```typescript
 interface OrgProvisionedPayload {
-  org_id: string;
-  org_name: string;
-  owner_user_id: string;
-  plan: 'free' | 'presencia' | 'light_ops' | 'business_in_motion';
-  provisioned_at: string; // ISO8601
+  org_id: string
+  org_name: string
+  owner_user_id: string
+  plan: 'free' | 'presencia' | 'light_ops' | 'business_in_motion'
+  provisioned_at: string // ISO8601
 }
 ```
 
@@ -168,6 +169,7 @@ interface OrgProvisionedPayload {
 ### Project Structure Notes
 
 **Files to create:**
+
 ```
 services/core-api/
 ├── src/
@@ -190,6 +192,7 @@ packages/ts-schema/src/
 ```
 
 **Files to modify:**
+
 ```
 services/core-api/src/routes/webhooks/clerk.ts  (enhance provisioning)
 services/core-api/src/server.ts                 (register orgs routes)
@@ -241,6 +244,7 @@ packages/ts-schema/src/index.ts                 (export orgs)
 - [Source: docs/sprint-artifacts/1-3-user-authentication-signup.md] - Previous story context
 
 ### AC Refinement Note
+
 This story refines the high-level requirements from `tech-spec-epic-1.md`. While the Tech Spec mentions `org_created`, this story explicitly defines the `xentri.org.provisioned.v1` event and detailed provisioning logic (settings, memberships) to ensure a complete setup flow.
 
 ## Dev Agent Record
@@ -277,6 +281,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 ### File List
 
 **New files:**
+
 - `packages/ts-schema/src/orgs.ts` - OrgSettings, MembershipRole schemas
 - `services/core-api/src/domain/orgs/OrgProvisioningService.ts` - Provisioning service
 - `services/core-api/src/domain/orgs/OrgProvisioningService.test.ts` - Unit/RLS tests
@@ -286,6 +291,7 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - `services/core-api/src/routes/webhooks/clerk.integration.test.ts` - Svix webhook provisioning integration tests
 
 **Modified files:**
+
 - `packages/ts-schema/src/events.ts` - Added `xentri.org.provisioned.v1` event type
 - `packages/ts-schema/src/index.ts` - Export orgs module
 - `services/core-api/prisma/schema.prisma` - Added OrgSettings model
@@ -302,14 +308,14 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 
 ## Change Log
 
-| Date | Author | Change |
-|------|--------|--------|
-| 2025-11-26 | SM Agent (Bob) | Initial draft created from Epic 1 requirements, architecture.md, and Story 1.3 learnings |
+| Date       | Author             | Change                                                                                                         |
+| ---------- | ------------------ | -------------------------------------------------------------------------------------------------------------- |
+| 2025-11-26 | SM Agent (Bob)     | Initial draft created from Epic 1 requirements, architecture.md, and Story 1.3 learnings                       |
 | 2025-11-26 | Dev Agent (Amelia) | Implementation complete: org_settings table, OrgProvisioningService, webhook integration, API endpoints, tests |
-| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review (AI) blocked on organization.created RLS context and owner-only settings guard |
-| 2025-11-27 | Carlo | Senior Developer Review notes appended |
-| 2025-11-27 | Carlo | Senior Developer Review rerun after fixes |
-| 2025-11-27 | Carlo | Added webhook integration/replay tests, provisioning healing, and event cursor fix |
+| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review (AI) blocked on organization.created RLS context and owner-only settings guard         |
+| 2025-11-27 | Carlo              | Senior Developer Review notes appended                                                                         |
+| 2025-11-27 | Carlo              | Senior Developer Review rerun after fixes                                                                      |
+| 2025-11-27 | Carlo              | Added webhook integration/replay tests, provisioning healing, and event cursor fix                             |
 
 ## Senior Developer Review (AI)
 
@@ -318,50 +324,59 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - Outcome: Changes Requested (tests still missing for signup→provisioning and webhook replay)
 
 ### Summary
+
 - Provisioning now heals partial state with upsert + limited backoff and re-emits provisioned event if missing.
 - Org endpoints have integration coverage.
 - Critical integration tests for signup→provisioning and webhook replay remain absent.
 
 ### Key Findings
-- High: Task 7.1 claims integration test for signup→provisioning, but no webhook or end-to-end test exists; only service-level provisioning tests present (services/core-api/src/routes/webhooks/* lacks tests; new coverage is at services/core-api/src/domain/orgs/OrgProvisioningService.test.ts).
+
+- High: Task 7.1 claims integration test for signup→provisioning, but no webhook or end-to-end test exists; only service-level provisioning tests present (services/core-api/src/routes/webhooks/\* lacks tests; new coverage is at services/core-api/src/domain/orgs/OrgProvisioningService.test.ts).
 - Medium: Task 7.2 replay idempotency lacks webhook-level test; service healing covers membership/event but not Svix/webhook flow (services/core-api/src/routes/webhooks/clerk.ts has no test for replay).
 
 ### Acceptance Criteria Coverage
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | Implemented | Org upsert in webhook + provisioning (services/core-api/src/routes/webhooks/clerk.ts:123-146) |
-| AC2 | Implemented | Owner membership upsert with healing (services/core-api/src/domain/orgs/OrgProvisioningService.ts:99-116) |
-| AC3 | Implemented | Member model unique (services/core-api/prisma/schema.prisma:64-88) |
-| AC4 | Implemented | Provisioned event emitted with dedupe and backfill if missing (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-214) |
-| AC5 | Implemented | Defaults set via upsert (services/core-api/src/domain/orgs/OrgProvisioningService.ts:85-97) |
-| AC6 | Implemented | Upsert-based healing prevents duplicates on replay (services/core-api/src/domain/orgs/OrgProvisioningService.ts:85-116) |
+
+| AC  | Status                | Evidence                                                                                                                                  |
+| --- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| AC1 | Implemented           | Org upsert in webhook + provisioning (services/core-api/src/routes/webhooks/clerk.ts:123-146)                                             |
+| AC2 | Implemented           | Owner membership upsert with healing (services/core-api/src/domain/orgs/OrgProvisioningService.ts:99-116)                                 |
+| AC3 | Implemented           | Member model unique (services/core-api/prisma/schema.prisma:64-88)                                                                        |
+| AC4 | Implemented           | Provisioned event emitted with dedupe and backfill if missing (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-214)       |
+| AC5 | Implemented           | Defaults set via upsert (services/core-api/src/domain/orgs/OrgProvisioningService.ts:85-97)                                               |
+| AC6 | Implemented           | Upsert-based healing prevents duplicates on replay (services/core-api/src/domain/orgs/OrgProvisioningService.ts:85-116)                   |
 | AC7 | Implemented (minimal) | In-process exponential backoff (100/200/400ms) + rollback on failure (services/core-api/src/domain/orgs/OrgProvisioningService.ts:63-157) |
 
 ### Task Validation
-| Task | Status | Evidence |
-|------|--------|----------|
-| 5.5 Org endpoint integration tests | Present | services/core-api/src/routes/orgs.test.ts |
-| 7.1 Provisioning integration test (signup→provisioning) | Missing | No webhook/end-to-end test in repo |
-| 7.2 Webhook replay idempotency test | Missing | No webhook replay test; only service-level healing |
-| 7.3 Partial failure rollback test | Present | services/core-api/src/domain/orgs/OrgProvisioningService.test.ts (rollback on forced failure) |
-| 7.4/7.5 RLS isolation tests | Present | services/core-api/src/domain/orgs/OrgProvisioningService.test.ts |
-| 7.6 Full test suite run | Not verified | Tests not executed in this review |
+
+| Task                                                    | Status       | Evidence                                                                                      |
+| ------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------- |
+| 5.5 Org endpoint integration tests                      | Present      | services/core-api/src/routes/orgs.test.ts                                                     |
+| 7.1 Provisioning integration test (signup→provisioning) | Missing      | No webhook/end-to-end test in repo                                                            |
+| 7.2 Webhook replay idempotency test                     | Missing      | No webhook replay test; only service-level healing                                            |
+| 7.3 Partial failure rollback test                       | Present      | services/core-api/src/domain/orgs/OrgProvisioningService.test.ts (rollback on forced failure) |
+| 7.4/7.5 RLS isolation tests                             | Present      | services/core-api/src/domain/orgs/OrgProvisioningService.test.ts                              |
+| 7.6 Full test suite run                                 | Not verified | Tests not executed in this review                                                             |
 
 ### Test Coverage and Gaps
+
 - New coverage: org routes (GET current, PATCH settings), provisioning healing + rollback.
 - Still missing: webhook path integration for happy-path signup→provisioning and replay idempotency.
 
 ### Architectural Alignment
+
 - RLS enforced via `set_config` in provisioning and org routes.
 - Provisioned event deduped via query + dedupe_key, but durability still depends on webhook retries; no queue.
 
 ### Security Notes
+
 - Org routes still rely on Clerk org context from `getAuth`; membership verification remains assumed.
 
 ### Best-Practices and References
+
 - Stack: Node/Fastify + Prisma + Clerk; continue to align with ADR-002/003 for idempotent events and fail-closed RLS.
 
 ### Action Items
+
 - [ ] [High] Add webhook integration test for signup→provisioning (Svix payload) asserting org, org_settings, membership, and `xentri.org.provisioned.v1` are created. Target: services/core-api/src/routes/webhooks/clerk.test.ts or new e2e.
 - [ ] [Medium] Add webhook replay test covering idempotent healing (existing settings, missing membership/event) to ensure no duplicates and provisioned event present.
 - [ ] [Low] Execute and document test run for the new coverage (services/core-api).
@@ -373,51 +388,60 @@ Claude Opus 4.5 (claude-opus-4-5-20251101)
 - Outcome: Approve (containerized tests deferred; see action item)
 
 ### Summary
+
 - RLS context set during organization.created upsert.
 - Owner-only settings updates enforced via membership role lookup; negative test added.
 - Provisioned event emitted in-transaction with dedupe key and unique index; replay remains single event.
 - Container-backed suites attempted with `RUN_TESTCONTAINERS=1 pnpm --filter @xentri/core-api test` but failed: `Could not find a working container runtime strategy` (Colima/docker unavailable). Integration suites remain unexecuted until runtime available.
 
 ### Key Findings
+
 - Low: Container runtime unavailable; rerun full suite when docker/colima available.
 
 ### Acceptance Criteria Coverage
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | Implemented | organization.created upsert with org context set for RLS (services/core-api/src/routes/webhooks/clerk.ts:120-146). |
-| AC2 | Implemented | Owner membership upsert remains idempotent (services/core-api/src/domain/orgs/OrgProvisioningService.ts:99-116). |
-| AC3 | Implemented | Membership links user/org with owner role (services/core-api/src/domain/orgs/OrgProvisioningService.ts:99-116). |
+
+| AC  | Status      | Evidence                                                                                                                                                                                                                                               |
+| --- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AC1 | Implemented | organization.created upsert with org context set for RLS (services/core-api/src/routes/webhooks/clerk.ts:120-146).                                                                                                                                     |
+| AC2 | Implemented | Owner membership upsert remains idempotent (services/core-api/src/domain/orgs/OrgProvisioningService.ts:99-116).                                                                                                                                       |
+| AC3 | Implemented | Membership links user/org with owner role (services/core-api/src/domain/orgs/OrgProvisioningService.ts:99-116).                                                                                                                                        |
 | AC4 | Implemented | Provisioned event emitted in transaction with dedupe key and unique index (services/core-api/src/domain/orgs/OrgProvisioningService.ts:118-164; services/core-api/prisma/migrations/20251126123000_system_events_dedupe_key_unique/migration.sql:1-4). |
-| AC5 | Implemented | Settings defaults created via upsert (services/core-api/src/domain/orgs/OrgProvisioningService.ts:85-98). |
-| AC6 | Implemented | Upsert-based idempotency plus replay healing test structure (services/core-api/src/domain/orgs/OrgProvisioningService.ts:59-166; services/core-api/src/routes/webhooks/clerk.integration.test.ts:56-134). |
-| AC7 | Implemented | Retry loop with exponential backoff and transactional rollback (services/core-api/src/domain/orgs/OrgProvisioningService.ts:64-185; services/core-api/src/domain/orgs/OrgProvisioningService.test.ts:267-314). |
+| AC5 | Implemented | Settings defaults created via upsert (services/core-api/src/domain/orgs/OrgProvisioningService.ts:85-98).                                                                                                                                              |
+| AC6 | Implemented | Upsert-based idempotency plus replay healing test structure (services/core-api/src/domain/orgs/OrgProvisioningService.ts:59-166; services/core-api/src/routes/webhooks/clerk.integration.test.ts:56-134).                                              |
+| AC7 | Implemented | Retry loop with exponential backoff and transactional rollback (services/core-api/src/domain/orgs/OrgProvisioningService.ts:64-185; services/core-api/src/domain/orgs/OrgProvisioningService.test.ts:267-314).                                         |
 
 ### Task Completion Validation
-| Task | Status | Evidence |
-|------|--------|----------|
-| 1 OrgProvisioningService | Verified | Idempotent provisioning with defaults and owner membership; provisioned event deduped (services/core-api/src/domain/orgs/OrgProvisioningService.ts:59-166). |
-| 2 Membership model/RLS | Verified | Member model with unique(orgId,userId) and RLS policy (services/core-api/prisma/schema.prisma:64-88; services/core-api/prisma/migrations/20251126093000_clerk_ids_text/migration.sql:45-58). |
-| 3 org_settings table/RLS | Verified | Table/migration with fail-closed policies (services/core-api/prisma/migrations/20251126120000_org_settings/migration.sql:7-73). |
-| 4 Webhook enhancements | Verified | organization.created uses RLS context and calls provisioning (services/core-api/src/routes/webhooks/clerk.ts:120-207). |
-| 5 Org API endpoints | Verified | Owner-only enforcement via membership role with negative test (services/core-api/src/routes/orgs.ts:33-178; services/core-api/src/routes/orgs.test.ts:77-139). |
-| 6 ts-schema updates | Verified | Org settings/membership schemas and provisioned event added/exported (packages/ts-schema/src/orgs.ts:7-121; packages/ts-schema/src/events.ts:11-88; packages/ts-schema/src/index.ts:1-5). |
-| 7 Tests | Partial | Unit/mocked suites pass; container-gated suites blocked by missing runtime (services/core-api/src/routes/webhooks/clerk.integration.test.ts; services/core-api/src/domain/orgs/OrgProvisioningService.test.ts; services/core-api/src/routes/events.test.ts). |
+
+| Task                     | Status   | Evidence                                                                                                                                                                                                                                                     |
+| ------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1 OrgProvisioningService | Verified | Idempotent provisioning with defaults and owner membership; provisioned event deduped (services/core-api/src/domain/orgs/OrgProvisioningService.ts:59-166).                                                                                                  |
+| 2 Membership model/RLS   | Verified | Member model with unique(orgId,userId) and RLS policy (services/core-api/prisma/schema.prisma:64-88; services/core-api/prisma/migrations/20251126093000_clerk_ids_text/migration.sql:45-58).                                                                 |
+| 3 org_settings table/RLS | Verified | Table/migration with fail-closed policies (services/core-api/prisma/migrations/20251126120000_org_settings/migration.sql:7-73).                                                                                                                              |
+| 4 Webhook enhancements   | Verified | organization.created uses RLS context and calls provisioning (services/core-api/src/routes/webhooks/clerk.ts:120-207).                                                                                                                                       |
+| 5 Org API endpoints      | Verified | Owner-only enforcement via membership role with negative test (services/core-api/src/routes/orgs.ts:33-178; services/core-api/src/routes/orgs.test.ts:77-139).                                                                                               |
+| 6 ts-schema updates      | Verified | Org settings/membership schemas and provisioned event added/exported (packages/ts-schema/src/orgs.ts:7-121; packages/ts-schema/src/events.ts:11-88; packages/ts-schema/src/index.ts:1-5).                                                                    |
+| 7 Tests                  | Partial  | Unit/mocked suites pass; container-gated suites blocked by missing runtime (services/core-api/src/routes/webhooks/clerk.integration.test.ts; services/core-api/src/domain/orgs/OrgProvisioningService.test.ts; services/core-api/src/routes/events.test.ts). |
 
 ### Test Coverage and Gaps
+
 - New negative test for owner-only settings; dedupe validation added.
 - Container-backed suites pending: `Could not find a working container runtime strategy` (Colima/docker unavailable). Rerun when runtime available.
 
 ### Architectural Alignment
+
 - organization.created path now respects ADR-003 (RLS fail-closed); provisioned event emission uses dedupe key with unique index per ADR-002 intent.
 - pgcrypto extension provisioned via base migrations and scripts (scripts/init-db.sql, services/core-api/prisma/migrations/00000000000000_init/migration.sql) to support `gen_random_uuid()`.
 
 ### Security Notes
+
 - Owner enforcement reads membership role from DB; relies on membership presence.
 
 ### Best-Practices and References
+
 - Stack: Node/Fastify + Prisma + Clerk + Postgres with RLS (architecture.md, tech-spec-epic-1).
 
 ### Action Items
+
 - [x] [High] Set org context before organization upsert in organization.created handler (services/core-api/src/routes/webhooks/clerk.ts:123-137; services/core-api/prisma/migrations/20251126093000_clerk_ids_text/migration.sql:45-58).
 - [x] [Medium] Enforce owner-only updates for `/api/v1/orgs/current/settings` via membership role lookup or Clerk role mapping; add negative test (services/core-api/src/routes/orgs.ts:100-166).
 - [x] [Low] Make provisioned event emission transactional/deduped to prevent duplicate events on concurrent replays (services/core-api/src/domain/orgs/OrgProvisioningService.ts:121-135).

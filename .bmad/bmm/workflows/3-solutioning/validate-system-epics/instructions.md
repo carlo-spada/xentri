@@ -35,6 +35,7 @@ Please create epics first using create-system-epics workflow.</output>
 Load {checklist} and check:
 
 **Structural Completeness:**
+
 - [ ] Frontmatter present with entity_type: constitution
 - [ ] Requirements Inventory section
 - [ ] Epic Summary section
@@ -85,21 +86,24 @@ Record findings for each item.
 <action>Check epic quality standards:
 
 **Epic Quality:**
+
 - [ ] Each epic has clear user value statement
 - [ ] Epic goals are measurable
 - [ ] Dependencies are valid (no forward dependencies)
 - [ ] Cascading ID pattern is correct
 
 **Story Quality:**
+
 - [ ] Stories follow BDD format (Given/When/Then)
 - [ ] Acceptance criteria are testable
 - [ ] Prerequisites reference valid previous stories
 - [ ] Technical notes provide implementation guidance
 
 **Coordination Quality:**
+
 - [ ] Infrastructure Module coordination is defined
 - [ ] Child inheritance pattern is documented
-</action>
+      </action>
 
 <output>
 **Quality Validation Results:**
@@ -140,7 +144,7 @@ Validator: {user_name}
 
 <ask>Save validation report to file? (y/n)</ask>
 <check if="response == 'y'">
-  <action>Save report to {validation_report_path}epics-validation-constitution-{date}.md</action>
+<action>Save report to {validation_report_path}epics-validation-constitution-{date}.md</action>
 </check>
 </step>
 

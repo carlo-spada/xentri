@@ -27,12 +27,13 @@ Entity Type:    Constitution
 Output Path:    docs/platform/epics.md
 
 This is the FOUNDATIONAL epic structure that:
+
 - Defines category-level outcomes coordinating all work
 - Maps to Platform Requirements (PR-xxx) and Integration Contracts (IC-xxx)
 - Establishes cascading epic IDs for child entities
 - Cannot be contradicted by downstream epics
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <invoke-protocol name="discover_inputs" />
 
@@ -41,10 +42,10 @@ This is the FOUNDATIONAL epic structure that:
 
 Epics should be derived from PRD requirements.
 Please create the Constitution PRD first using create-system-prd workflow.</output>
-  <ask>Continue anyway? (y/n)</ask>
-  <check if="response != 'y'">
-    <action>Exit workflow</action>
-  </check>
+<ask>Continue anyway? (y/n)</ask>
+<check if="response != 'y'">
+<action>Exit workflow</action>
+</check>
 </check>
 
 <check if="existing epics found">
@@ -66,6 +67,7 @@ Please create the Constitution PRD first using create-system-prd workflow.</outp
 <action>Extract all requirements from Constitution PRD:
 
 From PRD, identify:
+
 1. **Platform Requirements (PR-xxx):**
    - PR-001 through PR-xxx
    - Each PR is a system-wide constraint
@@ -102,17 +104,20 @@ Create a Requirements Inventory showing all items that need epic coverage.
 <action>Propose epic structure based on Constitution requirements:
 
 **Constitution Epic Pattern:**
+
 - Epics at Constitution level define CATEGORY-LEVEL outcomes
 - Each epic coordinates work across Infrastructure Modules
 - Epics map to PR-xxx and IC-xxx requirements
 
 **Epic Naming Convention:**
+
 - Epic 1: Foundation & Infrastructure
 - Epic 2: [User Value Area]
 - Epic 3: [User Value Area]
 - ...
 
 **Critical Principles:**
+
 1. Each epic MUST deliver user value (not just technical capability)
 2. Epic 1 is Foundation - acceptable exception for infrastructure
 3. Each epic should be independently valuable
@@ -120,15 +125,17 @@ Create a Requirements Inventory showing all items that need epic coverage.
 
 **Cascading ID Pattern:**
 Constitution Epic IDs become the base for child entities:
+
 - Epic 1 → Child entities can have Epic 1-1, Epic 1-2, etc.
 - Epic 2 → Child entities can have Epic 2-1, Epic 2-2, etc.
 
 For each proposed epic:
+
 - Epic title with clear value statement
 - PR-xxx and IC-xxx coverage
 - Which Infrastructure Modules are involved
 - Dependencies on other epics
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -146,6 +153,7 @@ For each proposed epic:
 What user value does this epic deliver?
 
 **Scope:**
+
 - Platform Requirements covered: PR-xxx, PR-xxx
 - Integration Contracts covered: IC-xxx, IC-xxx
 - Infrastructure Modules involved: shell, core-api, etc.
@@ -154,16 +162,19 @@ What user value does this epic deliver?
 At Constitution level, stories represent high-level outcomes:
 
 Story {{N}}.1: [Outcome Name]
+
 - Traces to: PR-xxx
 - Coordinates: [modules involved]
 - Acceptance: [success criteria]
 
 Story {{N}}.2: [Outcome Name]
+
 - Traces to: IC-xxx
 - Coordinates: [modules involved]
 - Acceptance: [success criteria]
 
 **Dependencies:**
+
 - Requires: [previous epics]
 - Enables: [child entity epics]
 
@@ -190,7 +201,7 @@ How do Infrastructure Modules coordinate for this epic?
 {traceability.missing_requirements}
 
 Please add epics or stories to cover these.</output>
-  <action>Work with user to resolve gaps</action>
+<action>Work with user to resolve gaps</action>
 </check>
 
 <output>
@@ -230,16 +241,18 @@ This epic structure now governs ALL downstream entities.
 Infrastructure Module epics must align with these outcomes.
 
 **Cascading Epic IDs Available:**
+
 - Epic 1 → Children use Epic 1-x
 - Epic 2 → Children use Epic 2-x
 - ...
 
 **Next Steps:**
+
 1. Create Infrastructure Module epics using create-domain-epics
 2. Reference this document for epic ID inheritance
 3. Begin sprint planning at module level
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-</step>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
+   </step>
 
 </workflow>

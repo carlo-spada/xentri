@@ -3,112 +3,112 @@
 # Generated: 2025-12-03
 
 project:
-  name: "xentri"
-  owner: "Carlo"
-  initialized: "2025-12-03"
+  name: 'xentri'
+  owner: 'Carlo'
+  initialized: '2025-12-03'
 
 entity:
-  type: "constitution"
-  path: "docs/platform/"
-  code: "SYS"
-  fr_prefix: "PR/IC"
+  type: 'constitution'
+  path: 'docs/platform/'
+  code: 'SYS'
+  fr_prefix: 'PR/IC'
 
 phase_1_discovery:
-  status: "skipped"
+  status: 'skipped'
   workflows:
     brainstorm-project:
-      status: "skipped"
-      notes: "Artifacts already mature"
+      status: 'skipped'
+      notes: 'Artifacts already mature'
     research:
-      status: "skipped"
-      notes: "Artifacts already mature"
+      status: 'skipped'
+      notes: 'Artifacts already mature'
 
 phase_2_planning:
-  status: "complete"
+  status: 'complete'
   workflows:
     product-soul:
-      status: "complete"
-      output: "docs/platform/product-soul.md"
-      completed: "2025-11-28"
+      status: 'complete'
+      output: 'docs/platform/product-soul.md'
+      completed: '2025-11-28'
     prd:
-      status: "complete"
-      output: "docs/platform/prd.md"
-      version: "2.2.2"
-      completed: "2025-12-02"
+      status: 'complete'
+      output: 'docs/platform/prd.md'
+      version: '2.2.2'
+      completed: '2025-12-02'
     validate-prd:
-      status: "pending"
+      status: 'pending'
       recommended: true
-      notes: "Recommended quality gate"
+      notes: 'Recommended quality gate'
 
 phase_3_design:
-  status: "complete"
+  status: 'complete'
   workflows:
     create-ux:
-      status: "complete"
-      output: "docs/platform/ux-design.md"
-      version: "2.2.0"
-      completed: "2025-12-02"
+      status: 'complete'
+      output: 'docs/platform/ux-design.md'
+      version: '2.2.0'
+      completed: '2025-12-02'
     validate-ux:
-      status: "pending"
+      status: 'pending'
       recommended: true
-      notes: "Recommended quality gate"
+      notes: 'Recommended quality gate'
 
 phase_4_solutioning:
-  status: "in_progress"
+  status: 'in_progress'
   workflows:
     architecture:
-      status: "complete"
-      output: "docs/platform/architecture.md"
-      version: "2.4.0"
-      completed: "2025-12-02"
+      status: 'complete'
+      output: 'docs/platform/architecture.md'
+      version: '2.4.0'
+      completed: '2025-12-02'
     validate-architecture:
-      status: "pending"
+      status: 'pending'
       recommended: true
-      notes: "Recommended quality gate"
+      notes: 'Recommended quality gate'
     create-epics-and-stories:
-      status: "complete"
-      output: "docs/platform/epics.md"
-      version: "2.1.0"
-      completed: "2025-12-03"
+      status: 'complete'
+      output: 'docs/platform/epics.md'
+      version: '2.1.0'
+      completed: '2025-12-03'
     validate-epics:
-      status: "pending"
+      status: 'pending'
       recommended: true
-      notes: "Recommended quality gate"
+      notes: 'Recommended quality gate'
     implementation-readiness:
-      status: "pending"
+      status: 'pending'
       recommended: true
-      notes: "Final gate before sprint planning"
+      notes: 'Final gate before sprint planning'
 
 phase_5_implementation:
-  status: "blocked"
-  blocked_by: "implementation-readiness"
+  status: 'blocked'
+  blocked_by: 'implementation-readiness'
   workflows:
     sprint-planning:
-      status: "blocked"
-      notes: "Waiting for implementation-readiness"
+      status: 'blocked'
+      notes: 'Waiting for implementation-readiness'
     dev-story:
-      status: "not_started"
+      status: 'not_started'
     story-ready:
-      status: "not_started"
+      status: 'not_started'
     story-done:
-      status: "not_started"
+      status: 'not_started'
     code-review:
-      status: "not_started"
+      status: 'not_started'
     retrospective:
-      status: "not_started"
+      status: 'not_started'
 
 next_recommended:
-  workflow: "validate-prd"
-  reason: "Run validation workflows to ensure all artifacts pass quality gates before sprint planning"
+  workflow: 'validate-prd'
+  reason: 'Run validation workflows to ensure all artifacts pass quality gates before sprint planning'
   alternatives:
-    - workflow: "implementation-readiness"
-      reason: "Skip individual validations, run comprehensive readiness check"
-    - workflow: "sprint-planning"
-      reason: "Jump directly to implementation (not recommended without validation)"
+    - workflow: 'implementation-readiness'
+      reason: 'Skip individual validations, run comprehensive readiness check'
+    - workflow: 'sprint-planning'
+      reason: 'Jump directly to implementation (not recommended without validation)'
 
 summary:
   completed_workflows: 5
   pending_workflows: 6
   skipped_workflows: 2
-  status: "Phase 4 (Solutioning) - Validation pending"
-  progress: "Artifacts complete. Validation workflows recommended before implementation."
+  status: 'Phase 4 (Solutioning) - Validation pending'
+  progress: 'Artifacts complete. Validation workflows recommended before implementation.'

@@ -246,10 +246,10 @@ async function install(options) {
   // - External downloads
   // - Integration setup
 
-  return true;
+  return true
 }
 
-module.exports = { install };
+module.exports = { install }
 ```
 
 ### Optional: module-installer/assets/

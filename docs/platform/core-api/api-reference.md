@@ -28,6 +28,7 @@ GET /health
 Returns service health status. No authentication required.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -57,6 +58,7 @@ Returns events for the authenticated organization.
 | `cursor` | string | Pagination cursor |
 
 **Response:**
+
 ```json
 {
   "events": [
@@ -80,6 +82,7 @@ POST /api/v1/events
 Emits a new event to the event spine.
 
 **Request Body:**
+
 ```json
 {
   "type": "xentri.{category}.{entity}.{action}.v1",
@@ -89,6 +92,7 @@ Emits a new event to the event spine.
 ```
 
 **Response:** `201 Created`
+
 ```json
 {
   "id": "evt_456",
@@ -110,9 +114,11 @@ GET /api/v1/soul
 Returns the complete Soul for the authenticated organization.
 
 **Headers:**
+
 - `If-None-Match: <etag>` — For conditional requests
 
 **Response:**
+
 ```json
 {
   "version": "1.0.0",
@@ -135,6 +141,7 @@ GET /api/v1/soul/{section}
 Returns a specific Soul section.
 
 **Path Parameters:**
+
 - `section` — One of: `identity`, `offerings`, `goals`, `operational`
 
 ---
@@ -150,6 +157,7 @@ GET /api/v1/orgs/current
 Returns the organization from JWT context.
 
 **Response:**
+
 ```json
 {
   "id": "org_123",
@@ -176,25 +184,26 @@ All errors use Problem Details format:
 
 ### Common Errors
 
-| Status | Type | Description |
-|--------|------|-------------|
-| 400 | `validation-error` | Request validation failed |
-| 401 | `unauthorized` | Missing or invalid auth |
-| 403 | `forbidden` | Insufficient permissions |
-| 404 | `not-found` | Resource not found |
-| 409 | `conflict` | Duplicate or conflict |
-| 500 | `internal-error` | Server error |
+| Status | Type               | Description               |
+| ------ | ------------------ | ------------------------- |
+| 400    | `validation-error` | Request validation failed |
+| 401    | `unauthorized`     | Missing or invalid auth   |
+| 403    | `forbidden`        | Insufficient permissions  |
+| 404    | `not-found`        | Resource not found        |
+| 409    | `conflict`         | Duplicate or conflict     |
+| 500    | `internal-error`   | Server error              |
 
 ---
 
 ## Rate Limits
 
 | Tier | Requests/min | Burst |
-|------|-------------|-------|
-| Free | 60 | 10 |
-| Paid | 600 | 100 |
+| ---- | ------------ | ----- |
+| Free | 60           | 10    |
+| Paid | 600          | 100   |
 
 Rate limit headers included in responses:
+
 - `X-RateLimit-Limit`
 - `X-RateLimit-Remaining`
 - `X-RateLimit-Reset`

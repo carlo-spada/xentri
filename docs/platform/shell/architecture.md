@@ -9,6 +9,7 @@
 ## Overview
 
 The Shell is the Astro-based container application that:
+
 - Provides the main navigation and layout
 - Handles authentication flows via Clerk
 - Orchestrates React "islands" for interactive features
@@ -18,13 +19,13 @@ The Shell is the Astro-based container application that:
 
 ## Technology Stack
 
-| Component | Technology | Version |
-|-----------|------------|---------|
-| Framework | Astro | 5.x |
-| Islands | React | 19.x |
-| State | Nano Stores | 0.11.x |
-| Auth | Clerk Astro | 2.x |
-| Styling | Tailwind CSS | 4.x |
+| Component | Technology   | Version |
+| --------- | ------------ | ------- |
+| Framework | Astro        | 5.x     |
+| Islands   | React        | 19.x    |
+| State     | Nano Stores  | 0.11.x  |
+| Auth      | Clerk Astro  | 2.x     |
+| Styling   | Tailwind CSS | 4.x     |
 
 ---
 
@@ -76,6 +77,7 @@ import { StrategySPA } from '../islands/StrategySPA';
 ```
 
 Hydration strategies:
+
 - `client:load` — Hydrate immediately on page load
 - `client:visible` — Hydrate when scrolled into view
 - `client:idle` — Hydrate when browser is idle

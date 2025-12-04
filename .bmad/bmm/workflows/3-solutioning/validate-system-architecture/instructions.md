@@ -28,12 +28,13 @@ Date: {date}
 <action>Load and apply checklist: {checklist}</action>
 
 <action>Check:
+
 1. Required sections present (Vision, Principles, Tech Stack, etc.)
 2. No unfilled template variables
 3. Proper formatting
 4. ADRs documented for major decisions
-</action>
-</step>
+   </action>
+   </step>
 
 <step n="3" goal="PRD Alignment">
 <action>Verify architecture addresses PRD requirements:
@@ -41,7 +42,7 @@ Date: {date}
 1. For each PR-xxx, check architectural support
 2. For each IC-xxx, verify architecture defines implementation
 3. NFRs have corresponding architectural patterns
-</action>
+   </action>
 
 <action>Generate PRD alignment matrix</action>
 </step>

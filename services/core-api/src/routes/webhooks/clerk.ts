@@ -1,47 +1,47 @@
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { Webhook } from 'svix';
-import type { WebhookEvent } from '@clerk/fastify';
-import { getPrisma } from '../../infra/db.js';
-import { eventService } from '../../domain/events/EventService.js';
-import { orgProvisioningService } from '../../domain/orgs/OrgProvisioningService.js';
-import type { UserSignupPayload, UserLoginPayload, OrgCreatedPayload } from '@xentri/ts-schema';
+import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify'
+import { Webhook } from 'svix'
+import type { WebhookEvent } from '@clerk/fastify'
+import { getPrisma } from '../../infra/db.js'
+import { eventService } from '../../domain/events/EventService.js'
+import { orgProvisioningService } from '../../domain/orgs/OrgProvisioningService.js'
+import type { UserSignupPayload, UserLoginPayload, OrgCreatedPayload } from '@xentri/ts-schema'
 
 // ===================
 // Types
 // ===================
 
 interface ClerkWebhookBody {
-  data: Record<string, unknown>;
-  object: string;
-  type: string;
+  data: Record<string, unknown>
+  object: string
+  type: string
 }
 
 interface UserCreatedData {
-  id: string;
+  id: string
   email_addresses: Array<{
-    id: string;
-    email_address: string;
-  }>;
-  primary_email_address_id: string;
-  first_name: string | null;
-  last_name: string | null;
-  created_at: number;
+    id: string
+    email_address: string
+  }>
+  primary_email_address_id: string
+  first_name: string | null
+  last_name: string | null
+  created_at: number
 }
 
 interface OrganizationCreatedData {
-  id: string;
-  name: string;
-  slug: string;
-  created_by: string;
-  created_at: number;
+  id: string
+  name: string
+  slug: string
+  created_by: string
+  created_at: number
 }
 
 interface SessionCreatedData {
-  id: string;
-  user_id: string;
-  status: string;
-  created_at: number;
-  last_active_organization_id: string | null;
+  id: string
+  user_id: string
+  status: string
+  created_at: number
+  last_active_organization_id: string | null
 }
 
 // ===================
@@ -60,18 +60,16 @@ interface SessionCreatedData {
  * triggered here. For MVP, we create org synchronously.
  */
 async function handleUserCreated(data: UserCreatedData): Promise<void> {
-  const prisma = getPrisma();
+  const prisma = getPrisma()
 
-  const primaryEmail = data.email_addresses.find(
-    (e) => e.id === data.primary_email_address_id
-  );
+  const primaryEmail = data.email_addresses.find((e) => e.id === data.primary_email_address_id)
 
   if (!primaryEmail) {
-    throw new Error(`User ${data.id} has no primary email`);
+    throw new Error(`User ${data.id} has no primary email`)
   }
 
-  const email = primaryEmail.email_address;
-  const emailDomain = email.split('@')[1];
+  const email = primaryEmail.email_address
+  const emailDomain = email.split('@')[1]
 
   // Sync user to local database
   await prisma.user.upsert({
@@ -86,7 +84,7 @@ async function handleUserCreated(data: UserCreatedData): Promise<void> {
       emailVerified: true, // Clerk handles verification
       createdAt: new Date(data.created_at),
     },
-  });
+  })
 
   // Note: Organization creation happens via organization.created webhook
   // or can be triggered here via Clerk Backend API if auto-create is needed.
@@ -98,11 +96,11 @@ async function handleUserCreated(data: UserCreatedData): Promise<void> {
     email,
     name: [data.first_name, data.last_name].filter(Boolean).join(' ') || undefined,
     auth_provider: 'email', // Default, could be detected from webhook metadata
-  };
+  }
 
   // Note: We'll emit the event once org is created in organization.created handler
   // This prevents emitting events without valid org_id
-  console.log(`[Clerk Webhook] User created: ${data.id}, email: ${email}`);
+  console.log(`[Clerk Webhook] User created: ${data.id}, email: ${email}`)
 }
 
 /**
@@ -118,11 +116,11 @@ async function handleUserCreated(data: UserCreatedData): Promise<void> {
  * 4. Emit `xentri.user.signup.v1` event (if this is the user's first org)
  */
 async function handleOrganizationCreated(data: OrganizationCreatedData): Promise<void> {
-  const prisma = getPrisma();
+  const prisma = getPrisma()
 
   // Sync organization to local database first (before provisioning) with org context set for RLS
   await prisma.$transaction(async (tx) => {
-    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${data.id}, true)`;
+    await tx.$executeRaw`SELECT set_config('app.current_org_id', ${data.id}, true)`
 
     await tx.organization.upsert({
       where: { id: data.id },
@@ -137,8 +135,8 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
         slug: data.slug,
         createdAt: new Date(data.created_at),
       },
-    });
-  });
+    })
+  })
 
   // Full provisioning: org_settings + membership + provisioned event (AC1-AC7)
   // This is idempotent - safe for webhook replays
@@ -147,14 +145,14 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
     clerkUserId: data.created_by,
     orgName: data.name,
     orgSlug: data.slug,
-  });
+  })
 
   // Emit org created event (separate from provisioned event)
   const orgPayload: OrgCreatedPayload = {
     name: data.name,
     slug: data.slug,
     owner_id: data.created_by,
-  };
+  }
 
   await eventService.createEvent(
     {
@@ -168,27 +166,27 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
       envelope_version: '1.0',
     },
     data.id
-  );
+  )
 
   // Check if this is the user's first org (signup completion)
   // Only emit signup event if not already provisioned (prevents duplicate on replay)
   if (!provisionResult.alreadyProvisioned) {
     const memberCount = await prisma.member.count({
       where: { userId: data.created_by },
-    });
+    })
 
     if (memberCount === 1) {
       const user = await prisma.user.findUnique({
         where: { id: data.created_by },
         select: { email: true },
-      });
+      })
 
       if (user) {
         // First org = signup complete, emit signup event
         const signupPayload: UserSignupPayload = {
           email: user.email,
           auth_provider: 'email',
-        };
+        }
 
         await eventService.createEvent(
           {
@@ -202,12 +200,14 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
             envelope_version: '1.0',
           },
           data.id
-        );
+        )
       }
     }
   }
 
-  console.log(`[Clerk Webhook] Organization created & provisioned: ${data.id}, slug: ${data.slug}, alreadyProvisioned: ${provisionResult.alreadyProvisioned}`);
+  console.log(
+    `[Clerk Webhook] Organization created & provisioned: ${data.id}, slug: ${data.slug}, alreadyProvisioned: ${provisionResult.alreadyProvisioned}`
+  )
 }
 
 /**
@@ -219,29 +219,29 @@ async function handleOrganizationCreated(data: OrganizationCreatedData): Promise
  * Note: This is optional - login events can also be tracked client-side.
  */
 async function handleSessionCreated(data: SessionCreatedData): Promise<void> {
-  const prisma = getPrisma();
+  const prisma = getPrisma()
 
   // Only emit login event if user has an active organization
   if (!data.last_active_organization_id) {
-    console.log(`[Clerk Webhook] Session created for user ${data.user_id} without org context`);
-    return;
+    console.log(`[Clerk Webhook] Session created for user ${data.user_id} without org context`)
+    return
   }
 
   // Fetch user email for event payload
   const user = await prisma.user.findUnique({
     where: { id: data.user_id },
     select: { email: true },
-  });
+  })
 
   if (!user) {
-    console.log(`[Clerk Webhook] Session created for unknown user ${data.user_id}`);
-    return;
+    console.log(`[Clerk Webhook] Session created for unknown user ${data.user_id}`)
+    return
   }
 
   const loginPayload: UserLoginPayload = {
     email: user.email,
     method: 'email', // Could be detected from session metadata
-  };
+  }
 
   await eventService.createEvent(
     {
@@ -255,9 +255,9 @@ async function handleSessionCreated(data: SessionCreatedData): Promise<void> {
       envelope_version: '1.0',
     },
     data.last_active_organization_id
-  );
+  )
 
-  console.log(`[Clerk Webhook] Session created: ${data.id}, user: ${data.user_id}`);
+  console.log(`[Clerk Webhook] Session created: ${data.id}, user: ${data.user_id}`)
 }
 
 // ===================
@@ -278,74 +278,69 @@ export default async function clerkWebhookRoutes(fastify: FastifyInstance): Prom
         rawBody: true,
       },
     },
-    async (
-      request: FastifyRequest<{ Body: ClerkWebhookBody }>,
-      reply: FastifyReply
-    ) => {
-      const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
+    async (request: FastifyRequest<{ Body: ClerkWebhookBody }>, reply: FastifyReply) => {
+      const webhookSecret = process.env.CLERK_WEBHOOK_SECRET
 
       if (!webhookSecret) {
-        fastify.log.error('CLERK_WEBHOOK_SECRET not configured');
-        return reply.status(500).send({ error: 'Webhook not configured' });
+        fastify.log.error('CLERK_WEBHOOK_SECRET not configured')
+        return reply.status(500).send({ error: 'Webhook not configured' })
       }
 
       // Get svix headers for signature verification
-      const svixId = request.headers['svix-id'] as string;
-      const svixTimestamp = request.headers['svix-timestamp'] as string;
-      const svixSignature = request.headers['svix-signature'] as string;
+      const svixId = request.headers['svix-id'] as string
+      const svixTimestamp = request.headers['svix-timestamp'] as string
+      const svixSignature = request.headers['svix-signature'] as string
 
       if (!svixId || !svixTimestamp || !svixSignature) {
-        return reply.status(400).send({ error: 'Missing svix headers' });
+        return reply.status(400).send({ error: 'Missing svix headers' })
       }
 
       // Verify webhook signature using raw body
-      const wh = new Webhook(webhookSecret);
-      let event: WebhookEvent;
+      const wh = new Webhook(webhookSecret)
+      let event: WebhookEvent
 
       try {
         const rawBody =
           // rawBody is provided by fastify-raw-body
           (request as FastifyRequest & { rawBody?: Buffer }).rawBody?.toString('utf8') ||
-          (typeof request.body === 'string'
-            ? request.body
-            : JSON.stringify(request.body));
+          (typeof request.body === 'string' ? request.body : JSON.stringify(request.body))
 
         event = wh.verify(rawBody, {
           'svix-id': svixId,
           'svix-timestamp': svixTimestamp,
           'svix-signature': svixSignature,
-        }) as WebhookEvent;
+        }) as WebhookEvent
       } catch (err) {
-        fastify.log.error({ err }, 'Webhook signature verification failed');
-        return reply.status(401).send({ error: 'Invalid signature' });
+        fastify.log.error({ err }, 'Webhook signature verification failed')
+        return reply.status(401).send({ error: 'Invalid signature' })
       }
 
       // Dispatch to appropriate handler
       try {
         switch (event.type) {
           case 'user.created':
-            await handleUserCreated(event.data as unknown as UserCreatedData);
-            break;
+            await handleUserCreated(event.data as unknown as UserCreatedData)
+            break
 
           case 'organization.created':
-            await handleOrganizationCreated(event.data as unknown as OrganizationCreatedData);
-            break;
+            await handleOrganizationCreated(event.data as unknown as OrganizationCreatedData)
+            break
 
           case 'session.created':
-            await handleSessionCreated(event.data as unknown as SessionCreatedData);
-            break;
+            await handleSessionCreated(event.data as unknown as SessionCreatedData)
+            break
 
           default:
-            fastify.log.info(`Unhandled webhook event type: ${event.type}`);
+            fastify.log.info(`Unhandled webhook event type: ${event.type}`)
         }
 
-        return reply.status(200).send({ received: true });
+        return reply.status(200).send({ received: true })
       } catch (err) {
-        fastify.log.error({ err, eventType: event.type }, 'Webhook handler failed');
+        fastify.log.error({ err, eventType: event.type }, 'Webhook handler failed')
         // Return 200 to prevent Clerk from retrying (we logged the error)
         // For critical failures, return 500 to trigger retry
-        return reply.status(500).send({ error: 'Handler failed' });
+        return reply.status(500).send({ error: 'Handler failed' })
       }
     }
-  );
+  )
 }

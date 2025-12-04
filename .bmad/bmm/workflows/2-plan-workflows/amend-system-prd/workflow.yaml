@@ -1,31 +1,31 @@
 # System PRD Amendment Workflow (Constitution)
 name: amend-system-prd
-description: "Amend the System PRD (Constitution) with full impact analysis. Constitution changes affect ALL downstream entities and require governance review."
-author: "BMad"
+description: 'Amend the System PRD (Constitution) with full impact analysis. Constitution changes affect ALL downstream entities and require governance review.'
+author: 'BMad'
 
 # Critical variables from config
-config_source: "{project-root}/.bmad/bmm/config.yaml"
-user_name: "{config_source}:user_name"
-communication_language: "{config_source}:communication_language"
+config_source: '{project-root}/.bmad/bmm/config.yaml'
+user_name: '{config_source}:user_name'
+communication_language: '{config_source}:communication_language'
 date: system-generated
 
 # Fixed paths for Constitution
 entity_type: constitution
-prd_path: "{project-root}/docs/platform/prd.md"
+prd_path: '{project-root}/docs/platform/prd.md'
 
 # Workflow components
-installed_path: "{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-system-prd"
-instructions: "{installed_path}/instructions.md"
+installed_path: '{project-root}/.bmad/bmm/workflows/2-plan-workflows/amend-system-prd'
+instructions: '{installed_path}/instructions.md'
 
 # Shared tasks
-impact_analysis_task: "{project-root}/.bmad/bmm/tasks/impact-analysis.xml"
-save_task: "{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml"
+impact_analysis_task: '{project-root}/.bmad/bmm/tasks/impact-analysis.xml'
+save_task: '{project-root}/.bmad/bmm/tasks/save-with-checkpoint.xml'
 
 # Checklist for validation
-checklist: "{project-root}/.bmad/bmm/checklists/constitution-prd-checklist.md"
+checklist: '{project-root}/.bmad/bmm/checklists/constitution-prd-checklist.md'
 
 # Output
-amendment_log_path: "{project-root}/docs/platform/amendment-log.md"
+amendment_log_path: '{project-root}/docs/platform/amendment-log.md'
 
 template: false
 standalone: true

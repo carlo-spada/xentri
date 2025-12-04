@@ -62,7 +62,7 @@ so that **we have an immutable audit trail and secure multi-tenancy from which a
 - [x] **Task 5: Create events API routes** (AC: 6, 7)
   - [x] 5.1 Create `POST /api/v1/events` route in core-api
   - [x] 5.2 Create `GET /api/v1/events` route with query param parsing
-  - [ ] 5.3 Add auth middleware to extract user_id from JWT *(Deferred to Story 1.3)*
+  - [ ] 5.3 Add auth middleware to extract user_id from JWT _(Deferred to Story 1.3)_
   - [x] 5.4 Add org scoping middleware to verify x-org-id header
   - [x] 5.5 Return Problem Details format for errors (400, 401, 403, 500)
   - [x] 5.6 Write integration tests for both endpoints
@@ -101,6 +101,7 @@ so that **we have an immutable audit trail and secure multi-tenancy from which a
 ### Technical Specifications
 
 **System Events Table Schema:**
+
 ```sql
 CREATE TABLE system_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -120,9 +121,11 @@ CREATE TABLE system_events (
 
 CREATE INDEX idx_events_org_type_time ON system_events(org_id, event_type, occurred_at DESC);
 ```
+
 [Source: docs/sprint-artifacts/tech-spec-epic-1.md#Data-Models-and-Contracts]
 
 **Event Types (v0.1/v0.2):**
+
 - `xentri.user.signup.v1`
 - `xentri.user.login.v1`
 - `xentri.org.created.v1`
@@ -138,11 +141,13 @@ CREATE INDEX idx_events_org_type_time ON system_events(org_id, event_type, occur
 ### API Contracts
 
 **POST /api/v1/events:**
+
 - Request: `SystemEvent` payload (validated via Zod)
 - Response: `{ event_id: string, acknowledged: true }`
 - Errors: 400 (validation), 401 (unauthenticated), 403 (wrong org)
 
 **GET /api/v1/events:**
+
 - Query params: `?type=`, `?since=ISO8601`, `?limit=number`, `?cursor=string`
 - Response: `{ data: SystemEvent[], meta: { cursor?: string, has_more: boolean } }`
 - Events scoped to authenticated org via RLS
@@ -157,6 +162,7 @@ CREATE INDEX idx_events_org_type_time ON system_events(org_id, event_type, occur
 ### Project Structure Notes
 
 **Files to create/modify:**
+
 ```
 services/core-api/
 ├── prisma/
@@ -231,6 +237,7 @@ claude-opus-4-5-20251101
 - **Shell:** EventTimeline React component displays recent events with formatted types and timestamps
 
 **Review Follow-up Resolutions (2025-11-26):**
+
 - ✅ Resolved review finding [High]: `ensureOrgMembership()` function in events.ts verifies user membership before allowing event operations
 - ✅ Resolved review finding [High]: `listEvents` query already uses `Prisma.sql` fragments with proper parameterization (lines 158-225)
 - ✅ Resolved review finding [Medium]: `CreateEventSchema.refine()` validates typed payloads against event-type-specific schemas
@@ -240,6 +247,7 @@ claude-opus-4-5-20251101
 ### File List
 
 **New Files:**
+
 - `services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql`
 - `services/core-api/prisma.config.ts`
 - `services/core-api/src/infra/db.ts`
@@ -251,6 +259,7 @@ claude-opus-4-5-20251101
 - `apps/shell/src/components/EventTimeline.tsx`
 
 **Modified Files:**
+
 - `services/core-api/prisma/schema.prisma` - Added columns, renamed type→eventType, updated index
 - `services/core-api/package.json` - Added @prisma/adapter-pg, pg, @types/pg dependencies
 - `services/core-api/src/server.ts` - Registered events routes, added graceful shutdown
@@ -265,14 +274,14 @@ claude-opus-4-5-20251101
 
 ## Change Log
 
-| Date | Author | Change |
-|------|--------|--------|
-| 2025-11-26 | SM Agent (Bob) | Initial draft created from Epic 1 tech spec, epics.md, and Story 1.1 learnings |
-| 2025-11-26 | Dev Agent (Amelia) | Implementation complete: All 7 tasks done, all ACs satisfied |
-| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review notes appended (Blocked) |
+| Date       | Author             | Change                                                                                                                               |
+| ---------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 2025-11-26 | SM Agent (Bob)     | Initial draft created from Epic 1 tech spec, epics.md, and Story 1.1 learnings                                                       |
+| 2025-11-26 | Dev Agent (Amelia) | Implementation complete: All 7 tasks done, all ACs satisfied                                                                         |
+| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review notes appended (Blocked)                                                                                     |
 | 2025-11-26 | Dev Agent (Claude) | Addressed code review findings - 4 items resolved: membership validation, query parameterization, payload validation, and test fixes |
-| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review (AI) - Blocked: header-trust bypasses org/user verification |
-| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review #3 - Approved with Conditions: JWT binding deferred to Story 1.3 |
+| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review (AI) - Blocked: header-trust bypasses org/user verification                                                  |
+| 2025-11-26 | Dev Agent (Amelia) | Senior Developer Review #3 - Approved with Conditions: JWT binding deferred to Story 1.3                                             |
 
 ## Senior Developer Review (AI)
 
@@ -282,52 +291,61 @@ claude-opus-4-5-20251101
 - Summary: Cross-org access trusts headers, no auth/membership check. GET /api/v1/events query uses nested Prisma promises, likely throwing/ignoring filters.
 
 ### Key Findings
+
 - **HIGH** – Tenant isolation relies on client-supplied `x-org-id`; no JWT/membership validation, so setting another org header exposes its events (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169; services/core-api/src/domain/events/EventService.ts:153-199).
 - **HIGH** – GET /api/v1/events builds SQL with nested `tx.$queryRaw` promises; Prisma will reject/ignore filters and pagination, so AC7 fails (services/core-api/src/domain/events/EventService.ts:193-201).
 - **MEDIUM** – CreateEventSchema accepts any payload shape; typed payload schemas are unused, so invalid payloads pass Zod validation (packages/ts-schema/src/events.ts:139-179). Tests only cover invalid type, not payload conformance (services/core-api/src/domain/events/EventService.test.ts:37-94).
 - **MEDIUM** – RLS paths untested: smoke-test seeds events without setting `app.current_org_id`, so fail-closed behavior isn’t exercised and API flows aren’t covered (scripts/smoke-test.ts:37-129; services/core-api/src/routes/events.test.ts:145-260 seeds via pool without verified context).
 
 ### Acceptance Criteria Coverage
-| AC | Status | Evidence |
-|----|--------|----------|
-| AC1 | ✅ | Column set including org_id/user_id/payload_schema/source/dedupe/correlation/trace (services/core-api/prisma/schema.prisma:76-94; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33). |
-| AC2 | ❌ | Org scoping trusts header; no auth/membership enforcement, so cross-org reads possible (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169). |
-| AC3 | ✅ | Immutability enforced via insert-only policies + trigger + delete rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78). |
-| AC4 | ✅ | EventType union lists all nine v0.1/v0.2 types (packages/ts-schema/src/events.ts:11-21). |
-| AC5 | ✅ | OpenLoopsProjection placeholder documented (packages/ts-schema/src/events.ts:204-239). |
-| AC6 | ⚠️ Partial | POST validates envelope but payload is generic record; typed payload schemas unused; no auth on user_id (packages/ts-schema/src/events.ts:139-179; services/core-api/src/routes/events.ts:43-88). |
-| AC7 | ❌ | List query uses nested Prisma promises; filters/pagination can’t execute (services/core-api/src/domain/events/EventService.ts:193-201). |
+
+| AC  | Status     | Evidence                                                                                                                                                                                                                            |
+| --- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC1 | ✅         | Column set including org_id/user_id/payload_schema/source/dedupe/correlation/trace (services/core-api/prisma/schema.prisma:76-94; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33). |
+| AC2 | ❌         | Org scoping trusts header; no auth/membership enforcement, so cross-org reads possible (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169).                                      |
+| AC3 | ✅         | Immutability enforced via insert-only policies + trigger + delete rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78).                                                          |
+| AC4 | ✅         | EventType union lists all nine v0.1/v0.2 types (packages/ts-schema/src/events.ts:11-21).                                                                                                                                            |
+| AC5 | ✅         | OpenLoopsProjection placeholder documented (packages/ts-schema/src/events.ts:204-239).                                                                                                                                              |
+| AC6 | ⚠️ Partial | POST validates envelope but payload is generic record; typed payload schemas unused; no auth on user_id (packages/ts-schema/src/events.ts:139-179; services/core-api/src/routes/events.ts:43-88).                                   |
+| AC7 | ❌         | List query uses nested Prisma promises; filters/pagination can’t execute (services/core-api/src/domain/events/EventService.ts:193-201).                                                                                             |
 
 ### Task Completion Validation
-| Task | Marked As | Verified As | Evidence / Notes |
-|------|-----------|-------------|------------------|
-| 1. System_events schema/migration | [x] | Verified | Columns/index + source/created_at added (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33). |
-| 2. RLS policies (fail-closed) | [x] | **Not Done – header trust allows cross-org access** | No membership/JWT check; any org header is accepted (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169). |
-| 3. ts-schema event types | [x] | Verified | EventType union and payload schemas present (packages/ts-schema/src/events.ts:11-129). |
-| 4. EventService create/list | [x] | **Partial – list query broken** | Nested `tx.$queryRaw` promises will fail/ignore filters (services/core-api/src/domain/events/EventService.ts:193-201). |
-| 5. API routes & middleware | [x] | **Partial – auth missing, list bug** | No JWT/user extraction (TODO comment) and same list query issue (services/core-api/src/middleware/orgContext.ts:62-99; services/core-api/src/routes/events.ts:43-169). |
-| 6. Shell timeline slice | [x] | Verified | EventTimeline renders recent events list (apps/shell/src/components/EventTimeline.tsx:1-122; apps/shell/src/pages/index.astro:6-40). |
-| 7. Testing & validation | [x] | **Partial – gaps** | No cross-org/RLS API test; smoke-test doesn’t exercise API and skips org context on inserts (services/core-api/src/routes/events.test.ts:145-260; scripts/smoke-test.ts:37-129). |
+
+| Task                              | Marked As | Verified As                                         | Evidence / Notes                                                                                                                                                                          |
+| --------------------------------- | --------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. System_events schema/migration | [x]       | Verified                                            | Columns/index + source/created_at added (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33). |
+| 2. RLS policies (fail-closed)     | [x]       | **Not Done – header trust allows cross-org access** | No membership/JWT check; any org header is accepted (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169).                               |
+| 3. ts-schema event types          | [x]       | Verified                                            | EventType union and payload schemas present (packages/ts-schema/src/events.ts:11-129).                                                                                                    |
+| 4. EventService create/list       | [x]       | **Partial – list query broken**                     | Nested `tx.$queryRaw` promises will fail/ignore filters (services/core-api/src/domain/events/EventService.ts:193-201).                                                                    |
+| 5. API routes & middleware        | [x]       | **Partial – auth missing, list bug**                | No JWT/user extraction (TODO comment) and same list query issue (services/core-api/src/middleware/orgContext.ts:62-99; services/core-api/src/routes/events.ts:43-169).                    |
+| 6. Shell timeline slice           | [x]       | Verified                                            | EventTimeline renders recent events list (apps/shell/src/components/EventTimeline.tsx:1-122; apps/shell/src/pages/index.astro:6-40).                                                      |
+| 7. Testing & validation           | [x]       | **Partial – gaps**                                  | No cross-org/RLS API test; smoke-test doesn’t exercise API and skips org context on inserts (services/core-api/src/routes/events.test.ts:145-260; scripts/smoke-test.ts:37-129).          |
 
 ### Test Coverage and Gaps
+
 - API tests cover happy-path create/list and basic validation, but no cross-org/RLS enforcement, no payload shape checks, and pagination/filter path is broken yet untested.
 - Smoke test bypasses API and may not hit RLS fail-closed paths; endpoints unvalidated in end-to-end flow.
 - Tests not re-run in this review session.
 
 ### Architectural Alignment
+
 - ADR-003 (fail-closed RLS) isn’t enforced end-to-end because org context is trusted from headers with no membership check.
 - Event list query violates reliability expectations; pagination cannot function with current Prisma call.
 
 ### Security Notes
+
 - Cross-tenant data exposure risk: any caller can set `x-org-id` to another org and read/write events because membership/auth is absent in middleware and routes.
 
 ### Best-Practices and References
+
 - Use Fastify auth preHandler to verify JWT and membership, then set `app.current_org_id` from verified org claim (align with ADR-003).
 - Build dynamic queries with `Prisma.sql` or parameter arrays; never interpolate Prisma promises inside `$queryRaw`.
 - Tie CreateEvent validation to event-type-specific payload schemas to keep contracts enforceable.
 
 ### Action Items
+
 **Code Changes Required:**
+
 - [x] [High] Enforce org membership/JWT in events preHandler; derive org_id/user_id from verified claims and reject mismatched headers (services/core-api/src/middleware/orgContext.ts:62-100; services/core-api/src/routes/events.ts:43-169).
 - [x] [High] Rewrite listEvents query using `Prisma.sql`/parameterized raw SQL so filters and pagination run without Prisma promise interpolation (services/core-api/src/domain/events/EventService.ts:193-201).
 - [x] [Medium] Bind CreateEvent payload validation to typed schemas per event type and add negative tests (packages/ts-schema/src/events.ts:139-179; services/core-api/src/domain/events/EventService.test.ts:37-94; services/core-api/src/routes/events.test.ts:50-143).
@@ -343,48 +361,58 @@ claude-opus-4-5-20251101
 - Summary: Events API gate uses unauthenticated x-org-id/x-user-id headers. Any caller with UUIDs can set RLS context and pass membership lookup, violating ADR-003. Other ACs pass.
 
 ### Key Findings
+
 - **HIGH** — Header-trust bypass: orgContext/ensureOrgMembership accept x-org-id/x-user-id without JWT binding; RLS context set from untrusted data (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58).
 
 ### Acceptance Criteria Coverage
-| AC | Status | Evidence |
-| --- | --- | --- |
-| AC1 | ✅ | Schema includes org_id/user_id/payload_schema/source/dedupe/correlation/trace (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33) |
-| AC2 | ❌ | No JWT/org binding; spoofed headers pass gate (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58) |
-| AC3 | ✅ | Insert-only policies + update trigger + delete rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78) |
-| AC4 | ✅ | EventType union covers all v0.1/v0.2 types (packages/ts-schema/src/events.ts:11-129) |
-| AC5 | ✅ | OpenLoopsProjection placeholder present (packages/ts-schema/src/events.ts:232-246) |
-| AC6 | ✅ | POST validates payloads via typed schemas and returns ack (services/core-api/src/routes/events.ts:76-150; services/core-api/src/domain/events/EventService.ts:19-119) |
-| AC7 | ⚠️ Partial | Listing works but relies on spoofable headers for org scoping (services/core-api/src/routes/events.ts:153-248; services/core-api/src/middleware/orgContext.ts:52-99) |
+
+| AC  | Status     | Evidence                                                                                                                                                                                                                       |
+| --- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AC1 | ✅         | Schema includes org_id/user_id/payload_schema/source/dedupe/correlation/trace (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-33) |
+| AC2 | ❌         | No JWT/org binding; spoofed headers pass gate (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58)                                                                             |
+| AC3 | ✅         | Insert-only policies + update trigger + delete rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78)                                                                         |
+| AC4 | ✅         | EventType union covers all v0.1/v0.2 types (packages/ts-schema/src/events.ts:11-129)                                                                                                                                           |
+| AC5 | ✅         | OpenLoopsProjection placeholder present (packages/ts-schema/src/events.ts:232-246)                                                                                                                                             |
+| AC6 | ✅         | POST validates payloads via typed schemas and returns ack (services/core-api/src/routes/events.ts:76-150; services/core-api/src/domain/events/EventService.ts:19-119)                                                          |
+| AC7 | ⚠️ Partial | Listing works but relies on spoofable headers for org scoping (services/core-api/src/routes/events.ts:153-248; services/core-api/src/middleware/orgContext.ts:52-99)                                                           |
 
 ### Task Completion Validation
-| Task | Marked | Verified | Evidence/Notes |
-| --- | --- | --- | --- |
-| 1. system_events schema/migration | [x] | ✅ | Columns/index/immutability aligned (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-78) |
-| 2. RLS policies | [x] | ✅ | Insert/read policies + trigger/rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78) |
-| 3. ts-schema event types | [x] | ✅ | EventType union + payload schemas (packages/ts-schema/src/events.ts:11-129) |
-| 4. EventService create/list | [x] | ✅ | Validation + cursor pagination (services/core-api/src/domain/events/EventService.ts:19-210) |
-| 5. API routes & middleware (auth) | [x] | ❌ | Auth step incomplete: header trust, no JWT/org binding (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58) |
-| 6. Shell timeline slice | [x] | ✅ | EventTimeline renders list (apps/shell/src/components/EventTimeline.tsx) |
-| 7. Testing & validation | [x] | ✅ | RLS/immutability/API tests exist but lack auth spoof coverage (services/core-api/src/routes/events.test.ts; scripts/smoke-test.ts) |
+
+| Task                              | Marked | Verified | Evidence/Notes                                                                                                                                                                      |
+| --------------------------------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. system_events schema/migration | [x]    | ✅       | Columns/index/immutability aligned (services/core-api/prisma/schema.prisma:76-100; services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:9-78) |
+| 2. RLS policies                   | [x]    | ✅       | Insert/read policies + trigger/rule (services/core-api/prisma/migrations/20251126000001_add_system_events_columns/migration.sql:42-78)                                              |
+| 3. ts-schema event types          | [x]    | ✅       | EventType union + payload schemas (packages/ts-schema/src/events.ts:11-129)                                                                                                         |
+| 4. EventService create/list       | [x]    | ✅       | Validation + cursor pagination (services/core-api/src/domain/events/EventService.ts:19-210)                                                                                         |
+| 5. API routes & middleware (auth) | [x]    | ❌       | Auth step incomplete: header trust, no JWT/org binding (services/core-api/src/middleware/orgContext.ts:52-99; services/core-api/src/routes/events.ts:15-58)                         |
+| 6. Shell timeline slice           | [x]    | ✅       | EventTimeline renders list (apps/shell/src/components/EventTimeline.tsx)                                                                                                            |
+| 7. Testing & validation           | [x]    | ✅       | RLS/immutability/API tests exist but lack auth spoof coverage (services/core-api/src/routes/events.test.ts; scripts/smoke-test.ts)                                                  |
 
 ### Test Coverage and Gaps
+
 - Present: EventService unit, routes integration, immutability/RLS smoke tests.
 - Gaps: No JWT/org binding tests; no spoofed header coverage.
 
 ### Architectural Alignment
+
 - ADR-003 gate broken: RLS context derives from untrusted headers, not verified JWT membership.
 
 ### Security Notes
+
 - Cross-tenant exposure risk if attacker knows org/user UUIDs; can read/write events by spoofing headers.
 
 ### Best-Practices & References
+
 - Enforce JWT-based membership before setting org context; derive org_id/user_id from token claims and reject mismatched headers.
 
 ### Action Items
+
 **Code Changes Required**
+
 - [ ] [High] Bind org/user to authenticated JWT; derive org_id/user_id from token and reject mismatched headers before set_config (services/core-api/src/middleware/orgContext.ts; services/core-api/src/routes/events.ts)
 
 **Advisory Notes**
+
 - Note: Add integration tests covering header spoof and membership enforcement (services/core-api/src/routes/events.test.ts)
 
 ---
@@ -399,21 +427,22 @@ claude-opus-4-5-20251101
 ### Review Decision
 
 After 3 reviews blocking on the same issue, a pragmatic decision was made:
+
 - Story 1.2 delivers **event infrastructure** (DB schema, RLS policies, API routes, types)
 - Story 1.3 delivers **authentication infrastructure** (JWT issuance, login, signup)
 - JWT binding requires JWT infrastructure that doesn't exist yet
 
 ### AC Validation Summary
 
-| AC | Status | Notes |
-|---|---|---|
-| AC1 | ✅ | All columns present in system_events |
+| AC  | Status     | Notes                                                        |
+| --- | ---------- | ------------------------------------------------------------ |
+| AC1 | ✅         | All columns present in system_events                         |
 | AC2 | ⚠️ Partial | DB-level RLS correct; application gate deferred to Story 1.3 |
-| AC3 | ✅ | Immutability enforced via trigger + rule |
-| AC4 | ✅ | 9 event types with typed payloads |
-| AC5 | ✅ | OpenLoopsProjection placeholder documented |
-| AC6 | ✅ | POST validation with typed payloads |
-| AC7 | ✅ | GET with filters and cursor pagination |
+| AC3 | ✅         | Immutability enforced via trigger + rule                     |
+| AC4 | ✅         | 9 event types with typed payloads                            |
+| AC5 | ✅         | OpenLoopsProjection placeholder documented                   |
+| AC6 | ✅         | POST validation with typed payloads                          |
+| AC7 | ✅         | GET with filters and cursor pagination                       |
 
 ### Task Validation Summary
 
@@ -423,6 +452,7 @@ After 3 reviews blocking on the same issue, a pragmatic decision was made:
 ### Critical Dependencies for Story 1.3
 
 **MANDATORY before any deployment:**
+
 1. Implement JWT-based authentication in Story 1.3
 2. Modify `orgContext.ts` to extract user_id from verified JWT token
 3. Reject requests where header org_id doesn't match JWT claims
@@ -445,6 +475,7 @@ After 3 reviews blocking on the same issue, a pragmatic decision was made:
 ### Approval Justification
 
 The event infrastructure is architecturally sound and well-tested. The security gap is:
+
 1. Explicitly documented with TODO comments
 2. Intentionally deferred to the authentication story
 3. Tracked with explicit follow-up items

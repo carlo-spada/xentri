@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useStore } from '@nanostores/react';
-import { Button } from '@xentri/ui';
-import { FileText, Edit, CheckCircle, Circle, Loader2 } from 'lucide-react';
-import type { BriefSectionName } from '@xentri/ts-schema';
+import { useEffect } from 'react'
+import { useStore } from '@nanostores/react'
+import { Button } from '@xentri/ui'
+import { FileText, Edit, CheckCircle, Circle, Loader2 } from 'lucide-react'
+import type { BriefSectionName } from '@xentri/ts-schema'
 import {
   $brief,
   $briefLoading,
@@ -12,12 +12,12 @@ import {
   setBriefLoading,
   setBriefError,
   getApiUrl,
-} from '../../stores/brief.js';
+} from '../../stores/brief.js'
 
 interface BriefSummaryTileProps {
-  orgId?: string;
-  onEditClick?: (briefId: string) => void;
-  onViewClick?: (briefId: string) => void;
+  orgId?: string
+  onEditClick?: (briefId: string) => void
+  onViewClick?: (briefId: string) => void
 }
 
 const SECTION_LABELS: Record<BriefSectionName, string> = {
@@ -28,7 +28,7 @@ const SECTION_LABELS: Record<BriefSectionName, string> = {
   operations: 'Operations',
   goals: 'Goals',
   proof: 'Proof',
-};
+}
 
 const SECTION_ORDER: BriefSectionName[] = [
   'identity',
@@ -38,7 +38,7 @@ const SECTION_ORDER: BriefSectionName[] = [
   'operations',
   'goals',
   'proof',
-];
+]
 
 /**
  * BriefSummaryTile - Shows Brief status/summary in Strategy category
@@ -46,24 +46,20 @@ const SECTION_ORDER: BriefSectionName[] = [
  * Story 1.6, Task 3.2: React island showing Brief status
  * Per UX Design Spec 4.1: First-time user journey
  */
-export function BriefSummaryTile({
-  orgId,
-  onEditClick,
-  onViewClick,
-}: BriefSummaryTileProps) {
-  const brief = useStore($brief);
-  const loading = useStore($briefLoading);
-  const error = useStore($briefError);
-  const completionPercent = useStore($briefCompletionPercent);
+export function BriefSummaryTile({ orgId, onEditClick, onViewClick }: BriefSummaryTileProps) {
+  const brief = useStore($brief)
+  const loading = useStore($briefLoading)
+  const error = useStore($briefError)
+  const completionPercent = useStore($briefCompletionPercent)
 
   useEffect(() => {
     async function fetchBrief() {
       if (!orgId) {
-        setBriefError('No organization context');
-        return;
+        setBriefError('No organization context')
+        return
       }
 
-      setBriefLoading(true);
+      setBriefLoading(true)
 
       try {
         const response = await fetch(`${getApiUrl()}/api/v1/briefs/current`, {
@@ -71,24 +67,24 @@ export function BriefSummaryTile({
             'x-org-id': orgId,
           },
           credentials: 'include',
-        });
+        })
 
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
         }
 
-        const data = await response.json();
-        setBrief(data.data);
+        const data = await response.json()
+        setBrief(data.data)
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to fetch brief';
-        setBriefError(message);
+        const message = err instanceof Error ? err.message : 'Failed to fetch brief'
+        setBriefError(message)
       } finally {
-        setBriefLoading(false);
+        setBriefLoading(false)
       }
     }
 
-    fetchBrief();
-  }, [orgId]);
+    fetchBrief()
+  }, [orgId])
 
   if (loading) {
     return (
@@ -99,7 +95,7 @@ export function BriefSummaryTile({
         </div>
         <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -107,23 +103,19 @@ export function BriefSummaryTile({
       <div style={styles.container}>
         <div style={styles.errorState}>
           <p style={styles.errorText}>{error}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.location.reload()}
-          >
+          <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
             Retry
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   if (!brief) {
-    return null; // CreateBriefCTA will be shown instead
+    return null // CreateBriefCTA will be shown instead
   }
 
-  const businessName = brief.sections?.identity?.businessName || 'Your Business';
+  const businessName = brief.sections?.identity?.businessName || 'Your Business'
 
   return (
     <div style={styles.container}>
@@ -161,7 +153,7 @@ export function BriefSummaryTile({
 
       <div style={styles.sectionsGrid}>
         {SECTION_ORDER.map((section) => {
-          const isReady = brief.sectionStatus?.[section] === 'ready';
+          const isReady = brief.sectionStatus?.[section] === 'ready'
           return (
             <div
               key={section}
@@ -177,27 +169,21 @@ export function BriefSummaryTile({
               )}
               <span style={styles.sectionLabel}>{SECTION_LABELS[section]}</span>
             </div>
-          );
+          )
         })}
       </div>
 
       <div style={styles.actions}>
-        <Button
-          variant="default"
-          onClick={() => onViewClick?.(brief.id)}
-        >
+        <Button variant="default" onClick={() => onViewClick?.(brief.id)}>
           View Brief
         </Button>
-        <Button
-          variant="outline"
-          onClick={() => onEditClick?.(brief.id)}
-        >
+        <Button variant="outline" onClick={() => onEditClick?.(brief.id)}>
           <Edit size={16} />
           Edit
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -330,4 +316,4 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '1rem',
     borderTop: '1px solid var(--color-surface-plus)',
   },
-};
+}

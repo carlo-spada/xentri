@@ -16,4 +16,4 @@ See [manifest.yaml](../../manifest.yaml) for module list.
 
 ---
 
-*Sub-category documentation to be expanded as development begins.*
+_Sub-category documentation to be expanded as development begins._

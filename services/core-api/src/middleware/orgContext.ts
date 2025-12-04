@@ -1,15 +1,15 @@
-import type { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
-import { isUserOrgMember } from './clerkAuth.js';
+import type { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify'
+import { isUserOrgMember } from './clerkAuth.js'
 
 /**
  * Problem Details error response per RFC 7807
  */
 export interface ProblemDetails {
-  type: string;
-  title: string;
-  status: number;
-  detail?: string;
-  trace_id?: string;
+  type: string
+  title: string
+  status: number
+  detail?: string
+  trace_id?: string
 }
 
 /**
@@ -28,7 +28,7 @@ export function problemDetails(
     404: 'https://xentri.app/errors/not-found',
     422: 'https://xentri.app/errors/validation',
     500: 'https://xentri.app/errors/internal',
-  };
+  }
 
   return {
     type: typeMap[status] || 'https://xentri.app/errors/unknown',
@@ -36,7 +36,7 @@ export function problemDetails(
     status,
     detail,
     trace_id: traceId,
-  };
+  }
 }
 
 /**
@@ -44,23 +44,22 @@ export function problemDetails(
  */
 declare module 'fastify' {
   interface FastifyRequest {
-    orgId?: string;
-    userId?: string;
+    orgId?: string
+    userId?: string
   }
 }
 
 // UUID validation regex
-const UUID_REGEX =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 // Clerk ID format (e.g., 'org_2abc123...')
-const CLERK_ID_REGEX = /^(org|user)_[a-zA-Z0-9]+$/;
+const CLERK_ID_REGEX = /^(org|user)_[a-zA-Z0-9]+$/
 
 /**
  * Validates if a string is a valid org ID (UUID or Clerk format).
  */
 function isValidOrgId(id: string): boolean {
-  return UUID_REGEX.test(id) || CLERK_ID_REGEX.test(id);
+  return UUID_REGEX.test(id) || CLERK_ID_REGEX.test(id)
 }
 
 /**
@@ -81,19 +80,19 @@ export async function orgContextMiddleware(
   reply: FastifyReply
 ): Promise<void> {
   // Primary source: Clerk session claims (set by clerkAuthMiddleware)
-  const clerkOrgId = request.clerkOrgId;
-  const clerkUserId = request.clerkUserId;
+  const clerkOrgId = request.clerkOrgId
+  const clerkUserId = request.clerkUserId
 
   // Set user ID from verified Clerk session
   if (clerkUserId) {
-    request.userId = clerkUserId;
+    request.userId = clerkUserId
   }
 
   // Check for x-org-id header (org-switching)
-  const headerOrgId = request.headers['x-org-id'];
+  const headerOrgId = request.headers['x-org-id']
 
   // Determine which org ID to use
-  let effectiveOrgId: string | undefined = clerkOrgId;
+  let effectiveOrgId: string | undefined = clerkOrgId
 
   if (headerOrgId && typeof headerOrgId === 'string') {
     if (!isValidOrgId(headerOrgId)) {
@@ -101,13 +100,8 @@ export async function orgContextMiddleware(
         .status(400)
         .header('content-type', 'application/problem+json')
         .send(
-          problemDetails(
-            400,
-            'Bad Request',
-            'x-org-id must be a valid organization ID',
-            request.id
-          )
-        );
+          problemDetails(400, 'Bad Request', 'x-org-id must be a valid organization ID', request.id)
+        )
     }
 
     // If header differs from session, verify membership via Clerk
@@ -123,10 +117,10 @@ export async function orgContextMiddleware(
               'Authentication required for org-switching',
               request.id
             )
-          );
+          )
       }
 
-      const isMember = await isUserOrgMember(clerkUserId, headerOrgId);
+      const isMember = await isUserOrgMember(clerkUserId, headerOrgId)
       if (!isMember) {
         return reply
           .status(403)
@@ -138,11 +132,11 @@ export async function orgContextMiddleware(
               'You do not have access to the requested organization',
               request.id
             )
-          );
+          )
       }
     }
 
-    effectiveOrgId = headerOrgId;
+    effectiveOrgId = headerOrgId
   }
 
   if (!effectiveOrgId) {
@@ -156,11 +150,11 @@ export async function orgContextMiddleware(
           'No active organization. Please select or create an organization.',
           request.id
         )
-      );
+      )
   }
 
   // Set org context on request
-  request.orgId = effectiveOrgId;
+  request.orgId = effectiveOrgId
 }
 
 /**
@@ -174,19 +168,19 @@ export async function orgContextMiddlewareAsync(
   request: FastifyRequest,
   reply: FastifyReply
 ): Promise<void> {
-  const clerkOrgId = request.clerkOrgId;
-  const clerkUserId = request.clerkUserId;
-  const headerOrgId = request.headers['x-org-id'];
+  const clerkOrgId = request.clerkOrgId
+  const clerkUserId = request.clerkUserId
+  const headerOrgId = request.headers['x-org-id']
 
   // Set user ID from verified Clerk session
   if (clerkUserId) {
-    request.userId = clerkUserId;
+    request.userId = clerkUserId
   }
 
   // If no header or header matches session, use session org
   if (!headerOrgId || headerOrgId === clerkOrgId) {
-    request.orgId = clerkOrgId;
-    return;
+    request.orgId = clerkOrgId
+    return
   }
 
   // Validate header format
@@ -195,13 +189,8 @@ export async function orgContextMiddlewareAsync(
       .status(400)
       .header('content-type', 'application/problem+json')
       .send(
-        problemDetails(
-          400,
-          'Bad Request',
-          'x-org-id must be a valid organization ID',
-          request.id
-        )
-      );
+        problemDetails(400, 'Bad Request', 'x-org-id must be a valid organization ID', request.id)
+      )
   }
 
   // Header differs from session - verify user has access to requested org
@@ -210,17 +199,12 @@ export async function orgContextMiddlewareAsync(
       .status(401)
       .header('content-type', 'application/problem+json')
       .send(
-        problemDetails(
-          401,
-          'Unauthorized',
-          'Authentication required for org-switching',
-          request.id
-        )
-      );
+        problemDetails(401, 'Unauthorized', 'Authentication required for org-switching', request.id)
+      )
   }
 
   // Check membership via Clerk API
-  const isMember = await isUserOrgMember(clerkUserId, headerOrgId);
+  const isMember = await isUserOrgMember(clerkUserId, headerOrgId)
 
   if (!isMember) {
     return reply
@@ -233,11 +217,11 @@ export async function orgContextMiddlewareAsync(
           'You do not have access to the requested organization',
           request.id
         )
-      );
+      )
   }
 
   // User is verified member of requested org
-  request.orgId = headerOrgId;
+  request.orgId = headerOrgId
 }
 
 /**
@@ -251,21 +235,14 @@ export function legacyOrgContextMiddleware(
   reply: FastifyReply,
   done: HookHandlerDoneFunction
 ): void {
-  const orgId = request.headers['x-org-id'];
+  const orgId = request.headers['x-org-id']
 
   if (!orgId || typeof orgId !== 'string') {
     reply
       .status(403)
       .header('content-type', 'application/problem+json')
-      .send(
-        problemDetails(
-          403,
-          'Forbidden',
-          'Missing or invalid x-org-id header',
-          request.id
-        )
-      );
-    return;
+      .send(problemDetails(403, 'Forbidden', 'Missing or invalid x-org-id header', request.id))
+    return
   }
 
   if (!isValidOrgId(orgId)) {
@@ -273,22 +250,17 @@ export function legacyOrgContextMiddleware(
       .status(400)
       .header('content-type', 'application/problem+json')
       .send(
-        problemDetails(
-          400,
-          'Bad Request',
-          'x-org-id must be a valid organization ID',
-          request.id
-        )
-      );
-    return;
+        problemDetails(400, 'Bad Request', 'x-org-id must be a valid organization ID', request.id)
+      )
+    return
   }
 
-  request.orgId = orgId;
+  request.orgId = orgId
 
-  const userId = request.headers['x-user-id'];
+  const userId = request.headers['x-user-id']
   if (userId && typeof userId === 'string') {
-    request.userId = userId;
+    request.userId = userId
   }
 
-  done();
+  done()
 }

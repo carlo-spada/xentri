@@ -25,14 +25,15 @@
     <action>Exit workflow</action>
   </check>
 
-  <action>Load PRD from {output_folder_resolved}prd.md</action>
-  <action>Set prd_path to {output_folder_resolved}prd.md</action>
+<action>Load PRD from {output_folder_resolved}prd.md</action>
+<action>Set prd_path to {output_folder_resolved}prd.md</action>
 
   <check if="file not found">
     <output>❌ PRD not found at {prd_path}
 
     Use create-domain-prd workflow to create it first.</output>
     <action>Exit workflow</action>
+
   </check>
 
   <output>
@@ -83,7 +84,7 @@
 2. All required sections present for entity type
 3. No unfilled template variables
 4. Proper markdown formatting
-</action>
+   </action>
 
 </step>
 
@@ -127,7 +128,7 @@ Coverage check:
 
 - Adequate requirements for entity scope
 - Key capability areas addressed
-</action>
+  </action>
 
 </step>
 
@@ -208,7 +209,7 @@ Structure:
 5. Entity-Specific Checks
 6. Traceability (if applicable)
 7. Recommendations
-</action>
+   </action>
 
 <output>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -219,8 +220,8 @@ Date: {date}
 
 **Summary**
 
-| Status | Count |
-|--------|-------|
+| Status  | Count        |
+| ------- | ------------ |
 | ✅ PASS | {pass_count} |
 | ❌ FAIL | {fail_count} |
 | ⚠️ WARN | {warn_count} |
@@ -242,9 +243,9 @@ Date: {date}
 
 <ask>Save validation report? (y/n)</ask>
 <check if="response == 'y'">
-  <action>Create validation-reports directory if needed</action>
-  <action>Save report to {validation_report_path}</action>
-  <output>✅ Report saved: {validation_report_path}</output>
+<action>Create validation-reports directory if needed</action>
+<action>Save report to {validation_report_path}</action>
+<output>✅ Report saved: {validation_report_path}</output>
 </check>
 </step>
 

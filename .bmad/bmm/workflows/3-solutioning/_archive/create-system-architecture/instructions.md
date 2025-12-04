@@ -26,13 +26,14 @@ Entity Type:    Constitution
 Output Path:    docs/platform/architecture.md
 
 This is the FOUNDATIONAL architecture that:
+
 - Defines cross-cutting technical decisions
 - Establishes system-wide patterns and constraints
 - Defines integration architecture (event backbone, APIs)
 - Sets technology stack decisions
 - Cannot be contradicted by downstream architectures
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  </output>
 
 <invoke-protocol name="discover_inputs" />
 
@@ -41,10 +42,10 @@ This is the FOUNDATIONAL architecture that:
 
 The architecture should be based on the PRD requirements.
 Please create the Constitution PRD first using create-system-prd workflow.</output>
-  <ask>Continue anyway? (y/n)</ask>
-  <check if="response != 'y'">
-    <action>Exit workflow</action>
-  </check>
+<ask>Continue anyway? (y/n)</ask>
+<check if="response != 'y'">
+<action>Exit workflow</action>
+</check>
 </check>
 
 <check if="existing architecture found">
@@ -69,21 +70,24 @@ Please create the Constitution PRD first using create-system-prd workflow.</outp
 What are the fundamental architectural principles that will guide all decisions?"
 
 Extract from PRD:
+
 - Core principles that affect architecture
 - PR-xxx that have architectural implications
 - IC-xxx that define integration architecture
 
 Key questions:
+
 - What architectural style best supports the vision? (microservices, modular monolith, etc.)
 - What are the non-negotiable architectural constraints?
 - What trade-offs are we making and why?
-</action>
+  </action>
 
 <action>Document:
+
 - Architectural vision statement
 - Core architectural principles (3-7 principles)
 - Key trade-offs and rationale
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -98,17 +102,19 @@ Key questions:
 "Let's map out what's inside our system vs external."
 
 Document:
+
 - System boundary (what's in scope)
 - External systems and integrations
 - User types and access points
 - Data flows in and out of system
-</action>
+  </action>
 
 <action>Create a C4-style context diagram description:
+
 - System as central element
 - External actors (users, external systems)
 - Key interactions
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -123,17 +129,19 @@ Document:
 Load {architecture_patterns} and {pattern_categories} for reference.
 
 Key decisions:
+
 1. **Architectural Style** - Microservices, modular monolith, hybrid?
 2. **Deployment Model** - Cloud, on-prem, hybrid?
 3. **Data Architecture** - Single DB, polyglot, event-sourced?
 4. **Integration Pattern** - Sync, async, event-driven?
 
 For each decision:
+
 - State the decision clearly
 - Provide rationale
 - Note alternatives considered
 - Document trade-offs
-</action>
+  </action>
 
 <action>Create architecture decision records (ADR format) for major decisions</action>
 
@@ -148,17 +156,19 @@ For each decision:
 <action>Define the event-driven architecture (per Constitution IC requirements):
 
 Based on IC-xxx from PRD:
+
 - Event envelope schema
 - Event naming conventions
 - Event routing and transport
 - Event persistence and replay
 
 Document:
+
 - Event spine technology choice
 - Event categories and types
 - Producer/consumer patterns
 - Error handling and DLQ strategy
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -171,17 +181,19 @@ Document:
 <action>Define the data architecture:
 
 Based on PR-xxx from PRD (especially multi-tenancy):
+
 - Database technology choices
 - Schema strategy (per-tenant, shared with RLS, etc.)
 - Data isolation approach
 - Backup and recovery strategy
 
 Document:
+
 - Primary data stores and purposes
 - Caching strategy
 - Data flow between services
 - Data governance rules
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -194,17 +206,19 @@ Document:
 <action>Define the security architecture:
 
 Based on PR-xxx security requirements:
+
 - Authentication strategy
 - Authorization model (RBAC, ABAC, etc.)
 - API security
 - Data encryption (at rest, in transit)
 
 Document:
+
 - Identity provider integration
 - Token strategy (JWT, sessions, etc.)
 - Permission model
 - Audit logging approach
-</action>
+  </action>
 
 <invoke-task name="save-with-checkpoint">
   <param name="file_path">{default_output_file}</param>
@@ -217,6 +231,7 @@ Document:
 <action>Define the core technology stack:
 
 For each layer, document choice and rationale:
+
 - Frontend technologies
 - Backend technologies
 - Database technologies
@@ -275,11 +290,12 @@ This architecture now governs ALL downstream entities.
 Module architectures must align with these decisions.
 
 **Next Steps:**
+
 1. Create module-specific architectures using create-domain-architecture
 2. Reference this document for technology and pattern decisions
 3. Create ADRs for any deviations from established patterns
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-</output>
-</step>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   </output>
+   </step>
 
 </workflow>
