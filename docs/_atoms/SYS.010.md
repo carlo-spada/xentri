@@ -1,90 +1,63 @@
 ---
 id: SYS.010
-type: interface
-title: 'Event Envelope Schema'
+type: commission
+title: 'UI Module Commission'
 status: approved
 entity_path: docs/platform/
 created: 2025-12-04
 updated: 2025-12-04
-author: Architect
-tags: [events, schema, ts-schema, event-spine]
-legacy_id: IC-001
+author: Constitution
+tags: [infrastructure, ui, design-system]
 ---
 
-# Event Envelope Schema
+# UI Module Commission
 
 > **Atom ID:** `SYS.010`
-> **Type:** interface
+> **Type:** commission
 > **Status:** Approved
-> **Legacy ID:** IC-001
 
 ---
 
-## Summary
+## Commission
 
-Defines the `SystemEvent` interface — the standard envelope format for all events flowing through the Event Spine.
+The Constitution hereby commissions the **UI Module** to exist as an Infrastructure Module providing the design system and accessible component library.
 
 ---
 
-## Content
+## Essential Requirements
 
-### Contract
+The UI Module MUST:
 
-All events in Xentri MUST conform to the `SystemEvent` interface:
+1. **Provide Design System** — Consistent visual language across all modules
+2. **Ensure Accessibility** — WCAG 2.1 AA compliance for all components
+3. **Support Theming** — Light/dark mode with brand customization
+4. **Enable Composition** — Primitive components that compose into complex UIs
 
-```typescript
-interface SystemEvent {
-  id: string; // UUID v7 (time-ordered)
-  type: string; // Event type (see IC-002)
-  version: string; // Schema version (semver)
-  timestamp: string; // ISO 8601 timestamp
-  org_id: string; // Tenant identifier
-  actor: {
-    type: 'user' | 'system' | 'copilot';
-    id: string;
-    name?: string;
-  };
-  payload: Record<string, unknown>; // Event-specific data
-  metadata: {
-    correlation_id?: string; // Request tracing
-    causation_id?: string; // Parent event ID
-    source: string; // Originating service
-  };
-}
-```
+---
 
-### Consumers
+## Child Commissions
 
-- All modules reading from Event Spine
-- Analytics and reporting systems
-- Audit trail processors
-- Copilots tracking domain changes
+These essentials become commissions for child atoms:
 
-### Providers
-
-- core-api (primary event producer)
-- All modules emitting domain events
-
-### Version
-
-**v1.0** — Initial schema definition
-
-### Defined In
-
-**ts-schema** — `packages/ts-schema/src/events/system-event.ts`
+| Essential             | Becomes Child Commission             |
+| --------------------- | ------------------------------------ |
+| Provide Design System | Design Tokens (`SYS.010-UI.xxx`)     |
+| Ensure Accessibility  | A11y Standards (`SYS.010-UI.xxx`)    |
+| Support Theming       | Theme Provider (`SYS.010-UI.xxx`)    |
+| Enable Composition    | Component Library (`SYS.010-UI.xxx`) |
 
 ---
 
 ## Dependencies
 
-| Atom ID | Relationship | Description                              |
-| ------- | ------------ | ---------------------------------------- |
-| —       | root         | Constitution-level interface (no parent) |
+| Atom ID | Relationship | Description                         |
+| ------- | ------------ | ----------------------------------- |
+| —       | root         | Constitution-level atom (no parent) |
 
 ---
 
 ## Changelog
 
-| Date       | Author    | Change                                 |
-| ---------- | --------- | -------------------------------------- |
-| 2025-12-04 | Architect | Extracted from Constitution PRD IC-001 |
+| Date       | Author       | Change                                                |
+| ---------- | ------------ | ----------------------------------------------------- |
+| 2025-12-04 | Constitution | Initial creation with hierarchical commission pattern |

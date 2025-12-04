@@ -3,10 +3,10 @@ entity_type: constitution
 document_type: prd
 title: 'Xentri System PRD (Constitution)'
 description: 'System-wide product requirements, platform requirements (PR-xxx), and integration contracts (IC-xxx) that all entities must follow.'
-version: '5.0'
+version: '5.1'
 status: draft
 created: '2025-11-25'
-updated: '2025-12-03'
+updated: '2025-12-04'
 ---
 
 <!--
@@ -22,8 +22,8 @@ This PRD defines WHAT the product requires at the system level. For implementati
 # Xentri - Product Requirements Document (System Constitution)
 
 **Author:** Carlo
-**Date:** 2025-12-03
-**Version:** 4.0
+**Date:** 2025-12-04
+**Version:** 5.1
 **Level:** System (applies to ALL categories)
 
 ---
@@ -483,6 +483,7 @@ Modules that can't answer these questions don't belong in Xentri.
 | 3.0     | 2025-12-03 | Winston (Architect)  | Entity document structure: Added module doc references in header comment                                                                                                                      |
 | 4.0     | 2025-12-03 | Winston (Architect)  | **Constitutional Redistribution:** Migrated implementation details to module PRDs (core-api, shell, ui, ts-schema). Constitution now contains PR/IC definitions and high-level concepts only. |
 | 5.0     | 2025-12-03 | Winston (Architect)  | **Restored missing content:** Personalization Principle section (Soul-aware modules, competitive moat, design mandate). IC-006 restored to core-api/prd.md.                                   |
+| 5.1     | 2025-12-04 | John (PM)            | **Phase 3.09 Audit:** Fixed version mismatch (frontmatter vs body). Verified all PR/IC requirements, NFRs, governance. Added SSOT atom links validated.                                       |
 
 ---
 

@@ -1,53 +1,50 @@
 ---
 id: SYS.001
-type: requirement
-title: 'Shell Module Commission'
-status: draft
+type: commission
+title: 'Strategy Category Commission'
+status: approved
 entity_path: docs/platform/
 created: 2025-12-04
 updated: 2025-12-04
-author: Analyst
-tags: []
+author: Constitution
+tags: [category, strategy, soul]
 ---
 
-# Shell Module Commission
+# Strategy Category Commission
 
 > **Atom ID:** `SYS.001`
-> **Type:** requirement
-> **Status:** Draft
+> **Type:** commission
+> **Status:** Approved
 
 ---
 
-## Summary
+## Commission
 
-This Constitution atom establishes the Shell module as a core Infrastructure Module within the Xentri platform.
+The Constitution hereby commissions the **Strategy Category** to exist as a Strategic Container responsible for the organization's strategic intelligence layer.
 
 ---
 
-## Content
+## Essential Requirements
 
-The Shell module is commissioned to provide:
+The Strategy Category MUST:
 
-- Astro-based application container
-- Routing and navigation
-- Authentication integration
-- React island hydration
+1. **Manage the Universal Soul** — The living DNA of the business that evolves through conversation
+2. **Provide the Pulse** — Hierarchical recommendations surfaced at appropriate organizational levels
+3. **Enable Recommendations** — AI-generated suggestions based on Soul context and business events
+4. **Maintain Narrative Continuity** — Chronicle system preserving conversational context across sessions
 
-### Rationale
+---
 
-Separation of container concerns from feature development enables independent deployment and testing.
+## Child Commissions
 
-### Acceptance Criteria
+These essentials become commissions for child atoms:
 
-- Shell can load without any feature modules
-- Navigation persists across module transitions
-- Authentication state is shared across all islands
-
-### Constraints
-
-- Must use Astro 4.x or later
-- Must support React 18+ islands
-- Must integrate with Core API for auth
+| Essential                     | Becomes Child Commission                   |
+| ----------------------------- | ------------------------------------------ |
+| Manage the Universal Soul     | Soul Module (`SYS.001-STR.xxx`)            |
+| Provide the Pulse             | Pulse Module (`SYS.001-STR.xxx`)           |
+| Enable Recommendations        | Recommendations Module (`SYS.001-STR.xxx`) |
+| Maintain Narrative Continuity | Chronicle Module (`SYS.001-STR.xxx`)       |
 
 ---
 
@@ -61,6 +58,6 @@ Separation of container concerns from feature development enables independent de
 
 ## Changelog
 
-| Date       | Author  | Change           |
-| ---------- | ------- | ---------------- |
-| 2025-12-04 | Analyst | Initial creation |
+| Date       | Author       | Change                                                |
+| ---------- | ------------ | ----------------------------------------------------- |
+| 2025-12-04 | Constitution | Initial creation with hierarchical commission pattern |

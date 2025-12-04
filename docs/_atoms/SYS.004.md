@@ -1,70 +1,62 @@
 ---
 id: SYS.004
-type: requirement
-title: 'API Authentication Requirement'
+type: commission
+title: 'Sales Category Commission'
 status: approved
 entity_path: docs/platform/
 created: 2025-12-04
 updated: 2025-12-04
-author: PM
-tags: [security, authentication, api, endpoints]
-legacy_id: PR-003
+author: Constitution
+tags: [category, sales, pipeline]
 ---
 
-# API Authentication Requirement
+# Sales Category Commission
 
 > **Atom ID:** `SYS.004`
-> **Type:** requirement
+> **Type:** commission
 > **Status:** Approved
-> **Legacy ID:** PR-003
 
 ---
 
-## Summary
+## Commission
 
-All API endpoints MUST require authentication except explicitly designated health checks.
+The Constitution hereby commissions the **Sales Category** to exist as a Strategic Container responsible for sales pipeline and revenue generation.
 
 ---
 
-## Content
+## Essential Requirements
 
-### Requirement Statement
+The Sales Category MUST:
 
-All API endpoints MUST require authentication except health checks.
+1. **Manage Pipeline** — Lead tracking through sales stages
+2. **Track Deals** — Opportunity management with Soul-aware context
+3. **Enable Forecasting** — Revenue projections based on pipeline data
+4. **Integrate with Soul** — Sales strategy aligned with business DNA
 
-### Rationale
+---
 
-Zero-trust security posture requires that every request is authenticated. Health check endpoints are exempted to support infrastructure monitoring (load balancers, orchestrators).
+## Child Commissions
 
-### Acceptance Criteria
+These essentials become commissions for child atoms:
 
-1. Every API endpoint returns 401 Unauthorized if no valid token is provided
-2. Health check endpoints (`/health`, `/ready`, `/live`) are explicitly exempt
-3. Authentication tokens are validated on every request (no session caching)
-4. Token validation includes expiration, signature, and issuer checks
-
-### Constraints
-
-- Public endpoints (if any) must be explicitly documented and approved
-- Service-to-service communication uses separate authentication mechanism
-- Authentication must not leak timing information (constant-time comparison)
-
-### Implementation
-
-**Implemented By:** core-api
+| Essential          | Becomes Child Commission               |
+| ------------------ | -------------------------------------- |
+| Manage Pipeline    | Pipeline Module (`SYS.004-SAL.xxx`)    |
+| Track Deals        | Deals Module (`SYS.004-SAL.xxx`)       |
+| Enable Forecasting | Forecasting Module (`SYS.004-SAL.xxx`) |
 
 ---
 
 ## Dependencies
 
-| Atom ID | Relationship | Description                                |
-| ------- | ------------ | ------------------------------------------ |
-| —       | root         | Constitution-level requirement (no parent) |
+| Atom ID | Relationship | Description                         |
+| ------- | ------------ | ----------------------------------- |
+| —       | root         | Constitution-level atom (no parent) |
 
 ---
 
 ## Changelog
 
-| Date       | Author | Change                                 |
-| ---------- | ------ | -------------------------------------- |
-| 2025-12-04 | PM     | Extracted from Constitution PRD PR-003 |
+| Date       | Author       | Change                                                |
+| ---------- | ------------ | ----------------------------------------------------- |
+| 2025-12-04 | Constitution | Initial creation with hierarchical commission pattern |

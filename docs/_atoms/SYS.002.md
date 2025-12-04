@@ -1,70 +1,62 @@
 ---
 id: SYS.002
-type: requirement
-title: 'Multi-tenant RLS Architecture'
+type: commission
+title: 'Marketing Category Commission'
 status: approved
 entity_path: docs/platform/
 created: 2025-12-04
 updated: 2025-12-04
-author: PM
-tags: [multi-tenancy, security, database, rls]
-legacy_id: PR-001
+author: Constitution
+tags: [category, marketing, brand]
 ---
 
-# Multi-tenant RLS Architecture
+# Marketing Category Commission
 
 > **Atom ID:** `SYS.002`
-> **Type:** requirement
+> **Type:** commission
 > **Status:** Approved
-> **Legacy ID:** PR-001
 
 ---
 
-## Summary
+## Commission
 
-All database tables MUST include an `org_id` column with Row-Level Security (RLS) policy to ensure complete tenant isolation.
+The Constitution hereby commissions the **Marketing Category** to exist as a Strategic Container responsible for brand, content, and campaign management.
 
 ---
 
-## Content
+## Essential Requirements
 
-### Requirement Statement
+The Marketing Category MUST:
 
-All database tables MUST include `org_id` column with RLS policy.
+1. **Manage Brand Identity** — Visual identity, voice, and positioning aligned with Soul
+2. **Enable Content Creation** — Blog posts, social media, collateral with Soul-aware context
+3. **Coordinate Campaigns** — Marketing initiatives tracked and measured
+4. **Integrate with Soul** — All marketing aligned with business DNA
 
-### Rationale
+---
 
-Multi-tenancy is foundational to Xentri's architecture. Every piece of data belongs to exactly one organization, and RLS ensures that even with application bugs or misconfigurations, data cannot leak between tenants.
+## Child Commissions
 
-### Acceptance Criteria
+These essentials become commissions for child atoms:
 
-1. Every table in the schema has an `org_id` column of type `UUID`
-2. Every table has an RLS policy that enforces `org_id = current_setting('app.current_org_id')::uuid`
-3. No query can return data from multiple organizations in a single result set
-4. The `org_id` cannot be modified after row creation (immutable)
-
-### Constraints
-
-- RLS must be enabled at database level, not application level
-- System tables (migrations, audit logs) may be exempt if properly justified
-- Foreign keys across organizations are prohibited
-
-### Implementation
-
-**Implemented By:** core-api
+| Essential               | Becomes Child Commission             |
+| ----------------------- | ------------------------------------ |
+| Manage Brand Identity   | Brand Module (`SYS.002-MKT.xxx`)     |
+| Enable Content Creation | Content Module (`SYS.002-MKT.xxx`)   |
+| Coordinate Campaigns    | Campaigns Module (`SYS.002-MKT.xxx`) |
 
 ---
 
 ## Dependencies
 
-| Atom ID | Relationship | Description                                |
-| ------- | ------------ | ------------------------------------------ |
-| —       | root         | Constitution-level requirement (no parent) |
+| Atom ID | Relationship | Description                         |
+| ------- | ------------ | ----------------------------------- |
+| —       | root         | Constitution-level atom (no parent) |
 
 ---
 
 ## Changelog
 
-| Date       | Author | Change                                 |
-| ---------- | ------ | -------------------------------------- |
-| 2025-12-04 | PM     | Extracted from Constitution PRD PR-001 |
+| Date       | Author       | Change                                                |
+| ---------- | ------------ | ----------------------------------------------------- |
+| 2025-12-04 | Constitution | Initial creation with hierarchical commission pattern |

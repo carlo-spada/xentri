@@ -1,87 +1,65 @@
 ---
 id: SYS.008
-type: requirement
-title: 'Graceful Module Failure'
+type: commission
+title: 'Shell Module Commission'
 status: approved
 entity_path: docs/platform/
 created: 2025-12-04
 updated: 2025-12-04
-author: PM
-tags: [resilience, fault-tolerance, shell, modules]
-legacy_id: PR-007
+author: Constitution
+tags: [infrastructure, shell, routing]
 ---
 
-# Graceful Module Failure
+# Shell Module Commission
 
 > **Atom ID:** `SYS.008`
-> **Type:** requirement
+> **Type:** commission
 > **Status:** Approved
-> **Legacy ID:** PR-007
 
 ---
 
-## Summary
+## Commission
 
-All modules MUST fail gracefully and never crash the shell or affect other modules.
+The Constitution hereby commissions the **Shell Module** to exist as an Infrastructure Module providing the application container, routing, and authentication integration.
 
 ---
 
-## Content
+## Essential Requirements
 
-### Requirement Statement
+The Shell Module MUST:
 
-All modules MUST fail gracefully; never crash the shell.
+1. **Provide Routing** — URL-based navigation with state preservation
+2. **Integrate Authentication** — Session management and auth state sharing
+3. **Enable React Islands** — Lazy-loaded interactive components within Astro
+4. **Support Graceful Failure** — Degraded functionality when modules unavailable
+5. **Register Modules** — Module manifest for dynamic feature loading
 
-### Rationale
+---
 
-The shell is the user's primary interface. A bug in one module (e.g., Finance) must never:
+## Child Commissions
 
-1. Crash the entire application
-2. Block navigation to other modules
-3. Corrupt shared state
-4. Require a full page refresh to recover
+These essentials become commissions for child atoms:
 
-Each module operates in isolation with defined boundaries.
-
-### Acceptance Criteria
-
-1. Module JavaScript errors are caught at the island boundary
-2. Failed modules display a graceful error state (not blank or broken UI)
-3. Error states include "Retry" and "Report Issue" options
-4. Module failures are logged with full stack trace for debugging
-5. Shell navigation remains functional when any module fails
-6. Other modules continue operating normally during failure
-
-### Error State Requirements
-
-- Clear indication that something went wrong
-- No technical jargon in user-facing messages
-- Option to retry the operation
-- Option to report the issue (with context auto-attached)
-- Suggestion to refresh if retry fails repeatedly
-
-### Constraints
-
-- Modules cannot catch errors outside their boundary
-- Error boundaries must not swallow errors silently
-- Recovery attempts must be rate-limited (prevent infinite loops)
-
-### Implementation
-
-**Implemented By:** shell
+| Essential                | Becomes Child Commission             |
+| ------------------------ | ------------------------------------ |
+| Provide Routing          | Router (`SYS.008-SHL.xxx`)           |
+| Integrate Authentication | Auth Integration (`SYS.008-SHL.xxx`) |
+| Enable React Islands     | Island Hydration (`SYS.008-SHL.xxx`) |
+| Register Modules         | Module Manifest (`SYS.008-SHL.xxx`)  |
+| Support Graceful Failure | Error Boundaries (`SYS.008-SHL.xxx`) |
 
 ---
 
 ## Dependencies
 
-| Atom ID | Relationship | Description                                |
-| ------- | ------------ | ------------------------------------------ |
-| —       | root         | Constitution-level requirement (no parent) |
+| Atom ID | Relationship | Description                         |
+| ------- | ------------ | ----------------------------------- |
+| —       | root         | Constitution-level atom (no parent) |
 
 ---
 
 ## Changelog
 
-| Date       | Author | Change                                 |
-| ---------- | ------ | -------------------------------------- |
-| 2025-12-04 | PM     | Extracted from Constitution PRD PR-007 |
+| Date       | Author       | Change                                                |
+| ---------- | ------------ | ----------------------------------------------------- |
+| 2025-12-04 | Constitution | Initial creation with hierarchical commission pattern |

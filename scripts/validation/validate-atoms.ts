@@ -33,6 +33,37 @@ const DOCS_PATH = 'docs'
 // Atom ID pattern: SYS.001 or SYS.001-SHL.001 or SYS.001-SHL.001-PUL.001 etc.
 const ATOM_ID_PATTERN = /^[A-Z]{2,3}\.\d{3}(-[A-Z]{2,3}\.\d{3})*$/
 
+// Entity code to path mapping — defines which entity code maps to which directory
+// This is the AUTHORITATIVE mapping for validation Rule 6
+const ENTITY_CODE_TO_PATH: Record<string, string> = {
+  // Constitution (root level)
+  SYS: 'docs/platform/',
+
+  // Infrastructure Modules
+  SHL: 'docs/platform/shell/',
+  UI: 'docs/platform/ui/',
+  API: 'docs/platform/core-api/',
+  TSS: 'docs/platform/ts-schema/',
+
+  // Strategic Containers (7 categories)
+  STR: 'docs/strategy/',
+  MKT: 'docs/marketing/',
+  FIN: 'docs/finance/',
+  LEG: 'docs/legal/',
+  OPS: 'docs/operations/',
+  SAL: 'docs/sales/',
+  TEM: 'docs/team/',
+}
+
+// Reverse mapping for validation
+const PATH_TO_ENTITY_CODE: Record<string, string> = Object.entries(ENTITY_CODE_TO_PATH).reduce(
+  (acc, [code, path]) => {
+    acc[path] = code
+    return acc
+  },
+  {} as Record<string, string>
+)
+
 // Frontmatter YAML pattern
 const FRONTMATTER_PATTERN = /^---\n([\s\S]*?)\n---/
 
@@ -46,7 +77,7 @@ const EXTERNAL_ATOM_REF_PATTERN = /\[([^\]]+)\]\(\.\.\/_atoms\/([\w.-]+)\.md\)/g
 
 interface AtomFrontmatter {
   id: string
-  type?: 'requirement' | 'interface' | 'decision' | 'constraint'
+  type?: 'commission' | 'requirement' | 'interface' | 'decision'
   title?: string
   status?: 'draft' | 'approved' | 'deprecated'
   entity_path?: string
@@ -408,6 +439,58 @@ function validateNoDeprecated(atom: Atom, allAtoms: Map<string, Atom>): Validati
   return errors
 }
 
+/**
+ * Rule 6: Entity Code Matches Path
+ * The entity code in the atom ID must match the entity_path.
+ * For hierarchical IDs, the LAST entity code determines the owning entity.
+ *
+ * Examples:
+ *   SYS.001        → entity_path must be docs/platform/
+ *   SYS.001-SHL.001 → entity_path must be docs/platform/shell/
+ *   SYS.001-API.001 → entity_path must be docs/platform/core-api/
+ */
+function validateEntityCodeMatchesPath(atom: Atom): ValidationError | null {
+  if (!atom.frontmatter?.id || !atom.frontmatter?.entity_path) {
+    return null // Other rules will catch missing fields
+  }
+
+  const id = atom.frontmatter.id
+  const entityPath = atom.frontmatter.entity_path
+
+  // Extract the LAST entity code from the ID (the owning entity)
+  // SYS.001 → SYS
+  // SYS.001-SHL.001 → SHL
+  // SYS.001-SHL.001-PUL.001 → PUL
+  const parts = id.split('-')
+  const lastPart = parts[parts.length - 1]
+  const entityCode = lastPart.split('.')[0]
+
+  // Get expected path for this entity code
+  const expectedPath = ENTITY_CODE_TO_PATH[entityCode]
+
+  if (!expectedPath) {
+    return {
+      file: atom.filename,
+      rule: 6,
+      ruleName: 'Entity Code Valid',
+      message: `Unknown entity code "${entityCode}" in atom ID. Valid codes: ${Object.keys(ENTITY_CODE_TO_PATH).join(', ')}`,
+      severity: 'BLOCK',
+    }
+  }
+
+  if (entityPath !== expectedPath) {
+    return {
+      file: atom.filename,
+      rule: 6,
+      ruleName: 'Entity Code Matches Path',
+      message: `Entity path mismatch. ID "${id}" has entity code "${entityCode}" which requires entity_path: "${expectedPath}", but found: "${entityPath}"`,
+      severity: 'BLOCK',
+    }
+  }
+
+  return null
+}
+
 // =============================================================================
 // Required Fields Validation
 // =============================================================================
@@ -440,7 +523,7 @@ function validateRequiredFields(atom: Atom): ValidationError[] {
   }
 
   // Validate type enum
-  const validTypes = ['requirement', 'interface', 'decision', 'constraint']
+  const validTypes = ['commission', 'requirement', 'interface', 'decision']
   if (atom.frontmatter.type && !validTypes.includes(atom.frontmatter.type)) {
     errors.push({
       file: atom.filename,
@@ -510,6 +593,10 @@ function validateAtom(atom: Atom, allAtoms: Map<string, Atom>): ValidationError[
 
   // Rule 5: No Deprecated
   errors.push(...validateNoDeprecated(atom, allAtoms))
+
+  // Rule 6: Entity Code Matches Path
+  const entityCodeError = validateEntityCodeMatchesPath(atom)
+  if (entityCodeError) errors.push(entityCodeError)
 
   return errors
 }
@@ -604,7 +691,8 @@ function printResults(result: ValidationResult, verbose: boolean): void {
     console.log('    3. ID Format      — Atom ID must match schema pattern')
     console.log('    4. Refs Resolve   — All internal atom refs must resolve')
     console.log('    5. No Deprecated  — Cannot reference deprecated atoms')
-    console.log('\n  See: docs/_atoms/_schema.yaml for full schema')
+    console.log('    6. Entity Code    — Entity code in ID must match entity_path')
+    console.log('\n  See: docs/_atoms/GOVERNANCE.md for atom placement rules')
     console.log('')
   }
 }

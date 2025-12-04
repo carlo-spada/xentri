@@ -1,91 +1,62 @@
 ---
 id: SYS.007
-type: requirement
-title: 'Automated Action Logging'
+type: commission
+title: 'Team Category Commission'
 status: approved
 entity_path: docs/platform/
 created: 2025-12-04
 updated: 2025-12-04
-author: PM
-tags: [automation, logging, explainability, audit]
-legacy_id: PR-006
+author: Constitution
+tags: [category, team, hr]
 ---
 
-# Automated Action Logging
+# Team Category Commission
 
 > **Atom ID:** `SYS.007`
-> **Type:** requirement
+> **Type:** commission
 > **Status:** Approved
-> **Legacy ID:** PR-006
 
 ---
 
-## Summary
+## Commission
 
-All automated actions MUST be logged with a human-readable explanation of why the action was taken.
+The Constitution hereby commissions the **Team Category** to exist as a Strategic Container responsible for human resources, hiring, and performance management.
 
 ---
 
-## Content
+## Essential Requirements
 
-### Requirement Statement
+The Team Category MUST:
 
-All automated actions MUST be logged with human-readable explanation.
+1. **Manage HR** — Employee records, benefits, and policies
+2. **Enable Hiring** — Job postings, applications, and onboarding
+3. **Track Performance** — Reviews, goals, and development plans
+4. **Integrate with Soul** — Team culture aligned with business DNA
 
-### Rationale
+---
 
-"Visible automation" is a core Xentri principle. Users must never wonder "why did the system do that?" Every automated action — from copilot recommendations to scheduled tasks — must be explainable.
+## Child Commissions
 
-This builds trust and enables:
+These essentials become commissions for child atoms:
 
-1. User confidence in automation
-2. Debugging and troubleshooting
-3. Compliance and audit requirements
-4. Continuous improvement of automation rules
-
-### Acceptance Criteria
-
-1. Every automated action creates an audit log entry
-2. Log entries include human-readable `reason` field (not just action type)
-3. Reasons reference the triggering condition (e.g., "Invoice overdue by 30 days")
-4. Users can view automation history for any entity
-5. Explanations are localized to user's preferred language
-
-### Explanation Format
-
-```
-{
-  "action": "sent_reminder_email",
-  "entity_type": "invoice",
-  "entity_id": "inv_123",
-  "reason": "Invoice #247 is 30 days overdue. Automatic reminder sent per your collection policy.",
-  "triggered_by": "scheduled_job:invoice_reminders",
-  "timestamp": "2025-12-04T10:30:00Z"
-}
-```
-
-### Constraints
-
-- Explanations must be understandable by non-technical users
-- Batch operations must log individually or with clear aggregation
-- Explanations must not expose sensitive data
-
-### Implementation
-
-**Implemented By:** core-api
+| Essential         | Becomes Child Commission               |
+| ----------------- | -------------------------------------- |
+| Manage HR         | HR Module (`SYS.007-TEM.xxx`)          |
+| Enable Hiring     | Hiring Module (`SYS.007-TEM.xxx`)      |
+| Track Performance | Performance Module (`SYS.007-TEM.xxx`) |
 
 ---
 
 ## Dependencies
 
-| Atom ID | Relationship | Description                                |
-| ------- | ------------ | ------------------------------------------ |
-| —       | root         | Constitution-level requirement (no parent) |
+| Atom ID | Relationship | Description                         |
+| ------- | ------------ | ----------------------------------- |
+| —       | root         | Constitution-level atom (no parent) |
 
 ---
 
 ## Changelog
 
-| Date       | Author | Change                                 |
-| ---------- | ------ | -------------------------------------- |
-| 2025-12-04 | PM     | Extracted from Constitution PRD PR-006 |
+| Date       | Author       | Change                                                |
+| ---------- | ------------ | ----------------------------------------------------- |
+| 2025-12-04 | Constitution | Initial creation with hierarchical commission pattern |

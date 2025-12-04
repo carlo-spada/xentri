@@ -30,10 +30,10 @@ properties:
   type:
     type: string
     enum:
+      - commission
       - requirement
       - interface
       - decision
-      - constraint
     description: 'The type of authoritative content this atom represents'
 
   title:
