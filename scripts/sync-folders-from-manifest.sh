@@ -24,12 +24,13 @@ echo -e "${BLUE}Syncing folder structure from manifest.yaml...${NC}"
 echo ""
 
 # Use Python to parse manifest and create folders
+export PROJECT_ROOT
 python3 << 'PYTHON'
 import yaml
 import os
 from pathlib import Path
 
-project_root = os.environ.get('PROJECT_ROOT', '/Users/carlo/Desktop/Projects/xentri')
+project_root = os.environ.get('PROJECT_ROOT')
 manifest_file = f"{project_root}/docs/manifest.yaml"
 
 with open(manifest_file, 'r') as f:
