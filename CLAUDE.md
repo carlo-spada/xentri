@@ -4,6 +4,19 @@
 >
 > **Sync requirement.** If you modify this file, you MUST apply the same changes to GEMINI.md and AGENTS.md. All three files must remain identical (except for filename in header).
 
+## Cross-Project Context (_brain)
+
+This project is part of Carlo's `~/projects/` workspace. For cross-cutting context:
+- **Who Carlo is, how he works** → `~/projects/_brain/about-me.md`
+- **Business strategy, all ventures** → `~/projects/_brain/business.md`
+- **Writing voice, comms preferences** → `~/projects/_brain/voice.md`
+- **ICPs per venture** → `~/projects/_brain/icp.md`
+- **Cross-project patterns** → `~/projects/_brain/patterns/`
+
+**Project vault**: `docs/vault/` contains project-specific decisions, patterns, domain context, and tensions.
+
+**Session epilogues**: at the end of substantive sessions, append a structured epilogue to `~/projects/_brain/memory/daily/YYYY-MM-DD.md` tagged with `xentri`. Format is in `~/projects/_brain/system/brain-sync.md`.
+
 ## Project Overview
 
 **Xentri** is a modular Business OS that starts with conversation, not configuration. A **Strategy Co-pilot** generates a **Universal Soul** (the living DNA of a business), which powers tools organized into 7 capability categories.
